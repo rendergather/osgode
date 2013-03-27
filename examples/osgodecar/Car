@@ -1,0 +1,85 @@
+#ifndef _CAR_HPP
+#define _CAR_HPP
+
+
+
+
+#include <osgODE/ODEObjectContainer>
+
+
+
+
+namespace osgODE {
+
+
+
+class Cylinder ;
+class SuspensionJoint ;
+
+
+
+
+class OSG_EXPORT Car: public ODEObjectContainer
+{
+public:
+             Car(void) ;
+             Car(const Car& other, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Car(void) ;
+
+public:
+    META_Object(osgODE, Car) ;
+
+
+
+
+    void    init(void) ;
+
+
+
+
+    virtual void    update(double step_size) ;
+
+
+    void            handleKeyUp(const int& key, const int& mod_key_mask, bool& handled) ;
+    void            handleKeyDown(const int& key, const int& mod_key_mask, bool& handled) ;
+
+    inline RigidBody*   getBody(void)
+        { return m_body.get() ; }
+
+
+
+private:
+    double  _computeUnderSteer(void) ;
+    SuspensionJoint*    _createSuspension(RigidBody* wheel, const osg::Vec3& axis, osg::Node* graphics) ;
+
+
+
+private:
+    osg::ref_ptr<osgODE::RigidBody>         m_body ;
+    osg::ref_ptr<osgODE::Cylinder>          m_wheel_RL ;
+    osg::ref_ptr<osgODE::Cylinder>          m_wheel_RR ;
+    osg::ref_ptr<osgODE::Cylinder>          m_wheel_FR ;
+    osg::ref_ptr<osgODE::Cylinder>          m_wheel_FL ;
+    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_RL ;
+    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_RR ;
+    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_FR ;
+    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_FL ;
+
+
+    bool    m_steering_left ;
+    bool    m_steering_right ;
+
+    double  m_current_steer_angle ;
+} ;
+
+
+
+
+} // namespace
+
+
+
+
+#endif /* _CAR_HPP */

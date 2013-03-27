@@ -1,0 +1,140 @@
+/*!
+ * @file CollisionCallback
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_COLLISIONCALLBACK_HPP
+#define _OSGODE_COLLISIONCALLBACK_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osg/Object>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class   Collidable ;
+class   NearCallback ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Called each time a collidable generates a contact
+/*!
+ */
+class OSG_EXPORT CollisionCallback: public osg::Object
+{
+/* ======================================================================= */
+public:
+             CollisionCallback(void) ;
+             CollisionCallback(const CollisionCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~CollisionCallback(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+ META_Object(osgODE, CollisionCallback) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the nested callback
+    inline void     setNestedCallback(CollisionCallback* cbk) ;
+
+    //! Enqueue the callback
+    inline void     addNestedCallback(CollisionCallback* cbk) ;
+
+    //! Remove the first occurrence of the callback
+    inline void     removeNestedCallback(CollisionCallback* cbk) ;
+
+    //! Get the nested callback
+    inline CollisionCallback*   getNestedCallback(void) ;
+
+    //! Get the const nested callback
+    inline const CollisionCallback* getNestedCallback(void) const ;
+
+
+    //! Call the nested callback
+    inline void     traverse(Collidable* owner, Collidable* other, NearCallback* near_callback) ;
+
+
+    //! Called when a collision occours
+    /*!
+     * @param       owner           the callback owner
+     * @param       other           the collidable is colliding whith
+     * @param       near_callback   the callback that is generating the
+     *                              collision
+     */
+    virtual void    operator()(Collidable* owner, Collidable* other, NearCallback* near_callback) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<CollisionCallback> m_nested_callback ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "CollisionCallback.inl"
+
+
+
+
+#endif /* _OSGODE_COLLISIONCALLBACK_HPP */

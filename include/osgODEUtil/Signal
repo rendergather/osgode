@@ -1,0 +1,548 @@
+/*!
+ * @file Signal
+ * @author Rocco Martino
+ * @brief Based on a Sarah Thompson work. See http://sigslot.sourceforge.net/
+ */
+/***************************************************************************
+ *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODEUTIL_SIGNAL_HPP
+#define _OSGODEUTIL_SIGNAL_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osg/Referenced>
+#include <osg/observer_ptr>
+#include <osg/ref_ptr>
+
+#include <vector>
+/* ======================================================================= */
+
+
+
+
+namespace osgODEUtil
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+class OSG_EXPORT ConnectionBase: public osg::Referenced
+{
+/* ======================================================================= */
+public:
+             ConnectionBase(void) {}
+             ConnectionBase(const ConnectionBase& other):
+                osg::Referenced(other) {}
+
+protected:
+    virtual ~ConnectionBase(void) {}
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+public:
+    virtual osg::Referenced*        getReferenced(void) = 0 ;
+    virtual const osg::Referenced*  getReferenced(void) const = 0 ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+class OSG_EXPORT ConnectionBase0: public ConnectionBase
+{
+public:
+    virtual void    emit(void) const = 0 ;
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template <class T1>
+class OSG_EXPORT ConnectionBase1: public ConnectionBase
+{
+public:
+    virtual void    emit(T1& t1) const = 0 ;
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template <class T1, class T2>
+class OSG_EXPORT ConnectionBase2: public ConnectionBase
+{
+public:
+    virtual void    emit(T1& t1, T2& t2) const = 0 ;
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template <class T1, class T2, class T3>
+class OSG_EXPORT ConnectionBase3: public ConnectionBase
+{
+public:
+    virtual void    emit(T1& t1, T2& t2, T3& t3) const = 0 ;
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class TargetType >
+class OSG_EXPORT Connection0: public ConnectionBase0
+{
+/* ======================================================================= */
+public:
+             Connection0(TargetType* object, void (TargetType::*member)(void)):
+                m_referenced(object),
+                m_member(member) {}
+
+             Connection0(const Connection0& other):
+                ConnectionBase0(other),
+                m_referenced(other.m_referenced.get()),
+                m_member(other.m_member) {}
+
+protected:
+    virtual ~Connection0(void) {}
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+public:
+    virtual void emit(void) const { (*m_referenced.*m_member)() ; }
+
+    virtual osg::Referenced*         getReferenced(void) { return m_referenced.get() ; } ;
+    virtual const osg::Referenced*   getReferenced(void) const { return m_referenced.get() ; }
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+private:
+    osg::observer_ptr<TargetType>   m_referenced ;
+    void (TargetType::*m_member)(void) ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class TargetType, class T1 >
+class OSG_EXPORT Connection1: public ConnectionBase1<T1>
+{
+ /* ======================================================================= */
+public:
+             Connection1(TargetType* object, void (TargetType::*member)(T1&)):
+                m_referenced(object),
+                m_member(member) {}
+
+             Connection1(const Connection1& other):
+                ConnectionBase1<T1>(other),
+                m_referenced(other.m_referenced.get()),
+                m_member(other.m_member) {}
+
+protected:
+    virtual ~Connection1(void) {}
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+public:
+    virtual void emit(T1& t1) const { (*m_referenced.*m_member)(t1) ; }
+
+    virtual osg::Referenced*         getReferenced(void) { return m_referenced.get() ; } ;
+    virtual const osg::Referenced*   getReferenced(void) const { return m_referenced.get() ; }
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+private:
+    osg::observer_ptr<TargetType>   m_referenced ;
+    void (TargetType::*m_member)(T1&) ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class TargetType, class T1, class T2 >
+class OSG_EXPORT Connection2: public ConnectionBase2<T1, T2>
+{
+/* ======================================================================= */
+public:
+             Connection2(TargetType* object, void (TargetType::*member)(T1&, T2&)):
+                m_referenced(object),
+                m_member(member) {}
+
+             Connection2(const Connection2& other):
+                ConnectionBase2<T1, T2>(other),
+                m_referenced(other.m_referenced.get()),
+                m_member(other.m_member) {}
+
+protected:
+    virtual ~Connection2(void) {}
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+public:
+    virtual void emit(T1& t1, T2& t2) const { (*m_referenced.*m_member)(t1, t2) ; }
+
+    virtual osg::Referenced*         getReferenced(void) { return m_referenced.get() ; } ;
+    virtual const osg::Referenced*   getReferenced(void) const { return m_referenced.get() ; }
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+private:
+    osg::observer_ptr<TargetType>   m_referenced ;
+    void (TargetType::*m_member)(T1&, T2&) ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class TargetType, class T1, class T2, class T3 >
+class OSG_EXPORT Connection3: public ConnectionBase3<T1, T2, T3>
+{
+/* ======================================================================= */
+public:
+             Connection3(TargetType* object, void (TargetType::*member)(T1&, T2&, T3&)):
+                m_referenced(object),
+                m_member(member) {}
+
+             Connection3(const Connection3& other):
+                ConnectionBase3<T1, T2, T3>(other),
+                m_referenced(other.m_referenced.get()),
+                m_member(other.m_member) {}
+
+protected:
+    virtual ~Connection3(void) {}
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+public:
+    virtual void emit(T1& t1, T2& t2, T3& t3) const { (*m_referenced.*m_member)(t1, t2, t3) ; }
+
+    virtual osg::Referenced*         getReferenced(void) { return m_referenced.get() ; } ;
+    virtual const osg::Referenced*   getReferenced(void) const { return m_referenced.get() ; }
+/* ======================================================================= */
+
+
+/* ======================================================================= */
+private:
+    osg::observer_ptr<TargetType>   m_referenced ;
+    void (TargetType::*m_member)(T1&, T2&, T3&) ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ */
+class OSG_EXPORT Signal: public osg::Referenced
+{
+/* ======================================================================= */
+public:
+             Signal(void) {}
+             Signal(const Signal& other):
+                osg::Referenced(other),
+                m_connections(other.m_connections)  {}
+
+protected:
+    virtual ~Signal(void) {}
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    template < class TT >
+    inline void disconnect(TT* obj)
+    {
+        unsigned int    size = m_connections.size() ;
+        unsigned int    i = 0 ;
+
+        while(i < size) {
+            ConnectionBase* conn = m_connections[i].get() ;
+
+            if( conn->getReferenced() == obj  ||  ! conn->getReferenced() ) {
+                m_connections[i] = m_connections[--size] ;
+                continue ;
+            }
+
+            i++ ;
+        }
+
+        m_connections.resize(i) ;
+    }
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    typedef std::vector< osg::ref_ptr<ConnectionBase> > Connections ;
+    Connections     m_connections ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+class OSG_EXPORT Signal0: public Signal
+{
+/* ======================================================================= */
+public:
+    template < class TT >
+    inline void connect(TT* obj, void (TT::*member)(void))
+    {
+        m_connections.push_back( new Connection0<TT>(obj, member) ) ;
+    }
+
+
+
+
+    inline void     emit(void)
+    {
+        unsigned int    size = m_connections.size() ;
+        unsigned int    i = 0 ;
+
+        while(i < size) {
+            ConnectionBase* conn = m_connections[i].get() ;
+
+            if(conn->getReferenced()) {
+                static_cast<ConnectionBase0*>(conn)->emit() ;
+                i++ ;
+            } else {
+                m_connections[i] = m_connections[--size] ;
+            }
+        }
+
+        m_connections.resize(i) ;
+    }
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class T1 >
+class OSG_EXPORT Signal1: public Signal
+{
+/* ======================================================================= */
+public:
+    template < class TT >
+    inline void connect(TT* obj, void (TT::*member)(T1&))
+    {
+        m_connections.push_back( new Connection1<TT, T1>(obj, member) ) ;
+    }
+
+
+
+
+    inline void     emit(T1& t1)
+    {
+        unsigned int    size = m_connections.size() ;
+        unsigned int    i = 0 ;
+
+        while(i < size) {
+            ConnectionBase* conn = m_connections[i].get() ;
+
+            if(conn->getReferenced()) {
+                static_cast<ConnectionBase1<T1>*>(conn)->emit(t1) ;
+                i++ ;
+            } else {
+                m_connections[i] = m_connections[--size] ;
+            }
+        }
+
+        m_connections.resize(i) ;
+    }
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class T1, class T2 >
+class OSG_EXPORT Signal2: public Signal
+{
+/* ======================================================================= */
+public:
+    template < class TT >
+    inline void connect(TT* obj, void (TT::*member)(T1&, T2&))
+    {
+        m_connections.push_back( new Connection2<TT, T1, T2>(obj, member) ) ;
+    }
+
+
+
+
+    inline void     emit(T1& t1, T2& t2)
+    {
+        unsigned int    size = m_connections.size() ;
+        unsigned int    i = 0 ;
+
+        while(i < size) {
+            ConnectionBase* conn = m_connections[i].get() ;
+
+            if(conn->getReferenced()) {
+                static_cast<ConnectionBase2<T1, T2>*>(conn)->emit(t1, t2) ;
+                i++ ;
+            } else {
+                m_connections[i] = m_connections[--size] ;
+            }
+        }
+
+        m_connections.resize(i) ;
+    }
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+template < class T1, class T2, class T3 >
+class OSG_EXPORT Signal3: public Signal
+{
+/* ======================================================================= */
+public:
+    template < class TT >
+    inline void connect(TT* obj, void (TT::*member)(T1&, T2&, T3&))
+    {
+        m_connections.push_back( new Connection3<TT, T1, T2, T3>(obj, member) ) ;
+    }
+
+
+
+
+    inline void     emit(T1& t1, T2& t2, T3& t3)
+    {
+        unsigned int    size = m_connections.size() ;
+        unsigned int    i = 0 ;
+
+        while(i < size) {
+            ConnectionBase* conn = m_connections[i].get() ;
+
+            if(conn->getReferenced()) {
+                static_cast<ConnectionBase3<T1, T2, T3>*>(conn)->emit(t1, t2, t3) ;
+                i++ ;
+            } else {
+                m_connections[i] = m_connections[--size] ;
+            }
+        }
+
+        m_connections.resize(i) ;
+    }
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODEUtil
+
+
+
+
+#endif /* _OSGODEUTIL_SIGNAL_HPP */

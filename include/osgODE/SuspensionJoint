@@ -1,0 +1,193 @@
+/*!
+ * @file SuspensionJoint
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_SUSPENSIONJOINT_HPP
+#define _OSGODE_SUSPENSIONJOINT_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Hinge2Joint>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Update ERP and CFM to simulate a spring and damp system
+/*!
+ */
+class OSG_EXPORT SuspensionJoint: public Hinge2Joint
+{
+/* ======================================================================= */
+public:
+             SuspensionJoint(void) ;
+             SuspensionJoint(const SuspensionJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~SuspensionJoint(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, SuspensionJoint) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Default: 1
+    inline void     setSpring(double spring) ;
+
+    //! Default: 1
+    inline double   getSpring(void) const ;
+
+
+    //! Compression damping. Default: 0
+    inline void     setDamperBound(double damp) ;
+
+    //! Compression damping. Default: 0
+    inline double   getDamperBound(void) const ;
+
+
+    //! Extension damping. Default: 0
+    inline void     setDamperRebound(double damp) ;
+
+    //! Extension damping. Default: 0
+    inline double   getDamperRebound(void) const ;
+
+
+    //! Default: 0
+    inline void     setPreload(double preload) ;
+
+    //! Default: 0
+    inline double   getPreload(void) const ;
+
+
+    //! Set dumper bound and rebound
+    inline void     setDamp(double damp) ;
+
+
+    //! Set the steer angle in radians
+    inline void     setSteerAngle(double angle) ;
+
+    //! Get the steer angle in radians
+    /*!
+     * Compute it as 0.5 * (LoStop + HiStop)
+     */
+    inline double   getSteerAngle(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! update ERP e CFM
+    virtual void    update(double step_size) ;
+
+
+
+    //! Update the joint transformation
+    /*!
+     * The transformation is:\n
+     * - X = Axis1 ;\n
+     * - Z = X ^ Axis2 ;\n
+     * - Y = Z ^ X ;\n
+     * - The origin is in anchor 2 \n
+     * \n
+     * @image html suspension_transform.png
+     */
+    virtual void    postUpdate(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _computeDisplacement(double step_size) ;
+
+    void    _applyPreload(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    double      m_spring ;
+    double      m_damp_bound ;
+    double      m_damp_rebound ;
+
+    double      m_preload ;
+
+    // positivo in compressione
+    double      m_displacement ;
+
+    // positivo in compressione
+    double      m_displacement_dsdt ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "SuspensionJoint.inl"
+
+
+
+
+#endif /* _OSGODE_SUSPENSIONJOINT_HPP */

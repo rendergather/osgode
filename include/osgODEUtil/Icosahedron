@@ -1,0 +1,134 @@
+/*!
+ * @file Icosahedron
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODEUTIL_ICOSAHEDRON_HPP
+#define _OSGODEUTIL_ICOSAHEDRON_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osg/Drawable>
+/* ======================================================================= */
+
+
+
+
+namespace osgODEUtil
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Not compiled in Android build
+/*!
+ */
+class OSG_EXPORT Icosahedron: public osg::Drawable
+{
+/* ======================================================================= */
+public:
+             Icosahedron(unsigned int subdivisions = 0, bool smooth = false) ;
+             Icosahedron(const Icosahedron& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Icosahedron(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODEUtil, Icosahedron) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    void    subdivide(void) ;
+
+    inline void     setSmooth(bool smooth) ;
+    inline bool     getSmooth(void) const ;
+
+
+    inline osg::Vec3Array*      getVertexArray(void) ;
+    inline osg::IntArray*       getIndexArray(void) ;
+
+    inline const osg::Vec3Array*    getVertexArray(void) const ;
+    inline const osg::IntArray*     getIndexArray(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    drawImplementation(osg::RenderInfo& render_info) const ;
+
+    virtual osg::BoundingBox    computeBound(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<osg::Vec3Array>    m_vertex_array ;
+    osg::ref_ptr<osg::IntArray>     m_index_array ;
+
+    bool        m_smooth ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODEUtil
+
+
+
+
+#include "Icosahedron.inl"
+
+
+
+
+#endif /* _OSGODEUTIL_ICOSAHEDRON_HPP */

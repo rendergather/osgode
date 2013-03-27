@@ -1,0 +1,169 @@
+/*!
+ * @file TrianglesEmitterPrimitiveIndexFunctor
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODEUTIL_TRIANGLESEMITTERPRIMITIVEINDEXFUNCTOR_HPP
+#define _OSGODEUTIL_TRIANGLESEMITTERPRIMITIVEINDEXFUNCTOR_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osg/PrimitiveSet>
+#include <osg/Array>
+#include <osg/Matrix>
+/* ======================================================================= */
+
+
+
+
+namespace osgODEUtil
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ */
+class OSG_EXPORT TrianglesEmitterPrimitiveIndexFunctor: public osg::PrimitiveIndexFunctor
+{
+/* ======================================================================= */
+public:
+    class OSG_EXPORT TriangleCallback
+    {
+    public:
+        virtual void    operator()(const osg::Vec3& v1, const osg::Vec3& v2, const osg::Vec3& v3) = 0 ;
+    } ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+             TrianglesEmitterPrimitiveIndexFunctor(TriangleCallback& cbk) ;
+             TrianglesEmitterPrimitiveIndexFunctor(const TrianglesEmitterPrimitiveIndexFunctor& other) ;
+
+    virtual ~TrianglesEmitterPrimitiveIndexFunctor(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void setVertexArray(unsigned int count,const osg::Vec2* vertices) ;
+    virtual void setVertexArray(unsigned int count,const osg::Vec3* vertices) ;
+    virtual void setVertexArray(unsigned int count,const osg::Vec4* vertices) ;
+
+    virtual void setVertexArray(unsigned int count,const osg::Vec2d* vertices) ;
+    virtual void setVertexArray(unsigned int count,const osg::Vec3d* vertices) ;
+    virtual void setVertexArray(unsigned int count,const osg::Vec4d* vertices) ;
+
+    virtual void drawArrays(GLenum mode,GLint first,GLsizei count) ;
+    virtual void drawElements(GLenum mode,GLsizei count,const GLubyte* indices) ;
+    virtual void drawElements(GLenum mode,GLsizei count,const GLushort* indices) ;
+    virtual void drawElements(GLenum mode,GLsizei count,const GLuint* indices) ;
+
+    virtual void begin(GLenum mode) ;
+    virtual void vertex(unsigned int pos) ;
+    virtual void end() ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! I vertici vengono moltiplicati per questa matrice
+    inline void                 setMatrix(const osg::Matrix& matrix) ;
+
+    //! I vertici vengono moltiplicati per questa matrice
+    inline const osg::Matrix&   getMatrix(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _vertex_TRIANGLES(unsigned int pos) ;
+    void    _vertex_TRIANGLE_STRIP(unsigned int pos) ;
+    void    _vertex_TRIANGLE_FAN(unsigned int pos) ;
+    void    _vertex_QUADS(unsigned int pos) ;
+    void    _vertex_QUAD_STRIP(unsigned int pos) ;
+    void    _vertex_POLYGON(unsigned int pos) ;
+
+    void    _emitTriangle(const osg::Vec3& v1, const osg::Vec3& v2, const osg::Vec3& v3) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    TriangleCallback&   m_triangle_callback ;
+
+    osg::Vec3*      m_vec3_array ;
+    unsigned int    m_array_count ;
+
+    GLenum          m_current_mode ;
+
+    void (TrianglesEmitterPrimitiveIndexFunctor::*m_vertex_member)(unsigned int) ;
+
+    osg::ref_ptr<osg::Vec3Array>    m_aux_array ;
+
+    osg::Matrix     m_matrix ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODEUtil
+
+
+
+
+#include "TrianglesEmitterPrimitiveIndexFunctor.inl"
+
+
+
+
+#endif /* _OSGODEUTIL_TRIANGLESEMITTERPRIMITIVEINDEXFUNCTOR_HPP */

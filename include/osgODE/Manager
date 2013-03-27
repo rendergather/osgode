@@ -1,0 +1,263 @@
+/*!
+ * @file Manager
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_MANAGER_HPP
+#define _OSGODE_MANAGER_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/World>
+
+#include <osg/Node>
+#include <osg/NodeVisitor>
+#include <osg/Timer>
+
+#include <OpenThreads/Thread>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! This class synchronizes a World
+/*!
+ * The better way to use this is to call the "frame" method during the update
+ * traversal. The ManagerUpdateCallback does this job.\n
+ * \n
+ * The step invokes the World::writeLock.\n
+ * The traverse invokes the World::traverseLock.\n
+ */
+class OSG_EXPORT Manager: public osg::Node, public OpenThreads::Thread
+{
+/* ======================================================================= */
+public:
+             Manager(void) ;
+             Manager(const Manager& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Manager(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Node(osgODE, Manager) ;
+
+
+    //! Compute the BoundingSphere
+    /*!
+     * World::readLock
+     */
+    virtual osg::BoundingSphere computeBound(void) const ;
+
+
+    //! Start a new thread if it is not running and getAutoStartThread is true
+    /*!
+     * World::traverseLock
+     */
+    virtual void traverse(osg::NodeVisitor& nv) ;
+
+
+    //! Sould I transmit the visitors to the world? (default: false)
+    /*!
+     * Introduce an assert( m_world.valid() ) in the traverse method.
+     * (or SIGSEGV if asserts are disabled)
+     */
+    inline void     setAcceptVisitors(bool flag) ;
+
+    //! Do I transmit the visitors to the world? (default: false)
+    inline bool     getAcceptVisitors(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! If true, the manager will start during the next cull visit (default false)
+    inline void     setAutoStartThread(bool flag) ;
+
+    //! If true, the manager will start during the next cull visit (default false)
+    inline bool     getAutoStartThread(void) const ;
+
+
+    //! If true, stop the mainloop
+    inline void     setDone(bool done) ;
+
+    //! If true, stop the mainloop
+    inline bool     getDone(void) const ;
+
+
+    //! Set the step size (default: 1/60)
+    inline void     setStepSize(double step_size) ;
+
+    //! Get the step size (default: 1/60)
+    inline double   getStepSize(void) const ;
+
+
+    //! Set the time multiplier (default: 1.0)
+    inline void     setTimeMultiplier(double multiplier) ;
+
+    //! Get the time multiplier (default: 1.0)
+    inline double   getTimeMultiplier(void) const ;
+
+
+    //! Set the world
+    inline void     setWorld(World* world) ;
+
+    //! Get the world
+    inline World*   getWorld(void) ;
+
+    //! Get the const world
+    inline const World* getWorld(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Quick init
+    /*!
+     * @param   separate_thread     if true will invoke
+     *                                  setAutoStartThread(true), 
+     *                              otherwise
+     *                                  invoke setAutoStartThread(false)
+     *                                  setup the ManagerUpdateCallback
+     *
+     * @param   accept_visitors     invole setAcceptVisitors(accept_visitors)
+     * @param   step_size           invole setStepSize( step_size )
+     *
+     * Must be called once before everything else
+     */
+    void    setup(bool separate_thread=false, bool accept_visitors=true, double step_size=1.0/60.0) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Reset the timer
+    inline void     resetTimer(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    /*!
+     * Testing stuff. Don't use it \n
+     * Default: false
+     */
+    inline void     setUseNonConstantStepSize(bool flag) ;
+
+    //! see setUseNonConstantStepSize
+    inline bool     getUseNonConstantStepSize(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Advance the simulation
+    /*!
+     *  world->writeLock ;\n
+     *  world->getUpdateCallback()->callback ;\n
+     *  world->update ;\n
+     *  world->getPostUpdateCallback()->callback ;\n
+     *  world->writeUnlock \n
+     * \n
+     * If step_size <= 0.0 then the getStepSize returned value  is used
+     */
+    void    frame(double step_size=-1.0) ;
+
+    //! The mainloop. Use startThread to start it in another thread
+    virtual void    run(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Increment NumchildrenRequiringUpdateTraversal (default: false)
+    inline void     setForceUpdateTraversal(bool flag) ;
+
+    inline bool     getForceUpdateTraversal(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    double              m_delta ;
+
+    bool                m_done ;
+    double              m_step_size ;
+    double              m_time_multiplier ;
+
+    bool                m_auto_start_thread ;
+    bool                m_accept_visitors ;
+
+    osg::ref_ptr<World> m_world ;
+
+    osg::Timer          m_timer ;
+
+    bool                m_use_non_constant_step_size ;
+
+    bool                m_force_update_traversal ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "Manager.inl"
+
+
+
+
+#endif /* _OSGODE_MANAGER_HPP */

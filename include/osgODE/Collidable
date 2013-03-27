@@ -1,0 +1,286 @@
+/*!
+ * @file Collidable
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_COLLIDABLE_HPP
+#define _OSGODE_COLLIDABLE_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/RigidBody>
+#include <osgODE/CollisionParameters>
+#include <osgODE/CollisionCallback>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class   World ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Base class for each object that can collide
+/*!
+ * The Collidable incapsulates a dGeomID (collisions) \n
+ * This class uses the dGeomSetData to store its own pointer and it is
+ * important to not modify it.\n
+ * It is possible to set an offset on the geometry relative to the body, so
+ * you can change the center of mass.\n
+ */
+class OSG_EXPORT Collidable: public osgODE::RigidBody
+{
+/* ======================================================================= */
+public:
+             Collidable(void) ;
+
+            /*!
+             * Derived classes must call the method:
+             * setCollidableOffset( other.getCollidableOffset() ) ;
+             */
+             Collidable(const Collidable& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Collidable(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    // this class has pure abstract methods
+//  META_Object(osgODE, Collidable) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Enable/Disable the geometry
+    inline void     setGeometryEnabled(bool flag) ;
+
+    //! Enable/Disable the geometry
+    inline bool     getGeometryEnabled(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Get the dGeomID. This should never be used
+    inline dGeomID  getODEGeom(void) ;
+
+    //! Set the collision parameters
+    inline void     setCollisionParameters(CollisionParameters* cp) ;
+
+    //! Get the collision parameters
+    inline CollisionParameters* getCollisionParameters(void) ;
+
+    //! Get the const collision parameters
+    inline const CollisionParameters*   getCollisionParameters(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the collision callback
+    inline void     setCollisionCallback(CollisionCallback* cbk) ;
+
+    //! Add collision callback
+    inline void     addCollisionCallback(CollisionCallback* cbk) ;
+
+    //! Remove a collision callback
+    inline void     removeCollisionCallback(CollisionCallback* cbk) ;
+
+    //! Get the collision callback
+    inline CollisionCallback*   getCollisionCallback(void) ;
+
+    //! Get the const collision callback
+    inline const CollisionCallback* getCollisionCallback(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set a geometry offset relative to the body
+    void                       setCollidableOffset(const osg::Matrix& offset) ;
+
+    //! Tet the geometry offset relative to the body
+    inline const osg::Matrix&  getCollidableOffset(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the geometry dimensions
+    /*!
+     * This has different meanings depending on the concrete type of the
+     * geometry. In some way, it is the AABB around the geometry when it
+     * has identity matrix. See concrete implementations
+     */
+    virtual void    setSize(const osg::Vec3& size) = 0 ;
+
+    //! Get the geometry dimensions
+    /*!
+     * Has different meanings depending on the concrete type of the
+     * geometry. In some way, it is the AABB around the geometry when it
+     * has identity matrix. See concrete implementations
+     */
+    virtual osg::Vec3   getSize(void) const = 0 ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Get the AABB
+    virtual osg::BoundingBox    getAABB(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Collision_Detection#Category_and_Collide_Bitfields
+    inline void             setCategoryBits(unsigned int bits) ;
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Collision_Detection#Category_and_Collide_Bitfields
+    inline unsigned int     getCategoryBits(void) const ;
+
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Collision_Detection#Category_and_Collide_Bitfields
+    inline void             setCollideBits(unsigned int bits) ;
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Collision_Detection#Category_and_Collide_Bitfields
+    inline unsigned int     getCollideBits(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the total mass
+    virtual void        setMass(double mass) ;
+
+    //! Set the density
+    virtual void        setDensity(double density) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual Collidable*     asCollidable(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Insert the geometry into the space
+    virtual bool    addToWorldInternal(World* world) ;
+
+    //! Remove the geometry from the space
+    virtual bool    removeFromWorldInternal(World* world) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    //! Update center and radius of the interacting sphere
+    virtual void    _updateInteractingSphere(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    static void     _cloneODEGeom(dGeomID src, dGeomID dst) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    dGeomID     m_ODE_geom ;
+
+    osg::ref_ptr<CollisionParameters>   m_collision_parameters ;
+
+    osg::Matrix     m_matrix_offset ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<CollisionCallback> m_collision_callback ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "Collidable.inl"
+
+
+
+
+#endif /* _OSGODE_COLLIDABLE_HPP */

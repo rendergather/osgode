@@ -1,0 +1,162 @@
+/*!
+ * @file Notify
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2011 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_NOTIFY_H
+#define _OSGODE_NOTIFY_H
+
+
+
+
+/* ======================================================================= */
+#include <osg/Export>
+#include <osgODE/Config>
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Log level
+typedef enum {
+    //! Enable all messagges
+    LOG_LEVEL_ALL,
+
+    //! Inside the mainloop
+    LOG_LEVEL_DEBUG3,
+
+    //! Common operations
+    LOG_LEVEL_DEBUG2,
+
+    //! hotspots
+    LOG_LEVEL_DEBUG,
+
+    //! Messages to the user
+    LOG_LEVEL_MESSAGE,
+
+    //! Non critical error
+    LOG_LEVEL_WARNING,
+
+    //! Critical error
+    LOG_LEVEL_FATAL,
+
+    //! No messages
+    LOG_LEVEL_NONE
+    } psLogLevelEnum ;
+
+#ifdef __cplusplus
+extern "C" OSG_EXPORT psLogLevelEnum    psLogLevel ;
+#else
+extern OSG_EXPORT psLogLevelEnum        psLogLevel ;
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! If "0" will not compile the macros
+#ifndef PS_VERBOSE
+ #define        PS_VERBOSE  1
+#endif
+
+//! If "0" will not compile the asserts
+#ifndef PS_ASSERT_ENABLED
+ #define        PS_ASSERT_ENABLED   1
+#endif
+
+//! If "0" will not compile the timer
+#ifndef PS_SCOPED_TIMER_ENABLED
+ #define        PS_SCOPED_TIMER_ENABLED     1
+#endif
+
+//! If "0" will not insert file and line number in the messages
+#ifndef PS_REPORT_FILE_AND_LINE
+ #define        PS_REPORT_FILE_AND_LINE     0
+#endif
+
+//! Default log level
+#ifndef PS_DEFAULT_LOG_LEVEL
+ #define        PS_DEFAULT_LOG_LEVEL    LOG_LEVEL_DEBUG2
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Message prefix
+#ifndef PS_MSG_PREFIX
+# define        PS_MSG_PREFIX   "[PS]"
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_SCOPED_TIMER_ENABLED
+ #define        PS_SCOPED_TIMER(MESSAGE) osgODE::ScopedTimer _ps_scoped_timer(MESSAGE) ;
+#else
+ #define        PS_SCOPED_TIMER(MESSAGE)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if defined( WIN32 )
+    #include "Notify_windows"
+
+
+#elif defined( ANDROID )
+    #include "Notify_android"
+
+
+#else
+    #include "Notify_gnu"
+
+
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_NOTIFY_H */

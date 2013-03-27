@@ -1,0 +1,502 @@
+/*!
+ * @file World
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_WORLD_HPP
+#define _OSGODE_WORLD_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODEObject>
+
+#include <osg/Vec3>
+#include <osg/NodeVisitor>
+
+#include <OpenThreads/ReadWriteMutex>
+
+#include <osgODE/ODE>
+
+#include <vector>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! a dWorld wrapper
+class OSG_EXPORT World: public ODEObject
+{
+/* ======================================================================= */
+public:
+             World(void) ;
+             World(const World& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~World(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, World) ;
+
+
+    virtual void    accept(osg::NodeVisitor& nv) ;
+
+    //! Divert the visitor to each ODEObject
+    void    traverse(osg::NodeVisitor& nv) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! read lock
+    inline void     readLock(void) ;
+
+    //! read unlock
+    inline void     readUnlock(void) ;
+
+    //! write lock
+    inline void     writeLock(void) ;
+
+    //! write unlock
+    inline void     writeUnlock(void) ;
+
+
+    //! special lock for traversing purpose. experimental
+    inline void     traverseLock(void) ;
+
+    //! special lock for traversing purpose. experimental
+    inline void     traverseUnlock(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Advance by 1 frame
+    void    step(double step_size=1.0/60.0) ;
+
+
+    //! Call the dWorldStep
+    virtual void    update(double step_size=1.0/60.0) ;
+
+
+    //! Get the current frame number
+    inline unsigned int     getCurrentFrame(void) const ;
+
+    //! Set the current frame number
+    inline void             setCurrentFrame(unsigned int f) ;
+
+
+    //! Set the simulation time
+    inline void             setSimulationTime(double time=0.0) ;
+
+    //! Get the simulation time
+    inline double           getSimulationTime(void) const ;
+
+
+    //! Get the size of the last step
+    inline double   getCurrentStepSize(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the gravity
+    inline void         setGravity(const osg::Vec3& gravity) ;
+
+    //! Get the gravity
+    inline osg::Vec3    getGravity(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the wind velocity (Default: 0,0,0)
+    inline void     setWind(const osg::Vec3& wind) ;
+
+    //! Get the wind velocity
+    inline const osg::Vec3&     getWind(void) const ;
+
+
+    //! Set the wind frequency (Default: 0 Hz)
+    inline void     setWindFrequency(double Hz) ;
+
+    //! Get the wind frequency (Default: 0 Hz)
+    inline double   getWindFrequency(void) const ;
+
+
+    //! Set the air density (Default: 1.2929 Kg/m^3)
+    inline void     setAirDensity(double density) ;
+
+    //! Get the air density
+    inline double   getAirDensity(void) const ;
+
+
+    //! Get the current wind velocity
+    /*!
+     * Wind velocity is:\n
+     *  wind * 0.5 * ( 1.0 + cos( simulation_time * wind_frequency * 2 * pi ) )
+     */
+    inline const osg::Vec3& getCurrentWind(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Default: 0.2
+    inline void     setERP(double value) ;
+
+    //! Default: 0.2
+    inline double   getERP(void) const ;
+
+
+    //! Default: 1.0e-5
+    inline void     setCFM(double value) ;
+
+    //! Default: 1.0e-5
+    inline double   getCFM(void) const ;
+
+
+    //! Default: 20
+    inline void     setQuickStepNumIterations(int value) ;
+
+    //! Default: 20
+    inline int      getQuickStepNumIterations(void) const ;
+
+
+    //! Default: 1.3
+    inline void     setQuickStepW(double value) ;
+
+    //! Default: 1.3
+    inline double   getQuickStepW(void) const ;
+
+
+    //! Default: FLT_MAX
+    inline void     setContactMaxCorrectingVel(double value) ;
+
+    //! Default: FLT_MAX
+    inline double   getContactMaxCorrectingVel(void) const ;
+
+
+    //! Default: 0.0
+    inline void     setContactSurfaceLayer(double value) ;
+
+    //! Default: 0.0
+    inline double   getContactSurfaceLayer(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Get the dWorldID
+    inline dWorldID     getODEWorld(void) ;
+
+    //! Get the dWorldID
+    inline const dWorldID       getODEWorld(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! returns true
+    virtual bool    addToWorldInternal(World* world) ;
+
+    //! returns true
+    virtual bool    removeFromWorldInternal(World* world) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    void    copyWorld(const World* other) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Binary search
+    ODEObject*      getObjectByID(unsigned int ID) ;
+
+    //! Liner search
+    ODEObject*      getObjectByName(const std::string& name) ;
+
+
+
+    typedef std::vector< osg::ref_ptr<ODEObject> >  Objects ;
+
+    //! Get the objects ordered by id
+    inline Objects&     getObjects(void) ;
+
+    //! Get the objects
+    inline const Objects&   getObjects(void) const ;
+
+
+    //! return false if the pattern doesn't match
+    /*!
+     * On android doesn0t work (assert or sigsegv)
+     */
+    bool            getObjectsByRegexName(const std::string& pattern, Objects& result, int regcomp_cflags=0) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual World*      asWorld(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Add the object to the world
+    bool    addObject(ODEObject* obj) ;
+
+    //! Remove the object from the world
+    bool    removeObject(ODEObject* obj) ;
+
+
+    //! Remove all objects
+    inline void     removeAllObjects(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    class OSG_EXPORT Operation: public osg::Referenced
+    {
+    public:
+        virtual void    operator()(World*) = 0 ;
+    } ;
+
+
+    typedef std::vector< osg::ref_ptr<Operation> >  OperationList ;
+
+
+    //! Add an operation
+    /*!
+     * An operation is executed once when the update begins.\n
+     * If op is NULL there will be an assert or sigsegv in the update
+     */
+    inline void     addOperation(Operation* op) ;
+
+
+    //! Remove an operation
+    /*!
+     * An operation is executed once when the update begins.
+     */
+    inline void     removeOperation(Operation* op) ;
+
+
+    //! Remove all operations
+    inline void     removeAllOperations(void) ;
+
+
+    //! Get the operation list
+    inline const OperationList& getOperationList(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    typedef int (*WorldStepPrototype)(dWorldID, dReal) ;
+
+    //! Set the step function (default: dWorldStep)
+    inline void     setWorldStepFunction(WorldStepPrototype fn) ;
+
+    //! Get the step function (default: dWorldStep)
+    inline WorldStepPrototype   getWorldStepFunction(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Invoke T::member(ODEObject*) on each object
+    template<class T>
+    inline void    traverseObjects(T& t, void (T::*member)(ODEObject*)) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    class OSG_EXPORT InteractionCallback: public osg::Referenced
+    {
+    public:
+                 InteractionCallback(void) {}
+                 InteractionCallback(const InteractionCallback& other): osg::Referenced(other) {}
+
+    protected:
+                ~InteractionCallback(void) {}
+
+    public:
+        virtual void    operator()(ODEObject* i1, ODEObject* i2 /* = NULL */) = 0 ;
+    } ;
+
+    //! part of the interaction system, Don't use it
+    bool    findInteractions(   InteractionCallback* cbk,
+                                const osg::Vec3& from,
+                                const osg::Vec3& to ) ;
+
+    //! part of the interaction system, Don't use it
+    bool    findInteractions(   InteractionCallback* cbk,
+                                const osg::BoundingSphere& sphere ) ;
+
+    //! part of the interaction system, Don't use it
+    bool    findInteractions(   InteractionCallback* cbk ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _callObjectsCallbacks(double step_size) ;
+    void    _callObjectsPostCallbacks(double step_size) ;
+    void    _sortObjectsByID(void) ;
+
+    void    _runOperations(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    //! True if the segment hits the sphere (World_interaction.cpp)
+    bool    _intersectRaySphere(    const osg::BoundingSphere& sphere,
+                                    const osg::Vec3& from,
+                                    const osg::Vec3& to ) ;
+
+
+    //! True if the spheres are colliding (World_interaction.cpp)
+    bool    _intersectSphereSphere( const osg::BoundingSphere& sphere1,
+                                    const osg::BoundingSphere& sphere2) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    static void     _cloneODEWorld(dWorldID src, dWorldID dst) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    Objects     m_objects ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    WorldStepPrototype      m_world_step ;
+
+
+    OpenThreads::ReadWriteMutex     m_read_write_mutex ;
+
+    OpenThreads::Mutex              m_traverse_mutex ;
+
+    dWorldID                m_ODE_world ;
+
+
+    unsigned int    m_current_frame ;
+    double          m_simulation_time ;
+
+    bool            m_objects_sorted ;
+
+
+    osg::Vec3       m_wind ;
+    double          m_wind_frequency ;
+    double          m_air_density ;
+
+    osg::Vec3       m_current_wind ;
+
+
+    OperationList   m_operations ;
+
+
+    double          m_current_step_size ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "World.inl"
+
+
+
+
+#endif /* _OSGODE_WORLD_HPP */

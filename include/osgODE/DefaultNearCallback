@@ -1,0 +1,313 @@
+/*!
+ * @file DefaultNearCallback
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_DEFAULTNEARCALLBACK_HPP
+#define _OSGODE_DEFAULTNEARCALLBACK_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/NearCallback>
+#include <osgODE/Collidable>
+
+#include <osg/Vec3>
+
+#include <osgODE/ODE>
+
+#include <vector>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class   CollisionParameters ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! The Space allocate this callback in its constructor
+class OSG_EXPORT DefaultNearCallback: public osgODE::NearCallback
+{
+/* ======================================================================= */
+public:
+             DefaultNearCallback(void) ;
+             DefaultNearCallback(const DefaultNearCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~DefaultNearCallback(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, DefaultNearCallback) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Here is where the last collisions are reported
+    class OSG_EXPORT CollisionResult
+    {
+        public:
+                     CollisionResult(void):
+                        m_num_contacts(0) {}
+
+                     CollisionResult(const CollisionResult& other):
+                        m_normals(other.m_normals),
+                        m_contacts(other.m_contacts),
+                        m_depths(other.m_depths),
+                        m_num_contacts(other.m_num_contacts) {}
+
+            virtual ~CollisionResult(void) {}
+
+
+            inline void    addContactInternal( const osg::Vec3& normal,
+                                        const osg::Vec3& contact,
+                                        float depth )
+            {
+                m_normals.push_back( normal ) ;
+                m_contacts.push_back( contact ) ;
+                m_depths.push_back( depth ) ;
+
+                ++m_num_contacts ;
+            }
+
+
+            inline void    setCollidable1(Collidable* coll)
+                { m_collidable1 = coll ; }
+
+            inline void    setCollidable2(Collidable* coll)
+                { m_collidable2 = coll ; }
+
+
+            inline void    resetInternal(void)
+            {
+                m_normals.clear() ;
+                m_contacts.clear() ;
+                m_depths.clear() ;
+                m_num_contacts = 0 ;
+                m_collidable1 = NULL ;
+                m_collidable2 = NULL ;
+            }
+
+
+            typedef std::vector<osg::Vec3>  Normals ;
+            typedef std::vector<osg::Vec3>  Contacts ;
+            typedef std::vector<float>      Depths ;
+
+            inline const Normals&   getNormals(void) const
+                { return m_normals ; }
+
+            inline const Contacts&  getContacts(void) const
+                { return m_contacts ; }
+
+            inline const Depths&    getDepths(void) const
+                { return m_depths ; }
+
+            inline unsigned int     getNumContacts(void) const
+                { return m_num_contacts ; }
+
+
+            inline const Collidable*    getCollidable1(void) const
+                { return m_collidable1.get() ; }
+
+            inline const Collidable*    getCollidable2(void) const
+                { return m_collidable2.get() ; }
+
+
+        private:
+            Normals         m_normals ;
+            Contacts        m_contacts ;
+            Depths          m_depths ;
+            unsigned int    m_num_contacts ;
+            osg::ref_ptr<Collidable>    m_collidable1 ;
+            osg::ref_ptr<Collidable>    m_collidable2 ;
+    } ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the collision parameters
+    void    setCollisionParameters(CollisionParameters* cp) ;
+
+    //! Get the collision parameters
+    inline CollisionParameters* getCollisionParameters(void) ;
+
+    //! Get the const collision parameters
+    inline const CollisionParameters*   getCollisionParameters(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Clear the contact group
+    virtual void        reset(void) ;
+
+    //! This virtual method has a generic behaviour:
+    /*!
+     * Call:\n
+     * - entryPoint();\n
+     * - computeCollisionParameters();\n
+     * - generateContacts();
+     */
+    virtual int             collide(OverlappingPair* op) ;
+
+
+    //! Get last generated collisions
+    /*!
+     * Please note that the fields of the returned reference will change
+     * during the next update
+     */
+    inline const CollisionResult&   getCollisionResult(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual DefaultNearCallback*    asDefaultNearCallback(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Create a contact joint
+    /*!
+     * Both bodies must be in the same world (assert or worst) \n
+     * Assert on each body too
+     */
+    void    addContact(dBodyID body1, dBodyID body2, dContact* contact) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    //! First method called by the collide
+    /*!
+     * Various asserts.
+     */
+    virtual void    entryPoint(OverlappingPair* op) ;
+
+
+    //! Second method called by the collide
+    /*!
+     * Mix the collision parameters
+     */
+    virtual CollisionParameters*    computeCollisionParameters( OverlappingPair* op ) ;
+
+
+    //! Third methd called by the collide
+    /*!
+     * Generate contacts
+     */
+    virtual int generateContacts(OverlappingPair* op, CollisionParameters* collision_parameters) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    //! Free the previous allocated memory, then allocate memory for N contacts
+    bool    allocateContactArray(unsigned int N) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    //! Mix the collision parameters, See impl
+    CollisionParameters*    _mixCollisionParameters(CollisionParameters* cp1, CollisionParameters*cp2) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    osg::ref_ptr<CollisionParameters>   m_collision_parameters ;
+
+    dJointGroupID       m_contact_group ;
+    dContact*           m_contacts ;
+    unsigned int        m_max_contact_num ;
+
+    CollisionResult     m_collision_result ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "DefaultNearCallback.inl"
+
+
+
+
+#endif /* _OSGODE_DEFAULTNEARCALLBACK_HPP */

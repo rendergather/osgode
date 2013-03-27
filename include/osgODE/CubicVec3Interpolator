@@ -1,0 +1,159 @@
+/*!
+ * @file CubicVec3Interpolator
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_CUBICVEC3INTERPOLATOR_HPP
+#define _OSGODE_CUBICVEC3INTERPOLATOR_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Interpolator>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Cubic interpolator
+/*!
+ */
+class OSG_EXPORT CubicVec3Interpolator: public Vec3Interpolator
+{
+/* ======================================================================= */
+public:
+             CubicVec3Interpolator(void) ;
+             CubicVec3Interpolator(const CubicVec3Interpolator& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~CubicVec3Interpolator(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, CubicVec3Interpolator) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    virtual void    init(void) ;
+    virtual void    interpolateImplementation(double x, osg::Vec3& result) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _computeCoefficients(void) ;
+    void    _getCoefficients(   unsigned int idx,
+                                osg::Vec3& a,
+                                osg::Vec3& b,
+                                osg::Vec3& c,
+                                osg::Vec3& d
+                            ) ;
+
+
+    class Coefficient ;
+
+    Coefficient     _computeCoefficient(    const Point& p0,
+                                            const Point& p1,
+                                            const Point& p2,
+                                            const Point& p3
+                                       ) ;
+
+    Coefficient     _computeCoefficient(    const Point& p0,
+                                            const Point& p1,
+                                            const Point& p2
+                                       ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+
+    class Coefficient
+    {
+    public:
+        Coefficient(void) {}
+        Coefficient(const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c, const osg::Vec3& d): A(a), B(b), C(c), D(d) {}
+        Coefficient(const Coefficient& c): A(c.A), B(c.B), C(c.C), D(c.D) {}
+        osg::Vec3   A, B, C, D ;
+    } ;
+
+    typedef std::vector<Coefficient>    CoefficientList ;
+
+    CoefficientList     m_coefficients ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+// #include "CubicVec3Interpolator.inl"
+
+
+
+
+#endif /* _OSGODE_CUBICVEC3INTERPOLATOR_HPP */

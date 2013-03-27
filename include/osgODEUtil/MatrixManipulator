@@ -1,0 +1,128 @@
+/*!
+ * @file MatrixManipulator
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODEUTIL_MATRIXMANIPULATOR_HPP
+#define _OSGODEUTIL_MATRIXMANIPULATOR_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgGA/CameraManipulator>
+
+#include <osgODE/Transformable>
+/* ======================================================================= */
+
+
+
+
+namespace osgODEUtil
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! [set,get]Matrix
+/*!
+ *
+ */
+class OSG_EXPORT MatrixManipulator: public osgGA::CameraManipulator
+{
+/* ======================================================================= */
+public:
+             MatrixManipulator(void) ;
+             MatrixManipulator(const MatrixManipulator& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~MatrixManipulator(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+META_Object(osgODEUtil, MatrixManipulator) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    /** set the position of the matrix manipulator using a 4x4 Matrix.*/
+    virtual void setByMatrix(const osg::Matrixd& matrix) ;
+
+    /** set the position of the matrix manipulator using a 4x4 Matrix.*/
+    virtual void setByInverseMatrix(const osg::Matrixd& matrix) ;
+
+    /** get the position of the manipulator as 4x4 Matrix.*/
+    virtual osg::Matrixd getMatrix() const ;
+
+    /** get the position of the manipulator as a inverse matrix of the manipulator, typically used as a model view matrix.*/
+    virtual osg::Matrixd getInverseMatrix() const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::Matrixd    m_matrix ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#include "MatrixManipulator.inl"
+
+
+
+
+} // namespace osgODEUtil
+
+
+
+
+#endif /* _OSGODEUTIL_MATRIXMANIPULATOR_HPP */

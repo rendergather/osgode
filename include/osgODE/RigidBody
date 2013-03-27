@@ -1,0 +1,531 @@
+/*!
+ * @file RigidBody
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_RIGIDBODY_HPP
+#define _OSGODE_RIGIDBODY_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODE>
+#include <osgODE/Transformable>
+
+#include <osg/observer_ptr>
+#include <osg/BoundingBox>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class   World ;
+class   Joint ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A rigid body
+/*!
+ * This class incapsulates the dBodyID. The RigidBody communicates position
+ * and rotation through an osg::MatrixTransform class.\n
+ * See osgODE::Transformable.\n
+ *
+ * The dBody constructor takes a dWorld, but the osgODE::RigidBody doesn't,
+ * so a special dWorld exists and it contains each dBody that doesn't have
+ * a valid world yet. The StaticWorld singleton creates and destroy this
+ * special world and ensures that the step function is never called.\n
+ * The RigidBody constructor allocates a new dBody in the static world.
+ * During the RigidBody::addToWorldInternal a new dBody is created in the
+ * given dWorld cloning the current body. Then, the new body replaces the
+ * current one. This process is quite expensive.\n
+ * This class uses the dBodySetData to store its own pointer.\n
+ */
+class OSG_EXPORT RigidBody: public Transformable
+{
+/* ======================================================================= */
+public:
+             RigidBody(void) ;
+             RigidBody(const RigidBody& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~RigidBody(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, RigidBody) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Enable/Disable
+    inline void     setBodyEnabled(bool flag) ;
+
+    //! Enable/Disable
+    inline bool     getBodyEnabled(void) const ;
+
+    //! auto disable. Default: false
+    inline void     setAutoDisableFlag(bool flag) ;
+
+    //! auto disable. Default: false
+    inline bool     getAutoDisableFlag(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Number of steps it can be idle before it is disabled. Default: 60
+    inline void         setAutoDisableSteps(unsigned int steps) ;
+
+    //! Number of steps it can be idle before it is disabled. Default: 60
+    inline unsigned int getAutoDisableSteps(void) const ;
+
+    //! Seconds it can be idle before it is disabled. Default: 1
+    inline void         setAutoDisableTime(double secs) ;
+
+    //! Seconds it can be idle before it is disabled. Default: 1
+    inline double       getAutoDisableTime(void) const ;
+
+    //! Velocity threshold for auto disabling. Default: 0.01
+    inline void         setAutoDisableLinearThreshold(double speed) ;
+
+    //! Velocity threshold for auto disabling. Default: 0.01
+    inline double       getAutoDisableLinearThreshold(void) const ;
+
+    //! Velocity threshold for auto disabling. Default: 0.01
+    inline void         setAutoDisableAngularThreshold(double speed) ;
+
+    //! Velocity threshold for auto disabling. Default: 0.01
+    inline double       getAutoDisableAngularThreshold(void) const ;
+
+    //! The body speeds are the mean of those in the last N steps. Default: 5
+    inline void         setAutoDisableAverageSamplesCount(unsigned int n) ;
+
+    //! The body speeds are the mean of those in the last N steps. Default: 5
+    inline unsigned int getAutoDisableAverageSamplesCount(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the mass
+    /*!
+     * @param   mass        total mass of the body
+     * @param   size        AABB size
+     * @param   type_class  class type as from dGeomGetClass
+     */
+    void                    setMass(double mass, const osg::Vec3& size, int type_class) ;
+
+    //! Assume a unit sphere
+    virtual void            setMass(double mass) ;
+
+    //! Set the dMass
+    inline void             setODEMass(const dMass& mass) ;
+
+    //! Get the dMass
+    inline dMass            getODEMass(void) const ;
+
+    //! Get the total mass
+    inline double           getMass(void) const ;
+
+
+    //! Set the density
+    /*!
+     * @param   density     body density
+     * @param   size        AABB size
+     * @param   type_class  class type as from dGeomGetClass
+     */
+    void                    setDensity(double density, const osg::Vec3& size, int type_class) ;
+
+    //! Assume a unit sphere
+    virtual void            setDensity(double density) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the position
+    inline void         setPosition(const osg::Vec3& position) ;
+
+    //! Get the position
+    inline osg::Vec3    getPosition(void) const ;
+
+
+    //! Set the quaternion
+    inline void         setQuaternion(const osg::Quat& quaternion) ;
+
+    //! Get the quaternion
+    inline osg::Quat    getQuaternion(void) const ;
+
+
+    //! Set the matrix
+    inline void         setMatrix(const osg::Matrix& matrix) ;
+
+    //! Get the matrix
+    inline osg::Matrix  getMatrix(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Apply a force on a point
+    /*!
+     * Either force and point are intended as expressed in relative
+     * coordinates if the fourth element of the vector is greater than 0.5
+     */
+    void        addForce(const osg::Vec4& force, const osg::Vec4& point=osg::Vec4(0,0,0,1)) ;
+
+
+    //! Apply a torque
+    /*!
+     * Either force and point are intended as expressed in relative
+     * coordinates if the fourth element of the vector is greater than 0.5
+     */
+    void        addTorque(const osg::Vec4& torque) ;
+
+
+
+    //! Set the force
+    inline void setForce(const osg::Vec3& f) ;
+
+    //! Set the torque
+    inline void setTorque(const osg::Vec3& t) ;
+
+
+
+    //! Get the accumulated force
+    inline osg::Vec3    getForce(void) const ;
+
+    //! Get the accumulated torque
+    inline osg::Vec3    getTorque(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the linear velocity
+    inline void         setLinearVelocity(const osg::Vec3& linear_velocity) ;
+
+    //! Set the angular velocity
+    inline void         setAngularVelocity(const osg::Vec3& angular_velocity) ;
+
+    //! Get the linear velocity
+    inline osg::Vec3    getLinearVelocity(void) const ;
+
+    //! Get the angular velocity
+    inline osg::Vec3    getAngularVelocity(void) const ;
+
+    //! Default: FLT_MAX
+    inline void         setMaxAngularSpeed(double s) ;
+
+    //! Default: FLT_MAX
+    inline double       getMaxAngularSpeed(void) const ;
+
+
+    //! Get the linear acceleration
+    inline const osg::Vec3& getLinearAcceleration(void) const ;
+
+    //! Get the angular acceleration
+    inline const osg::Vec3& getAngularAcceleration(void) const ;
+
+
+    //! Get the velocity of a point belonging to this body
+    /*!
+     * The point is in relative coordinates if the fourth element of the
+     * vector is greater than 0.5
+     */
+    inline osg::Vec3    getPointVelocity(const osg::Vec4& p) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! If true the body doesn't react to the forces. Default: false
+    inline void         setKinematic(bool flag) ;
+
+    //! If true the body doesn't react to the forces. Default: false
+    inline bool         getKinematic(void) const ;
+
+
+    //! If false the body doesn't react to the gravity. Default: true
+    inline void         setGravityMode(bool flag) ;
+
+    //! If false the body doesn't react to the gravity. Default: true
+    inline bool         getGravityMode(void) const ;
+
+
+    //! Conservation of angular momentum (default: on)
+    inline void         setGyroscopicMode(bool flag) ;
+
+    //! Conservation of angular momentum (default: on)
+    inline bool         getGyroscopicMode(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Rigid_Body_Functions#Miscellaneous_Body_Functions
+    inline void         setFiniteRotationMode(bool flag) ;
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Rigid_Body_Functions#Miscellaneous_Body_Functions
+    inline bool         getFiniteRotationMode(void) const ;
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Rigid_Body_Functions#Miscellaneous_Body_Functions
+    inline void         setFiniteRotationAxis(const osg::Vec3& axis) ;
+
+    //! http://ode-wiki.org/wiki/index.php?title=Manual:_Rigid_Body_Functions#Miscellaneous_Body_Functions
+    inline osg::Vec3	getFiniteRotationAxis(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Default: 0.0 0.0
+    inline void     setDamping(double linear, double angular) ;
+
+    //! Default: 0.0
+    inline void     getDamping(double& linear, double& angular) const ;
+
+    //! Default: 0.0
+    inline void     setLinearDamping(double damping) ;
+
+    //! Default: 0.0
+    inline double   getLinearDamping(void) const ;
+
+    //! Default: 0.0
+    inline void     setAngularDamping(double damping) ;
+
+    //! Default: 0.0
+    inline double   getAngularDamping(void) const ;
+
+    //! Threshold for angular damping. Default: 0.01
+    inline void     setLinearDampingThreshold(double threshold) ;
+
+    //! Threshold for angular damping. Default: 0.01
+    inline double   getLinearDampingThreshold(void) const ;
+
+    //! Threshold for angular damping. Default: 0.01
+    inline void     setAngularDampingThreshold(double threshold) ;
+
+    //! Threshold for angular damping. Default: 0.01
+    inline double   getAngularDampingThreshold(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Returns the body center
+    virtual osg::BoundingBox    getAABB(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual RigidBody*      asRigidBody(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! This should never be used
+    inline dBodyID              getODEBody(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Add the body to the world
+    virtual bool    addToWorldInternal(World* world) ;
+
+    //! Remove the body from the world
+    virtual bool    removeFromWorldInternal(World* world) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Experimental. Default: false
+    inline void     setUpdateInteractingSphere(bool flag) ;
+
+    //! Experimental. Default: false
+    inline bool     getUpdateInteractingSphere(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    update(double step_size) ;
+
+    //! update the transformation
+    virtual void    postUpdate(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    updateTransformInternal(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    /*!
+     * Add the joint to the list. This list is used to notify the joints when
+     * a body is created or destroyed
+     */ 
+    inline void     addJointInternal(Joint* joint) ;
+
+    /*!
+     * Remove the constraint from the list. This list is used to notify the
+     * joints when a body is created or destroyed
+     */ 
+    inline void     removeJointInternal(Joint* joint) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    //! Notify all joints in list
+    void    _notifyJoints(void) ;
+
+
+    //! Compute the acceleration
+    void    _computeAcceleration(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    //! Experimental
+    /*!
+     * Update the center of the is
+     */
+    virtual void    _updateInteractingSphere(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    static void     _cloneODEBody(dBodyID src, dBodyID dst) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    dBodyID         m_ODE_body ;
+
+
+private:
+    typedef std::vector< osg::observer_ptr<Joint> > Joints ;
+    Joints  m_joints ;
+
+    bool                m_update_interacting_sphere ;
+
+
+
+    osg::Vec3           m_old_linear_velocity ;
+    osg::Vec3           m_linear_acceleration ;
+
+    osg::Vec3           m_old_angular_velocity ;
+    osg::Vec3           m_angular_acceleration ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "RigidBody.inl"
+
+
+
+
+#endif /* _OSGODE_RIGIDBODY_HPP */

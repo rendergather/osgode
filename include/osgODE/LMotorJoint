@@ -1,0 +1,153 @@
+/*!
+ * @file LMotorJoint
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_LMOTORJOINT_HPP
+#define _OSGODE_LMOTORJOINT_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Joint>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A linear motor
+/*!
+ */
+class OSG_EXPORT LMotorJoint: public Joint
+{
+/* ======================================================================= */
+public:
+    typedef enum {
+        WORLD = 0,
+        BODY1 = 1,
+        BODY2 = 2
+    } AxisAnchor ;
+
+             LMotorJoint(AxisAnchor default_axis_anchor=WORLD) ;
+             LMotorJoint(const LMotorJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~LMotorJoint(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, LMotorJoint) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void         setNumAxes(unsigned int num_axes) ;
+    inline unsigned int getNumAxes(void) const ;
+
+    inline void         setAxis1Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis1Anchor(void) const ;
+
+    inline void         setAxis2Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis2Anchor(void) const ;
+
+    inline void         setAxis3Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis3Anchor(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void        setAxis1Implementation(const osg::Vec3& axis) ;
+    virtual void        setAxis2Implementation(const osg::Vec3& axis) ;
+    virtual void        setAxis3Implementation(const osg::Vec3& axis) ;
+
+    virtual void        readAxis1Implementation(osg::Vec3& axis) ;
+    virtual void        readAxis2Implementation(osg::Vec3& axis) ;
+    virtual void        readAxis3Implementation(osg::Vec3& axis) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    int         m_num_axes ;
+
+    AxisAnchor  m_x_axis_anchor ;
+    AxisAnchor  m_y_axis_anchor ;
+    AxisAnchor  m_z_axis_anchor ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "LMotorJoint.inl"
+
+
+
+
+#endif /* _OSGODE_LMOTORJOINT_HPP */

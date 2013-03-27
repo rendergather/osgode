@@ -1,0 +1,156 @@
+/*!
+ * @file JointBreakCallback
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_JOINTBREAKCALLBACK_HPP
+#define _OSGODE_JOINTBREAKCALLBACK_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODECallback>
+#include <osgODE/ODE>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class   ODEObject ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! Break the joint when the force limit is reached
+/*!
+ */
+class OSG_EXPORT JointBreakCallback: public ODECallback
+{
+/* ======================================================================= */
+public:
+             JointBreakCallback(double force_limit=FLT_MAX, double torque_limit=FLT_MAX) ;
+             JointBreakCallback(const JointBreakCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~JointBreakCallback(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, JointBreakCallback) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Break the joint when needed
+    /*!
+     * assert or sigsegv if the object is not a Joint instance
+     */
+    virtual void    operator()(ODEObject* object) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Enable/disable. Default: true
+    inline void     setEnabled(bool flag) ;
+
+    //! Enable/disable. Default: true
+    inline bool     getEnabled(void) const ;
+
+
+
+    //! Set the force limit (Default: FLT_MAX)
+    inline void     setForceLimit(double limit) ;
+
+    //! Get the force limit (Default: FLT_MAX)
+    inline double   getForceLimit(void) const ;
+
+
+
+    //! Set the torque limit (Default: FLT_MAX)
+    inline void     setTorqueLimit(double limit) ;
+
+    //! Get the torque limit (Default: FLT_MAX)
+    inline double   getTorqueLimit(void) const ;
+
+
+
+    //! Set whether to remove the joint when it breaks. Default: true
+    inline void     setRemoveOnBreak(bool flag) ;
+
+    //! Get whether to remove the joint when it breaks. Default: true
+    inline bool     getRemoveOnBreak(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    double      m_force_limit ;
+    double      m_torque_limit ;
+    bool        m_remove_on_break ;
+    bool        m_enabled ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "JointBreakCallback.inl"
+
+
+
+
+#endif /* _OSGODE_JOINTBREAKCALLBACK_HPP */

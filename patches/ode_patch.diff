@@ -1,0 +1,1410 @@
+Index: include/ode/objects.h
+===================================================================
+--- include/ode/objects.h	(revision 1929)
++++ include/ode/objects.h	(working copy)
+@@ -1710,8 +1710,32 @@
+  */
+ ODE_API dJointID dJointCreateDHinge (dWorldID, dJointGroupID);
+ 
++/**
++ * @brief Create a new joint of the gearbox type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateGearbox (dWorldID, dJointGroupID);
+ 
+ /**
++ * @brief Create a new joint of the swaybar type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateSwaybar (dWorldID, dJointGroupID);
++
++/**
++ * @brief Create a new joint of the target type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateTarget (dWorldID, dJointGroupID);
++
++
++/**
+  * @brief Destroy a joint.
+  * @ingroup joints
+  *
+@@ -3105,12 +3129,149 @@
+  */
+ ODE_API dReal dJointGetDHingeParam(dJointID, int parameter);
+ 
++/**
++ * @brief set first axis for the gearbox joint
++ * @remarks This is the axis around which the first body is allowed to
++ * revolve and is attached to it.  It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxAxis1(dJointID, dReal x, dReal y, dReal z);
+ 
++/**
++ * @brief get first axis for the gearbox joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetGearboxAxis1(dJointID, dVector3 result);
+ 
++/**
++ * @brief set second axis for the gearbox joint
++ * @remarks This is the axis around which the second body is allowed to
++ * revolve and is attached to it.  It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxAxis2(dJointID, dReal x, dReal y, dReal z);
+ 
+ /**
++ * @brief get second axis for the gearbox joint
+  * @ingroup joints
+  */
++ODE_API void dJointGetGearboxAxis2(dJointID, dVector3 result);
++
++/**
++ * @brief set gearbox joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxParam(dJointID, int parameter, dReal value);
++
++/**
++ * @brief get gearbox joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetGearboxParam(dJointID, int parameter);
++
++/**
++ * @brief set gearbox ratio
++ * @remarks
++ * This is the ratio of the angular velocity of the first body to that
++ * of the second body along the joint axis.  If the ratio is N then
++ * the first body is constrained to rotate N times faster than the
++ * second body.  Set it to 1 / N or reverse the bodies for the reverse
++ * effect.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxRatio( dJointID j, dReal value );
++
++/**
++ * @brief get gearbox ratio
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetGearboxRatio( dJointID j );
++
++/**
++ * @brief set the sliding axis for the swaybar joint
++ * @remarks This is the sliding axis. It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetSwaybarAxis(dJointID, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get the sliding axis for the swaybar joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetSwaybarAxis(dJointID, dVector3 result);
++
++/**
++ * @brief set swaybar joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetSwaybarParam(dJointID, int parameter, dReal value);
++
++/**
++ * @brief get swaybar joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetSwaybarParam(dJointID, int parameter);
++
++/**
++ * @brief Get the swaybar linear position (i.e. the slider's extension)
++ *
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetSwaybarPosition (dJointID);
++
++/**
++ * @brief set target joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetParam(dJointID, int parameter, dReal value);
++
++/**
++ * @brief get target joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetParam(dJointID, int parameter);
++
++/**
++ * @brief set target position
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetPosition(dJointID, dReal time, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get target position
++ * @ingroup joints
++ */
++ODE_API void dJointGetTargetPosition(dJointID, dVector3 result);
++
++/**
++ * @brief get target position time
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetPositionTime(dJointID);
++
++/**
++ * @brief set target quaternion
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetQuaternion(dJointID, dReal time, const dReal* quaternion);
++
++/**
++ * @brief get target quaternion
++ * @ingroup joints
++ */
++ODE_API void dJointGetTargetQuaternion(dJointID, dQuaternion result);
++
++/**
++ * @brief get target quaternion time
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetQuaternionTime(dJointID);
++
++
++
++/**
++ * @ingroup joints
++ */
+ ODE_API dJointID dConnectingJoint (dBodyID, dBodyID);
+ 
+ /**
+Index: include/ode/common.h
+===================================================================
+--- include/ode/common.h	(revision 1929)
++++ include/ode/common.h	(working copy)
+@@ -211,7 +211,10 @@
+   dJointTypePU,
+   dJointTypePiston,
+   dJointTypeDBall,
+-  dJointTypeDHinge
++  dJointTypeDHinge,
++  dJointTypeGearbox,
++  dJointTypeSwaybar,
++  dJointTypeTarget
+ } dJointType;
+ 
+ 
+Index: ode/demo/demo_gearbox.cpp
+===================================================================
+--- ode/demo/demo_gearbox.cpp	(revision 0)
++++ ode/demo/demo_gearbox.cpp	(revision 0)
+@@ -0,0 +1,229 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++#include <ode/ode.h>
++#include <drawstuff/drawstuff.h>
++#include "texturepath.h"
++
++#ifdef dDOUBLE
++#define dsDrawCylinder dsDrawCylinderD
++#define dsDrawLine dsDrawLineD
++#define dsDrawSphere dsDrawSphereD
++#endif
++
++#define L_1 (2 - tan(THETA))
++#define L_2 (1 / cos(THETA))
++#define RATIO L_2 / L_1
++
++dReal THETA = M_PI / 4;
++
++dWorldID world;
++dSpaceID space;
++dBodyID body1, body2;
++dGeomID geom1, geom2;
++dJointID hinge1, hinge2, gearbox;
++dJointFeedback feedback;
++
++void setup() {
++    dMatrix3 R;
++    
++    dBodySetPosition(body1, 1, 0, 1);
++    dBodySetPosition(body2, -1, 0, 2);
++    dRFromZAxis (R, cos(THETA), 0, sin(THETA));
++    dBodySetRotation (body2, R);
++
++    dJointSetHingeAnchor(hinge1, 1, 0, 1);
++    dJointSetHingeAxis(hinge1, 0, 0, 1);
++    dJointSetHingeParam(hinge1, dParamVel, 5);
++    dJointSetHingeParam(hinge1, dParamFMax, 1);
++
++    dJointSetHingeAnchor(hinge2, -1, 0, 2);
++    dJointSetHingeAxis(hinge2, cos(THETA), 0, sin(THETA));
++    // dBodyAddRelTorque (body1, 0, 0, 1);
++
++    dJointSetGearboxAxis1(gearbox, 0, 0, 1);
++    dJointSetGearboxAxis2(gearbox, cos(THETA), 0, sin(THETA));
++    dJointSetGearboxRatio(gearbox, RATIO);
++}
++
++void start()
++{
++    dMass mass;
++    
++    world = dWorldCreate();
++    dWorldSetGravity (world,0,0,-9.8);
++
++    dWorldSetDamping(world, 1e-4, 1e-5);
++    dWorldSetERP(world, 0.2);
++
++    space = dSimpleSpaceCreate (0);
++    
++    body1 = dBodyCreate(world);
++    body2 = dBodyCreate(world);
++
++    dBodySetFiniteRotationMode(body1, 1);
++    dBodySetFiniteRotationMode(body2, 1);
++
++    geom1 = dCreateCylinder(space, 0.2, 0.5);
++    dGeomSetBody(geom1, body1);
++    dMassSetCylinder(&mass, 100, 3, 0.2, 0.5);
++    dBodySetMass(body1, &mass);
++    
++    geom2 = dCreateCylinder(space, 0.2, 0.5);
++    dGeomSetBody(geom2, body2);
++    dMassSetCylinder(&mass, 100, 3, 0.2, 0.5);
++    dBodySetMass(body2, &mass);
++
++    hinge1 = dJointCreateHinge(world, 0);
++    dJointAttach(hinge1, body1, 0);
++    
++    hinge2 = dJointCreateHinge(world, 0);
++    dJointAttach(hinge2, body2, 0);
++
++    gearbox = dJointCreateGearbox(world, 0);
++    dJointAttach(gearbox, body1, body2);
++    dJointSetFeedback(gearbox, &feedback);
++
++    setup();
++
++    // initial camera position
++    static float xyz[3] = {1.15,-2.78,4.1};
++    static float hpr[3] = {105,-45.5,0};
++    dsSetViewpoint (xyz,hpr);
++
++    printf ("Press '[' to decrease angle between gears and ']' to increase it.\n");
++}
++
++void stop()
++{
++    dSpaceDestroy(space);
++
++    dWorldDestroy(world);
++}
++
++void drawGeom(dGeomID g)
++{
++    int gclass = dGeomGetClass(g);
++    const dReal *pos = dGeomGetPosition(g);
++    const dReal *rot = dGeomGetRotation(g);
++
++    switch (gclass) {
++        case dCylinderClass:
++        {
++            dReal length, radius;
++
++	    if (g == geom1) {
++		dsSetColorAlpha(1, 0, 0, 1);
++	    } else {
++		dsSetColorAlpha(0, 1, 0, 1);
++	    }
++
++            dsSetTexture (DS_WOOD);
++            dGeomCylinderGetParams(g, &radius, &length);
++            dsDrawCylinder(pos, rot, length, radius);
++            break;
++        }
++        
++        default:
++	{
++	    abort();
++	}
++    }
++}
++
++void simLoop(int pause)
++{
++    if (!pause) {
++
++        static dReal t = 0;
++
++        const dReal step = 0.005;
++        const unsigned nsteps = 4;
++
++        for (unsigned i=0; i<nsteps; ++i) {
++            dWorldQuickStep(world, step);
++        }
++    }
++
++    // printf ("1: %f, %f, %f\n",
++    // 	    feedback.t1[0], feedback.t1[1], feedback.t1[2]);
++
++    // printf ("2: %f, %f, %f\n",
++    // 	    feedback.t2[0], feedback.t2[1], feedback.t2[2]);
++
++    // now we draw everything
++    unsigned ngeoms = dSpaceGetNumGeoms(space);
++    for (unsigned i=0; i<ngeoms; ++i) {
++        dGeomID g = dSpaceGetGeom(space, i);
++
++        drawGeom(g);
++    }
++
++    const dReal *p_1 = dGeomGetPosition(geom1);
++    const dReal *R_1 = dGeomGetRotation(geom1);
++    const dReal *p_2 = dGeomGetPosition(geom2);
++    const dReal *R_2 = dGeomGetRotation(geom2);
++
++    dsSetColorAlpha(0, 0, 1, 0.5);
++    dsDrawCylinder(p_1, R_1, 0.05, L_1);
++    dsDrawCylinder(p_2, R_2, 0.05, L_2);
++}
++
++static void command (int cmd)
++{
++  if (cmd == '[') {
++      if (THETA > 0.1) {
++          THETA -= 0.1;
++
++          setup();
++          printf ("Gear angle set to %.3f deg.\n", THETA / M_PI * 180);
++      }
++  } else if (cmd == ']') {
++      if (THETA < 0.9) {
++          THETA += 0.1;
++
++          setup();
++          printf ("Gear angle set to %.3f deg.\n", THETA / M_PI * 180);
++      }
++  } 
++}
++
++int main(int argc, char **argv)
++{
++    // setup pointers to drawstuff callback functions
++    dsFunctions fn;
++    fn.version = DS_VERSION;
++    fn.start = &start;
++    fn.step = &simLoop;
++    fn.command = &command;
++    fn.stop = stop;
++    fn.path_to_textures = DRAWSTUFF_TEXTURE_PATH;
++    
++    // create world
++    dInitODE();
++
++    // run demo
++    dsSimulationLoop (argc, argv, 800, 600, &fn);
++
++    dCloseODE();
++    return 0;
++}
+Index: ode/demo/Makefile.am
+===================================================================
+--- ode/demo/Makefile.am	(revision 1929)
++++ ode/demo/Makefile.am	(working copy)
+@@ -24,6 +24,7 @@
+                 demo_cylvssphere \
+                 demo_dball \
+                 demo_dhinge \
++                demo_gearbox \
+                 demo_feedback \
+                 demo_friction \
+                 demo_gyroscopic \
+@@ -58,6 +59,7 @@
+ demo_cylvssphere_SOURCES = demo_cylvssphere.cpp
+ demo_dball_SOURCES = demo_dball.cpp
+ demo_dhinge_SOURCES = demo_dhinge.cpp
++demo_gearbox_SOURCES = demo_gearbox.cpp
+ demo_feedback_SOURCES = demo_feedback.cpp
+ demo_friction_SOURCES = demo_friction.cpp
+ demo_gyroscopic_SOURCES = demo_gyroscopic.cpp
+Index: ode/src/joints/fixed.cpp
+===================================================================
+--- ode/src/joints/fixed.cpp	(revision 1929)
++++ ode/src/joints/fixed.cpp	(working copy)
+@@ -74,6 +74,10 @@
+     info->cfm[1] = this->cfm;
+     info->cfm[2] = this->cfm;
+ 
++    info->cfm[3] = this->cfm;
++    info->cfm[4] = this->cfm;
++    info->cfm[5] = this->cfm;
++
+     dxBody *b0 = node[0].body, *b1 = node[1].body;
+ 
+     dVector3 ofs;
+Index: ode/src/joints/swaybar.cpp
+===================================================================
+--- ode/src/joints/swaybar.cpp	(revision 0)
++++ ode/src/joints/swaybar.cpp	(revision 0)
+@@ -0,0 +1,172 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++
++#include <ode/odeconfig.h>
++#include "config.h"
++#include "swaybar.h"
++#include "joint_internal.h"
++
++/*
++ * Swaybar joint
++ */
++
++dxJointSwaybar::dxJointSwaybar(dxWorld* w) :
++    dxJoint(w)
++{
++    flags |= dJOINT_TWOBODIES;
++
++    dSetZero(axis, 3);
++    axis[2] = 1.0 ;
++
++    limot.init ( world );
++}
++
++
++void
++dxJointSwaybar::getSureMaxInfo( SureMaxInfo* info )
++{
++    info->max_m = 1;
++}
++
++
++void
++dxJointSwaybar::getInfo1( dxJoint::Info1* info )
++{
++    info->nub = 0;
++    info->m = 0;
++
++    if( ! (limot.stop_cfm < dInfinity) ) {
++        return ;
++    }
++
++    // see if joint is powered
++    if ( limot.fmax > 0 )
++        info->m = 1; // powered slider needs an extra constraint row
++    else info->m = 0;
++
++    // see if we're at a joint limit.
++    limot.limit = 0;
++    if ( ( limot.lostop > -dInfinity || limot.histop < dInfinity ) &&
++        limot.lostop <= limot.histop )
++    {
++        // measure joint position
++        dReal pos = dJointGetSwaybarPosition ( this );
++
++
++
++
++        if ( pos <= limot.lostop )
++        {
++            limot.limit = 1;
++            limot.limit_err = pos - limot.lostop;
++            info->m = 1;
++        }
++        else if ( pos >= limot.histop )
++        {
++            limot.limit = 2;
++            limot.limit_err = pos - limot.histop;
++            info->m = 1;
++        }
++    }
++}
++
++
++void
++dxJointSwaybar::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
++{
++
++    if( limot.stop_cfm < dInfinity ) {
++        limot.addLimot( this, worldFPS, info, 0, axis, 0 );
++    }
++}
++
++void dJointSetSwaybarAxis( dJointID j, dReal x, dReal y, dReal z )
++{
++    dxJointSwaybar* joint = static_cast<dxJointSwaybar*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    joint->axis[0] = x ;
++    joint->axis[1] = y ;
++    joint->axis[2] = z ;
++    dNormalize3(joint->axis);
++}
++
++void dJointGetSwaybarAxis( dJointID j, dVector3 result )
++{
++    dxJointSwaybar* joint = static_cast<dxJointSwaybar*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    result[0] = joint->axis[0] ;
++    result[1] = joint->axis[1] ;
++    result[2] = joint->axis[2] ;
++}
++
++void dJointSetSwaybarParam( dJointID j, int parameter, dReal value )
++{
++    dxJointSwaybar* joint = static_cast<dxJointSwaybar*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    checktype ( joint, Swaybar );
++    joint->limot.set ( parameter, value );
++}
++
++
++dReal dJointGetSwaybarParam( dJointID j, int parameter )
++{
++    dxJointSwaybar* joint = static_cast<dxJointSwaybar*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    checktype ( joint, Swaybar );
++    return joint->limot.get ( parameter ) ;
++}
++
++
++dReal dJointGetSwaybarPosition( dJointID j )
++{
++    dxJointSwaybar* joint = static_cast<dxJointSwaybar*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    checktype ( joint, Swaybar );
++
++
++    dVector3    dist ;
++
++    dist[0] = joint->node[0].body->posr.pos[0] - joint->node[1].body->posr.pos[0] ;
++    dist[1] = joint->node[0].body->posr.pos[1] - joint->node[1].body->posr.pos[1] ;
++    dist[2] = joint->node[0].body->posr.pos[2] - joint->node[1].body->posr.pos[2] ;
++
++
++    return dCalcVectorDot3( dist, joint->axis ) ;
++}
++
++dJointType
++dxJointSwaybar::type() const
++{
++    return dJointTypeSwaybar;
++}
++
++size_t
++dxJointSwaybar::size() const
++{
++    return sizeof( *this );
++}
+Index: ode/src/joints/joints.h
+===================================================================
+--- ode/src/joints/joints.h	(revision 1929)
++++ ode/src/joints/joints.h	(working copy)
+@@ -30,6 +30,9 @@
+ #include "ball.h"
+ #include "dball.h"
+ #include "dhinge.h"
++#include "gearbox.h"
++#include "swaybar.h"
++#include "target.h"
+ #include "hinge.h"
+ #include "slider.h"
+ #include "contact.h"
+Index: ode/src/joints/target.cpp
+===================================================================
+--- ode/src/joints/target.cpp	(revision 0)
++++ ode/src/joints/target.cpp	(revision 0)
+@@ -0,0 +1,351 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++
++#include <ode/odeconfig.h>
++#include "config.h"
++#include "target.h"
++#include "joint_internal.h"
++
++
++
++
++
++// slerp
++// Reference: OpenSceneGraph src/osg/Quat.cpp
++namespace {
++
++
++// Spherical Linear Interpolation
++// As t goes from 0 to 1, the Quat object goes from "from" to "to"
++// Reference: Shoemake at SIGGRAPH 89
++// See also
++// http://www.gamasutra.com/features/programming/19980703/quaternions_01.htm
++void _slerp( dQuaternion q, dReal t, const dReal* from, const dReal* to )
++{
++    const dReal epsilon = 0.00001;
++    double omega, cosomega, sinomega, scale_from, scale_to ;
++
++    dQuaternion quatTo ;
++    dCopyVector4( quatTo, to ) ;
++
++    // this is a dot product
++
++    cosomega =  from[0] * to[0] +
++                from[1] * to[1] +
++                from[2] * to[2] +
++                from[3] * to[3] ;
++
++    if ( cosomega <0.0 )
++    {
++        cosomega = -cosomega;
++        quatTo[0] *= -1.0 ;
++        quatTo[1] *= -1.0 ;
++        quatTo[2] *= -1.0 ;
++        quatTo[3] *= -1.0 ;
++    }
++
++    if( (1.0 - cosomega) > epsilon )
++    {
++        omega= acos(cosomega) ;  // 0 <= omega <= Pi (see man acos)
++        sinomega = sin(omega) ;  // this sinomega should always be +ve so
++        // could try sinomega=sqrt(1-cosomega*cosomega) to avoid a sin()?
++        scale_from = sin((1.0-t)*omega)/sinomega ;
++        scale_to = sin(t*omega)/sinomega ;
++    }
++    else
++    {
++        /* --------------------------------------------------
++           The ends of the vectors are very close
++           we can use simple linear interpolation - no need
++           to worry about the "spherical" interpolation
++           -------------------------------------------------- */
++        scale_from = 1.0 - t ;
++        scale_to = t ;
++    }
++
++    q[0] = from[0] * scale_from + quatTo[0] * scale_to ;
++    q[1] = from[1] * scale_from + quatTo[1] * scale_to ;
++    q[2] = from[2] * scale_from + quatTo[2] * scale_to ;
++    q[3] = from[3] * scale_from + quatTo[3] * scale_to ;
++
++    // so that we get a Vec4
++}
++
++
++} // anon namespace ;
++
++
++
++
++
++/*
++ * Target joint
++ */
++
++dxJointTarget::dxJointTarget(dxWorld* w) :
++    dxJoint(w)
++{
++    erp = world->global_erp;
++    cfm = world->global_cfm;
++
++    translation_time = 0.0 ;
++    rotation_time = 0.0 ;
++    rotation_time_delta = 0.0 ;
++
++    dSetZero( target_position, 3 ) ;
++    dQSetIdentity( target_rotation ) ;
++}
++
++
++
++
++void
++dxJointTarget::getSureMaxInfo( SureMaxInfo* info )
++{
++    info->max_m = 6 ;
++}
++
++
++
++
++void
++dxJointTarget::getInfo1( dxJoint::Info1* info )
++{
++    info->m = 6 ;
++    info->nub = 6 ;
++}
++
++
++
++
++void
++dxJointTarget::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
++{
++    (void) worldERP ;
++
++
++    const dReal     step_size = 1.0 / worldFPS ;
++
++
++    {
++        if( step_size >= translation_time ) {
++            translation_time = step_size ;
++        }
++
++        const dReal     t = this->erp / translation_time ;
++
++
++
++        dVector3    offset ;
++
++        dSubtractVectors3( offset, target_position, node[0].body->posr.pos ) ;
++        dScaleVector3( offset, t ) ;
++
++
++        info->J1l[ 0 ] = 1 ;
++
++        info->J1l[ info->rowskip + 1 ] = 1 ;
++
++        info->J1l[ 2 * info->rowskip + 2 ] = 1 ;
++
++        info->c[0] = offset[0] ;
++        info->c[1] = offset[1] ;
++        info->c[2] = offset[2] ;
++
++        info->cfm[0] = this->cfm ;
++        info->cfm[1] = this->cfm ;
++        info->cfm[2] = this->cfm ;
++
++
++
++        translation_time -= step_size ;
++    }
++
++
++    {
++        rotation_time_delta += step_size ;
++
++        if( rotation_time < step_size ) {
++            rotation_time = step_size ;
++        }
++
++
++        if( rotation_time_delta > rotation_time ) {
++            rotation_time_delta = rotation_time ;
++        }
++
++        const dReal     t = this->erp * rotation_time_delta / rotation_time ;
++
++
++        dQuaternion quat ;
++        _slerp( quat, t, node[0].body->q, target_rotation ) ;
++
++
++        setFixedOrientation ( this, worldFPS, worldERP, info, quat, 3 ) ;
++
++        info->cfm[3] = this->cfm ;
++        info->cfm[4] = this->cfm ;
++        info->cfm[5] = this->cfm ;
++    }
++}
++
++
++
++
++void dJointSetTargetParam( dJointID j, int parameter, dReal value )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            joint->cfm = value;
++            break;
++        case dParamERP:
++            joint->erp = value;
++            break;
++    }
++}
++
++
++
++
++dReal dJointGetTargetParam( dJointID j, int parameter )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            return joint->cfm;
++        case dParamERP:
++            return joint->erp;
++        default:
++            return 0;
++    }
++}
++
++
++
++
++void dJointSetTargetPosition( dJointID j, dReal time, dReal x, dReal y, dReal z )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    joint->target_position[0] = x ;
++    joint->target_position[1] = y ;
++    joint->target_position[2] = z ;
++
++    joint->translation_time = time ;
++}
++
++
++
++
++void dJointGetTargetPosition( dJointID j, dVector3 result )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    dCopyVector3( result, joint->target_position ) ;
++}
++
++
++
++
++dReal dJointGetTargetPositionTime( dJointID j )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    return joint->translation_time ;
++}
++
++
++
++
++void dJointSetTargetQuaternion( dJointID j, dReal time, const dReal* quaternion)
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    dCopyVector4( joint->target_rotation, quaternion ) ;
++
++    joint->rotation_time = time ;
++    joint->rotation_time_delta = 0.0 ;
++}
++
++
++
++
++void dJointGetTargetQuaternion( dJointID j, dQuaternion result )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    dCopyVector4( result, joint->target_rotation ) ;
++}
++
++
++
++
++dReal dJointGetTargetQuaternionTime( dJointID j )
++{
++    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype ( joint, Target );
++
++
++    return joint->rotation_time ;
++}
++
++
++
++
++dJointType
++dxJointTarget::type() const
++{
++    return dJointTypeTarget;
++}
++
++
++
++
++size_t
++dxJointTarget::size() const
++{
++    return sizeof( *this );
++}
+Index: ode/src/joints/gearbox.cpp
+===================================================================
+--- ode/src/joints/gearbox.cpp	(revision 0)
++++ ode/src/joints/gearbox.cpp	(revision 0)
+@@ -0,0 +1,187 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++
++#include <ode/odeconfig.h>
++#include "config.h"
++#include "gearbox.h"
++#include "joint_internal.h"
++
++/*
++ * Gearbox joint
++ */
++
++dxJointGearbox::dxJointGearbox(dxWorld* w) :
++    dxJoint(w)
++{
++    ratio = 1.0;
++    flags |= dJOINT_TWOBODIES;
++
++    dSetZero(axis1, 3);
++    dSetZero(axis2, 3);
++
++    erp = world->global_erp;
++    cfm = world->global_cfm;
++}
++
++
++void
++dxJointGearbox::getSureMaxInfo( SureMaxInfo* info )
++{
++    info->max_m = 1;
++}
++
++
++void
++dxJointGearbox::getInfo1( dxJoint::Info1* info )
++{
++    info->m = 1;
++    info->nub = 1;
++}
++
++
++void
++dxJointGearbox::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
++{
++    (void) worldFPS ;
++    (void) worldERP ;
++
++
++    dVector3 globalAxis1, globalAxis2;
++
++    dBodyVectorToWorld(node[0].body, axis1[0], axis1[1], axis1[2], globalAxis1);
++    dBodyVectorToWorld(node[1].body, axis2[0], axis2[1], axis2[2], globalAxis2);
++
++    info->J1a[0] = globalAxis1[0];
++    info->J1a[1] = globalAxis1[1];
++    info->J1a[2] = globalAxis1[2];
++    
++    info->J2a[0] = ratio * globalAxis2[0];
++    info->J2a[1] = ratio * globalAxis2[1];
++    info->J2a[2] = ratio * globalAxis2[2];
++
++
++    info->cfm[0] = cfm ;
++    
++    // dVector3 d;
++    // dAddScaledVectors3(d, node[0].body->avel, node[1].body->avel,
++    // 		       1.0, ratio);
++
++    // printf("d: %f\n", dCalcVectorDot3(globalAxis1, d));
++}
++
++void dJointSetGearboxAxis1( dJointID j, dReal x, dReal y, dReal z )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorFromWorld(joint->node[0].body, x, y, z, joint->axis1);
++    dNormalize3(joint->axis1);
++}
++
++void dJointSetGearboxAxis2( dJointID j, dReal x, dReal y, dReal z )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorFromWorld(joint->node[1].body, x, y, z, joint->axis2);
++    dNormalize3(joint->axis2);
++}
++
++void dJointGetGearboxAxis1( dJointID j, dVector3 result )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorToWorld(joint->node[0].body,
++                       joint->axis1[0], joint->axis1[1], joint->axis1[2],
++                       result);
++}
++
++void dJointGetGearboxAxis2( dJointID j, dVector3 result )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorToWorld(joint->node[1].body,
++                       joint->axis2[0], joint->axis2[1], joint->axis2[2],
++                       result);
++}
++
++void dJointSetGearboxRatio( dJointID j, dReal value )
++{
++    dxJointGearbox* joint = dynamic_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    joint->ratio = value;
++}
++
++dReal dJointGetGearboxRatio( dJointID j )
++{
++    dxJointGearbox* joint = dynamic_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    return joint->ratio;
++}
++
++void dJointSetGearboxParam( dJointID j, int parameter, dReal value )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            joint->cfm = value;
++            break;
++        case dParamERP:
++            joint->erp = value;
++            break;
++    }
++}
++
++
++dReal dJointGetGearboxParam( dJointID j, int parameter )
++{
++    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            return joint->cfm;
++        case dParamERP:
++            return joint->erp;
++        default:
++            return 0;
++    }
++}
++
++dJointType
++dxJointGearbox::type() const
++{
++    return dJointTypeGearbox;
++}
++
++size_t
++dxJointGearbox::size() const
++{
++    return sizeof( *this );
++}
+Index: ode/src/joints/swaybar.h
+===================================================================
+--- ode/src/joints/swaybar.h	(revision 0)
++++ ode/src/joints/swaybar.h	(revision 0)
+@@ -0,0 +1,44 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++#ifndef _ODE_JOINT_SWAYBAR_
++#define _ODE_JOINT_SWAYBAR_
++
++#include "joint.h"
++
++struct dxJointSwaybar : public dxJoint
++{
++    dVector3 axis;
++    dxJointLimitMotor limot; // limit and motor information
++    
++    dxJointSwaybar(dxWorld *w);
++
++    virtual void getSureMaxInfo( SureMaxInfo* info );
++    virtual void getInfo1( Info1* info );
++    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
++    virtual dJointType type() const;
++    virtual size_t size() const;
++
++};
++
++
++#endif
+Index: ode/src/joints/Makefile.am
+===================================================================
+--- ode/src/joints/Makefile.am	(revision 1929)
++++ ode/src/joints/Makefile.am	(working copy)
+@@ -10,6 +10,9 @@
+                         ball.h ball.cpp \
+                         dball.h dball.cpp \
+                         dhinge.h dhinge.cpp \
++                        gearbox.h gearbox.cpp \
++                        swaybar.h swaybar.cpp \
++                        target.h target.cpp \
+                         hinge.h hinge.cpp \
+                         slider.h slider.cpp \
+                         contact.h contact.cpp \
+Index: ode/src/joints/target.h
+===================================================================
+--- ode/src/joints/target.h	(revision 0)
++++ ode/src/joints/target.h	(revision 0)
+@@ -0,0 +1,51 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++#ifndef _ODE_JOINT_TARGET_
++#define _ODE_JOINT_TARGET_
++
++#include "joint.h"
++
++struct dxJointTarget : public dxJoint
++{
++    dReal   erp;    // error reduction
++    dReal   cfm;    // constraint force mix in
++
++    dReal   translation_time ;
++    dReal   rotation_time ;
++    dReal   rotation_time_delta ;
++
++    dVector3    target_position ;
++    dQuaternion target_rotation ;
++    
++    dxJointTarget(dxWorld *w);
++
++    virtual void getSureMaxInfo( SureMaxInfo* info );
++    virtual void getInfo1( Info1* info );
++    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
++    virtual dJointType type() const;
++    virtual size_t size() const;
++
++};
++
++
++#endif
+Index: ode/src/joints/gearbox.h
+===================================================================
+--- ode/src/joints/gearbox.h	(revision 0)
++++ ode/src/joints/gearbox.h	(revision 0)
+@@ -0,0 +1,46 @@
++/*************************************************************************
++ *                                                                       *
++ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
++ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *                                                                       *
++ * This library is distributed in the hope that it will be useful,       *
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
++ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ *                                                                       *
++ *************************************************************************/
++
++#ifndef _ODE_JOINT_GEARBOX_
++#define _ODE_JOINT_GEARBOX_
++
++#include "joint.h"
++
++struct dxJointGearbox : public dxJoint
++{
++    dVector3 axis1, axis2;
++    dReal ratio;        // gearbox ratio
++    dReal erp;          // error reduction
++    dReal cfm;          // constraint force mix in
++    
++    dxJointGearbox(dxWorld *w);
++
++    virtual void getSureMaxInfo( SureMaxInfo* info );
++    virtual void getInfo1( Info1* info );
++    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
++    virtual dJointType type() const;
++    virtual size_t size() const;
++
++};
++
++
++#endif
+Index: ode/src/ode.cpp
+===================================================================
+--- ode/src/ode.cpp	(revision 1929)
++++ ode/src/ode.cpp	(working copy)
+@@ -1269,7 +1269,24 @@
+     return createJoint<dxJointDHinge> (w,group);
+ }
+ 
++dxJoint * dJointCreateGearbox (dWorldID w, dJointGroupID group)
++{
++    dAASSERT (w);
++    return createJoint<dxJointGearbox> (w,group);
++}
+ 
++dxJoint * dJointCreateSwaybar (dWorldID w, dJointGroupID group)
++{
++    dAASSERT (w);
++    return createJoint<dxJointSwaybar> (w,group);
++}
++
++dxJoint * dJointCreateTarget (dWorldID w, dJointGroupID group)
++{
++    dAASSERT (w);
++    return createJoint<dxJointTarget> (w,group);
++}
++
+ static void FinalizeAndDestroyJointInstance(dxJoint *j, bool delete_it)
+ {
+     // if any group joints have their world pointer set to 0, their world was

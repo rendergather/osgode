@@ -1,0 +1,138 @@
+/*!
+ * @file Hinge2Joint
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_HINGE2JOINT_HPP
+#define _OSGODE_HINGE2JOINT_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Joint>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A hinge2 is similar to a car suspension
+/*!
+ */
+class OSG_EXPORT Hinge2Joint: public Joint
+{
+/* ======================================================================= */
+public:
+             Hinge2Joint(void) ;
+             Hinge2Joint(const Hinge2Joint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Hinge2Joint(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, Hinge2Joint) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Get the angle between the bodies
+    /*!
+     * When the constraint is created, the positions of the bodies are
+     * examined and that consiguration will be the "zero position" \n
+     * It is not possible to retrieve the angle on the second axis
+     */
+    inline double   getAngle1(void) const ;
+
+    //! Get the angular speed on axis 1
+    inline double   getAngle1Rate(void) const ;
+
+    //! Get the angular speed on axis 2
+    inline double   getAngle2Rate(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    //! Check against dangerous situations
+    /*!
+     * If one of the bodies attached to a hinge2 is the static environment
+     * (NULL) ODE generates a SIGSEGV. This method takes care that both bodies
+     * are valid
+     */
+    virtual void        finalize(void) ;
+
+    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "Hinge2Joint.inl"
+
+
+
+
+#endif /* _OSGODE_HINGE2JOINT_HPP */

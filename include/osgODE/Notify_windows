@@ -1,0 +1,278 @@
+/*!
+ * @file Notify_windows
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2011 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_NOTIFY_WINDOWS_H
+#define _OSGODE_NOTIFY_WINDOWS_H
+
+
+
+
+/* ======================================================================= */
+#include <Windows.h>
+#include <stdio.h>
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+// constant conditional expression
+#pragma warning(disable:4127)
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#ifdef __cplusplus
+extern "C" OSG_EXPORT int   psCheckLogLevel(psLogLevelEnum ll) ;
+#else
+extern OSG_EXPORT int   psCheckLogLevel(psLogLevelEnum ll) ;
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#define     PS_FPRINTF(WRITE_FILE_LINE, STREAM, FMT, ...) \
+{ \
+    fprintf(STREAM, "%s ", PS_MSG_PREFIX) ; \
+    fprintf(STREAM, FMT, __VA_ARGS__) ; \
+    if( WRITE_FILE_LINE && PS_REPORT_FILE_AND_LINE ) { \
+        fprintf(STREAM, " (%s:%u)", __FILE__, __LINE__) ; \
+    } \
+    fprintf(STREAM, "%s", "\n") ; \
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_MESSAGE(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_MESSAGE) ) { \
+        fprintf(stdout, "%s ", " ") ; \
+        PS_FPRINTF(0, stdout, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_MESSAGE(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_WARN(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_WARNING) ) { \
+        fprintf(stderr, "%s ", "*") ; \
+        PS_FPRINTF(1, stderr, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_WARN(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_FATAL(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_FATAL) ) { \
+        fprintf(stderr, "%s ", "#") ; \
+        PS_FPRINTF(1, stderr, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_FATAL(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_DBG(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_DEBUG) ) { \
+        fprintf(stdout, "%s ", "-") ; \
+        PS_FPRINTF(1, stdout, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_DBG(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_DBG2(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_DEBUG2) ) { \
+        fprintf(stdout, "%s ", "-") ; \
+        PS_FPRINTF(1, stdout, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_DBG2(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_DBG3(FMT, ...) \
+ { \
+    if( psCheckLogLevel(LOG_LEVEL_DEBUG3) ) { \
+        fprintf(stdout, "%s ", "-") ; \
+        PS_FPRINTF(1, stdout, FMT, __VA_ARGS__) ; \
+    } \
+}
+#else
+ #define        PS_DBG3(FMT, ...)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_VERBOSE
+ #define        PS_CCALL(CCALL, CONDITION, VALUE) \
+ { \
+    UINT    ps_ccall_return_value = (UINT)CCALL ; \
+    if( ! (ps_ccall_return_value CONDITION VALUE) && ( psCheckLogLevel(LOG_LEVEL_DEBUG) ) ) { \
+        LPWSTR  buf ; \
+        FormatMessage(  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, \
+                        0, \
+                        GetLastError(), \
+                        0, \
+                        (LPWSTR)&buf, \
+                        1, \
+                        NULL) ; \
+        fprintf(stdout, "%s ", "d") ; \
+        fprintf(stdout, "%s ", PS_MSG_PREFIX) ; \
+        fprintf(stderr, "%s : 0x%x (%s:%u) %ls", #CCALL, ps_ccall_return_value, __FILE__, __LINE__, buf) ; \
+        LocalFree(buf) ; \
+    } else { \
+        PS_DBG3("%s : 0x%x", #CCALL, ps_ccall_return_value) ; \
+    } \
+ }
+#else
+ #define        PS_CCALL(CCALL, CONDITION, VALUE) \
+    CCALL ;
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_ASSERT_ENABLED
+ #define        PS_BREAKPOINT() \
+ { \
+    DebugBreak() ; \
+ }
+#else
+ #define        PS_BREAKPOINT()
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_ASSERT_ENABLED
+ #define        PS_ASSERT(EXPRESSION) \
+ { \
+    if( ! (EXPRESSION) ) { \
+        fprintf(stdout, "%s ", PS_MSG_PREFIX) ; \
+        fprintf(stdout, "\"%s\" failed", #EXPRESSION) ; \
+        fprintf(stdout, " (%s:%u)", __FILE__, __LINE__) ; \
+        fprintf(stdout, "%s", "\n") ; \
+        PS_BREAKPOINT() ; \
+    } \
+ }
+#else
+ #define        PS_ASSERT(EXPRESSION) \
+ { \
+    (void) (EXPRESSION) ; \
+ }
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+#if PS_ASSERT_ENABLED
+ #define        PS_ASSERT1(EXPRESSION)  PS_ASSERT(EXPRESSION)
+#else
+ #define        PS_ASSERT1(EXPRESSION)
+#endif
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_NOTIFY_WINDOWS_H */

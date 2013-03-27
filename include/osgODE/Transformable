@@ -1,0 +1,252 @@
+/*!
+ * @file Transformable
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_TRANSFORMABLE_HPP
+#define _OSGODE_TRANSFORMABLE_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODEObject>
+
+#include <osg/MatrixTransform>
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+namespace osgGA {
+    class CameraManipulator ;
+}
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A positionable object
+class OSG_EXPORT Transformable: public ODEObject
+{
+/* ======================================================================= */
+public:
+             Transformable(void) ;
+             Transformable(const Transformable& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Transformable(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, Transformable) ;
+
+
+    //! Divert the visitor to the transform
+    /*!
+     * assert or SIGSEGV if the osg::MatrixTransform is NULL
+     */
+    virtual void    accept(osg::NodeVisitor& nv) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual Transformable*      asTransformable(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the manipulator
+    void        setCameraManipulator(osgGA::CameraManipulator* manipulator) ;
+
+    //! Get the manipulator
+    inline osgGA::CameraManipulator*        getCameraManipulator(void) ;
+
+    //! Get the const manipulator
+    inline const osgGA::CameraManipulator*  getCameraManipulator(void) const ;
+
+
+    //! Set the manipulator center in relative co. Default [0,0,0]
+    /*!
+     * Default: [0,0,0]
+     */
+    inline void     setCameraManipulatorCenter(const osg::Vec3& center) ;
+
+    //! Get the manipulator center in relative co. Default [0,0,0]
+    inline const osg::Vec3& getCameraManipulatorCenter(void) const ;
+
+
+    //! Set the direction of the manipulator in relative co. Default: -Z
+    inline void     setCameraManipulatorDirection(const osg::Vec3& direction) ;
+
+    //! Get the direction of the manipulator in relative co. Default: -Z
+    inline const osg::Vec3& getCameraManipulatorDirection(void) const ;
+
+
+    //! Set the up vector. Default: Y
+    inline void     setCameraManipulatorUp(const osg::Vec3& up) ;
+
+
+    //! Get the up vector. Default: Y
+    inline const osg::Vec3& getCameraManipulatorUp(void) const ;
+
+
+    //! Up vector is in relative co? Default: true
+    inline void     setCameraManipulatorUpObjectSpace(bool flag) ;
+
+    //! Up vector is in relative co? Default: true
+    inline bool     getCameraManipulatorUpObjectSpace(void) const ;
+
+
+    //! Set the elasticity of the manipulator. Default: 5
+    inline void     setCameraManipulatorElasticity(unsigned int elasticity) ;
+
+    //! Get the elasticity of the manipulator. Default: 5
+    inline unsigned int getCameraManipulatorElasticity(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the transform
+    inline void     setMatrixTransform(osg::MatrixTransform* transform) ;
+
+    //! Get the transform
+    inline osg::MatrixTransform*        getMatrixTransform(void) ;
+
+    //! Get the const transform
+    inline const osg::MatrixTransform*  getMatrixTransform(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Invoke the same method on the transform
+    inline osg::StateSet*   getOrCreateStateSet(void) ;
+
+    //! Invoke the same method on the transform
+    inline osg::StateSet*   getStateSet(void) ;
+
+    //! Invoke the same method on the transform
+    inline const osg::StateSet* getStateSet(void) const ;
+
+    //! Invoke the same method on the transform
+    inline void     setStateSet(osg::StateSet* stateset) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual const osg::BoundingSphere&  getBound(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Update the camera manipulator
+    virtual void    postUpdate(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _updateCameraManipulator(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<osg::MatrixTransform>  m_matrix_transform ;
+
+    osg::ref_ptr<osgGA::CameraManipulator>  m_camera_manipulator ;
+
+    osg::Vec3       m_camera_manipulator_center ;
+    osg::Vec3       m_camera_manipulator_direction ;
+    osg::Vec3       m_camera_manipulator_up ;
+    bool            m_camera_manipulator_up_object ;
+
+    osg::Vec3       m_camera_manipulator_center_ws ;
+    osg::Vec3       m_camera_manipulator_direction_ws ;
+    osg::Vec3       m_camera_manipulator_up_ws ;
+
+    unsigned int    m_camera_manipulator_elasticity ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "Transformable.inl"
+
+
+
+
+#endif /* _OSGODE_TRANSFORMABLE_HPP */

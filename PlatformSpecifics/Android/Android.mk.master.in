@@ -1,0 +1,10 @@
+#ANDROID ROOT MAKEFILE
+
+LOCAL_PATH := $(call my-dir)
+OSGODE_ROOT := $(LOCAL_PATH)
+
+OSGODE_INCLUDE := $(OSGODE_ROOT)/include
+ODE_INCLUDE := @ODE_INCLUDE@
+OSG_INCLUDE := @OSG_INCLUDE@
+ 
+include src/Android.mk

@@ -1,0 +1,172 @@
+/*!
+ * @file TriMesh
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_TRIMESH_HPP
+#define _OSGODE_TRIMESH_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Collidable>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! An indexed triangle mesh
+class OSG_EXPORT TriMesh: public osgODE::Collidable
+{
+/* ======================================================================= */
+public:
+             TriMesh(void) ;
+             TriMesh(const TriMesh& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~TriMesh(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, TriMesh) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void                     setVertexArray(osg::Vec3Array* array) ;
+    inline osg::Vec3Array*          getVertexArray(void) ;
+    inline const osg::Vec3Array*    getVertexArray(void) const ;
+
+    inline void                     setIndexArray(osg::IntArray* array) ;
+    inline osg::IntArray*           getIndexArray(void) ;
+    inline const osg::IntArray*     getIndexArray(void) const ;
+
+
+    bool    build(bool compute_size = true) ;
+    void    destroy(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set m_size
+    virtual void        setSize(const osg::Vec3&) ;
+
+    //! Get m_size
+    virtual osg::Vec3   getSize(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Use the dMassSetTrimeshTotal
+    /*!
+     * @todo    testing
+     */
+    virtual void        setMass(double mass) ;
+
+
+    //! Use the dMassSetTrimesh
+    /*!
+     * @todo    testing
+     */
+    virtual void        setDensity(double density) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    void        _cloneODETriMesh(dGeomID src, dGeomID dst) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    update(double step_size) ;
+    virtual void    postUpdate(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<osg::Vec3Array>        m_vertex_array ;
+    osg::ref_ptr<osg::IntArray>         m_index_array ;
+
+    osg::Vec3                           m_size ;
+
+    osg::Matrix                         m_last_transform ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "TriMesh.inl"
+
+
+
+
+#endif /* _OSGODE_TRIMESH_HPP */

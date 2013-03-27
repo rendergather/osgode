@@ -1,0 +1,126 @@
+/*!
+ * @file HingeJoint
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_HINGEJOINT_HPP
+#define _OSGODE_HINGEJOINT_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Joint>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A hinge constraint is a door, a window or ...
+/*!
+ */
+class OSG_EXPORT HingeJoint: public Joint
+{
+/* ======================================================================= */
+public:
+             HingeJoint(void) ;
+             HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~HingeJoint(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, HingeJoint) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Get the angle between the bodies
+    /*!
+     * When the constraint is created, the positions of the bodies are
+     * examined and that consiguration will be the "zero position"
+     */
+    inline double   getAngle(void) const ;
+
+    //! Get the angular speed
+    inline double   getAngleRate(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "HingeJoint.inl"
+
+
+
+
+#endif /* _OSGODE_HINGEJOINT_HPP */

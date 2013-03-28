@@ -335,7 +335,7 @@ Car::_createSuspension(RigidBody* wheel, const osg::Vec3& axis2, osg::Node* grap
     joint->setSteerAngle( 0.0 ) ;
 
 
-    // spring and damp...
+    // spring and damper...
 
     joint->setSpring( SPRING ) ;
     joint->setDamperBound( DAMPER_BOUND ) ;

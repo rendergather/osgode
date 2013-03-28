@@ -104,7 +104,7 @@ private:
 
     osgODE::Collidable* _createTemplate(void)
     {
-        osg::Node*  graphics = osgDB::readNodeFile("common/weight15.osgb") ;
+        osg::Node*  graphics = osgDB::readNodeFile("common/capsule.osgb") ;
         PS_ASSERT1( graphics != NULL ) ;
 
 

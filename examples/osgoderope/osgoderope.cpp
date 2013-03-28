@@ -6,6 +6,7 @@
 #include <osgODE/Notify>
 
 #include <osg/LineWidth>
+#include <osg/MatrixTransform>
 
 #include <osgViewer/Viewer>
 
@@ -161,13 +162,30 @@ main(int argc, char** argv)
     }
 
 
+
+
+
     bodies[NUM_BODIES - 1]->setLinearVelocity( osg::X_AXIS * 1.0 ) ;
     bodies[NUM_BODIES - 1]->setMass( 8.0, osg::Vec3(0.4, 0.4, 0.4), dBoxClass ) ;
 
-    osg::Node*  weight = osgDB::readNodeFile("common/weight8.osgb") ;
+
+
+    osg::MatrixTransform*   transform = new osg::MatrixTransform() ;
+
+    transform->setMatrix( osg::Matrix::scale( osg::Vec3(0.2, 0.2, 0.2) ) ) ;
+
+    transform->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON ) ;
+
+
+    osg::Node*  weight = osgDB::readNodeFile("common/companioncube.osgb") ;
     PS_ASSERT1( weight ) ;
 
-    bodies[NUM_BODIES - 1]->getMatrixTransform()->addChild( weight ) ;
+    transform->addChild( weight ) ;
+
+
+    bodies[NUM_BODIES - 1]->getMatrixTransform()->addChild( transform ) ;
+
+
 
 
 

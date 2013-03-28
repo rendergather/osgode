@@ -22,7 +22,7 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("common/weight512.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("common/companioncube.osgb") ;
 
     PS_ASSERT1( cube != NULL ) ;
 
@@ -47,7 +47,7 @@ main(int argc, char** argv)
         osgODE::Collidable* body = new osgODE::Box() ;
         manager->getWorld()->addObject( body ) ;
 
-        body->setSize( osg::Vec3(0.8, 0.8, 0.8) ) ;
+        body->setSize( osg::Vec3(1, 1, 1) ) ;
 
         // the mass
         body->setMass(512) ;
@@ -74,7 +74,7 @@ main(int argc, char** argv)
         osgODE::Collidable* body = new osgODE::Box() ;
         manager->getWorld()->addObject( body ) ;
 
-        body->setSize( osg::Vec3(0.8, 0.8, 0.8) ) ;
+        body->setSize( osg::Vec3(1, 1, 1) ) ;
 
 
         // graphics

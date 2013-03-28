@@ -49,7 +49,7 @@ main(int argc, char** argv)
      * [3] Creates two bodies: a motionless one to the right side and a
      *     dynamic one to the left
      */
-    osg::Node*      weight = osgDB::readNodeFile("common/weight1.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
 
     PS_ASSERT1( weight != NULL ) ;
 
@@ -60,8 +60,8 @@ main(int argc, char** argv)
     b1->getMatrixTransform()->addChild(weight) ;
     b2->getMatrixTransform()->addChild(weight) ;
 
-    b1->setPosition( osg::X_AXIS * -0.5 ) ;
-    b2->setPosition( osg::X_AXIS *  0.5 ) ;
+    b1->setPosition( osg::X_AXIS * -5 ) ;
+    b2->setPosition( osg::X_AXIS *  5 ) ;
 
     b1->setMass(1.0) ;
     b2->setMass(1.0) ;
@@ -80,11 +80,10 @@ main(int argc, char** argv)
     j->setBody1(b1) ;
     j->setBody2(b2) ;
 
-    j->setAnchor1( b1->getPosition() ) ;
-    j->setAnchor2( osg::Vec3() ) ;
+    j->setAnchor1( osg::X_AXIS * -2.5 ) ;
+    j->setAnchor2( osg::X_AXIS *  2.5 ) ;
 
-    osg::Vec3   axis = osg::X_AXIS + osg::Y_AXIS ;
-    axis.normalize() ;
+    osg::Vec3   axis = osg::Y_AXIS ;
 
     j->setAxis1(axis) ;
 
@@ -94,8 +93,8 @@ main(int argc, char** argv)
 
 
     // doesn't work
-    j->setParam(dParamVel1, 1.0) ;
-    j->setParam(dParamFMax1, 1000.0) ;
+//     j->setParam(dParamVel1, 1.0) ;
+//     j->setParam(dParamFMax1, 1000.0) ;
 
 
 

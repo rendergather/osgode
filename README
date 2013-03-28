@@ -141,8 +141,7 @@ $ g++ osgoderigidbody.cpp -o osgoderigidbody \
 > `pkg-config osgODE openscenegraph-osgDB --libs --cflags` -Wall
 @endverbatim
 \n
-You should not see any warning or error message. As always, if something does
-not work feel free contact me.\n
+You should not see any warning or error message. As always, if something doesn't work feel free to contact me.\n
 
 \n
 The executable will produce a file named "output.osgb". If the osgviewer

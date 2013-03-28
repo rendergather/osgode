@@ -55,7 +55,7 @@ main(int argc, char** argv)
      * [3] Creates two bodies: a motionless one to the right side and a
      *     dynamic one to the left
      */
-    osg::Node*      weight = osgDB::readNodeFile("common/weight1.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
 
     PS_ASSERT1( weight != NULL ) ;
 
@@ -66,8 +66,8 @@ main(int argc, char** argv)
     b1->getMatrixTransform()->addChild(weight) ;
     b2->getMatrixTransform()->addChild(weight) ;
 
-    b1->setPosition( osg::X_AXIS * -0.125 ) ;
-    b2->setPosition( osg::X_AXIS *  0.125 ) ;
+    b1->setPosition( osg::X_AXIS * -1.0 ) ;
+    b2->setPosition( osg::X_AXIS *  1.0 ) ;
 
     b1->setMass(1.0) ;
     b2->setMass(1.0) ;

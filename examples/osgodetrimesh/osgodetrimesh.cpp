@@ -5,8 +5,12 @@
 #include <osgODE/DefaultNearCallback>
 #include <osgODE/Notify>
 
+#include <osgODEUtil/CreateTriMeshFromNode>
+
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
+
+#include <osg/MatrixTransform>
 
 
 
@@ -99,11 +103,8 @@ main(int argc, char** argv)
 {
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
-    osg::Node*      weight512 = osgDB::readNodeFile("common/weight512.osgb") ;
-    PS_ASSERT1( weight512 != NULL ) ;
-
-    osg::Node*      weight64 = osgDB::readNodeFile("common/weight64.osgb") ;
-    PS_ASSERT1( weight64 != NULL ) ;
+    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
+    PS_ASSERT1( weight != NULL ) ;
 
     /*
      * [1] create the manager
@@ -113,6 +114,8 @@ main(int argc, char** argv)
 
     manager->setAutoStartThread(true) ;
     manager->setAcceptVisitors(true) ;
+
+    manager->setStepSize( 1.0 / 120.0 ) ;
 
     /*
      * [2] create the space
@@ -126,16 +129,19 @@ main(int argc, char** argv)
      */
     {
         // create
-        osgODE::TriMesh*    trimesh = create_cube(0.4) ;
+        osgODE::TriMesh*    trimesh = create_cube(1.0) ;
         manager->getWorld()->addObject( trimesh ) ;
 
 
         // graphics
-        trimesh->getMatrixTransform()->addChild( weight64 ) ;
+        trimesh->getMatrixTransform()->addChild( weight ) ;
 
 
         // raise the body
-        trimesh->setPosition( osg::Vec3(0.0, 0.0, 2.0) ) ;
+        trimesh->setPosition( osg::Vec3(0.0, 0.0, 5.0) ) ;
+
+
+        trimesh->setMass( 1.0 ) ;
     }
 
 
@@ -143,17 +149,29 @@ main(int argc, char** argv)
      * [4] create a kinematic triangle mesh
      */
     {
+        osg::MatrixTransform*   transform = new osg::MatrixTransform() ;
+
+        transform->setMatrix( osg::Matrix::scale( osg::Vec3(2.0, 2.0, 2.0) ) ) ;
+
+        transform->addChild( weight ) ;
+
+        transform->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON ) ;
+
+
         // create
-        osgODE::TriMesh*    trimesh = create_cube(0.8) ;
+        osgODE::TriMesh*    trimesh = osgODEUtil::createTriMeshFromNode(transform) ;
         manager->getWorld()->addObject( trimesh ) ;
 
 
         // graphics
-        trimesh->getMatrixTransform()->addChild( weight512 ) ;
+        trimesh->getMatrixTransform()->addChild( transform ) ;
 
 
         // this body is not dynamic
         trimesh->setKinematic(true) ;
+
+
+        trimesh->setMass( 1.0 ) ;
     }
 
 

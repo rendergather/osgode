@@ -26,7 +26,7 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("common/weight1.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("common/companioncube.osgb") ;
 
     PS_ASSERT1( cube != NULL ) ;
 
@@ -52,7 +52,7 @@ main(int argc, char** argv)
      * [3] Create a kinematic plane as floor
      */
     {
-        osg::Node*  plane = osgDB::readNodeFile( "common/floor_small.osgb" ) ;
+        osg::Node*  plane = osgDB::readNodeFile( "common/floor.osgb" ) ;
 
 
 
@@ -77,13 +77,13 @@ main(int argc, char** argv)
      */
     {
         osgODE::Collidable*     box = new osgODE::Box() ;
-        box->setSize( osg::Vec3(0.1, 0.1, 0.1) ) ;
+        box->setSize( osg::Vec3(1, 1, 1) ) ;
 
         // graphics
         box->getMatrixTransform()->addChild(cube) ;
 
         // move the cube to the left
-        box->setPosition( osg::Vec3(-0.5, 0.0, 2.0) ) ;
+        box->setPosition( osg::Vec3(-4, 0.0, 10.0) ) ;
 
         // insert the cube into the world
         manager->getWorld()->addObject(box) ;
@@ -97,13 +97,13 @@ main(int argc, char** argv)
      */
     {
         osgODE::Collidable*     box = new osgODE::Box() ;
-        box->setSize( osg::Vec3(0.1, 0.1, 0.1) ) ;
+        box->setSize( osg::Vec3(1, 1, 1) ) ;
 
         // graphics
         box->getMatrixTransform()->addChild(cube) ;
 
         // move the cube to the right
-        box->setPosition( osg::Vec3(0.5, 0.0, 2.0) ) ;
+        box->setPosition( osg::Vec3(4, 0.0, 10.0) ) ;
 
         // insert the cube into the world
         manager->getWorld()->addObject(box) ;

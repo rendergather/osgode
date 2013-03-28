@@ -52,14 +52,14 @@ main(int argc, char** argv)
 
 
 
-    osg::Node*  weight_graphics = osgDB::readNodeFile("common/weight512.osgb") ;
+    osg::Node*  weight_graphics = osgDB::readNodeFile("common/companioncube.osgb") ;
     PS_ASSERT1( weight_graphics != NULL ) ;
 
 
     osgODE::Box*            weight1 = new osgODE::Box() ;
     {
-        weight1->setSize( osg::Vec3(0.8, 0.8, 0.8) ) ;
-        weight1->setPosition( osg::Vec3(4.0, -4.0, 0.9) ) ;
+        weight1->setSize( osg::Vec3(1, 1, 1) ) ;
+        weight1->setPosition( osg::Vec3(4.0, -4.0, 5.0) ) ;
         weight1->setMass(512.0) ;
 
         weight1->getMatrixTransform()->addChild( weight_graphics ) ;
@@ -68,8 +68,8 @@ main(int argc, char** argv)
 
     osgODE::Box*            weight2 = new osgODE::Box() ;
     {
-        weight2->setSize( osg::Vec3(0.8, 0.8, 0.8) ) ;
-        weight2->setPosition( osg::Vec3(4.0, 0.0, 0.9) ) ;
+        weight2->setSize( osg::Vec3(1, 1, 1) ) ;
+        weight2->setPosition( osg::Vec3(4.0, 0.0, 5.0) ) ;
         weight2->setMass(512.0) ;
 
         weight2->getMatrixTransform()->addChild( weight_graphics ) ;
@@ -78,8 +78,8 @@ main(int argc, char** argv)
 
     osgODE::Box*            weight3 = new osgODE::Box() ;
     {
-        weight3->setSize( osg::Vec3(0.8, 0.8, 0.8) ) ;
-        weight3->setPosition( osg::Vec3(4.0, 4.0, 0.9) ) ;
+        weight3->setSize( osg::Vec3(1, 1, 1) ) ;
+        weight3->setPosition( osg::Vec3(4.0, 4.0, 5.0) ) ;
         weight3->setMass(512.0) ;
 
         weight3->getMatrixTransform()->addChild( weight_graphics ) ;

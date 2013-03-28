@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -49,7 +49,7 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! Update ERP and CFM to simulate a spring and damp system
+//! Update ERP and CFM to simulate a spring and damper system
 /*!
  */
 class OSG_EXPORT SuspensionJoint: public Hinge2Joint

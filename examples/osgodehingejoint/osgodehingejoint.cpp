@@ -42,8 +42,8 @@ main(int argc, char** argv)
 
     j->setAxis1(-osg::Y_AXIS) ;
     j->setParam(dParamHiStop, osg::PI / 6.0) ;
-    j->setParam(dParamStopERP, 1.0) ;
-    j->setParam(dParamStopCFM, 10.0 * manager->getStepSize()) ;
+    j->setParam(dParamStopERP, 0.9) ;
+    j->setParam(dParamStopCFM, 1.0e-2) ;
     j->setParam(dParamBounce, 1.0) ;
 
 
@@ -55,7 +55,7 @@ main(int argc, char** argv)
      * [3] Creates two bodies: a motionless one to the right side and a
      *     dynamic one to the left
      */
-    osg::Node*      weight = osgDB::readNodeFile("common/weight1.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
 
     PS_ASSERT1( weight != NULL ) ;
 
@@ -66,8 +66,8 @@ main(int argc, char** argv)
     b1->getMatrixTransform()->addChild(weight) ;
     b2->getMatrixTransform()->addChild(weight) ;
 
-    b1->setPosition( osg::X_AXIS * -0.5 ) ;
-    b2->setPosition( osg::X_AXIS *  0.5 ) ;
+    b1->setPosition( osg::X_AXIS * -5 ) ;
+    b2->setPosition( osg::X_AXIS *  5 ) ;
 
     b2->setKinematic(true) ;
 

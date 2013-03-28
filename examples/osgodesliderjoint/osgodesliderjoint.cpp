@@ -59,7 +59,7 @@ main(int argc, char** argv)
      * [3] Create two bodies: a kinematic one to the right and a dynamic one
      *     to the left
      */
-    osg::Node*      graphics = osgDB::readNodeFile("common/weight1.osgb") ;
+    osg::Node*      graphics = osgDB::readNodeFile("common/companioncube.osgb") ;
     PS_ASSERT1( graphics != NULL ) ;
 
 
@@ -69,8 +69,8 @@ main(int argc, char** argv)
     b1->getMatrixTransform()->addChild(graphics) ;
     b2->getMatrixTransform()->addChild(graphics) ;
 
-    b1->setPosition( osg::X_AXIS * -0.25 ) ;
-    b2->setPosition( osg::X_AXIS * 0.25 ) ;
+    b1->setPosition( osg::X_AXIS * -1.5 ) ;
+    b2->setPosition( osg::X_AXIS *  1.5 ) ;
 
     b1->setKinematic(true) ;
 

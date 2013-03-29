@@ -141,7 +141,7 @@ Car::init(void)
 
     {
         // the wheel
-        osg::ref_ptr<Cylinder>      wheel = dynamic_cast<Cylinder*>( osgDB::readObjectFile("Wheel.osgb") ) ;
+        osg::ref_ptr<Cylinder>      wheel = dynamic_cast<Cylinder*>( osgDB::readObjectFile("car_wheel.osgb") ) ;
         PS_ASSERT1( wheel.valid() ) ;
 
 
@@ -195,7 +195,7 @@ Car::init(void)
 
 
     {
-        m_body = dynamic_cast<RigidBody*>( osgDB::readObjectFile("Body.osgb") ) ;
+        m_body = dynamic_cast<RigidBody*>( osgDB::readObjectFile("car_body.osgb") ) ;
         PS_ASSERT1( m_body.valid() ) ;
 
 
@@ -221,7 +221,7 @@ Car::init(void)
 
 
     {
-        osg::ref_ptr<osg::Node>     joint_graphics = osgDB::readNodeFile("Joint.osgb") ;
+        osg::ref_ptr<osg::Node>     joint_graphics = osgDB::readNodeFile("car_suspension.osgb") ;
         PS_ASSERT1( joint_graphics.valid() ) ;
 
 

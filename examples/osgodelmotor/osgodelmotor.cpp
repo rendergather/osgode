@@ -11,7 +11,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -37,7 +37,7 @@ main(int argc, char** argv)
     osgODE::Joint*      j = new osgODE::LMotorJoint() ;
 
 
-    osg::Node*      graphics = osgDB::readNodeFile("common/companioncube.osgb") ;
+    osg::Node*      graphics = osgDB::readNodeFile("companioncube.osgb") ;
     PS_ASSERT1( graphics != NULL ) ;
 
 

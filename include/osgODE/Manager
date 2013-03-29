@@ -184,7 +184,18 @@ public:
 
 
     //! interpolation, useful when the step size is very large
+    /*!
+     * Doesn't work well with a small step size. Disabled by default
+     */
     void    logicFrame(double step_size) ;
+
+
+
+    //! Set wheter interpolation is used
+    inline void     setEnableInterpolation(bool flag) ;
+
+    //! Get wheter interpolation is used
+    inline bool     getEnableInterpolation(void) const ;
 
 
 
@@ -225,6 +236,8 @@ private:
 
     bool                m_auto_start_thread ;
     bool                m_accept_visitors ;
+
+    bool                m_interpolation_enabled ;
 
     osg::ref_ptr<World> m_world ;
 

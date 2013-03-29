@@ -11,7 +11,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -55,7 +55,7 @@ main(int argc, char** argv)
      * [3] Creates two bodies: a motionless one to the right side and a
      *     dynamic one to the left
      */
-    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgb") ;
 
     PS_ASSERT1( weight != NULL ) ;
 

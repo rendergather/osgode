@@ -16,7 +16,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -103,7 +103,7 @@ main(int argc, char** argv)
 {
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
-    osg::Node*      weight = osgDB::readNodeFile("common/companioncube.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgb") ;
     PS_ASSERT1( weight != NULL ) ;
 
     /*

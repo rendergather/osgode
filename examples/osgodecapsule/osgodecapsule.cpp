@@ -20,7 +20,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -104,7 +104,7 @@ private:
 
     osgODE::Collidable* _createTemplate(void)
     {
-        osg::Node*  graphics = osgDB::readNodeFile("common/capsule.osgb") ;
+        osg::Node*  graphics = osgDB::readNodeFile("capsule.osgb") ;
         PS_ASSERT1( graphics != NULL ) ;
 
 
@@ -181,7 +181,7 @@ main(int argc, char** argv)
      * [2] Create the floor
      */
     {
-        osg::Node*  floor_graphics = osgDB::readNodeFile("common/floor.osgb") ;
+        osg::Node*  floor_graphics = osgDB::readNodeFile("floor.osgb") ;
         PS_ASSERT1( floor_graphics != NULL ) ;
 
         floor_graphics->getOrCreateStateSet()->setAttributeAndModes( new osg::CullFace(osg::CullFace::BACK) ) ;

@@ -119,6 +119,7 @@ Manager::Manager(void):
     m_time_multiplier(1.0),
     m_auto_start_thread(false),
     m_accept_visitors(false),
+    m_interpolation_enabled(false),
     m_force_update_traversal(false),
     m_push_nv( new PusherVisitor() ),
     m_interpolate_nv( new InterpolatorVisitor() )
@@ -149,6 +150,7 @@ Manager::Manager(const Manager& other, const osg::CopyOp& copyop):
     m_time_multiplier(other.m_time_multiplier),
     m_auto_start_thread(other.m_auto_start_thread),
     m_accept_visitors(other.m_accept_visitors),
+    m_interpolation_enabled( other.m_interpolation_enabled ),
     m_push_nv( other.m_push_nv ),
     m_interpolate_nv( other.m_interpolate_nv )
 
@@ -251,7 +253,7 @@ Manager::frame(double step_size)
         }
 
 
-        if( step_done ) {
+        if( step_done && m_interpolation_enabled ) {
             _pushTransforms() ;
         }
 
@@ -274,7 +276,7 @@ Manager::frame(double step_size)
 void
 Manager::logicFrame(double step_size)
 {
-    if( step_size <= 0.0 ) {
+    if(     ( step_size <= 0.0 )    ||    ( ! m_interpolation_enabled )    ) {
         return ;
     }
 
@@ -308,6 +310,8 @@ Manager::run(void)
 
 
     setDone(false) ;
+
+    m_timer.setStartTick() ;
 
 
     if(m_world.valid()) {

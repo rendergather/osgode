@@ -34,7 +34,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -154,9 +154,10 @@ public:
         m_dt(dt),
         m_start_time(0.0)
     {
-        m_templates[0] = _createTemplate("common/woodenbox1.osgb") ;
-        m_templates[1] = _createTemplate("common/woodenbox2.osgb") ;
-        m_templates[2] = _createTemplate("common/woodenbox3.osgb") ;
+        m_templates[0] = _createTemplate("woodenbox1.osgb") ;
+        m_templates[1] = _createTemplate("woodenbox2.osgb") ;
+        m_templates[2] = _createTemplate("woodenbox3.osgb") ;
+        m_templates[3] = _createTemplate("woodenbox4.osgb") ;
     }
 
 
@@ -181,7 +182,7 @@ private:
 
     osgODE::ODEObject*  _createObject(void)
     {
-        const unsigned int  template_idx = rand() % 3 ;
+        const unsigned int  template_idx = rand() % 4 ;
 
         osgODE::Collidable* collidable = static_cast<osgODE::Collidable*>( m_templates[template_idx]->clone(osg::CopyOp::SHALLOW_COPY) ) ;
         collidable->setPosition( osg::Vec3(2 * _rand() - 1, 2 * _rand() - 1, 4 + 2 * _rand()) ) ;
@@ -225,7 +226,7 @@ private:
     float   m_dt ;
     float   m_start_time ;
 
-    osg::ref_ptr<osgODE::Collidable> m_templates[3] ;
+    osg::ref_ptr<osgODE::Collidable> m_templates[4] ;
 } ;
 
 }
@@ -291,7 +292,7 @@ main(int argc, char** argv)
      * [2] Create the floor
      */
     {
-        osg::Node*  floor_graphics = osgDB::readNodeFile("common/ground.osgb") ;
+        osg::Node*  floor_graphics = osgDB::readNodeFile("ground.osgb") ;
         PS_ASSERT1( floor_graphics != NULL ) ;
 
 

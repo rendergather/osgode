@@ -11,7 +11,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -23,8 +23,8 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      arm_graphics   = osgDB::readNodeFile("osgodeuniversaljoint/arm.osgb") ;
-    osg::Node*      joint_graphics = osgDB::readNodeFile("osgodeuniversaljoint/joint.osgb") ;
+    osg::Node*      arm_graphics   = osgDB::readNodeFile("universal_arm.osgb") ;
+    osg::Node*      joint_graphics = osgDB::readNodeFile("universal_joint.osgb") ;
 
     PS_ASSERT1( arm_graphics != NULL ) ;
     PS_ASSERT1( joint_graphics != NULL ) ;

@@ -17,7 +17,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -70,7 +70,7 @@ main(int argc, char** argv)
 
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("osgodependulum/pendulum_4.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_4.osgb") ;
         PS_ASSERT1( node ) ;
 
 
@@ -99,7 +99,7 @@ main(int argc, char** argv)
 
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("osgodependulum/pendulum_3.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_3.osgb") ;
         PS_ASSERT1( node ) ;
 
 
@@ -124,7 +124,7 @@ main(int argc, char** argv)
 
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("osgodependulum/pendulum_2.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_2.osgb") ;
         PS_ASSERT1( node ) ;
 
 
@@ -148,7 +148,7 @@ main(int argc, char** argv)
 
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("osgodependulum/pendulum_1.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_1.osgb") ;
         PS_ASSERT1( node ) ;
 
 

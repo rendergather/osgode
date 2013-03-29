@@ -12,7 +12,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -44,7 +44,7 @@ main(int argc, char** argv)
         base->setPosition( osg::Vec3(0.0, 0.0, 0.0) ) ;
         base->setMass(1.0e4) ;
 
-        osg::Node*  graphics = osgDB::readNodeFile("common/ground.osgb") ;
+        osg::Node*  graphics = osgDB::readNodeFile("ground.osgb") ;
         PS_ASSERT1( graphics != NULL ) ;
 
         base->getMatrixTransform()->addChild( graphics ) ;
@@ -52,7 +52,7 @@ main(int argc, char** argv)
 
 
 
-    osg::Node*  weight_graphics = osgDB::readNodeFile("common/companioncube.osgb") ;
+    osg::Node*  weight_graphics = osgDB::readNodeFile("companioncube.osgb") ;
     PS_ASSERT1( weight_graphics != NULL ) ;
 
 

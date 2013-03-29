@@ -33,7 +33,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -56,7 +56,7 @@ main(int argc, char** argv)
 //     psLogLevel = LOG_LEVEL_ALL ;
 
 
-    osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH "/osgodecar" ) ;
+    osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
     // The graph
@@ -111,7 +111,7 @@ main(int argc, char** argv)
 
     // the ground:
 
-    osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("Ground.osgb") ) ;
+    osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgb") ) ;
     PS_ASSERT1( ground.valid() ) ;
 
     space->addObject(ground) ;

@@ -15,7 +15,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -28,7 +28,7 @@ main(int argc, char** argv)
 
 
     // graphics
-    osg::Node*      r3_axis = osgDB::readNodeFile("common/axis3.osgb") ;
+    osg::Node*      r3_axis = osgDB::readNodeFile("axis3.osgb") ;
 
     PS_ASSERT1( r3_axis != NULL ) ;
 

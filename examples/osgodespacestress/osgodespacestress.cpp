@@ -14,7 +14,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/examples"
+#define OSGODE_DATA_PATH "../../data/export"
 #endif
 
 
@@ -74,16 +74,16 @@ private:
         osgODE::ODECallback*    cbk = new BodyRemover() ;
 
 
-        m_boxes[0] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("common/woodenbox1.osgb") ) ;
+        m_boxes[0] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox1.osgb") ) ;
         PS_ASSERT1( m_boxes[0].get() ) ;
 
-        m_boxes[1] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("common/woodenbox2.osgb") ) ;
+        m_boxes[1] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox2.osgb") ) ;
         PS_ASSERT1( m_boxes[1].get() ) ;
 
-        m_boxes[2] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("common/woodenbox3.osgb") ) ;
+        m_boxes[2] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox3.osgb") ) ;
         PS_ASSERT1( m_boxes[2].get() ) ;
 
-        m_boxes[3] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("common/woodenbox4.osgb") ) ;
+        m_boxes[3] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox4.osgb") ) ;
         PS_ASSERT1( m_boxes[3].get() ) ;
 
         m_dt = 0.0 ;
@@ -149,10 +149,12 @@ main(int argc, char** argv)
 
 
 
-    osgODE::ODEObject*      base = dynamic_cast<osgODE::ODEObject*>( osgDB::readObjectFile("osgodespacestress/space.osgb") ) ;
+    osgODE::Transformable*  base = dynamic_cast<osgODE::Transformable*>( osgDB::readObjectFile("space_stress_trimesh.osgb") ) ;
     PS_ASSERT1( base != NULL ) ;
 
     manager->getWorld()->addObject(base) ;
+
+    base->getMatrixTransform()->getOrCreateStateSet()->setMode(GL_CULL_FACE, osg::StateAttribute::ON) ;
 
 
 

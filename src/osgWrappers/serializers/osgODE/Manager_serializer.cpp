@@ -53,6 +53,7 @@ REGISTER_OBJECT_WRAPPER( Manager,
     ADD_BOOL_SERIALIZER(Done, false) ;
     ADD_BOOL_SERIALIZER(AutoStartThread, false) ;
     ADD_BOOL_SERIALIZER(AcceptVisitors, false) ;
+    ADD_BOOL_SERIALIZER(EnableInterpolation, false) ;
     ADD_BOOL_SERIALIZER(ForceUpdateTraversal, false) ;
     ADD_OBJECT_SERIALIZER(World, osgODE::World, NULL) ;
 }

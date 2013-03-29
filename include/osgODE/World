@@ -109,11 +109,15 @@ public:
 /* ======================================================================= */
 public:
     //! Advance by 1 frame
-    void    step(double step_size=1.0/60.0) ;
+    /*!
+     * It step_size is not positive, returns immediately
+     */
+    void    step(double step_size) ;
 
 
     //! Call the dWorldStep
-    virtual void    update(double step_size=1.0/60.0) ;
+    virtual void    update(double step_size) ;
+
 
 
     //! Get the current frame number

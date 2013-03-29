@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -250,6 +250,11 @@ World::update(double step_size)
 void
 World::step(double step_size)
 {
+    if( step_size <= 0.0 ) {
+        return ;
+    }
+
+
     PS_DBG3("osgODE::World::step(%p, step_size=%lf)", this, step_size) ;
 
 

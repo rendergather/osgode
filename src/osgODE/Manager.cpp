@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,6 +29,7 @@
 #include <osgODE/Notify>
 #include <osgODE/ScopedTimer>
 #include <osgODE/ManagerUpdateCallback>
+#include <osgODE/InterpolableMatrixTransform>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -53,6 +54,64 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
+namespace {
+    // lol .. cannot resist
+    class PusherVisitor: public osg::NodeVisitor
+    {
+    public:
+        PusherVisitor(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
+
+        virtual void    apply(osg::MatrixTransform& transform)
+        {
+            InterpolableMatrixTransform*    xform = dynamic_cast<InterpolableMatrixTransform*>( & transform ) ;
+
+
+            if( xform ) {
+                xform->push() ;
+            }
+
+
+            traverse(transform) ;
+        }
+
+    } ;
+
+
+
+    class InterpolatorVisitor: public osg::NodeVisitor
+    {
+    public:
+        InterpolatorVisitor(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN), m_t(1.0) {}
+
+        virtual void    apply(osg::MatrixTransform& transform)
+        {
+            InterpolableMatrixTransform*    xform = dynamic_cast<InterpolableMatrixTransform*>( & transform ) ;
+
+
+            if( xform ) {
+                xform->interpolate(m_t) ;
+            }
+
+
+            traverse(transform) ;
+        }
+
+        void    setT(double t)
+        {   m_t = t ;   }
+
+    private:
+        double  m_t ;
+
+    } ;
+} // anon namespace
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 Manager::Manager(void):
     m_delta(0.0),
     m_done(false),
@@ -60,8 +119,9 @@ Manager::Manager(void):
     m_time_multiplier(1.0),
     m_auto_start_thread(false),
     m_accept_visitors(false),
-    m_use_non_constant_step_size(false),
-    m_force_update_traversal(false)
+    m_force_update_traversal(false),
+    m_push_nv( new PusherVisitor() ),
+    m_interpolate_nv( new InterpolatorVisitor() )
 {
 
     {
@@ -89,7 +149,8 @@ Manager::Manager(const Manager& other, const osg::CopyOp& copyop):
     m_time_multiplier(other.m_time_multiplier),
     m_auto_start_thread(other.m_auto_start_thread),
     m_accept_visitors(other.m_accept_visitors),
-    m_use_non_constant_step_size(other.m_use_non_constant_step_size)
+    m_push_nv( other.m_push_nv ),
+    m_interpolate_nv( other.m_interpolate_nv )
 
 {
     setForceUpdateTraversal( getForceUpdateTraversal() ) ;
@@ -158,15 +219,20 @@ Manager::setup(bool separate_thread, bool accept_visitors, double step_size)
 void
 Manager::frame(double step_size)
 {
+    if( step_size <= 0.0 ) {
+        return ;
+    }
+
+
+
     PS_DBG3("osgODE::Manager::frame(%p, step_size=%lf)", this, step_size) ;
 
     PS_SCOPED_TIMER("Manager::frame") ;
 
 
+    m_delta += step_size ;
 
-    if( step_size <= 0.0 ) {
-        step_size = m_step_size ;
-    }
+    const double    step_done = m_delta > m_step_size ;
 
 
     if(m_world.valid()) {
@@ -175,9 +241,19 @@ Manager::frame(double step_size)
         m_world->writeLock() ;
 
 
-        m_world->callUpdateCallbackInternal() ;
-        m_world->update(step_size) ;
-        m_world->callPostUpdateCallbackInternal() ;
+        while( m_delta > m_step_size ) {
+
+            m_delta -= m_step_size ;
+
+            m_world->callUpdateCallbackInternal() ;
+            m_world->update(step_size) ;
+            m_world->callPostUpdateCallbackInternal() ;
+        }
+
+
+        if( step_done ) {
+            _pushTransforms() ;
+        }
 
 
 
@@ -186,6 +262,30 @@ Manager::frame(double step_size)
 
         dirtyBound() ;
     }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Manager::logicFrame(double step_size)
+{
+    if( step_size <= 0.0 ) {
+        return ;
+    }
+
+
+    const double    t = osg::clampTo( m_delta + step_size / m_step_size, 0.0, 1.0 ) ;
+
+
+//     PS_DBG3("osgODE::Manager::logicFrame(%p, step_size=%lf): t = %lf", this, step_size, t) ;
+
+    _interpolate( t ) ;
+    (void)t ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -207,29 +307,6 @@ Manager::run(void)
     dAllocateODEDataForThread(dAllocateMaskAll) ;
 
 
-
-/*=======================*/
-/* these are taken into account only when
-   m_use_non_constant_step_size == true */
-
-    // the number of frames on which we calculate the mean
-    const unsigned int  N = 100 ;
-
-    // array fill
-    unsigned int        F = 0 ;
-
-    // calculated mean over last frames
-    double  M = 0.0 ;
-
-    // current update spent time
-    double  elapsed = 0.0 ;
-
-
-    // helper
-    osg::Timer  aux_timer ;
-/*=======================*/
-
-
     setDone(false) ;
 
 
@@ -239,90 +316,31 @@ Manager::run(void)
 
 
 
-    resetTimer() ;
-
-
-
     while( ! m_done ) {
 
-        // accumulated time
-        m_delta += m_timer.time_s() ;
-        m_timer.setStartTick() ;
+        const double    t = m_timer.time_s() ;
 
-        // this maximum step size avoids degenerations
-        if(m_delta > 0.1)   m_delta = 0.1 ;
+        if( t >= m_step_size ) {
 
-
-        // wait until step_size is reached
-        while( m_delta < m_step_size ) {
-
-            OpenThreads::Thread::microSleep( (m_step_size - m_delta) * 1.0e6 ) ;
-//             OpenThreads::Thread::YieldCurrentThread() ;
-
-            m_delta += m_timer.time_s() * m_time_multiplier ;
+            this->frame( t ) ;
 
             m_timer.setStartTick() ;
-        }
 
-
-
-        if(  ! m_use_non_constant_step_size ) {
-
-            //
-            // constant step size
-            //
-
-            while( m_delta >= m_step_size ) {
-
-                frame(m_step_size) ;
-
-                m_delta -= m_step_size ;
-            }
-
-
+            logicFrame( m_delta ) ;
 
         } else {
 
+            logicFrame( t ) ;
+
+        }
 
 
-// *****************************************************************************
-// USE NON CONSTANT STEP SIZE == TRUE                                          *
-// Tengo in considerazione quanto tempo impiega la frame a tornare e mi baso   *
-// su quel valore per modificare lo step_size.                                 *
-// Ancora non so bene come fare                                                *
-// *****************************************************************************
-
-            while( m_delta >= m_step_size ) {
-
-                //
-                // update e tempo impiegato dall'update
-                //
-
-                aux_timer.setStartTick() ;
-
-                // the frame must take into account the step size and the time
-                // it takes to do its job, so the actual step size is the sum
-                // of this two times
-                frame(m_step_size + M) ;
-
-                elapsed = aux_timer.time_s() ;
-
-                F = osg::minimum(N, F + 1) ;
-
-                M = ( (M * (F-1)) + elapsed ) / F ;
-
-
-
-
-                // add the exceeding time
-                m_delta -= m_step_size + M ;
-
-
-            }
-
-        } // using m_use_non_constant_step_size
+        OpenThreads::Thread::YieldCurrentThread() ;
+//         OpenThreads::Thread::microSleep( (m_step_size - m_delta) * 1.0e6 * 1.0/1.0 ) ;
 
     } // while ! done
+
+
 
 
     PS_DBG("osgODE::Manager::run(%p) returns", this) ;
@@ -417,6 +435,34 @@ Manager::computeBound(void) const
 
 
     return bound ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Manager::_pushTransforms(void)
+{
+    m_world->accept( *m_push_nv ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Manager::_interpolate(double t)
+{
+    static_cast<InterpolatorVisitor*>( m_interpolate_nv.get() )->setT(t) ;
+
+    m_world->accept( *m_interpolate_nv ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

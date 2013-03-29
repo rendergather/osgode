@@ -1,9 +1,9 @@
 /*!
- * @file ManagerUpdateCallback.cpp
+ * @file InterpolableMatrixTransform.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,8 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ManagerUpdateCallback>
-#include <osgODE/Manager>
+#include <osgODE/InterpolableMatrixTransform>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -47,10 +46,7 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_tick(0),
-    m_delta(0.0),
-    m_max_frames_per_update(0)
+InterpolableMatrixTransform::InterpolableMatrixTransform(void)
 {
 }
 /* ....................................................................... */
@@ -61,12 +57,11 @@ ManagerUpdateCallback::ManagerUpdateCallback(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback(other, copyop),
-    m_last_tick(other.m_last_tick),
-    m_delta(other.m_delta),
-    m_max_frames_per_update( other.m_max_frames_per_update )
+InterpolableMatrixTransform::InterpolableMatrixTransform(const InterpolableMatrixTransform& other, const osg::CopyOp& copyop):
+    osg::MatrixTransform(other, copyop)
 {
+    m_points[0] = other.m_points[0] ;
+    m_points[1] = other.m_points[1] ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -76,7 +71,7 @@ ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other,
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::~ManagerUpdateCallback(void)
+InterpolableMatrixTransform::~InterpolableMatrixTransform(void)
 {
 }
 /* ....................................................................... */
@@ -88,57 +83,37 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
+InterpolableMatrixTransform::push(void)
 {
-    osg::Timer* timer = osg::Timer::instance() ;
+    const osg::Matrix&  m = this->getMatrix() ;
 
-    Manager*        manager = static_cast<Manager*>(n) ;
+    m_points[0] = m_points[1] ;
 
-    const double    step_size = manager->getStepSize() ;
+    osg::Quat   so ;
 
-
-
-    if( m_last_tick != 0 ) {
-
-        osg::Timer_t    cur_tick = timer->tick() ;
-
-        m_delta += timer->delta_s(m_last_tick, cur_tick) * manager->getTimeMultiplier() ;
-
-        m_last_tick = cur_tick ;
+    m.decompose( m_points[1].Position, m_points[1].Quaternion, m_points[1].Scale, so ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
-        if( m_max_frames_per_update == 0 ) {
-
-            while( m_delta >= step_size ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
-            }
-
-        } else {
-            unsigned int    frame_count = 0 ;
-
-            while( m_delta >= step_size && frame_count++ < m_max_frames_per_update ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
-            }
 
 
-            while( m_delta >= step_size ) {
-                m_delta -= step_size ;
-            }
-        }
+/* ======================================================================= */
+/* ....................................................................... */
+void
+InterpolableMatrixTransform::interpolate(double t)
+{
+    osg::Vec3   p = m_points[0].Position + (m_points[1].Position - m_points[0].Position) * t ;
+//     osg::Vec3   s = m_points[0].Scale + (m_points[1].Scale - m_points[0].Scale) * t ;
+
+    osg::Quat   q ;
+    q.slerp(t, m_points[0].Quaternion, m_points[1].Quaternion) ;
+
+    osg::Matrix m = osg::Matrix::rotate(q) * osg::Matrix::translate(p) ;
 
 
-        manager->logicFrame( m_delta ) ;
-
-    } else {
-
-        m_last_tick = timer->tick() ;
-
-    }
-
-
-    traverse(n, nv) ;
+    setMatrix( m ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

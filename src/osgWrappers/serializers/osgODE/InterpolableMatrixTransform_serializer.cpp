@@ -1,9 +1,9 @@
 /*!
- * @file Manager_serializer.cpp
+ * @file InterpolableMatrixTransform_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/Manager>
+#include <osgODE/InterpolableMatrixTransform>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -43,18 +43,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( Manager,
-                         new osgODE::Manager,
-                         osgODE::Manager,
-                         "osg::Object osg::Node osgODE::Manager" )
+REGISTER_OBJECT_WRAPPER( InterpolableMatrixTransform,
+                         new osgODE::InterpolableMatrixTransform,
+                         osgODE::InterpolableMatrixTransform,
+                         "osg::Object osg::Node osg::Group osg::Transform osg::MatrixTransform osgODE::InterpolableMatrixTransform" )
 {
-    ADD_DOUBLE_SERIALIZER(StepSize, 1.0/60.0) ;
-    ADD_DOUBLE_SERIALIZER(TimeMultiplier, 1.0) ;
-    ADD_BOOL_SERIALIZER(Done, false) ;
-    ADD_BOOL_SERIALIZER(AutoStartThread, false) ;
-    ADD_BOOL_SERIALIZER(AcceptVisitors, false) ;
-    ADD_BOOL_SERIALIZER(ForceUpdateTraversal, false) ;
-    ADD_OBJECT_SERIALIZER(World, osgODE::World, NULL) ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

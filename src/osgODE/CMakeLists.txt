@@ -37,6 +37,7 @@ SET(TARGET_H
     ${HEADER_PATH}/HingeJoint
     ${HEADER_PATH}/HingeJoint.inl
     ${HEADER_PATH}/Interpolator
+    ${HEADER_PATH}/InterpolableMatrixTransform
     ${HEADER_PATH}/Joint
     ${HEADER_PATH}/Joint.inl
     ${HEADER_PATH}/JointBreakCallback
@@ -122,6 +123,7 @@ SET(TARGET_SRC
     GearboxJoint.cpp
     Hinge2Joint.cpp
     HingeJoint.cpp
+    InterpolableMatrixTransform.cpp
     Joint.cpp
     Joint_implementations.cpp
     JointBreakCallback.cpp

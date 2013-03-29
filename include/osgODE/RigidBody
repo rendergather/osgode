@@ -220,7 +220,7 @@ public:
 public:
     //! Apply a force on a point
     /*!
-     * Either force and point are intended as expressed in relative
+     * Both force and point are intended as expressed in relative
      * coordinates if the fourth element of the vector is greater than 0.5
      */
     void        addForce(const osg::Vec4& force, const osg::Vec4& point=osg::Vec4(0,0,0,1)) ;
@@ -228,7 +228,7 @@ public:
 
     //! Apply a torque
     /*!
-     * Either force and point are intended as expressed in relative
+     * Both force and point are intended as expressed in relative
      * coordinates if the fourth element of the vector is greater than 0.5
      */
     void        addTorque(const osg::Vec4& torque) ;

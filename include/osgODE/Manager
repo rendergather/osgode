@@ -170,30 +170,6 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Reset the timer
-    inline void     resetTimer(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    /*!
-     * Testing stuff. Don't use it \n
-     * Default: false
-     */
-    inline void     setUseNonConstantStepSize(bool flag) ;
-
-    //! see setUseNonConstantStepSize
-    inline bool     getUseNonConstantStepSize(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
     //! Advance the simulation
     /*!
      *  world->writeLock ;\n
@@ -202,9 +178,15 @@ public:
      *  world->getPostUpdateCallback()->callback ;\n
      *  world->writeUnlock \n
      * \n
-     * If step_size <= 0.0 then the getStepSize returned value  is used
+     * If step_size <= 0.0 returns immediately
      */
-    void    frame(double step_size=-1.0) ;
+    void    frame(double step_size) ;
+
+
+    //! interpolation, useful when the step size is very large
+    void    logicFrame(double step_size) ;
+
+
 
     //! The mainloop. Use startThread to start it in another thread
     virtual void    run(void) ;
@@ -226,6 +208,15 @@ public:
 
 /* ======================================================================= */
 private:
+    void    _pushTransforms(void) ;
+    void    _interpolate(double t) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
     double              m_delta ;
 
     bool                m_done ;
@@ -239,9 +230,11 @@ private:
 
     osg::Timer          m_timer ;
 
-    bool                m_use_non_constant_step_size ;
-
     bool                m_force_update_traversal ;
+
+
+    osg::ref_ptr<osg::NodeVisitor>  m_push_nv ;
+    osg::ref_ptr<osg::NodeVisitor>  m_interpolate_nv ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

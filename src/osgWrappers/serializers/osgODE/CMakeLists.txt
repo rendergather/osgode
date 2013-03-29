@@ -21,6 +21,7 @@ SET(TARGET_SRC
     GearboxJoint_serializer.cpp
     Hinge2Joint_serializer.cpp
     HingeJoint_serializer.cpp
+    InterpolableMatrixTransform_serializer.cpp
     InterpolatorBase_serializer.cpp
     Joint_serializer.cpp
     JointBreakCallback_serializer.cpp

@@ -130,7 +130,7 @@ class ODETransform(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        writer.moveIn("osg::MatrixTransform")
+        writer.moveIn("osgODE::InterpolableMatrixTransform")
 
         if not super(ODETransform, self).writeToStream(writer) :
             return False
@@ -173,7 +173,7 @@ class ODETransform(Writable.Writable):
 
 
 
-        writer.moveOut("osg::MatrixTransform")
+        writer.moveOut("osgODE::InterpolableMatrixTransform")
 
         return True
 ############################################################################

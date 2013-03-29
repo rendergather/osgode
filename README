@@ -43,8 +43,7 @@ The OSG is at
 about to migrate to
 <a href="http://www.openscenegraph.com">www.openscenegraph.com</a> \n
 \n
-I will certainly use the 3.0.1 version of the OSG for each 0.8 and 0.9
-releases. \n
+I will certainly use the 3.0.1 version of the OSG for 0.8 and 0.9 releases. \n
 The ODE version will change more frequently because I update my local copy of
 the sources almost every day; I will specify the revision number in the release
 notes.\n

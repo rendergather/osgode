@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,7 +33,6 @@
 
 #include <osg/Node>
 #include <osg/NodeVisitor>
-#include <osg/Timer>
 
 #include <OpenThreads/Thread>
 /* ======================================================================= */
@@ -183,21 +182,6 @@ public:
     void    frame(double step_size) ;
 
 
-    //! interpolation, useful when the step size is very large
-    /*!
-     * Doesn't work well with a small step size. Disabled by default
-     */
-    void    logicFrame(double step_size) ;
-
-
-
-    //! Set wheter interpolation is used
-    inline void     setEnableInterpolation(bool flag) ;
-
-    //! Get wheter interpolation is used
-    inline bool     getEnableInterpolation(void) const ;
-
-
 
     //! The mainloop. Use startThread to start it in another thread
     virtual void    run(void) ;
@@ -219,15 +203,6 @@ public:
 
 /* ======================================================================= */
 private:
-    void    _pushTransforms(void) ;
-    void    _interpolate(double t) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
     double              m_delta ;
 
     bool                m_done ;
@@ -237,17 +212,9 @@ private:
     bool                m_auto_start_thread ;
     bool                m_accept_visitors ;
 
-    bool                m_interpolation_enabled ;
-
     osg::ref_ptr<World> m_world ;
 
-    osg::Timer          m_timer ;
-
     bool                m_force_update_traversal ;
-
-
-    osg::ref_ptr<osg::NodeVisitor>  m_push_nv ;
-    osg::ref_ptr<osg::NodeVisitor>  m_interpolate_nv ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

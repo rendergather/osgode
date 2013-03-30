@@ -29,7 +29,8 @@
 #include <osgODE/Notify>
 #include <osgODE/ScopedTimer>
 #include <osgODE/ManagerUpdateCallback>
-#include <osgODE/InterpolableMatrixTransform>
+
+#include <osg/Timer>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -54,64 +55,6 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-    // lol .. cannot resist
-    class PusherVisitor: public osg::NodeVisitor
-    {
-    public:
-        PusherVisitor(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
-
-        virtual void    apply(osg::MatrixTransform& transform)
-        {
-            InterpolableMatrixTransform*    xform = dynamic_cast<InterpolableMatrixTransform*>( & transform ) ;
-
-
-            if( xform ) {
-                xform->push() ;
-            }
-
-
-            traverse(transform) ;
-        }
-
-    } ;
-
-
-
-    class InterpolatorVisitor: public osg::NodeVisitor
-    {
-    public:
-        InterpolatorVisitor(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN), m_t(1.0) {}
-
-        virtual void    apply(osg::MatrixTransform& transform)
-        {
-            InterpolableMatrixTransform*    xform = dynamic_cast<InterpolableMatrixTransform*>( & transform ) ;
-
-
-            if( xform ) {
-                xform->interpolate(m_t) ;
-            }
-
-
-            traverse(transform) ;
-        }
-
-        void    setT(double t)
-        {   m_t = t ;   }
-
-    private:
-        double  m_t ;
-
-    } ;
-} // anon namespace
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
 Manager::Manager(void):
     m_delta(0.0),
     m_done(false),
@@ -119,19 +62,11 @@ Manager::Manager(void):
     m_time_multiplier(1.0),
     m_auto_start_thread(false),
     m_accept_visitors(false),
-    m_interpolation_enabled(false),
-    m_force_update_traversal(false),
-    m_push_nv( new PusherVisitor() ),
-    m_interpolate_nv( new InterpolatorVisitor() )
+    m_force_update_traversal(false)
 {
 
-    {
-        // Call the static world constructor to inizialize the library
-        osg::ref_ptr<osg::Object>   o = StaticWorld::instance() ;
-    }
-
-
-    m_timer.setStartTick() ;
+    // Call the static world constructor to inizialize the library
+    osg::ref_ptr<osg::Object>   o = StaticWorld::instance() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -149,17 +84,12 @@ Manager::Manager(const Manager& other, const osg::CopyOp& copyop):
     m_step_size(other.m_step_size),
     m_time_multiplier(other.m_time_multiplier),
     m_auto_start_thread(other.m_auto_start_thread),
-    m_accept_visitors(other.m_accept_visitors),
-    m_interpolation_enabled( other.m_interpolation_enabled ),
-    m_push_nv( other.m_push_nv ),
-    m_interpolate_nv( other.m_interpolate_nv )
+    m_accept_visitors(other.m_accept_visitors)
 
 {
     setForceUpdateTraversal( getForceUpdateTraversal() ) ;
 
     m_world = static_cast<World*>( other.m_world->clone(copyop) ) ;
-
-    m_timer.setStartTick() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -234,8 +164,6 @@ Manager::frame(double step_size)
 
     m_delta += step_size ;
 
-    const double    step_done = m_delta > m_step_size ;
-
 
     if(m_world.valid()) {
 
@@ -243,7 +171,7 @@ Manager::frame(double step_size)
         m_world->writeLock() ;
 
 
-        while( m_delta > m_step_size ) {
+        while( m_delta >= m_step_size ) {
 
             m_delta -= m_step_size ;
 
@@ -253,41 +181,12 @@ Manager::frame(double step_size)
         }
 
 
-        if( step_done && m_interpolation_enabled ) {
-            _pushTransforms() ;
-        }
-
-
 
         m_world->writeUnlock() ;
 
 
         dirtyBound() ;
     }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-Manager::logicFrame(double step_size)
-{
-    if(     ( step_size <= 0.0 )    ||    ( ! m_interpolation_enabled )    ) {
-        return ;
-    }
-
-
-    const double    t = osg::clampTo( m_delta + step_size / m_step_size, 0.0, 1.0 ) ;
-
-
-//     PS_DBG3("osgODE::Manager::logicFrame(%p, step_size=%lf): t = %lf", this, step_size, t) ;
-
-    _interpolate( t ) ;
-    (void)t ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -311,7 +210,7 @@ Manager::run(void)
 
     setDone(false) ;
 
-    m_timer.setStartTick() ;
+
 
 
     if(m_world.valid()) {
@@ -319,28 +218,25 @@ Manager::run(void)
     }
 
 
+    osg::Timer  timer ;
+    timer.setStartTick() ;
+
 
     while( ! m_done ) {
 
-        const double    t = m_timer.time_s() ;
+        const double    t = timer.time_s() ;
 
         if( t >= m_step_size ) {
 
+            timer.setStartTick() ;
+
             this->frame( t ) ;
-
-            m_timer.setStartTick() ;
-
-            logicFrame( m_delta ) ;
-
-        } else {
-
-            logicFrame( t ) ;
 
         }
 
 
+
         OpenThreads::Thread::YieldCurrentThread() ;
-//         OpenThreads::Thread::microSleep( (m_step_size - m_delta) * 1.0e6 * 1.0/1.0 ) ;
 
     } // while ! done
 
@@ -439,34 +335,6 @@ Manager::computeBound(void) const
 
 
     return bound ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-Manager::_pushTransforms(void)
-{
-    m_world->accept( *m_push_nv ) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-Manager::_interpolate(double t)
-{
-    static_cast<InterpolatorVisitor*>( m_interpolate_nv.get() )->setT(t) ;
-
-    m_world->accept( *m_interpolate_nv ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

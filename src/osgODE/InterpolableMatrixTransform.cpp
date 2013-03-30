@@ -105,12 +105,12 @@ void
 InterpolableMatrixTransform::interpolate(double t)
 {
     osg::Vec3   p = m_points[0].Position + (m_points[1].Position - m_points[0].Position) * t ;
-//     osg::Vec3   s = m_points[0].Scale + (m_points[1].Scale - m_points[0].Scale) * t ;
+    osg::Vec3   s = m_points[0].Scale + (m_points[1].Scale - m_points[0].Scale) * t ;
 
     osg::Quat   q ;
     q.slerp(t, m_points[0].Quaternion, m_points[1].Quaternion) ;
 
-    osg::Matrix m = osg::Matrix::rotate(q) * osg::Matrix::translate(p) ;
+    osg::Matrix m = osg::Matrix::scale(s) * osg::Matrix::rotate(q) * osg::Matrix::translate(p) ;
 
 
     setMatrix( m ) ;

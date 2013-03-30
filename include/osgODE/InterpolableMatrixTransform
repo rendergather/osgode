@@ -49,7 +49,7 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! This only combines rotation and position (scale is excluded)
+//! Matrix interpolation
 class OSG_EXPORT InterpolableMatrixTransform: public osg::MatrixTransform
 {
 /* ======================================================================= */

@@ -128,9 +128,6 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
             }
         }
 
-
-        manager->logicFrame( m_delta ) ;
-
     } else {
 
         m_last_tick = timer->tick() ;

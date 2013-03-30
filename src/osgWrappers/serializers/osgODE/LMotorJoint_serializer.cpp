@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,96 +35,11 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-static bool
-checkAxis1Anchor(const osgODE::LMotorJoint& joint)
-{
-    (void) joint ;
-    return true ;
-}
-
-static bool
-writeAxis1Anchor(osgDB::OutputStream& os, const osgODE::LMotorJoint& joint)
-{
-    os << joint.getAxis1Anchor() << std::endl ;
-    return true ;
-}
-
-static bool
-readAxis1Anchor(osgDB::InputStream& is, osgODE::LMotorJoint& joint)
-{
-    int a ;
-    is >> a ;
-    joint.setAxis1Anchor((osgODE::LMotorJoint::AxisAnchor) a) ;
-    return true ;
-}
-
-
-
-static bool
-checkAxis2Anchor(const osgODE::LMotorJoint& joint)
-{
-    (void) joint ;
-    return true ;
-}
-
-static bool
-writeAxis2Anchor(osgDB::OutputStream& os, const osgODE::LMotorJoint& joint)
-{
-    os << joint.getAxis2Anchor() << std::endl ;
-    return true ;
-}
-
-static bool
-readAxis2Anchor(osgDB::InputStream& is, osgODE::LMotorJoint& joint)
-{
-    int a ;
-    is >> a ;
-    joint.setAxis2Anchor((osgODE::LMotorJoint::AxisAnchor) a) ;
-    return true ;
-}
-
-
-
-static bool
-checkAxis3Anchor(const osgODE::LMotorJoint& joint)
-{
-    (void) joint ;
-    return true ;
-}
-
-static bool
-writeAxis3Anchor(osgDB::OutputStream& os, const osgODE::LMotorJoint& joint)
-{
-    os << joint.getAxis3Anchor() << std::endl ;
-    return true ;
-}
-
-static bool
-readAxis3Anchor(osgDB::InputStream& is, osgODE::LMotorJoint& joint)
-{
-    int a ;
-    is >> a ;
-    joint.setAxis3Anchor((osgODE::LMotorJoint::AxisAnchor) a) ;
-    return true ;
-}
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
 REGISTER_OBJECT_WRAPPER( LMotorJoint,
                          new osgODE::LMotorJoint,
                          osgODE::LMotorJoint,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::LMotorJoint" )
+                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::MotorJoint osgODE::LMotorJoint" )
 {
-    ADD_USER_SERIALIZER( Axis1Anchor ) ;
-    ADD_USER_SERIALIZER( Axis2Anchor ) ;
-    ADD_USER_SERIALIZER( Axis3Anchor ) ;
     ADD_UINT_SERIALIZER( NumAxes, 3 ) ;
 }
 /* ....................................................................... */

@@ -1,9 +1,9 @@
 /*!
- * @file AMotorJoint_serializer.cpp
+ * @file LMPlusJoint_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/AMotorJoint>
+#include <osgODE/LMPlusJoint>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -35,12 +35,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( AMotorJoint,
-                         new osgODE::AMotorJoint,
-                         osgODE::AMotorJoint,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::MotorJoint osgODE::AMotorJoint" )
+REGISTER_OBJECT_WRAPPER( LMPlusJoint,
+                         new osgODE::LMPlusJoint,
+                         osgODE::LMPlusJoint,
+                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::MotorJoint osgODE::LMPlusJoint" )
 {
-    ADD_UINT_SERIALIZER( NumAxes, 3 ) ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

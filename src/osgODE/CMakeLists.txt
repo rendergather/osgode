@@ -48,12 +48,15 @@ SET(TARGET_H
     ${HEADER_PATH}/LinearVec3Interpolator
     ${HEADER_PATH}/LMotorJoint
     ${HEADER_PATH}/LMotorJoint.inl
+    ${HEADER_PATH}/LMPlusJoint
     ${HEADER_PATH}/Manager
     ${HEADER_PATH}/Manager.inl
     ${HEADER_PATH}/ManagerUpdateCallback
     ${HEADER_PATH}/ManagerUpdateCallback.inl
     ${HEADER_PATH}/MotionPath
     ${HEADER_PATH}/MotionPath.inl
+    ${HEADER_PATH}/MotorJoint
+    ${HEADER_PATH}/MotorJoint.inl
     ${HEADER_PATH}/NearCallback
     ${HEADER_PATH}/Notify
     ${HEADER_PATH}/Notify_android
@@ -131,9 +134,11 @@ SET(TARGET_SRC
     LinearQuatInterpolator.cpp
     LinearVec3Interpolator.cpp
     LMotorJoint.cpp
+    LMPlusJoint.cpp
     Manager.cpp
     ManagerUpdateCallback.cpp
     MotionPath.cpp
+    MotorJoint.cpp
     NearCallback.cpp
     Notify.c
     Notify_android.cpp

@@ -1,9 +1,9 @@
 /*!
- * @file AMotorJoint.cpp
+ * @file LMPlusJoint.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/AMotorJoint>
+#include <osgODE/LMPlusJoint>
 #include <osgODE/StaticWorld>
 #include <osgODE/World>
 #include <osgODE/Notify>
@@ -36,6 +36,14 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+namespace {
+    void    dJointSetLMPlusMode3(dJointID j, int mode)
+    {
+        dJointSetLMPlusMode(j, 0, mode) ;
+        dJointSetLMPlusMode(j, 1, mode) ;
+        dJointSetLMPlusMode(j, 2, mode) ;
+    }
+} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -49,20 +57,18 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-AMotorJoint::AMotorJoint(void):
-    MotorJoint(WORLD, dAMotorUser)
+LMPlusJoint::LMPlusJoint(void):
+    MotorJoint(WORLD, dLMPlusPlanar)
 {
-    m_ODE_joint = dJointCreateAMotor(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    setNumAxes(3) ;
+    m_ODE_joint = dJointCreateLMPlus(StaticWorld::instance()->getODEWorld(), NULL) ;
 
 
-    m_functions.SetParam = dJointSetAMotorParam ;
-    m_functions.GetParam = dJointGetAMotorParam ;
+    m_functions.SetParam = dJointSetLMPlusParam ;
+    m_functions.GetParam = dJointGetLMPlusParam ;
 
-    m_set_axis_fn = dJointSetAMotorAxis ;
-    m_get_axis_fn = dJointGetAMotorAxis ;
-    m_set_motor_mode_fn = dJointSetAMotorMode ;
+    m_set_axis_fn = dJointSetLMPlusAxis ;
+    m_get_axis_fn = dJointGetLMPlusAxis ;
+    m_set_motor_mode_fn = dJointSetLMPlusMode3 ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -72,11 +78,9 @@ AMotorJoint::AMotorJoint(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-AMotorJoint::AMotorJoint(const AMotorJoint& other, const osg::CopyOp& copyop):
+LMPlusJoint::LMPlusJoint(const LMPlusJoint& other, const osg::CopyOp& copyop):
     MotorJoint(other, copyop)
 {
-
-    setNumAxes( other.getNumAxes() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -86,7 +90,7 @@ AMotorJoint::AMotorJoint(const AMotorJoint& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-AMotorJoint::~AMotorJoint(void)
+LMPlusJoint::~LMPlusJoint(void)
 {
     if(m_ODE_joint) {
         dJointDestroy(m_ODE_joint) ;
@@ -101,11 +105,11 @@ AMotorJoint::~AMotorJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 dJointID
-AMotorJoint::cloneODEJoint(dWorldID world) const
+LMPlusJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::AMotorJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("osgODE::LMPlusJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
-    dJointID    j = dJointCreateAMotor(world, NULL) ;
+    dJointID    j = dJointCreateLMPlus(world, NULL) ;
 
     if(dJointIsEnabled(m_ODE_joint)) {
         dJointEnable(j) ;
@@ -114,12 +118,6 @@ AMotorJoint::cloneODEJoint(dWorldID world) const
     }
 
     dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
-
-
-    {
-        dJointSetAMotorNumAxes( j, dJointGetAMotorNumAxes(m_ODE_joint) ) ;
-    }
 
 
 

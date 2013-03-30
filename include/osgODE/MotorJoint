@@ -1,9 +1,9 @@
 /*!
- * @file AMotorJoint
+ * @file MotorJoint
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_AMOTORJOINT_HPP
-#define _OSGODE_AMOTORJOINT_HPP
+#ifndef _OSGODE_MOTORJOINT_HPP
+#define _OSGODE_MOTORJOINT_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/MotorJoint>
+#include <osgODE/Joint>
 /* ======================================================================= */
 
 
@@ -49,21 +49,24 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! An angular motor
+//! Motor base class
 /*!
- * Default axis anchor: world \n
- * Default motor mode: dAMotorUser \n
- * Default num axes: 3
  */
-class OSG_EXPORT AMotorJoint: public MotorJoint
+class OSG_EXPORT MotorJoint: public Joint
 {
 /* ======================================================================= */
 public:
-             AMotorJoint(void) ;
-             AMotorJoint(const AMotorJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+    typedef enum {
+        WORLD = 0,
+        BODY1 = 1,
+        BODY2 = 2
+    } AxisAnchor ;
+
+             MotorJoint(AxisAnchor default_axis_anchor=WORLD, int default_motor_mode=0) ;
+             MotorJoint(const MotorJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~AMotorJoint(void) ;
+    virtual ~MotorJoint(void) ;
 /* ======================================================================= */
 
 
@@ -71,7 +74,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, AMotorJoint) ;
+//     META_Object(osgODE, MotorJoint) ;
 /* ======================================================================= */
 
 
@@ -84,8 +87,31 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void         setNumAxes(unsigned int num_axes) ;
-    inline unsigned int getNumAxes(void) const ;
+    inline void         setAxis1Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis1Anchor(void) const ;
+
+    inline void         setAxis2Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis2Anchor(void) const ;
+
+    inline void         setAxis3Anchor(AxisAnchor anchor) ;
+    inline AxisAnchor   getAxis3Anchor(void) const ;
+
+
+    inline void         setMotorMode(int mode) ;
+    inline int          getMotorMode(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void        setAxis1Implementation(const osg::Vec3& axis) ;
+    virtual void        setAxis2Implementation(const osg::Vec3& axis) ;
+    virtual void        setAxis3Implementation(const osg::Vec3& axis) ;
+    virtual void        readAxis1Implementation(osg::Vec3& axis) ;
+    virtual void        readAxis2Implementation(osg::Vec3& axis) ;
+    virtual void        readAxis3Implementation(osg::Vec3& axis) ;
 /* ======================================================================= */
 
 
@@ -93,7 +119,22 @@ public:
 
 /* ======================================================================= */
 protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    //! setup the motor mode
+    virtual void        finalize(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    typedef void    (*SetAxisPrototype)         (dJointID, int, int, dReal, dReal, dReal) ;
+    typedef void    (*GetAxisPrototype)         (dJointID, int, dVector3) ;
+    typedef void    (*SetMotorModePrototype)     (dJointID, int) ;
+
+    SetAxisPrototype        m_set_axis_fn ;
+    GetAxisPrototype        m_get_axis_fn ;
+    SetMotorModePrototype   m_set_motor_mode_fn ;
 /* ======================================================================= */
 
 
@@ -101,7 +142,11 @@ protected:
 
 /* ======================================================================= */
 private:
-    int         m_num_axes ;
+    AxisAnchor  m_x_axis_anchor ;
+    AxisAnchor  m_y_axis_anchor ;
+    AxisAnchor  m_z_axis_anchor ;
+
+    int         m_motor_mode ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -115,9 +160,9 @@ private:
 
 
 
-#include "AMotorJoint.inl"
+#include "MotorJoint.inl"
 
 
 
 
-#endif /* _OSGODE_AMOTORJOINT_HPP */
+#endif /* _OSGODE_MOTORJOINT_HPP */

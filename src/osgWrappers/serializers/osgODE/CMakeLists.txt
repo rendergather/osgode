@@ -28,8 +28,10 @@ SET(TARGET_SRC
     LinearQuatInterpolator_serializer.cpp
     LinearVec3Interpolator_serializer.cpp
     LMotorJoint_serializer.cpp
+    LMPlusJoint_serializer.cpp
     Manager_serializer.cpp
     ManagerUpdateCallback_serializer.cpp
+    MotorJoint_serializer.cpp
     MotionPath_serializer.cpp
     NearCallback_serializer.cpp
     ODECallback_serializer.cpp

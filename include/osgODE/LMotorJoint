@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   Copyright (C) 2011 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,7 +29,7 @@
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osgODE/MotorJoint>
 /* ======================================================================= */
 
 
@@ -51,18 +51,14 @@ namespace osgODE
 /* ....................................................................... */
 //! A linear motor
 /*!
+ * Default axis anchor: world \n
+ * Default num axes: 3
  */
-class OSG_EXPORT LMotorJoint: public Joint
+class OSG_EXPORT LMotorJoint: public MotorJoint
 {
 /* ======================================================================= */
 public:
-    typedef enum {
-        WORLD = 0,
-        BODY1 = 1,
-        BODY2 = 2
-    } AxisAnchor ;
-
-             LMotorJoint(AxisAnchor default_axis_anchor=WORLD) ;
+             LMotorJoint(void) ;
              LMotorJoint(const LMotorJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
@@ -89,29 +85,6 @@ public:
 public:
     inline void         setNumAxes(unsigned int num_axes) ;
     inline unsigned int getNumAxes(void) const ;
-
-    inline void         setAxis1Anchor(AxisAnchor anchor) ;
-    inline AxisAnchor   getAxis1Anchor(void) const ;
-
-    inline void         setAxis2Anchor(AxisAnchor anchor) ;
-    inline AxisAnchor   getAxis2Anchor(void) const ;
-
-    inline void         setAxis3Anchor(AxisAnchor anchor) ;
-    inline AxisAnchor   getAxis3Anchor(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void        setAxis1Implementation(const osg::Vec3& axis) ;
-    virtual void        setAxis2Implementation(const osg::Vec3& axis) ;
-    virtual void        setAxis3Implementation(const osg::Vec3& axis) ;
-
-    virtual void        readAxis1Implementation(osg::Vec3& axis) ;
-    virtual void        readAxis2Implementation(osg::Vec3& axis) ;
-    virtual void        readAxis3Implementation(osg::Vec3& axis) ;
 /* ======================================================================= */
 
 
@@ -128,10 +101,6 @@ protected:
 /* ======================================================================= */
 private:
     int         m_num_axes ;
-
-    AxisAnchor  m_x_axis_anchor ;
-    AxisAnchor  m_y_axis_anchor ;
-    AxisAnchor  m_z_axis_anchor ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

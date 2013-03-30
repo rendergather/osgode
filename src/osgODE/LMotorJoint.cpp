@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   Copyright (C) 2011 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -49,19 +49,19 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-LMotorJoint::LMotorJoint(AxisAnchor default_axis_anchor)
+LMotorJoint::LMotorJoint(void):
+    MotorJoint(WORLD, 0)
 {
     m_ODE_joint = dJointCreateLMotor(StaticWorld::instance()->getODEWorld(), NULL) ;
 
     setNumAxes(3) ;
 
-    setAxis1Anchor( default_axis_anchor ) ;
-    setAxis2Anchor( default_axis_anchor ) ;
-    setAxis3Anchor( default_axis_anchor ) ;
-
 
     m_functions.SetParam = dJointSetLMotorParam ;
     m_functions.GetParam = dJointGetLMotorParam ;
+
+    m_set_axis_fn = dJointSetLMotorAxis ;
+    m_get_axis_fn = dJointGetLMotorAxis ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -72,14 +72,10 @@ LMotorJoint::LMotorJoint(AxisAnchor default_axis_anchor)
 /* ======================================================================= */
 /* ....................................................................... */
 LMotorJoint::LMotorJoint(const LMotorJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+    MotorJoint(other, copyop)
 {
 
-    setNumAxes(other.getNumAxes()) ;
-
-    setAxis1Anchor(other.getAxis1Anchor()) ;
-    setAxis2Anchor(other.getAxis2Anchor()) ;
-    setAxis3Anchor(other.getAxis3Anchor()) ;
+    setNumAxes( other.getNumAxes() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -94,202 +90,6 @@ LMotorJoint::~LMotorJoint(void)
     if(m_ODE_joint) {
         dJointDestroy(m_ODE_joint) ;
     }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::setAxis1Implementation(const osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-
-
-
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
-
-
-    if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
-
-    } else {
-        b1 = NULL ;
-    }
-
-
-
-    if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-
-    } else {
-        b2 = NULL ;
-    }
-
-
-
-    if( (m_z_axis_anchor == WORLD)  ||  ((m_z_axis_anchor == BODY1) && b1)  ||  ((m_z_axis_anchor == BODY2) && b2) ) {
-        dJointSetLMotorAxis(m_ODE_joint, 0, m_z_axis_anchor, axis.x(), axis.y(), axis.z()) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::setAxis2Implementation(const osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-
-
-
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
-
-
-    if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
-
-    } else {
-        b1 = NULL ;
-    }
-
-
-
-    if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-
-    } else {
-        b2 = NULL ;
-    }
-
-
-    if( (m_y_axis_anchor == WORLD)  ||  ((m_y_axis_anchor == BODY1) && b1)  ||  ((m_y_axis_anchor == BODY2) && b2) ) {
-        dJointSetLMotorAxis(m_ODE_joint, 1, m_y_axis_anchor, axis.x(), axis.y(), axis.z()) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::setAxis3Implementation(const osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-
-
-
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
-
-
-    if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
-
-    } else {
-        b1 = NULL ;
-    }
-
-
-
-    if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-
-    } else {
-        b2 = NULL ;
-    }
-
-
-    if( (m_z_axis_anchor == WORLD)  ||  ((m_z_axis_anchor == BODY1) && b1)  ||  ((m_z_axis_anchor == BODY2) && b2) ) {
-        dJointSetLMotorAxis(m_ODE_joint, 2, m_z_axis_anchor, axis.x(), axis.y(), axis.z()) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::readAxis1Implementation(osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-    dVector3    vec ;
-    dOPE(vec, =, axis) ;
-
-    dJointGetLMotorAxis(m_ODE_joint, 0, vec) ;
-
-    dOPE(axis, =, vec) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::readAxis2Implementation(osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-    dVector3    vec ;
-    dOPE(vec, =, axis) ;
-
-    dJointGetLMotorAxis(m_ODE_joint, 1, vec) ;
-
-    dOPE(axis, =, vec) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-LMotorJoint::readAxis3Implementation(osg::Vec3& axis)
-{
-    if( ! getWorld() ) {
-        return ;
-    }
-
-    dVector3    vec ;
-    dOPE(vec, =, axis) ;
-
-    dJointGetLMotorAxis(m_ODE_joint, 2, vec) ;
-
-    dOPE(axis, =, vec) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

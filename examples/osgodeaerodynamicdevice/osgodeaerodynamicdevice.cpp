@@ -52,7 +52,7 @@ main(int argc, char** argv)
      * [3] Create a kinematic plane as floor
      */
     {
-        osg::Node*  plane = osgDB::readNodeFile( "common/floor.osgb" ) ;
+        osg::Node*  plane = osgDB::readNodeFile( "floor.osgb" ) ;
 
         PS_ASSERT1( plane != NULL ) ;
 

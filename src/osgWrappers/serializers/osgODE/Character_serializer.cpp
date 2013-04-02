@@ -1,9 +1,9 @@
 /*!
- * @file AerodynamicDevice.cpp
+ * @file Character_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,10 +24,9 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/AerodynamicDevice>
-#include <osgODE/RigidBody>
-#include <osgODE/World>
-#include <osgODE/Notify>
+#include <osgODE/Character>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -42,80 +41,14 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(double cx):
-    m_cx(cx)
+REGISTER_OBJECT_WRAPPER( Character,
+                         new osgODE::Character,
+                         osgODE::Character,
+                         "osg::Object osgODE::ODEObject osgODE::ODEObjectContainer osgODE::CharacterBase osgODE::Character" )
 {
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(const AerodynamicDevice& other, const osg::CopyOp& copyop):
-    ODECallback(other, copyop),
-    m_cx(other.m_cx)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-AerodynamicDevice::~AerodynamicDevice(void)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-AerodynamicDevice::operator()(ODEObject* object)
-{
-
-    RigidBody*  body = object->asRigidBody() ;
-
-    PS_ASSERT1(body != NULL) ;
-
-
-
-    World*              world = body->getWorld() ;
-
-    PS_ASSERT1(world != NULL) ;
-
-
-    osg::Vec3       wind = world->getCurrentWind() - body->getLinearVelocity() ;
-
-    const osg::Vec3 K = wind * 0.5 * wind.length() * world->getAirDensity() ;
-
-
-
-    // F = 1/2 CX VEL^2 DENSITY
-
-    osg::Vec3   F = K * m_cx ;
-
-
-    // add the force
-    body->addForce( F ) ;
-
-
-    traverse(object) ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

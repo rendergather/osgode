@@ -1,0 +1,297 @@
+/*!
+ * @file CharacterBase
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_CHARACTERBASE_HPP
+#define _OSGODE_CHARACTERBASE_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODEObjectContainer>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class AMotorJoint ;
+class LMotorJoint ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A standing up, running and jumping character
+/*!
+ *
+ */
+class OSG_EXPORT CharacterBase: public ODEObjectContainer
+{
+/* ======================================================================= */
+public:
+             CharacterBase(void) ;
+             CharacterBase(const CharacterBase& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~CharacterBase(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, CharacterBase) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Create and setup body and motors
+    void    init(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the body
+    void                        setBody(RigidBody* body) ;
+
+    //! Get the body
+    inline RigidBody*           getBody(void) ;
+
+    //! Get the const body
+    inline const RigidBody*     getBody(void) const ;
+
+
+
+    //! Set the joint that constrains body orientation
+    void                        setAngularMotor(AMotorJoint* joint) ;
+
+    //! Get the joint that constrains body orientation
+    inline AMotorJoint*         getAngularMotor(void) ;
+
+    //! Get the const joint that constrains body orientation
+    inline const AMotorJoint*   getAngularMotor(void) const ;
+
+
+
+    //! Set the joint that translates the body
+    void                        setLinearMotor(LMotorJoint* joint) ;
+
+    //! Get the joint that translates the body
+    inline LMotorJoint*         getLinearMotor(void) ;
+
+    //! Get the const joint that translates the body
+    inline const LMotorJoint*   getLinearMotor(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the "up" vector in world frame. Default: +Z
+    inline void                 setUpVersor(const osg::Vec3& up) ;
+
+    //! Get the "up" vector in world frame. Default: +Z
+    inline const osg::Vec3&     getUpVersor(void) const ;
+
+
+    //! The right hand side of the character in local frame. Default: +X
+    inline void                 setSideVersor(const osg::Vec3& rhs) ;
+
+    //! The right hand side of the character in local frame. Default: +X
+    inline const osg::Vec3&     getSideVersor(void) const ;
+
+
+
+    //! Set the height. Default: 1.75
+    inline void     setHeight(double height) ;
+
+    //! Get the height. Default: 1.75
+    inline double   getHeight(void) const ;
+
+
+
+    //! Set the rotation around the up versor
+    inline void     setYaw(double yaw) ;
+
+    //! Get the rotation around the up versor
+    inline double   getYaw(void) const ;
+
+    //! Set the rotation around the side versor. Default: 1/2 pi
+    inline void     setPitch(double pitch) ;
+
+    //! Get the rotation around the side versor. Default: 1/2 pi
+    inline double   getPitch(void) const ;
+
+
+
+
+    //! Foot contact spring (default: 1e5)
+    inline void     setFootContactSpring(double spring) ;
+
+
+    //! Foot contact spring (default: 1e5)
+    inline double   getFootContactSpring(void) const ;
+
+
+    //! Foot contact damper (default: 1e3)
+    inline void     setFootContactDamper(double damper) ;
+
+
+    //! Foot contact damper (default: 1e3)
+    inline double   getFootContactDamper(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the linear velocity of the character
+    /*!
+     * @param   velocity    During computation, the velocity is projected
+     *                      onto the plane orthogonal to the foot contact
+     *                      normal. The resulting vector is then rescaled to
+     *                      preserve the original length.
+     *
+     * @param   fmax        The maximum force that can be used to push the
+     *                      humanoid
+     */
+    inline void     setMotion(const osg::Vec3& velocity, double fmax) ;
+
+
+    //! Add a force to the body in world frame
+    /*!
+     * @param   force       The force in world frame
+     *
+     * @param   res_time    Any other call to this function will have no
+     *                      effect for res_time seconds, starting at next
+     *                      world step.
+     */
+    inline void     setJump(const osg::Vec3& force, double res_time = 0.0) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Returns true if the character touches the ground
+    inline bool     isOnGround(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    update(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    void    _updateOrientation(double step_size) ;
+    void    _collideAgainstGround(double step_size) ;
+    void    _move(double step_size) ;
+    void    _jump(double step_size) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<RigidBody>     m_body ;
+    osg::ref_ptr<AMotorJoint>   m_amotor ;
+    osg::ref_ptr<LMotorJoint>   m_lmotor ;
+
+
+    osg::Vec3   m_up_versor ;
+    osg::Vec3   m_side_versor ;
+
+    double      m_yaw ;
+    double      m_pitch ;
+
+    double      m_height ;
+
+
+    double          m_foot_contact_spring ;
+    double          m_foot_contact_damper ;
+
+    osg::Vec3       m_motion_velocity ;
+    double          m_motion_fmax ;
+
+    osg::Vec3       m_jump_force ;
+    double          m_jump_res_time ;
+
+
+
+    dJointID    m_foot_contact_joint ;
+
+    bool        m_is_on_ground ;
+
+    osg::Vec3   m_ground_contact_normal ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "CharacterBase.inl"
+
+
+
+
+#endif /* _OSGODE_CHARACTERBASE_HPP */

@@ -45,7 +45,7 @@ using namespace osgODEUtil ;
 
 
 // Get a directional light
-osg::Group* create_light(void) ;
+osg::Group* create_light(bool nofx) ;
 
 
 
@@ -59,8 +59,46 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
+
+
+#if USE_PVIEWER
+
+    osg::ArgumentParser arguments(&argc,argv) ;
+
+    bool            HDR = false ;
+    bool            BLOOM = false ;
+    bool            LOW = false ;
+    bool            NO_FX = false ;
+    std::string     SKY_CUBE_PREFIX = "" ;
+
+
+    while( arguments.read("--hdr") ) {
+        HDR = true ;
+        BLOOM = true ;
+    }
+
+    while( arguments.read("--bloom") ) {
+        BLOOM = true ;
+    }
+
+    while( arguments.read("--low") ) {
+        LOW = true ;
+    }
+
+    while( arguments.read("--no-fx") ) {
+        NO_FX = true ;
+    }
+
+    while( arguments.read("--sky-cube-prefix", SKY_CUBE_PREFIX) ) ;
+
+
+
     // The graph
-    osg::Group*     root = create_light() ;
+    osg::Group*     root = create_light( NO_FX ) ;
+
+#else
+    osg::Group*     root = create_light( true ) ;
+#endif
 
 
 
@@ -137,20 +175,14 @@ main(int argc, char** argv)
 
 #if USE_PVIEWER
 
-    bool    HDR = false ;
-
-    osg::ArgumentParser arguments(&argc,argv) ;
-
-    while( arguments.read("--hdr") ) {
-        HDR = true ;
-    }
-
-
-
     pViewer::Viewer     viewer ;
-    viewer.setEnableFullScreenEffects(true) ;
-//     viewer.setRenderPass( pViewer::createLo() ) ;
-    viewer.setRenderPass( pViewer::createHi(HDR, HDR, "../../../pViewer/examples/data/cube") ) ;
+    viewer.setEnableFullScreenEffects( ! NO_FX ) ;
+
+    if( LOW ) {
+        viewer.setRenderPass( pViewer::createLo() ) ;
+    } else {
+        viewer.setRenderPass( pViewer::createHi(BLOOM, HDR, SKY_CUBE_PREFIX) ) ;
+    }
 
 #else
 
@@ -229,13 +261,17 @@ main(int argc, char** argv)
 
 
 osg::Group*
-create_light(void)
+create_light(bool nofx)
 {
+    osg::Group* group = NULL ;
+
+
 #if USE_PVIEWER
-    osg::Group*         group = new osg::Group() ;
+
+    if( ! nofx ) {
+        group = new osg::Group() ;
 
 
-    {
         pViewer::Light* light = new pViewer::Light() ;
 
         osg::Vec3   position = osg::Vec3(1, -2, 2) ;
@@ -255,15 +291,10 @@ create_light(void)
         light->setType( pViewer::Light::DIRECTIONAL ) ;
 
         group->addChild(light) ;
-    }
 
+    } else {
 
-
-#else
-    osg::LightSource*   group = new osg::LightSource() ;
-
-
-    {
+        osg::LightSource*   ls = new osg::LightSource() ;
         osg::Light* light = new osg::Light() ;
 
         osg::Vec3   position = osg::Vec3(1, -2, 2) ;
@@ -276,7 +307,35 @@ create_light(void)
         light->setDiffuse( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
         light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
 
-        group->setLight(light) ;
+        ls->setLight(light) ;
+
+        group = ls ;
+    }
+
+
+
+#else
+
+    (void) nofx ;
+
+
+    {
+        osg::LightSource*   ls = new osg::LightSource() ;
+        osg::Light* light = new osg::Light() ;
+
+        osg::Vec3   position = osg::Vec3(1, -2, 2) ;
+        position.normalize() ;
+
+        light->setLightNum(0) ;
+        light->setPosition( osg::Vec4(position, 0.0) ) ;
+        light->setDirection( -position ) ;
+        light->setAmbient( osg::Vec4(0.0, 0.0, 0.0, 1.0) ) ;
+        light->setDiffuse( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
+        light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
+
+        ls->setLight(light) ;
+
+        group = ls ;
     }
 #endif
 

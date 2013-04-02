@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -59,7 +59,7 @@ ODEObjectContainer::ODEObjectContainer(void)
 /* ======================================================================= */
 /* ....................................................................... */
 ODEObjectContainer::ODEObjectContainer(const ODEObjectContainer& other, const osg::CopyOp& copyop):
-    osgODE::ODEObject(other, copyop)
+    ODEObject(other, copyop)
 {
     ObjectList::const_iterator  itr = other.m_object_list.begin() ;
     ObjectList::const_iterator  itr_end = other.m_object_list.end() ;
@@ -148,7 +148,7 @@ ODEObjectContainer::addToWorldInternal(World* world)
 
 
     while( itr != itr_end ) {
-        osgODE::ODEObject*  current = *itr++ ;
+        ODEObject*  current = *itr++ ;
 
         if( current->addToWorldInternal(world) ) {
             PS_DBG2("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): %p added to world",
@@ -187,7 +187,7 @@ ODEObjectContainer::removeFromWorldInternal(World* world)
 
 
     while( itr != itr_end ) {
-        osgODE::ODEObject*  current = *itr++ ;
+        ODEObject*  current = *itr++ ;
 
         if( current->removeFromWorldInternal(world) ) {
             PS_DBG2("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): %p removed from world",
@@ -254,15 +254,19 @@ ODEObjectContainer::getBound(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::addObject(osgODE::ODEObject* obj)
+ODEObjectContainer::addObject(ODEObject* obj)
 {
     PS_DBG2("osgODE::ODEObjectContainer::addObject(%p, obj=%p)", this, obj) ;
+
+    if( ! obj ) {
+        return ;
+    }
 
 
     m_object_list.push_back(obj) ;
 
 
-    osgODE::World*  world = getWorld() ;
+    World*  world = getWorld() ;
 
 
     if( world ) {
@@ -272,7 +276,7 @@ ODEObjectContainer::addObject(osgODE::ODEObject* obj)
 
             obj->setWorldInternal(world) ;
         } else {
-            PS_FATAL("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
+            PS_FATAL("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
                             this, world, obj->libraryName(), obj->className(), obj) ;
         }
     }
@@ -294,7 +298,7 @@ ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
     }
 
 
-    osg::ref_ptr<osgODE::ODEObject> obj = m_object_list[idx].get() ;
+    osg::ref_ptr<ODEObject> obj = m_object_list[idx].get() ;
 
 
     PS_DBG2("osgODE::ODEObjectContainer::removeObject(%p, obj=%p)", this, obj.get()) ;
@@ -309,7 +313,7 @@ ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
     }
 
 
-    osgODE::World*  world = getWorld() ;
+    World*  world = getWorld() ;
 
 
     if( world ) {
@@ -372,7 +376,7 @@ ODEObjectContainer::getObject(unsigned int idx) const
 /* ======================================================================= */
 /* ....................................................................... */
 unsigned int
-ODEObjectContainer::getObjectIDX(osgODE::ODEObject* obj) const
+ODEObjectContainer::getObjectIDX(ODEObject* obj) const
 {
     ObjectList::const_iterator  itr = m_object_list.begin() ;
     ObjectList::const_iterator  itr_end = m_object_list.end() ;

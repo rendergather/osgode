@@ -488,11 +488,11 @@ osgODE::RigidBody::getAngularAcceleration(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline osg::Vec3
-osgODE::RigidBody::getPointVelocity(const osg::Vec4& p) const
+osgODE::RigidBody::getPointVelocity(const osg::Vec3& p, bool local) const
 {
     dVector3    result ;
 
-    if( p.w() > 0.5 ) {
+    if( local ) {
         dBodyGetRelPointVel(m_ODE_body, p.x(), p.y(), p.z(), result) ;
     } else {
         dBodyGetPointVel(m_ODE_body, p.x(), p.y(), p.z(), result) ;

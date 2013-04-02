@@ -33,6 +33,7 @@
 #include <osg/NodeVisitor>
 #include <osg/observer_ptr>
 
+#include <osgODE/ODE>
 #include <osgODE/ODECallback>
 /* ======================================================================= */
 

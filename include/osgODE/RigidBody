@@ -220,18 +220,21 @@ public:
 public:
     //! Apply a force on a point
     /*!
-     * Both force and point are intended as expressed in relative
-     * coordinates if the fourth element of the vector is greater than 0.5
+     * Last two parameters specify wheter the force and/or the point are in
+     * local co.
      */
-    void        addForce(const osg::Vec4& force, const osg::Vec4& point=osg::Vec4(0,0,0,1)) ;
+    void        addForce(   const osg::Vec3&    force,
+                            const osg::Vec3&    point = osg::Vec3(0,0,0),
+                            bool                force_local = false,
+                            bool                point_local = true
+                        ) ;
 
 
     //! Apply a torque
     /*!
-     * Both force and point are intended as expressed in relative
-     * coordinates if the fourth element of the vector is greater than 0.5
+     * Second parameter specifies if the torque is in relative co
      */
-    void        addTorque(const osg::Vec4& torque) ;
+    void        addTorque(const osg::Vec3& torque, bool local=false) ;
 
 
 
@@ -283,10 +286,9 @@ public:
 
     //! Get the velocity of a point belonging to this body
     /*!
-     * The point is in relative coordinates if the fourth element of the
-     * vector is greater than 0.5
+     * The point is in relative coordinates if the second parameter is true
      */
-    inline osg::Vec3    getPointVelocity(const osg::Vec4& p) const ;
+    inline osg::Vec3    getPointVelocity(const osg::Vec3& p, bool local=false) const ;
 /* ======================================================================= */
 
 

@@ -16,6 +16,9 @@ SET(TARGET_H
     ${HEADER_PATH}/BallJoint
     ${HEADER_PATH}/Box
     ${HEADER_PATH}/Capsule
+    ${HEADER_PATH}/Character
+    ${HEADER_PATH}/CharacterBase
+    ${HEADER_PATH}/CharacterBase.inl
     ${HEADER_PATH}/Collidable
     ${HEADER_PATH}/Collidable.inl
     ${HEADER_PATH}/CollisionCallback
@@ -114,6 +117,8 @@ SET(TARGET_SRC
     BallJoint.cpp
     Box.cpp
     Capsule.cpp
+    Character.cpp
+    CharacterBase.cpp
     Collidable.cpp
     CollisionCallback.cpp
     CollisionParameters.cpp

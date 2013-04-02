@@ -9,6 +9,8 @@ SET(TARGET_SRC
     BallJoint_serializer.cpp
     Box_serializer.cpp
     Capsule_serializer.cpp
+    Character_serializer.cpp
+    CharacterBase_serializer.cpp
     Collidable_serializer.cpp
     CollisionCallback_serializer.cpp
     CollisionParameters_serializer.cpp

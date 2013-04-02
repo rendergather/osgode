@@ -1,9 +1,9 @@
 /*!
- * @file AerodynamicDevice.cpp
+ * @file CharacterBase_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,10 +24,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/AerodynamicDevice>
+#include <osgODE/CharacterBase>
 #include <osgODE/RigidBody>
-#include <osgODE/World>
-#include <osgODE/Notify>
+#include <osgODE/AMotorJoint>
+#include <osgODE/LMotorJoint>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -42,80 +44,24 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(double cx):
-    m_cx(cx)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(const AerodynamicDevice& other, const osg::CopyOp& copyop):
-    ODECallback(other, copyop),
-    m_cx(other.m_cx)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-AerodynamicDevice::~AerodynamicDevice(void)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-AerodynamicDevice::operator()(ODEObject* object)
+REGISTER_OBJECT_WRAPPER( CharacterBase,
+                         new osgODE::CharacterBase,
+                         osgODE::CharacterBase,
+                         "osg::Object osgODE::ODEObject osgODE::ODEObjectContainer osgODE::CharacterBase" )
 {
 
-    RigidBody*  body = object->asRigidBody() ;
-
-    PS_ASSERT1(body != NULL) ;
-
-
-
-    World*              world = body->getWorld() ;
-
-    PS_ASSERT1(world != NULL) ;
-
-
-    osg::Vec3       wind = world->getCurrentWind() - body->getLinearVelocity() ;
-
-    const osg::Vec3 K = wind * 0.5 * wind.length() * world->getAirDensity() ;
-
-
-
-    // F = 1/2 CX VEL^2 DENSITY
-
-    osg::Vec3   F = K * m_cx ;
-
-
-    // add the force
-    body->addForce( F ) ;
-
-
-    traverse(object) ;
+    ADD_OBJECT_SERIALIZER( Body, osgODE::RigidBody, NULL ) ;
+    ADD_OBJECT_SERIALIZER( AngularMotor, osgODE::AMotorJoint, NULL ) ;
+    ADD_OBJECT_SERIALIZER( LinearMotor, osgODE::LMotorJoint, NULL ) ;
+    ADD_VEC3_SERIALIZER( UpVersor, osg::Z_AXIS ) ;
+    ADD_VEC3_SERIALIZER( SideVersor, osg::Y_AXIS ) ;
+    ADD_DOUBLE_SERIALIZER( Yaw, 0.0 ) ;
+    ADD_DOUBLE_SERIALIZER( Pitch, osg::PI * 0.5 ) ;
+    ADD_DOUBLE_SERIALIZER( Height, 1.75 ) ;
+    ADD_DOUBLE_SERIALIZER( FootContactSpring, 10000 ) ;
+    ADD_DOUBLE_SERIALIZER( FootContactDamper, 1000 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

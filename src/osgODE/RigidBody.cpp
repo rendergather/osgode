@@ -303,14 +303,14 @@ RigidBody::setDensity(double density, const osg::Vec3& size, int type_class)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-osgODE::RigidBody::addForce(const osg::Vec4& f, const osg::Vec4& p)
+osgODE::RigidBody::addForce(const osg::Vec3& f, const osg::Vec3& p, bool fl, bool pl)
 {
-    const int  bit_mask = ( (int)(p.w() > 0.5) << 1 )  |  (int)(f.w() > 0.5) ;
+    const int  bit_mask = ( (int)(pl) << 1 )  |  (int)(fl) ;
 
     switch( bit_mask )
     {
         case 0:
-            // f.w() <= 0.5 && p.w() <= 0.5
+            // force_local=false, point_local=false
             dBodyAddForceAtPos(m_ODE_body,
                                     f.x(), f.y(), f.z(),
                                     p.x(), p.y(), p.z()) ;
@@ -319,7 +319,7 @@ osgODE::RigidBody::addForce(const osg::Vec4& f, const osg::Vec4& p)
 
 
         case 1:
-            // f.w() > 0.5 && p.w() <= 0.5
+            // force_local=true, point_local=false
             dBodyAddRelForceAtPos(m_ODE_body,
                                     f.x(), f.y(), f.z(),
                                     p.x(), p.y(), p.z()) ;
@@ -328,7 +328,7 @@ osgODE::RigidBody::addForce(const osg::Vec4& f, const osg::Vec4& p)
 
 
         case 2:
-            // f.w() <= 0.5 && p.w() > 0.5
+            // force_local=false, point_local=true
             dBodyAddForceAtRelPos(m_ODE_body,
                                     f.x(), f.y(), f.z(),
                                     p.x(), p.y(), p.z()) ;
@@ -337,7 +337,7 @@ osgODE::RigidBody::addForce(const osg::Vec4& f, const osg::Vec4& p)
 
 
         case 3:
-            // f.w() > 0.5 && p.w() > 0.5
+            // force_local=true, point_local=true
             dBodyAddRelForceAtRelPos(m_ODE_body,
                                         f.x(), f.y(), f.z(),
                                         p.x(), p.y(), p.z()) ;
@@ -359,9 +359,9 @@ osgODE::RigidBody::addForce(const osg::Vec4& f, const osg::Vec4& p)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-osgODE::RigidBody::addTorque(const osg::Vec4& t)
+osgODE::RigidBody::addTorque(const osg::Vec3& t, bool local)
 {
-    if(t.w() > 0.5) {
+    if( local ) {
 
         dBodyAddRelTorque(m_ODE_body, t.x(), t.y(), t.z()) ;
 

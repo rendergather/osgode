@@ -156,53 +156,6 @@ Joint::addToWorldInternal(World* world)
 
 
 
-#if 0
-#define WRITE_PARAM(PAR) \
-    PS_DBG2("Joint %p:  %s  %lf", this, #PAR, getParam(PAR))
-
-        WRITE_PARAM(dParamLoStop1) ;
-        WRITE_PARAM(dParamHiStop1) ;
-        WRITE_PARAM(dParamVel1) ;
-        WRITE_PARAM(dParamFMax1) ;
-        WRITE_PARAM(dParamFudgeFactor1) ;
-        WRITE_PARAM(dParamBounce) ;
-        WRITE_PARAM(dParamERP1)
-        WRITE_PARAM(dParamCFM1)
-        WRITE_PARAM(dParamStopERP1) ;
-        WRITE_PARAM(dParamStopCFM1) ; ;
-        WRITE_PARAM(dParamSuspensionERP1) ;
-        WRITE_PARAM(dParamSuspensionCFM1) ;
-
-        WRITE_PARAM(dParamLoStop2) ;
-        WRITE_PARAM(dParamHiStop2) ;
-        WRITE_PARAM(dParamVel2) ;
-        WRITE_PARAM(dParamFMax2) ;
-        WRITE_PARAM(dParamFudgeFactor2) ;
-        WRITE_PARAM(dParamBounce) ;
-        WRITE_PARAM(dParamERP2)
-        WRITE_PARAM(dParamCFM2)
-        WRITE_PARAM(dParamStopERP2) ;
-        WRITE_PARAM(dParamStopCFM2) ; ;
-        WRITE_PARAM(dParamSuspensionERP2) ;
-        WRITE_PARAM(dParamSuspensionCFM2) ;
-
-        WRITE_PARAM(dParamLoStop3) ;
-        WRITE_PARAM(dParamHiStop3) ;
-        WRITE_PARAM(dParamVel3) ;
-        WRITE_PARAM(dParamFMax3) ;
-        WRITE_PARAM(dParamFudgeFactor3) ;
-        WRITE_PARAM(dParamBounce) ;
-        WRITE_PARAM(dParamERP3)
-        WRITE_PARAM(dParamCFM3)
-        WRITE_PARAM(dParamStopERP3) ;
-        WRITE_PARAM(dParamStopCFM3) ; ;
-        WRITE_PARAM(dParamSuspensionERP3) ;
-        WRITE_PARAM(dParamSuspensionCFM3) ;
-#undef WRITE_PARAM
-#endif
-
-
-
         setJointFeedback(m_feedback.get()) ;
 
         return true ;

@@ -235,20 +235,16 @@ SuspensionJoint::_computeDisplacement(double step_size)
 void
 SuspensionJoint::_applyPreload(void)
 {
-    osg::Vec3   F = getOrCreateJointFeedback()->getF1() ;
-
-    double  load = m_preload - F.normalize() ;
-
-    const osg::Vec3&    Z = this->getAxis1() ;
+    const double        load = m_preload - getOrCreateJointFeedback()->getF1().normalize() ;
 
 
     if(load > 0.0) {
 
-        const osg::Vec3 PL = Z * load ;
-        const osg::Vec4 pos(getBody2()->getPosition(), 0) ;
+        const osg::Vec3 PL = this->getAxis1() * load ;
+        const osg::Vec3 pos = getBody2()->getPosition() ;
 
-        getBody1()->addForce( osg::Vec4( -PL, 0 ), pos ) ;
-        getBody2()->addForce( osg::Vec4(  PL, 0 ), pos ) ;
+        getBody1()->addForce( -PL, pos, false, false ) ;
+        getBody2()->addForce(  PL, pos, false, false ) ;
 
     }
 }

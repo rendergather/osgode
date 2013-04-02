@@ -1,9 +1,9 @@
 /*!
- * @file ODEObjectContainer
+ * @file CharacterController
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ODEOBJECTCONTAINER_HPP
-#define _OSGODE_ODEOBJECTCONTAINER_HPP
+#ifndef _OSGODE_CHARACTERCONTROLLER_HPP
+#define _OSGODE_CHARACTERCONTROLLER_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/ODEObject>
+#include <osgGA/GUIEventHandler>
 /* ======================================================================= */
 
 
@@ -42,6 +42,7 @@ namespace osgODE
 
 
 /* ======================================================================= */
+class Character ;
 /* ======================================================================= */
 
 
@@ -49,19 +50,57 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! This class contains a list of objects
+//!
 /*!
  *
  */
-class OSG_EXPORT ODEObjectContainer: public ODEObject
+class OSG_EXPORT CharacterController: public osgGA::GUIEventHandler
 {
 /* ======================================================================= */
 public:
-             ODEObjectContainer(void) ;
-             ODEObjectContainer(const ODEObjectContainer& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             CharacterController(Character* character = NULL) ;
+             CharacterController(const CharacterController& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~ODEObjectContainer(void) ;
+    virtual ~CharacterController(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+    class OSG_EXPORT Keys
+    {
+    public:
+        Keys(void) ;
+        Keys(const Keys& other) ;
+
+        //! w
+        int     MoveFront ;
+
+        //! s
+        int     MoveBack ;
+
+        //! a
+        int     MoveLeft ;
+
+        //! d
+        int     MoveRight ;
+
+        //! KEY_Space
+        int     Jump ;
+
+        //! LMB
+        int     PrimaryAction ;
+
+        //! RMB
+        int     SecondaryAction ;
+    } ;
 /* ======================================================================= */
 
 
@@ -69,10 +108,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, ODEObjectContainer) ;
-
-    //! divert the visitors to the objects in the list
-    virtual void    accept(osg::NodeVisitor& nv) ;
+    META_Object(osgODE, CharacterController) ;
 /* ======================================================================= */
 
 
@@ -85,37 +121,9 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Put the object in the list
-    void    addObject(ODEObject* obj) ;
-
-
-    //! Remove the object by the list
-    inline bool     removeObject(ODEObject* obj, bool preserve_order=false) ;
-
-
-    //! Remove the object by the list
-    void            removeObject(unsigned int idx, bool preserve_order=false) ;
-
-    ODEObject*          getObject(unsigned int idx) ;
-    const ODEObject*    getObject(unsigned int idx) const ;
-
-
-#define ODEOBJECT_NOT_FOUND ((unsigned int)-1)
-
-    //! If the object is not in the list, this returns ODEOBJECT_NOT_FOUND
-    unsigned int    getObjectIDX(ODEObject* obj) const ;
-
-
-
-    //! Returns true if the object is in the list
-    inline bool     hasObject(ODEObject* obj) const ;
-
-
-
-
-    typedef std::vector< osg::ref_ptr<ODEObject> >  ObjectList ;
-
-    inline const ObjectList&    getObjectList(void) const ;
+    void                        setCharacter(Character* character) ;
+    inline Character*           getCharacter(void) ;
+    inline const Character*     getCharacter(void) const ;
 /* ======================================================================= */
 
 
@@ -123,14 +131,12 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual ODEObjectContainer* asODEObjectContainer(void) ;
+    inline void         setKeys(const Keys& keys) ;
+    inline Keys&        getKeys(void) ;
+    inline const Keys&  getKeys(void) const ;
 
-
-    //! Transmit the update to the objects in the list
-    virtual void                update(double step_size) ;
-
-    //! Transmit the update to the objects in the list
-    virtual void                postUpdate(double step_size) ;
+    inline void         setSensitivity(float f) ;
+    inline float        getSensitivity(void) const ;
 /* ======================================================================= */
 
 
@@ -138,28 +144,10 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Insert this instance and all the objects into the world
-    virtual bool    addToWorldInternal(World* world) ;
-
-    //! Remove this instance and all the objects from the world
-    virtual bool    removeFromWorldInternal(World* world) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual const osg::BoundingSphere&  getBound(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    callUpdateCallbackInternal(void) ;
-    virtual void    callPostUpdateCallbackInternal(void) ;
+    virtual bool    handle( const osgGA::GUIEventAdapter& ea,
+                            osgGA::GUIActionAdapter& aa,
+                            osg::Object*,
+                            osg::NodeVisitor* ) ;
 /* ======================================================================= */
 
 
@@ -167,10 +155,43 @@ public:
 
 /* ======================================================================= */
 private:
-    ObjectList  m_object_list ;
+    bool    _handleMOVE(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
+    bool    _handleKEYDOWN(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
+    bool    _handleKEYUP(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
+    bool    _handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
+    bool    _handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
+
+    void    _moveCharacter(void) ;
+/* ======================================================================= */
 
 
-    osg::BoundingSphere         m_bounding_sphere ;
+
+
+/* ======================================================================= */
+private:
+    Keys        m_keys ;
+    float       m_sensitivity ;
+
+    osg::ref_ptr<Character>  m_character ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    bool    m_warp_pointer ;
+
+
+    enum {
+        NO_MOTION = 0,
+        MOVE_FRONT = 1,
+        MOVE_BACK = 2,
+        MOVE_LEFT = 4,
+        MOVE_RIGHT = 8
+    } ;
+
+    unsigned int    m_motion ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -184,9 +205,9 @@ private:
 
 
 
-#include "ODEObjectContainer.inl"
+#include "CharacterController.inl"
 
 
 
 
-#endif /* _OSGODE_ODEOBJECTCONTAINER_HPP */
+#endif /* _OSGODE_CHARACTERCONTROLLER_HPP */

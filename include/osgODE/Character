@@ -1,9 +1,9 @@
 /*!
- * @file ODEObjectContainer.inl
+ * @file Character
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,36 +22,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ODEOBJECTCONTAINER_INL
-#define _OSGODE_ODEOBJECTCONTAINER_INL
-
-/* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_CHARACTER_HPP
+#define _OSGODE_CHARACTER_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline bool
-osgODE::ODEObjectContainer::removeObject(osgODE::ODEObject* obj, bool preserve_order)
+#include <osgODE/CharacterBase>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
 {
-    if( ! obj ) {
-        return true ;
-    }
 
-    unsigned int    idx = getObjectIDX(obj) ;
 
-    if( idx != ODEOBJECT_NOT_FOUND ) {
-        removeObject(idx, preserve_order) ;
-        return true ;
-    }
 
-    return false ;
-}
-/* ....................................................................... */
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -59,28 +49,62 @@ osgODE::ODEObjectContainer::removeObject(osgODE::ODEObject* obj, bool preserve_o
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline bool
-osgODE::ODEObjectContainer::hasObject(osgODE::ODEObject* obj) const
+//!
+/*!
+ *
+ */
+class OSG_EXPORT Character: public CharacterBase
 {
-    return getObjectIDX(obj) != ODEOBJECT_NOT_FOUND ;
-}
-/* ....................................................................... */
+/* ======================================================================= */
+public:
+             Character(void) ;
+             Character(const Character& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Character(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::ODEObjectContainer::ObjectList&
-osgODE::ODEObjectContainer::getObjectList(void) const
-{
-    return m_object_list ;
-}
+public:
+    META_Object(osgODE, Character) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-#endif /* _OSGODE_ODEOBJECTCONTAINER_INL */
+} // namespace osgODE
+
+
+
+
+// #include "Character.inl"
+
+
+
+
+#endif /* _OSGODE_CHARACTER_HPP */

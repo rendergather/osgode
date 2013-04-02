@@ -1,9 +1,9 @@
 /*!
- * @file AerodynamicDevice.cpp
+ * @file CharacterController.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,14 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/AerodynamicDevice>
-#include <osgODE/RigidBody>
-#include <osgODE/World>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_CHARACTERCONTROLLER_INL
+#define _OSGODE_CHARACTERCONTROLLER_INL
 
 
 
@@ -42,16 +36,12 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(double cx):
-    m_cx(cx)
+inline void
+osgODE::CharacterController::setKeys(const Keys& keys)
 {
+    m_keys = keys ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -61,10 +51,10 @@ AerodynamicDevice::AerodynamicDevice(double cx):
 
 /* ======================================================================= */
 /* ....................................................................... */
-AerodynamicDevice::AerodynamicDevice(const AerodynamicDevice& other, const osg::CopyOp& copyop):
-    ODECallback(other, copyop),
-    m_cx(other.m_cx)
+inline osgODE::CharacterController::Keys&
+osgODE::CharacterController::getKeys(void)
 {
+    return m_keys ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,8 +64,10 @@ AerodynamicDevice::AerodynamicDevice(const AerodynamicDevice& other, const osg::
 
 /* ======================================================================= */
 /* ....................................................................... */
-AerodynamicDevice::~AerodynamicDevice(void)
+inline const osgODE::CharacterController::Keys&
+osgODE::CharacterController::getKeys(void) const
 {
+    return m_keys ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -85,37 +77,54 @@ AerodynamicDevice::~AerodynamicDevice(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-AerodynamicDevice::operator()(ODEObject* object)
+inline void
+osgODE::CharacterController::setSensitivity(float f)
 {
-
-    RigidBody*  body = object->asRigidBody() ;
-
-    PS_ASSERT1(body != NULL) ;
-
-
-
-    World*              world = body->getWorld() ;
-
-    PS_ASSERT1(world != NULL) ;
-
-
-    osg::Vec3       wind = world->getCurrentWind() - body->getLinearVelocity() ;
-
-    const osg::Vec3 K = wind * 0.5 * wind.length() * world->getAirDensity() ;
-
-
-
-    // F = 1/2 CX VEL^2 DENSITY
-
-    osg::Vec3   F = K * m_cx ;
-
-
-    // add the force
-    body->addForce( F ) ;
-
-
-    traverse(object) ;
+    m_sensitivity = f ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline float
+osgODE::CharacterController::getSensitivity(void) const
+{
+    return m_sensitivity ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgODE::Character*
+osgODE::CharacterController::getCharacter(void)
+{
+    return m_character.get() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgODE::Character*
+osgODE::CharacterController::getCharacter(void) const
+{
+    return m_character.get() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_CHARACTERCONTROLLER_INL */

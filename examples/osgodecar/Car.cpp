@@ -169,7 +169,7 @@ Car::_computeUnderSteer(void)
 
 
     // This point is in local coord. I choose it because it's between the two wheels
-    osg::Vec3   dir = m_body->getPointVelocity( osg::Vec4(0.0, 1.5, 0.0, 1.0) ) ;
+    osg::Vec3   dir = m_body->getPointVelocity( osg::Vec3(0.0, 1.5, 0.0), true ) ;
 
     // subtract because the left axis is opposite to the right one
     osg::Vec3   axis = m_hinge_FR->getAxis2() - m_hinge_FL->getAxis2() ;

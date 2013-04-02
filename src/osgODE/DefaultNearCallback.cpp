@@ -355,9 +355,9 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
         dContact*           contact_end = &m_contacts[contacts_num] ;
 
 
-        osg::Vec4   p = osg::Vec4(contact->geom.pos[0], contact->geom.pos[1], contact->geom.pos[2], 0.0) ;
+        osg::Vec3   p = osg::Vec3(contact->geom.pos[0], contact->geom.pos[1], contact->geom.pos[2]) ;
 
-        osg::Vec3   fdir = collidable2->getPointVelocity( p ) - collidable1->getPointVelocity( p ) ;
+        osg::Vec3   fdir = collidable2->getPointVelocity( p, false ) - collidable1->getPointVelocity( p, false ) ;
 //         osg::Vec3   fdir = collidable2->getLinearVelocity() - collidable1->getLinearVelocity() ;
 
 

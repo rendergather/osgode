@@ -103,7 +103,7 @@ public:
 /* ======================================================================= */
 public:
     //! Get the dGeomID. This should never be used
-    inline dGeomID  getODEGeom(void) ;
+    inline dGeomID  getODEGeom(void) const ;
 
     //! Set the collision parameters
     inline void     setCollisionParameters(CollisionParameters* cp) ;

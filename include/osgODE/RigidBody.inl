@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -865,8 +865,20 @@ osgODE::RigidBody::setODEMass(const dMass& mass)
     bool    kinematic_flag = this->getKinematic() ;
 
 
+    if( mass.mass <= 0.0 ) {
+        dMass   m = mass ;
+        m.mass *= -1 ;
 
-    dBodySetMass(m_ODE_body, &mass) ;
+        dBodySetMass(m_ODE_body, &m) ;
+
+        m_mass_negative = true ;
+
+        this->setGravityMode(false) ;
+
+    } else {
+        dBodySetMass(m_ODE_body, &mass) ;
+        m_mass_negative = false ;
+    }
 
 
 
@@ -887,6 +899,10 @@ osgODE::RigidBody::getODEMass(void) const
     dMass   m ;
     dBodyGetMass( m_ODE_body, &m ) ;
 
+    if( m_mass_negative ) {
+        m.mass *= -1.0 ;
+    }
+
     return m ;
 }
 /* ....................................................................... */
@@ -903,7 +919,7 @@ osgODE::RigidBody::getMass(void) const
     dMass   m ;
     dBodyGetMass( m_ODE_body, &m ) ;
 
-    return m.mass ;
+    return m_mass_negative ? -m.mass : m.mass ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

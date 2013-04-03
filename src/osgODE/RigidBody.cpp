@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -51,6 +51,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody::RigidBody(void):
+    m_mass_negative(false),
     m_update_interacting_sphere(false)
 {
     dWorldID    static_world = StaticWorld::instance()->getODEWorld() ;
@@ -84,6 +85,7 @@ RigidBody::RigidBody(void):
 /* ....................................................................... */
 RigidBody::RigidBody(const RigidBody& other, const osg::CopyOp& copyop):
     Transformable(other, copyop),
+    m_mass_negative( other.m_mass_negative ),
     m_update_interacting_sphere(other.m_update_interacting_sphere),
     m_old_linear_velocity( other.m_old_linear_velocity ),
     m_linear_acceleration( other.m_linear_acceleration ),
@@ -139,6 +141,28 @@ RigidBody::setMass(double mass, const osg::Vec3& size, int type_class)
 {
     PS_DBG2(    "osgODE::RigidBody::setMass(%p, mass=%f, size=[%f, %f, %f], class=%d)",
                 this, mass, size.x(), size.y(), size.z(), type_class ) ;
+
+
+
+    // check for negative mass
+    if( mass <= 0.0 ) {
+
+        mass = fabs( mass ) ;
+
+        m_mass_negative = true ;
+
+        this->setGravityMode(false) ;
+
+
+
+    } else {
+
+        m_mass_negative = false ;
+
+    }
+
+
+
 
 
 
@@ -231,6 +255,23 @@ RigidBody::setDensity(double density, const osg::Vec3& size, int type_class)
 {
     PS_DBG2(    "osgODE::RigidBody::setDensity(%p, density=%f, size=[%f, %f, %f], class=%d)",
                 this, density, size.x(), size.y(), size.z(), type_class ) ;
+
+
+
+    // check for negative mass
+    if( density <= 0.0 ) {
+
+        density = fabs( density ) ;
+
+        m_mass_negative = true ;
+
+        this->setGravityMode(false) ;
+
+
+    } else {
+
+        m_mass_negative = false ;
+    }
 
 
 
@@ -518,9 +559,21 @@ RigidBody::removeFromWorldInternal(World* world)
 void
 RigidBody::update(double step_size)
 {
+    World*  world = getWorld() ;
+
+    PS_ASSERT1( world != NULL ) ;
+
+
     if( m_update_interacting_sphere ) {
         _updateInteractingSphere() ;
     }
+
+
+    if( m_mass_negative ) {
+        osg::Vec3   F = world->getGravity() * this->getMass() ;
+        this->addForce( F ) ;
+    }
+
 
     this->Transformable::update(step_size) ;
 }

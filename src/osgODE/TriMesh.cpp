@@ -189,6 +189,24 @@ TriMesh::setDensity(double density)
 
 
 
+    // check for negative mass
+    if( density <= 0.0 ) {
+
+        density = fabs( density ) ;
+
+        m_mass_negative = true ;
+
+        this->setGravityMode(false) ;
+
+
+    } else {
+
+        m_mass_negative = false ;
+    }
+
+
+
+
     // See RigidBody::setMass(mass, size, type_class)
     bool    kinematic_flag = this->RigidBody::getKinematic() ;
 

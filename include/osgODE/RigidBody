@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -163,6 +163,10 @@ public:
     void                    setMass(double mass, const osg::Vec3& size, int type_class) ;
 
     //! Assume a unit sphere
+    /*!
+     * If "mass" is less than or equal to zero, setGravityMode(false) is
+     * called and the body fluctuates
+     */
     virtual void            setMass(double mass) ;
 
     //! Set the dMass
@@ -498,20 +502,22 @@ private:
 protected:
     dBodyID         m_ODE_body ;
 
+    bool        m_mass_negative ;
+
 
 private:
     typedef std::vector< osg::observer_ptr<Joint> > Joints ;
     Joints  m_joints ;
 
-    bool                m_update_interacting_sphere ;
+    bool        m_update_interacting_sphere ;
 
 
 
-    osg::Vec3           m_old_linear_velocity ;
-    osg::Vec3           m_linear_acceleration ;
+    osg::Vec3       m_old_linear_velocity ;
+    osg::Vec3       m_linear_acceleration ;
 
-    osg::Vec3           m_old_angular_velocity ;
-    osg::Vec3           m_angular_acceleration ;
+    osg::Vec3       m_old_angular_velocity ;
+    osg::Vec3       m_angular_acceleration ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

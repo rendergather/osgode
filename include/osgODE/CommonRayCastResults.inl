@@ -1,9 +1,9 @@
 /*!
- * @file NearestNotMeRayCastResult.cpp
+ * @file CommonRayCastResults.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,16 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODEUtil/NearestNotMeRayCastResult>
-
-#include <osgODE/Collidable>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
+#ifndef _OSGODE_COMMONRAYCASTRESULTS_INL
+#define _OSGODE_COMMONRAYCASTRESULTS_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -41,16 +33,12 @@
 
 
 
-using namespace osgODEUtil ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-NearestNotMeRayCastResult::NearestNotMeRayCastResult(osgODE::Collidable* me):
-    m_me(me)
+inline bool
+osgODE::AllRayCastResult::hasHit(void) const
 {
+    return ! m_collision_list.empty() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -60,10 +48,10 @@ NearestNotMeRayCastResult::NearestNotMeRayCastResult(osgODE::Collidable* me):
 
 /* ======================================================================= */
 /* ....................................................................... */
-NearestNotMeRayCastResult::NearestNotMeRayCastResult(const NearestNotMeRayCastResult& other):
-    NearestRayCastResult(other),
-    m_me(other.m_me.get())
+inline const osgODE::AllRayCastResult::CollisionList&
+osgODE::AllRayCastResult::getCollisionList(void) const
 {
+    return m_collision_list ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -73,8 +61,38 @@ NearestNotMeRayCastResult::NearestNotMeRayCastResult(const NearestNotMeRayCastRe
 
 /* ======================================================================= */
 /* ....................................................................... */
-NearestNotMeRayCastResult::~NearestNotMeRayCastResult(void)
+inline osgODE::AllRayCastResult::CollisionList&
+osgODE::AllRayCastResult::getCollisionList(void)
 {
+    return m_collision_list ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline bool
+osgODE::NearestRayCastResult::hasHit(void) const
+{
+    return m_collidable.valid() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -84,10 +102,10 @@ NearestNotMeRayCastResult::~NearestNotMeRayCastResult(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-NearestNotMeRayCastResult::setMe(osgODE::Collidable* me)
+inline osgODE::Collidable*
+osgODE::NearestRayCastResult::getCollidable(void)
 {
-    m_me = me ;
+    return m_collidable.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -97,15 +115,95 @@ NearestNotMeRayCastResult::setMe(osgODE::Collidable* me)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-NearestNotMeRayCastResult::addContact(  osgODE::Collidable* other,
-                                        const osg::Vec3& position,
-                                        const osg::Vec3& surface_normal,
-                                        double distance )
+inline const osgODE::Collidable*
+osgODE::NearestRayCastResult::getCollidable(void) const
 {
-    if( other != m_me ) {
-        this->NearestRayCastResult::addContact(other, position, surface_normal, distance) ;
-    }
+    return m_collidable.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osg::Vec3&
+osgODE::NearestRayCastResult::getPosition(void) const
+{
+    return m_position ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osg::Vec3&
+osgODE::NearestRayCastResult::getNormal(void) const
+{
+    return m_normal ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const double&
+osgODE::NearestRayCastResult::getDistance(void) const
+{
+    return m_distance ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgODE::Collidable*
+osgODE::NearestNotMeRayCastResult::getMe(void)
+{
+    return m_me.get() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgODE::Collidable*
+osgODE::NearestNotMeRayCastResult::getMe(void) const
+{
+    return m_me.get() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_COMMONRAYCASTRESULTS_INL */

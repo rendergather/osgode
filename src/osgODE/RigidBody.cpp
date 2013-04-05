@@ -66,8 +66,8 @@ RigidBody::RigidBody(void):
     setMaxAngularSpeed(FLT_MAX) ;
     setLinearDamping(0.0) ;
     setAngularDamping(0.0) ;
-    setLinearDampingThreshold(0.01) ;
-    setAngularDampingThreshold(0.01) ;
+    setLinearDampingThreshold(0.0) ;
+    setAngularDampingThreshold(0.0) ;
     setAutoDisableLinearThreshold(0.01) ;
     setAutoDisableAngularThreshold(0.01) ;
     setAutoDisableFlag(false) ;

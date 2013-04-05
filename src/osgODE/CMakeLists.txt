@@ -25,7 +25,13 @@ SET(TARGET_H
     ${HEADER_PATH}/CollisionCallback.inl
     ${HEADER_PATH}/CollisionParameters
     ${HEADER_PATH}/CollisionParameters.inl
+    ${HEADER_PATH}/CommonRayCastResults
+    ${HEADER_PATH}/CommonRayCastResults.inl
+    ${HEADER_PATH}/CommonWorldOperations
     ${HEADER_PATH}/Config
+    ${HEADER_PATH}/Config.in
+    ${HEADER_PATH}/Container
+    ${HEADER_PATH}/Container.inl
     ${HEADER_PATH}/CubicVec3Interpolator
     ${HEADER_PATH}/Cylinder
     ${HEADER_PATH}/DBallJoint
@@ -39,19 +45,19 @@ SET(TARGET_H
     ${HEADER_PATH}/Hinge2Joint.inl
     ${HEADER_PATH}/HingeJoint
     ${HEADER_PATH}/HingeJoint.inl
-    ${HEADER_PATH}/Interpolator
     ${HEADER_PATH}/InterpolableMatrixTransform
+    ${HEADER_PATH}/Interpolator
     ${HEADER_PATH}/Joint
     ${HEADER_PATH}/Joint.inl
     ${HEADER_PATH}/JointBreakCallback
     ${HEADER_PATH}/JointBreakCallback.inl
     ${HEADER_PATH}/JointFeedback
     ${HEADER_PATH}/JointFeedback.inl
-    ${HEADER_PATH}/LinearQuatInterpolator
-    ${HEADER_PATH}/LinearVec3Interpolator
+    ${HEADER_PATH}/LMPlusJoint
     ${HEADER_PATH}/LMotorJoint
     ${HEADER_PATH}/LMotorJoint.inl
-    ${HEADER_PATH}/LMPlusJoint
+    ${HEADER_PATH}/LinearQuatInterpolator
+    ${HEADER_PATH}/LinearVec3Interpolator
     ${HEADER_PATH}/Manager
     ${HEADER_PATH}/Manager.inl
     ${HEADER_PATH}/ManagerUpdateCallback
@@ -70,8 +76,6 @@ SET(TARGET_H
     ${HEADER_PATH}/ODECallback.inl
     ${HEADER_PATH}/ODEObject
     ${HEADER_PATH}/ODEObject.inl
-    ${HEADER_PATH}/ODEObjectContainer
-    ${HEADER_PATH}/ODEObjectContainer.inl
     ${HEADER_PATH}/OverlappingPair
     ${HEADER_PATH}/OverlappingPair.inl
     ${HEADER_PATH}/PistonJoint
@@ -122,6 +126,9 @@ SET(TARGET_SRC
     Collidable.cpp
     CollisionCallback.cpp
     CollisionParameters.cpp
+    CommonRayCastResults.cpp
+    CommonWorldOperations.cpp
+    Container.cpp
     CubicVec3Interpolator.cpp
     Cylinder.cpp
     DBallJoint.cpp
@@ -133,13 +140,13 @@ SET(TARGET_SRC
     HingeJoint.cpp
     InterpolableMatrixTransform.cpp
     Joint.cpp
-    Joint_implementations.cpp
     JointBreakCallback.cpp
     JointFeedback.cpp
+    Joint_implementations.cpp
+    LMPlusJoint.cpp
+    LMotorJoint.cpp
     LinearQuatInterpolator.cpp
     LinearVec3Interpolator.cpp
-    LMotorJoint.cpp
-    LMPlusJoint.cpp
     Manager.cpp
     ManagerUpdateCallback.cpp
     MotionPath.cpp
@@ -150,7 +157,6 @@ SET(TARGET_SRC
     Notify_windows.c
     ODECallback.cpp
     ODEObject.cpp
-    ODEObjectContainer.cpp
     OverlappingPair.cpp
     PistonJoint.cpp
     RigidBody.cpp
@@ -176,7 +182,7 @@ SET(TARGET_SRC
 
 
 
-SET( MODULE_LINK_LIBRARIES_GNU "osg OpenThreads ode" )
-SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osg OpenThreads ODE_WIN" )
+SET( MODULE_LINK_LIBRARIES_GNU "osgParticle ode" )
+SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osgParticle osg OpenThreads ODE_WIN" )
 
 OSGODE_SETUP_LIBRARY()

@@ -1,7 +1,7 @@
 #include <osgODE/Manager>
 #include <osgODE/RigidBody>
 #include <osgODE/HingeJoint>
-#include <osgODE/ODEObjectContainer>
+#include <osgODE/Container>
 #include <osgODE/Notify>
 
 #include <osgDB/ReadFile>
@@ -11,7 +11,7 @@
 
 
 #define STEP_SIZE   5e-5
-#define INITIAL_FORCE   osg::Vec4(1e-2 / STEP_SIZE, 0, 0, 0)
+#define INITIAL_FORCE   osg::Vec3(0.1, 0.0, 0.0)
 
 
 
@@ -44,7 +44,7 @@ main(int argc, char** argv)
 
 
 
-    osgODE::ODEObjectContainer* pendulum_container = new osgODE::ODEObjectContainer() ;
+    osgODE::Container* pendulum_container = new osgODE::Container() ;
     manager->getWorld()->addObject(pendulum_container) ;
 
 

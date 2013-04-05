@@ -1,5 +1,5 @@
 /*!
- * @file ODEObjectContainer.cpp
+ * @file Container.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ODEObjectContainer>
+#include <osgODE/Container>
 #include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -47,7 +47,7 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObjectContainer::ODEObjectContainer(void)
+Container::Container(void)
 {
 }
 /* ....................................................................... */
@@ -58,7 +58,7 @@ ODEObjectContainer::ODEObjectContainer(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObjectContainer::ODEObjectContainer(const ODEObjectContainer& other, const osg::CopyOp& copyop):
+Container::Container(const Container& other, const osg::CopyOp& copyop):
     ODEObject(other, copyop)
 {
     ObjectList::const_iterator  itr = other.m_object_list.begin() ;
@@ -76,7 +76,7 @@ ODEObjectContainer::ODEObjectContainer(const ODEObjectContainer& other, const os
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObjectContainer::~ODEObjectContainer(void)
+Container::~Container(void)
 {
 }
 /* ....................................................................... */
@@ -87,8 +87,8 @@ ODEObjectContainer::~ODEObjectContainer(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObjectContainer*
-ODEObjectContainer::asODEObjectContainer(void)
+Container*
+Container::asContainer(void)
 {
     return this ;
 }
@@ -101,7 +101,7 @@ ODEObjectContainer::asODEObjectContainer(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::update(double step_size)
+Container::update(double step_size)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
@@ -119,7 +119,7 @@ ODEObjectContainer::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::postUpdate(double step_size)
+Container::postUpdate(double step_size)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
@@ -137,9 +137,9 @@ ODEObjectContainer::postUpdate(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-ODEObjectContainer::addToWorldInternal(World* world)
+Container::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -151,13 +151,13 @@ ODEObjectContainer::addToWorldInternal(World* world)
         ODEObject*  current = *itr++ ;
 
         if( current->addToWorldInternal(world) ) {
-            PS_DBG2("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): %p added to world",
+            PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p): %p added to world",
                             this, world, current) ;
 
             current->setWorldInternal(world) ;
 
         } else {
-            PS_FATAL("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
+            PS_FATAL("osgODE::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
                             this, world, current->libraryName(), current->className(), current) ;
 
             current->setWorldInternal(NULL) ;
@@ -177,9 +177,9 @@ ODEObjectContainer::addToWorldInternal(World* world)
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-ODEObjectContainer::removeFromWorldInternal(World* world)
+Container::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
 
     ObjectList::iterator    itr = m_object_list.begin() ;
@@ -190,13 +190,13 @@ ODEObjectContainer::removeFromWorldInternal(World* world)
         ODEObject*  current = *itr++ ;
 
         if( current->removeFromWorldInternal(world) ) {
-            PS_DBG2("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): %p removed from world",
+            PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
                             this, world, current) ;
 
             current->setWorldInternal(NULL) ;
 
         } else {
-            PS_FATAL("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
+            PS_FATAL("osgODE::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
                             this, world, current->libraryName(), current->className(), current) ;
         }
     }
@@ -213,7 +213,7 @@ ODEObjectContainer::removeFromWorldInternal(World* world)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::accept(osg::NodeVisitor& nv)
+Container::accept(osg::NodeVisitor& nv)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
@@ -231,7 +231,7 @@ ODEObjectContainer::accept(osg::NodeVisitor& nv)
 /* ======================================================================= */
 /* ....................................................................... */
 const osg::BoundingSphere&
-ODEObjectContainer::getBound(void) const
+Container::getBound(void) const
 {
     ObjectList::const_iterator  itr = m_object_list.begin() ;
     ObjectList::const_iterator  itr_end = m_object_list.end() ;
@@ -254,9 +254,9 @@ ODEObjectContainer::getBound(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::addObject(ODEObject* obj)
+Container::addObject(ODEObject* obj)
 {
-    PS_DBG2("osgODE::ODEObjectContainer::addObject(%p, obj=%p)", this, obj) ;
+    PS_DBG2("osgODE::Container::addObject(%p, obj=%p)", this, obj) ;
 
     if( ! obj ) {
         return ;
@@ -271,12 +271,12 @@ ODEObjectContainer::addObject(ODEObject* obj)
 
     if( world ) {
         if( obj->addToWorldInternal(world) ) {
-            PS_DBG2("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): %p added to world",
+            PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p): %p added to world",
                             this, world, obj) ;
 
             obj->setWorldInternal(world) ;
         } else {
-            PS_FATAL("osgODE::ODEObjectContainer::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
+            PS_FATAL("osgODE::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
                             this, world, obj->libraryName(), obj->className(), obj) ;
         }
     }
@@ -290,10 +290,10 @@ ODEObjectContainer::addObject(ODEObject* obj)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
+Container::removeObject(unsigned int idx, bool preserve_order)
 {
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::ODEObjectContainer::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return ;
     }
 
@@ -301,7 +301,7 @@ ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
     osg::ref_ptr<ODEObject> obj = m_object_list[idx].get() ;
 
 
-    PS_DBG2("osgODE::ODEObjectContainer::removeObject(%p, obj=%p)", this, obj.get()) ;
+    PS_DBG2("osgODE::Container::removeObject(%p, obj=%p)", this, obj.get()) ;
 
 
     if( preserve_order ) {
@@ -318,11 +318,11 @@ ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
 
     if( world ) {
         if( obj->removeFromWorldInternal(world) ) {
-            PS_DBG2("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): %p removed from world",
+            PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
                             this, world, obj.get()) ;
 
         } else {
-            PS_FATAL("osgODE::ODEObjectContainer::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
+            PS_FATAL("osgODE::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
                             this, world, obj->libraryName(), obj->className(), obj.get()) ;
         }
     }
@@ -338,10 +338,10 @@ ODEObjectContainer::removeObject(unsigned int idx, bool preserve_order)
 /* ======================================================================= */
 /* ....................................................................... */
 osgODE::ODEObject*
-ODEObjectContainer::getObject(unsigned int idx)
+Container::getObject(unsigned int idx)
 {
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::ODEObjectContainer::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return NULL ;
     }
 
@@ -357,10 +357,10 @@ ODEObjectContainer::getObject(unsigned int idx)
 /* ======================================================================= */
 /* ....................................................................... */
 const osgODE::ODEObject*
-ODEObjectContainer::getObject(unsigned int idx) const
+Container::getObject(unsigned int idx) const
 {
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::ODEObjectContainer::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return NULL ;
     }
 
@@ -376,7 +376,7 @@ ODEObjectContainer::getObject(unsigned int idx) const
 /* ======================================================================= */
 /* ....................................................................... */
 unsigned int
-ODEObjectContainer::getObjectIDX(ODEObject* obj) const
+Container::getObjectIDX(ODEObject* obj) const
 {
     ObjectList::const_iterator  itr = m_object_list.begin() ;
     ObjectList::const_iterator  itr_end = m_object_list.end() ;
@@ -403,7 +403,7 @@ ODEObjectContainer::getObjectIDX(ODEObject* obj) const
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::callUpdateCallbackInternal(void)
+Container::callUpdateCallbackInternal(void)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
@@ -430,7 +430,7 @@ ODEObjectContainer::callUpdateCallbackInternal(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObjectContainer::callPostUpdateCallbackInternal(void)
+Container::callPostUpdateCallbackInternal(void)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;

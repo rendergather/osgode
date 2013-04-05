@@ -6,7 +6,7 @@
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
 
-#include <osgODEUtil/AddRemoveObjectOperation>
+#include <osgODE/CommonWorldOperations>
 
 #include <osgViewer/Viewer>
 
@@ -31,7 +31,7 @@ public:
         const osg::Vec3 p = body->getPosition() ;
 
         if( body->getPosition().z() < -25.0 ) {
-            body->getWorld()->addOperation( new osgODEUtil::RemoveObjectOperation(body) ) ;
+            body->getWorld()->addOperation( new osgODE::RemoveObjectOperation(body) ) ;
         }
 
         traverse(obj) ;
@@ -108,7 +108,7 @@ private:
 
         box->setPosition( osg::Z_AXIS * 10 ) ;
 
-        world->addOperation( new osgODEUtil::AddObjectOperation(box) ) ;
+        world->addOperation( new osgODE::AddObjectOperation(box) ) ;
     }
 
 

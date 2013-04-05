@@ -1,9 +1,9 @@
 /*!
- * @file AddRemoveObjectOperation.inl
+ * @file Container.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,8 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_ADDREMOVEOBJECTOPERATION_INL
-#define _OSGODEUTIL_ADDREMOVEOBJECTOPERATION_INL
+#ifndef _OSGODE_CONTAINER_INL
+#define _OSGODE_CONTAINER_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -33,4 +33,54 @@
 
 
 
-#endif /* _OSGODEUTIL_ADDREMOVEOBJECTOPERATION_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+inline bool
+osgODE::Container::removeObject(osgODE::ODEObject* obj, bool preserve_order)
+{
+    if( ! obj ) {
+        return true ;
+    }
+
+    unsigned int    idx = getObjectIDX(obj) ;
+
+    if( idx != ODEOBJECT_NOT_FOUND ) {
+        removeObject(idx, preserve_order) ;
+        return true ;
+    }
+
+    return false ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline bool
+osgODE::Container::hasObject(osgODE::ODEObject* obj) const
+{
+    return getObjectIDX(obj) != ODEOBJECT_NOT_FOUND ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgODE::Container::ObjectList&
+osgODE::Container::getObjectList(void) const
+{
+    return m_object_list ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_CONTAINER_INL */

@@ -9,10 +9,6 @@ SET(HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${MODULE_NAME})
 
 
 SET(TARGET_H
-    ${HEADER_PATH}/AddRemoveObjectOperation
-    ${HEADER_PATH}/AddRemoveObjectOperation.inl
-    ${HEADER_PATH}/AllRayCastResult
-    ${HEADER_PATH}/AllRayCastResult.inl
     ${HEADER_PATH}/ControllerBase
     ${HEADER_PATH}/ControllerBase.inl
     ${HEADER_PATH}/CreateTriMeshFromNode
@@ -27,10 +23,6 @@ SET(TARGET_H
     ${HEADER_PATH}/Math.inl
     ${HEADER_PATH}/MatrixManipulator
     ${HEADER_PATH}/MatrixManipulator.inl
-    ${HEADER_PATH}/NearestNotMeRayCastResult
-    ${HEADER_PATH}/NearestNotMeRayCastResult.inl
-    ${HEADER_PATH}/NearestRayCastResult
-    ${HEADER_PATH}/NearestRayCastResult.inl
     ${HEADER_PATH}/Signal
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor.inl
@@ -43,8 +35,6 @@ SET(TARGET_H
 
 
 SET(TARGET_SRC
-    AddRemoveObjectOperation.cpp
-    AllRayCastResult.cpp
     ControllerBase.cpp
     CreateTriMeshFromNode.cpp
     FindObjects.cpp
@@ -52,8 +42,6 @@ SET(TARGET_SRC
     Icosahedron.cpp
     Math.cpp
     MatrixManipulator.cpp
-    NearestNotMeRayCastResult.cpp
-    NearestRayCastResult.cpp
     TrianglesEmitterIndexVisitor.cpp
     TrianglesEmitterPrimitiveIndexFunctor.cpp
     Version.cpp

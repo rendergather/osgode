@@ -344,7 +344,7 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Default: 0.0 0.0
+    //! Default: 0.0
     inline void     setDamping(double linear, double angular) ;
 
     //! Default: 0.0
@@ -362,16 +362,16 @@ public:
     //! Default: 0.0
     inline double   getAngularDamping(void) const ;
 
-    //! Threshold for angular damping. Default: 0.01
+    //! Threshold for angular damping. Default: 0.0
     inline void     setLinearDampingThreshold(double threshold) ;
 
-    //! Threshold for angular damping. Default: 0.01
+    //! Threshold for angular damping. Default: 0.0
     inline double   getLinearDampingThreshold(void) const ;
 
-    //! Threshold for angular damping. Default: 0.01
+    //! Threshold for angular damping. Default: 0.0
     inline void     setAngularDampingThreshold(double threshold) ;
 
-    //! Threshold for angular damping. Default: 0.01
+    //! Threshold for angular damping. Default: 0.0
     inline double   getAngularDampingThreshold(void) const ;
 /* ======================================================================= */
 

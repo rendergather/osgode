@@ -29,6 +29,7 @@
 #include <osgODE/AMotorJoint>
 #include <osgODE/LMotorJoint>
 #include <osgODE/Space>
+#include <osgODE/CommonRayCastResults>
 #include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -52,6 +53,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 CharacterBase::CharacterBase(void):
+    m_foot_ray_cast_result( new NearestNotMeRayCastResult() ),
     m_up_versor( osg::Z_AXIS ),
     m_side_versor( osg::X_AXIS ),
     m_yaw(0.0),
@@ -75,10 +77,11 @@ CharacterBase::CharacterBase(void):
 /* ======================================================================= */
 /* ....................................................................... */
 CharacterBase::CharacterBase(const CharacterBase& other, const osg::CopyOp& copyop):
-    ODEObjectContainer(other, copyop),
+    Container(other, copyop),
     m_body( other.m_body ),
     m_amotor( other.m_amotor ),
     m_lmotor( other.m_lmotor ),
+    m_foot_ray_cast_result( other.m_foot_ray_cast_result ),
     m_up_versor( other.m_up_versor ),
     m_side_versor( other.m_side_versor ),
     m_yaw(other.m_yaw),
@@ -135,7 +138,7 @@ CharacterBase::update(double step_size)
 
 
 
-    this->ODEObjectContainer::update( step_size ) ;
+    this->Container::update( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -246,45 +249,6 @@ CharacterBase::_jump(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-    class FeetRayCastResult: public Space::RayCastResult
-    {
-    public:
-             FeetRayCastResult(RigidBody* me=NULL):
-                m_me(me),
-                m_distance(-1.0) {}
-
-    public:
-
-        virtual void    addContact( Collidable* other,
-                                    const osg::Vec3& position,
-                                    const osg::Vec3& surface_normal,
-                                    double distance )
-        {
-            if(  ( other != m_me.get() )  && ( distance < m_distance  ||  m_distance < 0 ) ) {
-                m_collidable = other ;
-                m_position.set(position) ;
-                m_normal.set( surface_normal ) ;
-                m_distance = distance ;
-            }
-        }
-
-        const Collidable*   getCollidable(void) const { return m_collidable.get() ; }
-        const osg::Vec3&    getPosition(void) const {  return m_position ; }
-        const osg::Vec3&    getNormal(void) const {  return m_normal ; }
-        double              getDistance(void) const {  return m_distance ; }
-        bool                hasHit(void) const {  return m_distance >= 0.0 ; }
-
-    public:
-        osg::ref_ptr<RigidBody>     m_me ;
-        osg::ref_ptr<Collidable>    m_collidable ;
-        osg::Vec3                   m_position ;
-        osg::Vec3                   m_normal ;
-        double                      m_distance ;
-    } ;
-} // anon namespace
-
-
 void
 CharacterBase:: _collideAgainstGround(double step_size)
 {
@@ -324,10 +288,6 @@ CharacterBase:: _collideAgainstGround(double step_size)
 
 
 
-    osg::ref_ptr<FeetRayCastResult> result = new FeetRayCastResult( m_body.get() ) ;
-
-
-
 
     const osg::Vec3     ray_from = m_body->getPosition() ;
     const osg::Vec3     ray_to = ray_from - m_up_versor * m_height ;
@@ -335,15 +295,20 @@ CharacterBase:: _collideAgainstGround(double step_size)
 
 
 
-    space->rayCast( ray_from, ray_to, result.get(), 4, false, true, true ) ;
 
-    m_is_on_ground = result->hasHit() ;
+    m_foot_ray_cast_result->reset() ;
+    m_foot_ray_cast_result->setMe( m_body->asCollidable() ) ;
+
+    space->rayCast( ray_from, ray_to, m_foot_ray_cast_result.get(), 4, false, true, true ) ;
+
+    m_is_on_ground = m_foot_ray_cast_result->hasHit() ;
+
 
 
     if( m_is_on_ground ) {
 
 
-        const Collidable*   collidable = result->getCollidable() ;
+        const Collidable*   collidable = m_foot_ray_cast_result->getCollidable() ;
         PS_ASSERT1( collidable != NULL ) ;
 
 
@@ -382,7 +347,7 @@ CharacterBase:: _collideAgainstGround(double step_size)
             osg::Vec3 fdir1 = m_body->getQuaternion() * m_motion_velocity ;
             fdir1.normalize() ;
 
-            const osg::Vec3&    point = result->getPosition() ;
+            const osg::Vec3&    point = m_foot_ray_cast_result->getPosition() ;
             const osg::Vec3     v1 = m_body->getPointVelocity( point, false ) + fdir1 ;
             const osg::Vec3     v2 = collidable->getPointVelocity( point, false ) ;
 
@@ -406,14 +371,14 @@ CharacterBase:: _collideAgainstGround(double step_size)
 
 
         // compenetration
-        contact.geom.depth = m_height - result->getDistance() ;
+        contact.geom.depth = m_height - m_foot_ray_cast_result->getDistance() ;
         PS_ASSERT1(contact.geom.depth >= 0.0) ;
 
         // normal
         dOPE(contact.geom.normal, =, m_up_versor) ;
 
         {
-            const osg::Vec3 n = result->getNormal() ;
+            const osg::Vec3 n = m_foot_ray_cast_result->getNormal() ;
             dOPE(m_ground_contact_normal, =, n) ;
         }
 
@@ -443,9 +408,9 @@ CharacterBase:: _collideAgainstGround(double step_size)
 void
 CharacterBase::init(void)
 {
-    this->ODEObjectContainer::removeObject( m_body.get() ) ;
-    this->ODEObjectContainer::removeObject( m_amotor.get() ) ;
-    this->ODEObjectContainer::removeObject( m_lmotor.get() ) ;
+    this->Container::removeObject( m_body.get() ) ;
+    this->Container::removeObject( m_amotor.get() ) ;
+    this->Container::removeObject( m_lmotor.get() ) ;
 
 
     //
@@ -456,7 +421,7 @@ CharacterBase::init(void)
         m_body->setMass( 75.0 ) ;
 
 
-        this->ODEObjectContainer::addObject( m_body ) ;
+        this->Container::addObject( m_body ) ;
     }
 
 
@@ -488,7 +453,7 @@ CharacterBase::init(void)
         m_amotor->setBody2( NULL ) ;
 
 
-        this->ODEObjectContainer::addObject( m_amotor ) ;
+        this->Container::addObject( m_amotor ) ;
     }
 
 
@@ -519,7 +484,7 @@ CharacterBase::init(void)
         m_lmotor->setBody2( NULL) ;
 
 
-        this->ODEObjectContainer::addObject( m_lmotor ) ;
+        this->Container::addObject( m_lmotor ) ;
     }
 }
 /* ....................................................................... */

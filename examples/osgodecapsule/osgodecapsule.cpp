@@ -4,9 +4,9 @@
 #include <osgODE/Capsule>
 #include <osgODE/DefaultNearCallback>
 #include <osgODE/Notify>
+#include <osgODE/CommonWorldOperations>
 
 #include <osgODEUtil/CreateTriMeshFromNode>
-#include <osgODEUtil/AddRemoveObjectOperation>
 
 #include <osgViewer/Viewer>
 
@@ -45,7 +45,7 @@ public:
         osgODE::RigidBody*  body = obj->asRigidBody() ;
 
         if( body->getPosition().z() < -1.0 ) {
-            body->getWorld()->addOperation( new osgODEUtil::RemoveObjectOperation(body) ) ;
+            body->getWorld()->addOperation( new osgODE::RemoveObjectOperation(body) ) ;
         }
     }
 } ;
@@ -73,7 +73,7 @@ public:
         if( dt >= m_dt ) {
             m_start_time = world->getSimulationTime() ;
 
-            world->addOperation( new osgODEUtil::AddObjectOperation(_createObject()) ) ;
+            world->addOperation( new osgODE::AddObjectOperation(_createObject()) ) ;
         }
     }
 

@@ -49,7 +49,7 @@
 REGISTER_OBJECT_WRAPPER( CharacterBase,
                          new osgODE::CharacterBase,
                          osgODE::CharacterBase,
-                         "osg::Object osgODE::ODEObject osgODE::ODEObjectContainer osgODE::CharacterBase" )
+                         "osg::Object osgODE::ODEObject osgODE::Container osgODE::CharacterBase" )
 {
 
     ADD_OBJECT_SERIALIZER( Body, osgODE::RigidBody, NULL ) ;

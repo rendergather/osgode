@@ -1,0 +1,308 @@
+/*!
+ * @file CommonRayCastResults
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU Lesser General Public License for more details.                   *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_COMMONRAYCASTRESULTSHPP
+#define _OSGODE_COMMONRAYCASTRESULTSHPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/Space>
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+class Collidable ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ */
+class OSG_EXPORT AllRayCastResult: public Space::RayCastResult
+{
+/* ======================================================================= */
+public:
+             AllRayCastResult(void) ;
+             AllRayCastResult(const AllRayCastResult& other) ;
+
+protected:
+    virtual ~AllRayCastResult(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    inline bool     hasHit(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    typedef struct {
+        osg::ref_ptr<Collidable>            mCollidable ;
+        osg::Vec3                           mPosition ;
+        osg::Vec3                           mNormal ;
+        double                              mDistance ;
+    } Collision ;
+
+    typedef std::vector<Collision>  CollisionList ;
+
+
+    inline CollisionList&       getCollisionList(void) ;
+    inline const CollisionList& getCollisionList(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    void    sortByDistance(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    reset(void) ;
+
+    virtual void    addContact( Collidable* other,
+                                const osg::Vec3& position,
+                                const osg::Vec3& surface_normal,
+                                double distance ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    CollisionList       m_collision_list ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ */
+class OSG_EXPORT NearestRayCastResult: public osgODE::Space::RayCastResult
+{
+/* ======================================================================= */
+public:
+             NearestRayCastResult(void) ;
+             NearestRayCastResult(const NearestRayCastResult& other) ;
+
+protected:
+    virtual ~NearestRayCastResult(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    inline bool     hasHit(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    inline Collidable*                  getCollidable(void) ;
+    inline const Collidable*            getCollidable(void) const ;
+    inline const osg::Vec3&             getPosition(void) const ;
+    inline const osg::Vec3&             getNormal(void) const ;
+    inline const double&                getDistance(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    reset(void) ;
+
+    virtual void    addContact( Collidable* other,
+                                const osg::Vec3& position,
+                                const osg::Vec3& surface_normal,
+                                double distance ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<Collidable>            m_collidable ;
+    osg::Vec3                           m_position ;
+    osg::Vec3                           m_normal ;
+    double                              m_distance ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ */
+class OSG_EXPORT NearestNotMeRayCastResult: public NearestRayCastResult
+{
+/* ======================================================================= */
+public:
+             NearestNotMeRayCastResult(Collidable* me = NULL) ;
+             NearestNotMeRayCastResult(const NearestNotMeRayCastResult& other) ;
+
+protected:
+    virtual ~NearestNotMeRayCastResult(void) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    void    setMe(Collidable* me) ;
+
+    inline Collidable*          getMe(void) ;
+    inline const Collidable*    getMe(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    addContact( Collidable* other,
+                                const osg::Vec3& position,
+                                const osg::Vec3& surface_normal,
+                                double distance ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<Collidable>    m_me ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "CommonRayCastResults.inl"
+
+
+
+
+#endif /* _OSGODE_COMMONRAYCASTRESULTSHPP */

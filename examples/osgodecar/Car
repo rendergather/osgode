@@ -4,7 +4,7 @@
 
 
 
-#include <osgODE/ODEObjectContainer>
+#include <osgODE/Container>
 
 
 
@@ -19,7 +19,7 @@ class SuspensionJoint ;
 
 
 
-class OSG_EXPORT Car: public ODEObjectContainer
+class OSG_EXPORT Car: public Container
 {
 public:
              Car(void) ;

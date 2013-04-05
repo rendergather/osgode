@@ -4,9 +4,9 @@
 #include <osgODE/Box>
 #include <osgODE/DefaultNearCallback>
 #include <osgODE/Notify>
+#include <osgODE/CommonWorldOperations>
 
 #include <osgODEUtil/CreateTriMeshFromNode>
-#include <osgODEUtil/AddRemoveObjectOperation>
 
 #include <osgViewer/Viewer>
 
@@ -105,8 +105,8 @@ public:
         osgODE::RigidBody*  b1 = owner ;
         osgODE::RigidBody*  b2 = other ;
 
-        osg::Vec3   v1 = b1->getPointVelocity( osg::Vec4(p, 0.0) ) ;
-        osg::Vec3   v2 = b2->getPointVelocity( osg::Vec4(p, 0.0) ) ;
+        osg::Vec3   v1 = b1->getPointVelocity( p, false ) ;
+        osg::Vec3   v2 = b2->getPointVelocity( p, false ) ;
 
         osg::Vec3   vv = v1 - v2 ;
 
@@ -139,7 +139,7 @@ public:
         osgODE::RigidBody*  body = obj->asRigidBody() ;
 
         if( body->getPosition().z() < -1.0 ) {
-            body->getWorld()->addOperation( new osgODEUtil::RemoveObjectOperation(body) ) ;
+            body->getWorld()->addOperation( new osgODE::RemoveObjectOperation(body) ) ;
         }
     }
 } ;
@@ -170,7 +170,7 @@ public:
         if( dt >= m_dt ) {
             m_start_time = world->getSimulationTime() ;
 
-            world->addOperation( new osgODEUtil::AddObjectOperation(_createObject()) ) ;
+            world->addOperation( new osgODE::AddObjectOperation(_createObject()) ) ;
         }
     }
 

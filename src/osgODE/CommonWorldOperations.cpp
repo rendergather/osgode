@@ -1,5 +1,5 @@
 /*!
- * @file ODEObjectContainer
+ * @file CommonWorldOperations.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,26 +22,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ODEOBJECTCONTAINER_HPP
-#define _OSGODE_ODEOBJECTCONTAINER_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osgODE/ODEObject>
-/* ======================================================================= */
-
-
-
-
-namespace osgODE
-{
-
-
-
-
-/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODE/CommonWorldOperations>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,144 +33,124 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! This class contains a list of objects
-/*!
- *
- */
-class OSG_EXPORT ODEObjectContainer: public ODEObject
-{
-/* ======================================================================= */
-public:
-             ODEObjectContainer(void) ;
-             ODEObjectContainer(const ODEObjectContainer& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~ODEObjectContainer(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Object(osgODE, ODEObjectContainer) ;
-
-    //! divert the visitors to the objects in the list
-    virtual void    accept(osg::NodeVisitor& nv) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    //! Put the object in the list
-    void    addObject(ODEObject* obj) ;
-
-
-    //! Remove the object by the list
-    inline bool     removeObject(ODEObject* obj, bool preserve_order=false) ;
-
-
-    //! Remove the object by the list
-    void            removeObject(unsigned int idx, bool preserve_order=false) ;
-
-    ODEObject*          getObject(unsigned int idx) ;
-    const ODEObject*    getObject(unsigned int idx) const ;
-
-
-#define ODEOBJECT_NOT_FOUND ((unsigned int)-1)
-
-    //! If the object is not in the list, this returns ODEOBJECT_NOT_FOUND
-    unsigned int    getObjectIDX(ODEObject* obj) const ;
-
-
-
-    //! Returns true if the object is in the list
-    inline bool     hasObject(ODEObject* obj) const ;
-
-
-
-
-    typedef std::vector< osg::ref_ptr<ODEObject> >  ObjectList ;
-
-    inline const ObjectList&    getObjectList(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual ODEObjectContainer* asODEObjectContainer(void) ;
-
-
-    //! Transmit the update to the objects in the list
-    virtual void                update(double step_size) ;
-
-    //! Transmit the update to the objects in the list
-    virtual void                postUpdate(double step_size) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    //! Insert this instance and all the objects into the world
-    virtual bool    addToWorldInternal(World* world) ;
-
-    //! Remove this instance and all the objects from the world
-    virtual bool    removeFromWorldInternal(World* world) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual const osg::BoundingSphere&  getBound(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    callUpdateCallbackInternal(void) ;
-    virtual void    callPostUpdateCallbackInternal(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-    ObjectList  m_object_list ;
-
-
-    osg::BoundingSphere         m_bounding_sphere ;
-/* ======================================================================= */
-} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
+using namespace osgODE ;
 
 
 
 
-#include "ODEObjectContainer.inl"
+/* ======================================================================= */
+/* ....................................................................... */
+RemoveObjectOperation::RemoveObjectOperation(ODEObject* object, bool acquire_traverse_lock):
+    m_object(object),
+    m_acquire_traverse_lock(acquire_traverse_lock)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-#endif /* _OSGODE_ODEOBJECTCONTAINER_HPP */
+/* ======================================================================= */
+/* ....................................................................... */
+RemoveObjectOperation::RemoveObjectOperation(const RemoveObjectOperation& other):
+    World::Operation(other),
+    m_object( other.m_object ),
+    m_acquire_traverse_lock( other.m_acquire_traverse_lock )
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+RemoveObjectOperation::~RemoveObjectOperation(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+RemoveObjectOperation::operator()(World* world)
+{
+    if( m_acquire_traverse_lock ) {
+        world->traverseLock() ;
+        world->removeObject( m_object.get() ) ;
+        world->traverseUnlock() ;
+    } else {
+        world->removeObject( m_object.get() ) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+AddObjectOperation::AddObjectOperation(ODEObject* object, bool acquire_traverse_lock):
+    m_object(object),
+    m_acquire_traverse_lock(acquire_traverse_lock)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+AddObjectOperation::AddObjectOperation(const AddObjectOperation& other):
+    World::Operation(other),
+    m_object( other.m_object ),
+    m_acquire_traverse_lock( other.m_acquire_traverse_lock )
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+AddObjectOperation::~AddObjectOperation(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AddObjectOperation::operator()(World* world)
+{
+    if( m_acquire_traverse_lock ) {
+        world->traverseLock() ;
+        world->addObject( m_object.get() ) ;
+        world->traverseUnlock() ;
+    } else {
+        world->addObject( m_object.get() ) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */

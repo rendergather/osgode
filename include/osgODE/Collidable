@@ -60,7 +60,7 @@ class   World ;
  * It is possible to set an offset on the geometry relative to the body, so
  * you can change the center of mass.\n
  */
-class OSG_EXPORT Collidable: public osgODE::RigidBody
+class OSG_EXPORT Collidable: public RigidBody
 {
 /* ======================================================================= */
 public:

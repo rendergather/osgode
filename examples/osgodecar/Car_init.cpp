@@ -181,10 +181,10 @@ Car::init(void)
         m_wheel_FL->setPosition( osg::Vec3(-1,  1.5, 0.0) ) ;
 
 
-        this->ODEObjectContainer::addObject( m_wheel_RL ) ;
-        this->ODEObjectContainer::addObject( m_wheel_RR ) ;
-        this->ODEObjectContainer::addObject( m_wheel_FR ) ;
-        this->ODEObjectContainer::addObject( m_wheel_FL ) ;
+        this->Container::addObject( m_wheel_RL ) ;
+        this->Container::addObject( m_wheel_RR ) ;
+        this->Container::addObject( m_wheel_FR ) ;
+        this->Container::addObject( m_wheel_FL ) ;
     }
 
 
@@ -210,7 +210,7 @@ Car::init(void)
         m_body->addUpdateCallback( new BodyCallback(buffer) ) ;
 
 
-        this->ODEObjectContainer::addObject( m_body ) ;
+        this->Container::addObject( m_body ) ;
     }
 
 
@@ -231,10 +231,10 @@ Car::init(void)
         m_hinge_FR = _createSuspension( m_wheel_FR,   osg::X_AXIS, joint_graphics ) ;
 
 
-        this->ODEObjectContainer::addObject( m_hinge_RL ) ;
-        this->ODEObjectContainer::addObject( m_hinge_RR ) ;
-        this->ODEObjectContainer::addObject( m_hinge_FR ) ;
-        this->ODEObjectContainer::addObject( m_hinge_FL ) ;
+        this->Container::addObject( m_hinge_RL ) ;
+        this->Container::addObject( m_hinge_RR ) ;
+        this->Container::addObject( m_hinge_FR ) ;
+        this->Container::addObject( m_hinge_FL ) ;
     }
 
 
@@ -261,8 +261,8 @@ Car::init(void)
         rear->setFriction( 0.9 ) ;  // quietly locked
 
 
-        this->ODEObjectContainer::addObject( front ) ;
-        this->ODEObjectContainer::addObject( rear ) ;
+        this->Container::addObject( front ) ;
+        this->Container::addObject( rear ) ;
     }
 
 
@@ -292,8 +292,8 @@ Car::init(void)
         rear->setRigidity(0.25) ;
 
 
-        this->ODEObjectContainer::addObject( front ) ;
-        this->ODEObjectContainer::addObject( rear ) ;
+        this->Container::addObject( front ) ;
+        this->Container::addObject( rear ) ;
     }
 }
 

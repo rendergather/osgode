@@ -1,9 +1,9 @@
 /*!
- * @file AllRayCastResult
+ * @file Container
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,29 +22,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_ALLRAYCASTRESULT_HPP
-#define _OSGODEUTIL_ALLRAYCASTRESULT_HPP
+#ifndef _OSGODE_CONTAINER_HPP
+#define _OSGODE_CONTAINER_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Space>
+#include <osgODE/ODEObject>
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-namespace osgODE {
-    class Collidable ;
-}
-/* ======================================================================= */
-
-
-
-
-namespace osgODEUtil
+namespace osgODE
 {
 
 
@@ -58,18 +49,30 @@ namespace osgODEUtil
 
 /* ======================================================================= */
 /* ....................................................................... */
-//!
+//! This class contains a list of objects
 /*!
+ *
  */
-class OSG_EXPORT AllRayCastResult: public osgODE::Space::RayCastResult
+class OSG_EXPORT Container: public ODEObject
 {
 /* ======================================================================= */
 public:
-             AllRayCastResult(void) ;
-             AllRayCastResult(const AllRayCastResult& other) ;
+             Container(void) ;
+             Container(const Container& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~AllRayCastResult(void) ;
+    virtual ~Container(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, Container) ;
+
+    //! divert the visitors to the objects in the list
+    virtual void    accept(osg::NodeVisitor& nv) ;
 /* ======================================================================= */
 
 
@@ -82,7 +85,37 @@ protected:
 
 /* ======================================================================= */
 public:
-    inline bool     hasHit(void) const ;
+    //! Put the object in the list
+    void    addObject(ODEObject* obj) ;
+
+
+    //! Remove the object by the list
+    inline bool     removeObject(ODEObject* obj, bool preserve_order=false) ;
+
+
+    //! Remove the object by the list
+    void            removeObject(unsigned int idx, bool preserve_order=false) ;
+
+    ODEObject*          getObject(unsigned int idx) ;
+    const ODEObject*    getObject(unsigned int idx) const ;
+
+
+#define ODEOBJECT_NOT_FOUND ((unsigned int)-1)
+
+    //! If the object is not in the list, this returns ODEOBJECT_NOT_FOUND
+    unsigned int    getObjectIDX(ODEObject* obj) const ;
+
+
+
+    //! Returns true if the object is in the list
+    inline bool     hasObject(ODEObject* obj) const ;
+
+
+
+
+    typedef std::vector< osg::ref_ptr<ODEObject> >  ObjectList ;
+
+    inline const ObjectList&    getObjectList(void) const ;
 /* ======================================================================= */
 
 
@@ -90,18 +123,14 @@ public:
 
 /* ======================================================================= */
 public:
-    typedef struct {
-        osg::ref_ptr<osgODE::Collidable>    Collidable ;
-        osg::Vec3                           Position ;
-        osg::Vec3                           Normal ;
-        double                              Distance ;
-    } Collision ;
-
-    typedef std::vector<Collision>  CollisionList ;
+    virtual Container*  asContainer(void) ;
 
 
-    inline CollisionList&       getCollisionList(void) ;
-    inline const CollisionList& getCollisionList(void) const ;
+    //! Transmit the update to the objects in the list
+    virtual void                update(double step_size) ;
+
+    //! Transmit the update to the objects in the list
+    virtual void                postUpdate(double step_size) ;
 /* ======================================================================= */
 
 
@@ -109,7 +138,11 @@ public:
 
 /* ======================================================================= */
 public:
-    void    sortByDistance(void) ;
+    //! Insert this instance and all the objects into the world
+    virtual bool    addToWorldInternal(World* world) ;
+
+    //! Remove this instance and all the objects from the world
+    virtual bool    removeFromWorldInternal(World* world) ;
 /* ======================================================================= */
 
 
@@ -117,12 +150,16 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    reset(void) ;
+    virtual const osg::BoundingSphere&  getBound(void) const ;
+/* ======================================================================= */
 
-    virtual void    addContact( osgODE::Collidable* other,
-                                const osg::Vec3& position,
-                                const osg::Vec3& surface_normal,
-                                double distance ) ;
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    callUpdateCallbackInternal(void) ;
+    virtual void    callPostUpdateCallbackInternal(void) ;
 /* ======================================================================= */
 
 
@@ -130,7 +167,10 @@ public:
 
 /* ======================================================================= */
 private:
-    CollisionList       m_collision_list ;
+    ObjectList  m_object_list ;
+
+
+    osg::BoundingSphere         m_bounding_sphere ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -139,14 +179,14 @@ private:
 
 
 
-} // namespace osgODEUtil
+} // namespace osgODE
 
 
 
 
-#include "AllRayCastResult.inl"
+#include "Container.inl"
 
 
 
 
-#endif /* _OSGODEUTIL_ALLRAYCASTRESULT_HPP */
+#endif /* _OSGODE_CONTAINER_HPP */

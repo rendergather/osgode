@@ -9,11 +9,12 @@ SET(TARGET_SRC
     BallJoint_serializer.cpp
     Box_serializer.cpp
     Capsule_serializer.cpp
-    Character_serializer.cpp
     CharacterBase_serializer.cpp
+    Character_serializer.cpp
     Collidable_serializer.cpp
     CollisionCallback_serializer.cpp
     CollisionParameters_serializer.cpp
+    Container_serializer.cpp
     CubicVec3Interpolator_serializer.cpp
     Cylinder_serializer.cpp
     DBallJoint_serializer.cpp
@@ -25,20 +26,19 @@ SET(TARGET_SRC
     HingeJoint_serializer.cpp
     InterpolableMatrixTransform_serializer.cpp
     InterpolatorBase_serializer.cpp
-    Joint_serializer.cpp
     JointBreakCallback_serializer.cpp
+    Joint_serializer.cpp
+    LMPlusJoint_serializer.cpp
+    LMotorJoint_serializer.cpp
     LinearQuatInterpolator_serializer.cpp
     LinearVec3Interpolator_serializer.cpp
-    LMotorJoint_serializer.cpp
-    LMPlusJoint_serializer.cpp
-    Manager_serializer.cpp
     ManagerUpdateCallback_serializer.cpp
-    MotorJoint_serializer.cpp
+    Manager_serializer.cpp
     MotionPath_serializer.cpp
+    MotorJoint_serializer.cpp
     NearCallback_serializer.cpp
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
-    ODEObjectContainer_serializer.cpp
     PistonJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RigidBody_serializer.cpp
@@ -51,7 +51,6 @@ SET(TARGET_SRC
     TargetJoint_serializer.cpp
     Transformable_serializer.cpp
     TriMesh_serializer.cpp
-    SuspensionJoint_serializer.cpp
     UniversalJoint_serializer.cpp
     Vec3Interpolator_serializer.cpp
     Wheel_serializer.cpp
@@ -61,6 +60,6 @@ SET(TARGET_SRC
 
 
 
-SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgDB osg OpenThreads opengl32 ODE_WIN")
+SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
 
 OSGODE_SETUP_PLUGIN()

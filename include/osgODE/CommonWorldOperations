@@ -1,9 +1,9 @@
 /*!
- * @file ODEObjectContainer_serializer.cpp
+ * @file CommonWorldOperations
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,66 +22,87 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/ODEObjectContainer>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_COMMONWORLDOPERATIONS_HPP
+#define _OSGODE_COMMONWORLDOPERATIONS_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-namespace {
-static bool checkODEObjects(const osgODE::ODEObjectContainer& container)
-{
-	(void) container ;
-
-    return true ;
-}
-
-static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::ODEObjectContainer& container)
-{
-    const osgODE::ODEObjectContainer::ObjectList&   objs = container.getObjectList() ;
-    os << (unsigned long int)objs.size() << std::endl ;
-    for(unsigned int i=0; i<objs.size(); i++) {
-        os << objs[i].get() ;
-    }
-    return true ;
-}
-
-static bool readODEObjects(osgDB::InputStream& is, osgODE::ODEObjectContainer& container)
-{
-    unsigned int    size = 0 ;
-    is >> size ;
-    for(unsigned int i=0; i<size; i++) {
-        osg::ref_ptr<osg::Object>   tmp = is.readObject() ;
-        osgODE::ODEObject*  obj = dynamic_cast<osgODE::ODEObject*>(tmp.get()) ;
-        if( obj ) {
-            container.addObject(obj) ;
-        }
-    }
-    return true ;
-}
-} // anon namespace
-/* ....................................................................... */
+#include <osgODE/World>
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( ODEObjectContainer,
-                         new osgODE::ODEObjectContainer,
-                         osgODE::ODEObjectContainer,
-                         "osg::Object osgODE::ODEObject osgODE::ODEObjectContainer" )
+namespace osgODE
 {
 
-    ADD_USER_SERIALIZER(ODEObjects) ;
-}
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+class OSG_EXPORT RemoveObjectOperation: public World::Operation
+{
+public:
+             RemoveObjectOperation(ODEObject* object, bool acquire_traverse_lock=true) ;
+             RemoveObjectOperation(const RemoveObjectOperation& other) ;
+
+
+    virtual void    operator()(World* world) ;
+
+protected:
+    virtual ~RemoveObjectOperation(void) ;
+
+private:
+    osg::ref_ptr<ODEObject> m_object ;
+    bool    m_acquire_traverse_lock ;
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+class OSG_EXPORT AddObjectOperation: public World::Operation
+{
+public:
+             AddObjectOperation(ODEObject* object, bool acquire_traverse_lock=true) ;
+             AddObjectOperation(const AddObjectOperation& other) ;
+
+
+    virtual void    operator()(World* world) ;
+
+protected:
+    virtual ~AddObjectOperation(void) ;
+
+private:
+    osg::ref_ptr<ODEObject> m_object ;
+    bool    m_acquire_traverse_lock ;
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+// #include "CommonWorldOperations.inl"
+
+
+
+
+#endif /* _OSGODE_COMMONWORLDOPERATIONS_HPP */

@@ -61,8 +61,10 @@ main(int argc, char** argv)
         body->setPosition( osg::Vec3(0.0, 0.0, 4.0) ) ;
 
 
-        // let the box spin around the Z axis... for no reason
-        body->addTorque( osg::Vec4(0.0, 0.0, 100.0 / manager->getStepSize(), 1.0) ) ;
+        // let the box spin around the local Z axis...
+        const double    W = 2.0 * osg::PI *  10 ;
+
+        body->setAngularVelocity( osg::Z_AXIS * W ) ;
     }
 
 

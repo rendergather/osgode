@@ -20,7 +20,7 @@ Car::Car(void):
 
 
 Car::Car(const Car& other, const osg::CopyOp& copyop):
-    ODEObjectContainer(other, copyop),
+    Container(other, copyop),
     m_steering_left(other.m_steering_left),
     m_steering_right(other.m_steering_right),
     m_current_steer_angle(other.m_current_steer_angle)
@@ -147,7 +147,7 @@ Car::update(double step_size)
 
 
 
-    this->ODEObjectContainer::update(step_size) ;
+    this->Container::update(step_size) ;
 }
 
 

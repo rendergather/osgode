@@ -29,7 +29,7 @@
 
 
 /* ======================================================================= */
-#include <osgODE/ODEObjectContainer>
+#include <osgODE/Container>
 /* ======================================================================= */
 
 
@@ -44,6 +44,7 @@ namespace osgODE
 /* ======================================================================= */
 class AMotorJoint ;
 class LMotorJoint ;
+class NearestNotMeRayCastResult ;
 /* ======================================================================= */
 
 
@@ -55,7 +56,7 @@ class LMotorJoint ;
 /*!
  *
  */
-class OSG_EXPORT CharacterBase: public ODEObjectContainer
+class OSG_EXPORT CharacterBase: public Container
 {
 /* ======================================================================= */
 public:
@@ -247,8 +248,11 @@ private:
 /* ======================================================================= */
 private:
     osg::ref_ptr<RigidBody>     m_body ;
+
     osg::ref_ptr<AMotorJoint>   m_amotor ;
     osg::ref_ptr<LMotorJoint>   m_lmotor ;
+
+    osg::ref_ptr<NearestNotMeRayCastResult> m_foot_ray_cast_result ;
 
 
     osg::Vec3   m_up_versor ;

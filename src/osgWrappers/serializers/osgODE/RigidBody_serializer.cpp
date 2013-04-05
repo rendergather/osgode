@@ -182,8 +182,8 @@ REGISTER_OBJECT_WRAPPER( RigidBody,
 
     ADD_DOUBLE_SERIALIZER(LinearDamping, 0.0) ;
     ADD_DOUBLE_SERIALIZER(AngularDamping, 0.0) ;
-    ADD_DOUBLE_SERIALIZER(LinearDampingThreshold, 0.01) ;
-    ADD_DOUBLE_SERIALIZER(AngularDampingThreshold, 0.01) ;
+    ADD_DOUBLE_SERIALIZER(LinearDampingThreshold, 0.0) ;
+    ADD_DOUBLE_SERIALIZER(AngularDampingThreshold, 0.0) ;
     ADD_DOUBLE_SERIALIZER(MaxAngularSpeed, FLT_MAX) ;
 
     ADD_DOUBLE_SERIALIZER(Mass, 1.0) ;

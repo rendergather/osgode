@@ -1,5 +1,5 @@
 /*!
- * @file ODEObjectContainer.inl
+ * @file Container_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,35 +22,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ODEOBJECTCONTAINER_INL
-#define _OSGODE_ODEOBJECTCONTAINER_INL
+/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODE/Container>
+
+#include <osgDB/Registry>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
 
 /* ======================================================================= */
 /* ....................................................................... */
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline bool
-osgODE::ODEObjectContainer::removeObject(osgODE::ODEObject* obj, bool preserve_order)
+namespace {
+static bool checkODEObjects(const osgODE::Container& container)
 {
-    if( ! obj ) {
-        return true ;
+	(void) container ;
+
+    return true ;
+}
+
+static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::Container& container)
+{
+    const osgODE::Container::ObjectList&   objs = container.getObjectList() ;
+    os << (unsigned long int)objs.size() << std::endl ;
+    for(unsigned int i=0; i<objs.size(); i++) {
+        os << objs[i].get() ;
     }
+    return true ;
+}
 
-    unsigned int    idx = getObjectIDX(obj) ;
-
-    if( idx != ODEOBJECT_NOT_FOUND ) {
-        removeObject(idx, preserve_order) ;
-        return true ;
+static bool readODEObjects(osgDB::InputStream& is, osgODE::Container& container)
+{
+    unsigned int    size = 0 ;
+    is >> size ;
+    for(unsigned int i=0; i<size; i++) {
+        osg::ref_ptr<osg::Object>   tmp = is.readObject() ;
+        osgODE::ODEObject*  obj = dynamic_cast<osgODE::ODEObject*>(tmp.get()) ;
+        if( obj ) {
+            container.addObject(obj) ;
+        }
     }
-
-    return false ;
+    return true ;
 }
+} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -59,28 +75,13 @@ osgODE::ODEObjectContainer::removeObject(osgODE::ODEObject* obj, bool preserve_o
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline bool
-osgODE::ODEObjectContainer::hasObject(osgODE::ODEObject* obj) const
+REGISTER_OBJECT_WRAPPER( Container,
+                         new osgODE::Container,
+                         osgODE::Container,
+                         "osg::Object osgODE::ODEObject osgODE::Container" )
 {
-    return getObjectIDX(obj) != ODEOBJECT_NOT_FOUND ;
+
+    ADD_USER_SERIALIZER(ODEObjects) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::ODEObjectContainer::ObjectList&
-osgODE::ODEObjectContainer::getObjectList(void) const
-{
-    return m_object_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_ODEOBJECTCONTAINER_INL */

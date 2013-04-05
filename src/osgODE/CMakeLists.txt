@@ -38,6 +38,8 @@ SET(TARGET_H
     ${HEADER_PATH}/DHingeJoint
     ${HEADER_PATH}/DefaultNearCallback
     ${HEADER_PATH}/DefaultNearCallback.inl
+    ${HEADER_PATH}/DynamicParticleSystem
+    ${HEADER_PATH}/DynamicParticleSystem.inl
     ${HEADER_PATH}/FixedJoint
     ${HEADER_PATH}/GearboxJoint
     ${HEADER_PATH}/GearboxJoint.inl
@@ -134,6 +136,7 @@ SET(TARGET_SRC
     DBallJoint.cpp
     DHingeJoint.cpp
     DefaultNearCallback.cpp
+    DynamicParticleSystem.cpp
     FixedJoint.cpp
     GearboxJoint.cpp
     Hinge2Joint.cpp

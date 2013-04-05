@@ -38,8 +38,9 @@
 namespace {
 static bool checkODEObjects(const osgODE::World& world)
 {
-    const osgODE::World::Objects&   objs = world.getObjects() ;
-    return objs.size() > 0 ;
+    (void) world ;
+
+    return true ;
 }
 
 static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::World& world)

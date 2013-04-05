@@ -20,6 +20,7 @@ SET(TARGET_SRC
     DBallJoint_serializer.cpp
     DHingeJoint_serializer.cpp
     DefaultNearCallback_serializer.cpp
+    DynamicParticleSystem_serializer.cpp
     FixedJoint_serializer.cpp
     GearboxJoint_serializer.cpp
     Hinge2Joint_serializer.cpp

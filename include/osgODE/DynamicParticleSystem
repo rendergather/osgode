@@ -1,0 +1,173 @@
+/*!
+ * @file DynamicParticleSystem
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_DYNAMICPARTICLESYSTEM_HPP
+#define _OSGODE_DYNAMICPARTICLESYSTEM_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgParticle/ParticleSystem>
+
+#include <osgODE/World>
+#include <osgODE/RigidBody>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! This class offers dynamic support to osgParticle
+/*!
+ *
+ */
+class OSG_EXPORT DynamicParticleSystem: public osgParticle::ParticleSystem
+{
+/* ======================================================================= */
+public:
+             DynamicParticleSystem(World* world = NULL) ;
+             DynamicParticleSystem(const DynamicParticleSystem& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~DynamicParticleSystem(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, DynamicParticleSystem) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the world to use
+    inline void         setWorld(World* world) ;
+
+    //! Get the world
+    inline World*       getWorld(void) ;
+
+    //! Get the const world
+    inline const World* getWorld(void) const ;
+
+
+
+    //! Get the i-th body
+    inline RigidBody*       getBody(int i) ;
+
+    //! Get the const i-th body
+    inline const RigidBody* getBody(int i) const ;
+
+
+
+    //! Set the body template
+    inline void             setBodyTemplate(RigidBody* body) ;
+
+    //! Get the body template
+    inline RigidBody*       getBodyTemplate(void) ;
+
+    //! Get the const body template
+    inline const RigidBody* getBodyTemplate(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    typedef std::vector< osg::ref_ptr<RigidBody> >  BodyList ;
+
+    //! Set the body list.
+    inline void             setBodyList( const BodyList& body_list ) ;
+
+    //! Get the body list
+    inline BodyList&        getBodyList(void) ;
+
+    //! Get the body list
+    inline const BodyList&  getBodyList(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual osgParticle::Particle*  createParticle( const osgParticle::Particle* ptemplate ) ;
+    virtual void                    destroyParticle( int i ) ;
+    virtual void                    reuseParticle( int i ) ;
+
+    virtual void                    update(double dt, osg::NodeVisitor& nv) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    BodyList                m_body_list ;
+    osg::ref_ptr<World>     m_world ;
+
+    osg::ref_ptr<RigidBody> m_body_template ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "DynamicParticleSystem.inl"
+
+
+
+
+#endif /* _OSGODE_DYNAMICPARTICLESYSTEM_HPP */

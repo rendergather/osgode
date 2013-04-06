@@ -55,7 +55,9 @@ DynamicParticleSystem::DynamicParticleSystem(const DynamicParticleSystem& other,
     osgParticle::ParticleSystem(other, copyop),
     m_body_list( other.m_body_list ),
     m_world( other.m_world ),
-    m_body_template( other.m_body_template )
+    m_body_template( other.m_body_template ),
+    m_world_to_local( other.m_world_to_local ),
+    m_local_to_world( other.m_local_to_world )
 {
 }
 /* ....................................................................... */
@@ -188,16 +190,24 @@ DynamicParticleSystem::update(double dt, osg::NodeVisitor& nv)
 
         if( particle.isAlive() && ! body->getBodyEnabled() ) {
 
-            body->setPosition( particle.getPosition() ) ;
-            body->setLinearVelocity( particle.getVelocity() ) ;
-            body->setAngularVelocity( particle.getAngularVelocity() ) ;
+            osg::Vec3   position = particle.getPosition() * m_local_to_world ;
+            osg::Vec3   velocity = osg::Matrix::transform3x3( particle.getVelocity(), m_local_to_world ) ;
+            osg::Vec3   angular = osg::Matrix::transform3x3( particle.getAngularVelocity(), m_local_to_world ) ;
+
+            body->setPosition( position ) ;
+            body->setLinearVelocity( velocity ) ;
+            body->setAngularVelocity( angular ) ;
             body->setBodyEnabled( true ) ;
 
         } else {
 
-            particle.setPosition( body->getPosition() ) ;
-            particle.setVelocity( body->getLinearVelocity() ) ;
-            particle.setAngularVelocity( body->getAngularVelocity() ) ;
+            osg::Vec3   position = body->getPosition() * m_world_to_local ;
+            osg::Vec3   velocity = osg::Matrix::transform3x3( body->getLinearVelocity(), m_world_to_local ) ;
+            osg::Vec3   angular = osg::Matrix::transform3x3( body->getAngularVelocity(), m_world_to_local ) ;
+
+            particle.setPosition( position ) ;
+            particle.setVelocity( velocity ) ;
+            particle.setAngularVelocity( angular ) ;
 
         }
     }

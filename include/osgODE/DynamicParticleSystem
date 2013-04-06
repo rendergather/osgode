@@ -136,6 +136,18 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Called by DynamicParticleGeode::traverse
+    inline void         setWorldToLocalMatrix( const osg::Matrix& wtl ) ;
+
+    //! Called by DynamicParticleGeode::traverse
+    inline const osg::Matrix&   getWorldToLocalMatrix(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     virtual osgParticle::Particle*  createParticle( const osgParticle::Particle* ptemplate ) ;
     virtual void                    destroyParticle( int i ) ;
     virtual void                    reuseParticle( int i ) ;
@@ -152,6 +164,10 @@ private:
     osg::ref_ptr<World>     m_world ;
 
     osg::ref_ptr<RigidBody> m_body_template ;
+
+
+    osg::Matrix     m_world_to_local ;
+    osg::Matrix     m_local_to_world ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

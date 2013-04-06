@@ -1,5 +1,5 @@
 /*!
- * @file DynamicParticleSystem_serializer.cpp
+ * @file DynamicParticleGeode.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,19 +14,34 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/DynamicParticleGeode>
 #include <osgODE/DynamicParticleSystem>
+/* ....................................................................... */
+/* ======================================================================= */
 
-#include <osgDB/Registry>
+
+
+
+using namespace osgODE ;
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+DynamicParticleGeode::DynamicParticleGeode(void)
+{
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -35,69 +50,50 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-static bool checkBodyList(const osgODE::DynamicParticleSystem& dps)
+DynamicParticleGeode::DynamicParticleGeode(const DynamicParticleGeode& other, const osg::CopyOp& copyop):
+    osg::Geode(other, copyop)
 {
-    (void) dps ;
-
-    return true ;
 }
+/* ....................................................................... */
+/* ======================================================================= */
 
-static bool writeBodyList(osgDB::OutputStream& os, const osgODE::DynamicParticleSystem& dps)
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+DynamicParticleGeode::~DynamicParticleGeode(void)
 {
-    const osgODE::DynamicParticleSystem::BodyList&    bodies = dps.getBodyList() ;
-
-    os << (unsigned long int)bodies.size() << std::endl ;
-
-    for(unsigned int i=0; i<bodies.size(); i++) {
-        os << bodies[i].get() ;
-    }
-
-    return true ;
 }
+/* ....................................................................... */
+/* ======================================================================= */
 
-static bool readBodyList(osgDB::InputStream& is, osgODE::DynamicParticleSystem& dps)
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+DynamicParticleGeode::traverse(osg::NodeVisitor& nv)
 {
-    unsigned int    size = 0 ;
-    is >> size ;
+    if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR ) {
 
-    if( size ) {
-        osgODE::DynamicParticleSystem::BodyList bodies ;
+        const osg::Matrix   wtl = osg::computeWorldToLocal( nv.getNodePath() ) ;
 
-        for(unsigned int i=0; i<size; i++) {
 
-            osg::ref_ptr<osg::Object>   tmp = is.readObject() ;
+        for(unsigned int i = 0; i < getNumDrawables(); i++) {
+            DynamicParticleSystem*  dps = dynamic_cast<DynamicParticleSystem*>( getDrawable(i) ) ;
 
-            osgODE::RigidBody*  body = dynamic_cast<osgODE::RigidBody*>(tmp.get()) ;
-
-            if( body ) {
-                bodies.push_back( body ) ;
+            if( dps ) {
+                dps->setWorldToLocalMatrix( wtl ) ;
             }
         }
 
-        dps.setBodyList( bodies ) ;
     }
 
-    return true ;
-}
-} // anon namespace
-/* ....................................................................... */
-/* ======================================================================= */
 
 
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( DynamicParticleSystem,
-                         new osgODE::DynamicParticleSystem,
-                         osgODE::DynamicParticleSystem,
-                         "osg::Object osg::Drawable osgParticle::ParticleSystem osgODE::DynamicParticleSystem" )
-{
-    ADD_MATRIX_SERIALIZER( WorldToLocalMatrix, osg::Matrix::identity() ) ;
-    ADD_OBJECT_SERIALIZER( World, osgODE::World, NULL ) ;
-    ADD_OBJECT_SERIALIZER( BodyTemplate, osgODE::RigidBody, NULL ) ;
-    ADD_USER_SERIALIZER( BodyList ) ;
+    this->osg::Geode::traverse(nv) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

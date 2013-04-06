@@ -187,4 +187,31 @@ osgODE::DynamicParticleSystem::getBodyTemplate(void) const
 
 
 
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::DynamicParticleSystem::setWorldToLocalMatrix( const osg::Matrix& wtl )
+{
+    m_world_to_local = wtl ;
+    m_local_to_world = osg::Matrix::inverse(wtl) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osg::Matrix&
+osgODE::DynamicParticleSystem::getWorldToLocalMatrix(void) const
+{
+    return m_world_to_local ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
 #endif /* _OSGODE_DYNAMICPARTICLESYSTEM_INL */

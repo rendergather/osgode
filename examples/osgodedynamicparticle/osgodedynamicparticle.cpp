@@ -3,6 +3,7 @@
 #include <osgODE/TriMesh>
 #include <osgODE/Sphere>
 #include <osgODE/DynamicParticleSystem>
+#include <osgODE/DynamicParticleGeode>
 #include <osgODE/Notify>
 
 #include <osgODEUtil/CreateTriMeshFromNode>
@@ -21,6 +22,10 @@
 #include <osgParticle/RadialShooter>
 #include <osgParticle/AccelOperator>
 #include <osgParticle/FluidFrictionOperator>
+
+#if 0
+#include <pViewer/NodeMasks>
+#endif
 
 
 
@@ -83,6 +88,14 @@ main(int argc, char** argv)
 
         // add the graphic node to the simulation
         trim->getMatrixTransform()->addChild(plane) ;
+
+
+#if 0
+        plane->setNodeMask( pViewer::NodeMasks::ALBEDO |
+                            pViewer::NodeMasks::MATERIAL |
+                            pViewer::NodeMasks::NORMAL
+        ) ;
+#endif
     }
 
 
@@ -95,7 +108,9 @@ main(int argc, char** argv)
         // create the particle system
         osgODE::DynamicParticleSystem   *ps = new  osgODE::DynamicParticleSystem() ;
 
-        ps->setDefaultAttributes("", true, false) ;
+        const char* texture = argc > 1 ? argv[1] : "" ;
+
+        ps->setDefaultAttributes(texture, true, false) ;
 
         // set the world to use
         ps->setWorld( manager->getWorld() ) ;
@@ -146,8 +161,12 @@ main(int argc, char** argv)
 
 
 
-        osg::Geode *geode = new osg::Geode() ;
+        // The DynamicParticleGeode communicates the world-to-local
+        // matrix to the particle systems. This is required because the
+        // DynamicParticleSystem needs to transform bodies properties
+        // from world frame to drawable local frame
 
+        osg::Geode *geode = new osgODE::DynamicParticleGeode() ;
         geode->addDrawable(ps) ;
 
 
@@ -155,8 +174,18 @@ main(int argc, char** argv)
         root->addChild( geode ) ;
         root->addChild( emitter ) ;
         root->addChild( psu ) ;
+
+
+#if 0
+        geode->setNodeMask( pViewer::NodeMasks::TRANSPARENCY ) ;
+#endif
     }
 
+
+#if 0
+    root->getOrCreateStateSet()->getOrCreateUniform("uMaterial", osg::Uniform::FLOAT_VEC4)->set( osg::Vec4(1.0, 0.8, 0.5, 1.0) ) ;
+    root->getOrCreateStateSet()->getOrCreateUniform("uColor", osg::Uniform::FLOAT_VEC4)->set( osg::Vec4(0.8, 0.8, 0.8, 1.0) ) ;
+#endif
 
 
 

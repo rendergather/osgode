@@ -285,7 +285,7 @@ create_light(bool nofx)
 
         light->setShadowEnabled(true) ;
         light->setShadowBufferSize(1024) ;
-        light->setShadowBias(3.0) ;
+        light->setShadowBias(4.0) ;
         light->setShadowFrustumSize(15) ;
 
         light->setType( pViewer::Light::DIRECTIONAL ) ;

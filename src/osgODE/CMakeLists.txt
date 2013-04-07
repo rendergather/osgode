@@ -25,6 +25,7 @@ SET(TARGET_H
     ${HEADER_PATH}/CollisionCallback.inl
     ${HEADER_PATH}/CollisionParameters
     ${HEADER_PATH}/CollisionParameters.inl
+    ${HEADER_PATH}/CollisionPredictor
     ${HEADER_PATH}/CommonRayCastResults
     ${HEADER_PATH}/CommonRayCastResults.inl
     ${HEADER_PATH}/CommonWorldOperations
@@ -130,6 +131,7 @@ SET(TARGET_SRC
     Collidable.cpp
     CollisionCallback.cpp
     CollisionParameters.cpp
+    CollisionPredictor.cpp
     CommonRayCastResults.cpp
     CommonWorldOperations.cpp
     Container.cpp

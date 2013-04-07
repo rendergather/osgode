@@ -14,6 +14,7 @@ SET(TARGET_SRC
     Collidable_serializer.cpp
     CollisionCallback_serializer.cpp
     CollisionParameters_serializer.cpp
+    CollisionPredictor_serializer.cpp
     Container_serializer.cpp
     CubicVec3Interpolator_serializer.cpp
     Cylinder_serializer.cpp

@@ -391,10 +391,55 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
                 dOPE(contact->fdir1, =, fdir) ;
 
 
-                addContact( dBodyIsKinematic(body1) ? NULL : body1,
-                            dBodyIsKinematic(body2) ? NULL : body2,
-                            contact
-                        ) ;
+
+
+
+
+
+
+                //
+                // generate contact
+                //
+                // If a body is kinematic and very slow, then replace it
+                // with the static environment
+                //
+
+                {
+                    const dReal EPSYLON = 1.0e-3 ;
+
+
+                    dBodyID b1 = body1 ;
+                    dBodyID b2 = body2 ;
+
+
+
+                    const dReal*    p = contact->geom.pos ;
+                    dVector3        v ;
+
+
+
+                    dBodyGetPointVel(body1, p[0], p[1], p[2], v) ;
+
+                    if( dBodyIsKinematic(body1) && ( dCalcVectorLength3( v ) < EPSYLON ) ) {
+                        b1 = NULL ;
+                    }
+
+
+
+                    dBodyGetPointVel(body2, p[0], p[1], p[2], v) ;
+
+                    if( dBodyIsKinematic(body2) && ( dCalcVectorLength3( v ) < EPSYLON ) ) {
+                        b2 = NULL ;
+                    }
+
+
+
+                    addContact( b1, b2, contact ) ;
+                }
+
+
+
+
 
 
 

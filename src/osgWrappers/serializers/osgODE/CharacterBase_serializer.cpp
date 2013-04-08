@@ -61,7 +61,7 @@ REGISTER_OBJECT_WRAPPER( CharacterBase,
     ADD_DOUBLE_SERIALIZER( Pitch, osg::PI * 0.5 ) ;
     ADD_DOUBLE_SERIALIZER( Height, 1.75 ) ;
     ADD_DOUBLE_SERIALIZER( FootContactSpring, 10000 ) ;
-    ADD_DOUBLE_SERIALIZER( FootContactDamper, 1000 ) ;
+    ADD_DOUBLE_SERIALIZER( FootContactDamper, 1500 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -169,19 +169,19 @@ public:
 
 
 
-    //! Foot contact spring (default: 1e5)
+    //! Foot contact spring (default: 1.0e5)
     inline void     setFootContactSpring(double spring) ;
 
 
-    //! Foot contact spring (default: 1e5)
+    //! Foot contact spring (default: 1.0e5)
     inline double   getFootContactSpring(void) const ;
 
 
-    //! Foot contact damper (default: 1e3)
+    //! Foot contact damper (default: 1.5e3)
     inline void     setFootContactDamper(double damper) ;
 
 
-    //! Foot contact damper (default: 1e3)
+    //! Foot contact damper (default: 1.5e3)
     inline double   getFootContactDamper(void) const ;
 /* ======================================================================= */
 

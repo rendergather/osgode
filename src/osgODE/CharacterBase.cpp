@@ -60,7 +60,7 @@ CharacterBase::CharacterBase(void):
     m_pitch(osg::PI * 0.5),
     m_height( 1.75 ),
     m_foot_contact_spring(10000),
-    m_foot_contact_damper(1000),
+    m_foot_contact_damper(1500),
     m_motion_fmax(0.0),
     m_jump_res_time(-1.0),
     m_foot_contact_joint(NULL),

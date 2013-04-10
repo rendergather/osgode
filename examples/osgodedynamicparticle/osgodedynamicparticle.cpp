@@ -36,6 +36,9 @@
 
 
 
+#include <osgViewer/Viewer>
+
+
 
 int
 main(int argc, char** argv)
@@ -187,6 +190,10 @@ main(int argc, char** argv)
     root->getOrCreateStateSet()->getOrCreateUniform("uColor", osg::Uniform::FLOAT_VEC4)->set( osg::Vec4(0.8, 0.8, 0.8, 1.0) ) ;
 #endif
 
+
+    osgViewer::Viewer   viewer ;
+    viewer.setSceneData( root ) ;
+    viewer.run() ;
 
 
     /*

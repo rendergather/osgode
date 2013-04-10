@@ -92,6 +92,45 @@ DynamicParticleSystem::~DynamicParticleSystem(void)
 osgParticle::Particle*
 DynamicParticleSystem::createParticle( const osgParticle::Particle* ptemplate )
 {
+
+
+    /*
+     * During the serialization the ParticleSystem does not write the
+     * emitted particles, but the associated bodies are valid and the World
+     * writes them. In that case, the loaded scene has a lot of useless
+     * bodies that need to be removed
+     */
+
+    if( m_body_list.size() != _particles.size() ) {
+
+
+        if( m_world.valid() ) {
+
+            for(unsigned int i = 0; i < m_body_list.size(); i++) {
+                m_world->addOperation( new RemoveObjectOperation( m_body_list[i].get()  ) ) ;
+            }
+
+
+            m_body_list.clear() ;
+
+
+
+            for(unsigned int i = 0; i < _particles.size(); i++) {
+
+                RigidBody*  body = osg::clone( m_body_template.get() ) ;
+
+                body->setBodyEnabled( false ) ;
+
+                m_world->addOperation( new AddObjectOperation( body ) ) ;
+
+                m_body_list.push_back( body ) ;
+            }
+        }
+
+    }
+
+
+
     // is there any dead particle?
     if (!_deadparts.empty()) {
 

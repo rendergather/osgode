@@ -12,17 +12,12 @@ SET(TARGET_H
     ${HEADER_PATH}/ControllerBase
     ${HEADER_PATH}/ControllerBase.inl
     ${HEADER_PATH}/CreateTriMeshFromNode
-    ${HEADER_PATH}/CreateTriMeshFromNode.inl
     ${HEADER_PATH}/FindObjects
-    ${HEADER_PATH}/FindObjects.inl
     ${HEADER_PATH}/HashTable
     ${HEADER_PATH}/HashTable.inl
     ${HEADER_PATH}/Icosahedron
     ${HEADER_PATH}/Icosahedron.inl
-    ${HEADER_PATH}/Math
-    ${HEADER_PATH}/Math.inl
     ${HEADER_PATH}/MatrixManipulator
-    ${HEADER_PATH}/MatrixManipulator.inl
     ${HEADER_PATH}/Signal
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor.inl
@@ -40,7 +35,6 @@ SET(TARGET_SRC
     FindObjects.cpp
     HashTable.cpp
     Icosahedron.cpp
-    Math.cpp
     MatrixManipulator.cpp
     TrianglesEmitterIndexVisitor.cpp
     TrianglesEmitterPrimitiveIndexFunctor.cpp

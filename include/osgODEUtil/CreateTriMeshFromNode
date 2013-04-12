@@ -67,7 +67,7 @@ createTriMeshFromNode(  osg::Node* node,
 
 
 
-#include "CreateTriMeshFromNode.inl"
+// #include "CreateTriMeshFromNode.inl"
 
 
 

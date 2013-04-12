@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -154,7 +154,7 @@ public:
     void                set(Pair* pair ) ;
 
 
-    //! Elimina la coppia
+    //! Eliminate the pair
     void                reset(const std::string& key) ;
 
     //! Get the value

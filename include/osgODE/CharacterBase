@@ -85,8 +85,12 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Create and setup body and motors
+    //! Create (if needed) and setup body and motors
     void    init(void) ;
+
+
+    //! Destroy body and motors
+    void    clear(void) ;
 /* ======================================================================= */
 
 

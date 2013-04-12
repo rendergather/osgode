@@ -416,12 +416,9 @@ CharacterBase::init(void)
     //
     // Body
     //
-    {
+    if( ! m_body.valid() ) {
         m_body = new RigidBody() ;
         m_body->setMass( 75.0 ) ;
-
-
-        this->Container::addObject( m_body ) ;
     }
 
 
@@ -430,9 +427,13 @@ CharacterBase::init(void)
     //
     // Angular motor
     //
-    {
+    if( ! m_amotor.valid() ) {
         m_amotor = new AMotorJoint() ;
+    }
 
+
+
+    {
         m_amotor->setMotorMode( dAMotorUser ) ;
         m_amotor->setNumAxes( 3 ) ;
         m_amotor->setAxis1Anchor( osgODE::AMotorJoint::BODY1 ) ;
@@ -451,9 +452,6 @@ CharacterBase::init(void)
 
         m_amotor->setBody1( m_body ) ;
         m_amotor->setBody2( NULL ) ;
-
-
-        this->Container::addObject( m_amotor ) ;
     }
 
 
@@ -462,9 +460,13 @@ CharacterBase::init(void)
     //
     // Linear motor
     //
-    {
+    if( ! m_lmotor.valid() ) {
         m_lmotor = new LMotorJoint() ;
+    }
 
+
+
+    {
         m_lmotor->setNumAxes( 3 ) ;
         m_lmotor->setAxis1Anchor( osgODE::LMotorJoint::WORLD ) ;
         m_lmotor->setAxis2Anchor( osgODE::LMotorJoint::WORLD ) ;
@@ -482,10 +484,34 @@ CharacterBase::init(void)
 
         m_lmotor->setBody1( m_body ) ;
         m_lmotor->setBody2( NULL) ;
-
-
-        this->Container::addObject( m_lmotor ) ;
     }
+
+
+
+
+
+    this->Container::addObject( m_body ) ;
+    this->Container::addObject( m_amotor ) ;
+    this->Container::addObject( m_lmotor ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+CharacterBase::clear(void)
+{
+    this->Container::removeObject( m_body.get() ) ;
+    this->Container::removeObject( m_amotor.get() ) ;
+    this->Container::removeObject( m_lmotor.get() ) ;
+
+    m_body = NULL ;
+    m_amotor = NULL ;
+    m_lmotor = NULL ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

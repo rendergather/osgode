@@ -44,6 +44,7 @@ main(int argc, char** argv)
 
 
     manager->getWorld()->setWind( osg::Vec3(-1.0, 0.0, 0.0) ) ;
+    manager->getWorld()->setWindFrequency( 4.0 ) ;
 
 
 
@@ -113,9 +114,12 @@ main(int argc, char** argv)
 
 
         // setup the aerodynamic device
-        const double    CX = 2.0 ;
+        osgODE::AerodynamicDevice*  ad = new osgODE::AerodynamicDevice() ;
 
-        box->addUpdateCallback( new osgODE::AerodynamicDevice(CX) ) ;
+        // just a drag point in the front lower left vertex
+        ad->addDragPoint( osg::Vec4(-0.5, -0.5, -0.5, 5.0) ) ;
+
+        box->addUpdateCallback( ad ) ;
     }
 
 

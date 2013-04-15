@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,6 +30,8 @@
 
 /* ======================================================================= */
 #include <osgODE/ODECallback>
+
+#include <osg/Vec4>
 /* ======================================================================= */
 
 
@@ -49,21 +51,26 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! Oppose resistance to motion due to the friction with the air
+//! An aerodynamic device
 /*!
- * The mechanism is very rough:\n
- * compute the force as 1/2 d c S V^2 where:\n
+ * An AerodynamicDevice is a set of points that oppose resistance to motion
+ * due to the friction with the air. Each point has to be specified in body
+ * coordinate system. The function that defines the force is:\n
+ * \n
+ * F = 0.5 * d * c * V^2 \n
+ * \n
+ * where:\n
  * - d is the air density ;\n
- * - c is a body related coefficient;\n
- * - S is the surface which "takes air" ;\n
- * - V is the body velocity.\n
- * The only parameter to set is CX = c*S
+ * - c is a point related coefficient;\n
+ * - V is the point velocity relative to the global wind.\n
+ * \n
+ * See AerodynamicDevice::addDragPoint to see how to set these values
  */
 class OSG_EXPORT AerodynamicDevice: public ODECallback
 {
 /* ======================================================================= */
 public:
-             AerodynamicDevice(double cx=1.0) ;
+             AerodynamicDevice(void) ;
              AerodynamicDevice(const AerodynamicDevice& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
@@ -88,11 +95,35 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set CX (see class description) Default: 1.0
-    inline void     setCX(double cx) ;
+    //! Add a drag point
+    /*!
+     * point.xyz is the point in object local frame, point.w is the drag
+     * coefficient
+     */
+    inline void         addDragPoint( const osg::Vec4& point ) ;
 
-    //! Get CX (see class description) Default: 1.0
-    inline double   getCX(void) const ;
+
+    //! Get the i-th drag point in object local coordinate system
+    /*!
+     * This function does not check whether 'i' is in the proper range
+     */
+    inline const osg::Vec4& getDragPoint(unsigned int i) const ;
+
+
+    //! Get the number of drag points
+    inline unsigned int getNumDragPoints(void) const ;
+
+
+
+    //! xyz is the point in local frame, w is the drag factor
+    typedef std::vector<osg::Vec4>  DragPointList ;
+
+
+    //! Set the point list
+    inline void     setDragPointList( const DragPointList& point_list ) ;
+
+    //! Get the point list
+    inline const DragPointList& getDragPointList(void) const ;
 /* ======================================================================= */
 
 
@@ -100,7 +131,7 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Apply the force on the body
+    //! Compute and apply the force
     /*!
      * SIGSEGV (or assert) when obj is not a RigidBody
      */
@@ -112,7 +143,7 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_cx ;
+    DragPointList   m_point_list ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -28,7 +28,7 @@ Android 2.3.3 (armeabi-v5) and variuos Slackware (x86 and x86-64)
 \n
 \n
 Source code: <a href="http://code.google.com/p/osgode/">http://code.google.com/p/osgode/</a>\n
-Mailing list: <a href="https://groups.google.com/group/osgODE">https://groups.google.com/group/osgODE</a>\n
+Mailing list: <a href="https://groups.google.com/group/osgODE">http://groups.google.com/group/osgODE</a>\n
 \n
 \n
 \n
@@ -120,6 +120,15 @@ If everything is Ok you can proceed, otherwise you can write to the mailing
 list.\n
 \n
 \n
+Note that some 64 bit distributions do not include the directory
+/usr/local/lib64 in the ldconfig search directories, so you have to manually
+specify it in /etc/ld.so.conf and run ldconfig as root. Alternatively, you can
+edit the file .bashrc in your home and add the following line:
+@verbatim
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64
+@endverbatim
+\n
+\n
 \n
 You are about to verify the installation. \n
 \n
@@ -131,7 +140,7 @@ You need to link the osgODE and the osgDB.\n
 \n
 Shell:
 @verbatim
-$ g++ osgoderigidbody.cpp -o osgoderigidbody -losgODE -losgDB
+$ g++ osgoderigidbody.cpp -o osgoderigidbody -losgODE -losgDB -losg -lode
 @endverbatim
 \n
 or, if pkg-config did a goog job:

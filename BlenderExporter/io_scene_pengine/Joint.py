@@ -292,9 +292,6 @@ class Joint(ODEObject.ODEObject):
 
 
 
-        if self.MotorMode != None:
-            writer.writeLine("MotorMode %d" %self.MotorMode)
-
         if self.Axis1Anchor != None:
             writer.writeLine("Axis1Anchor %d" %self.Axis1Anchor)
 
@@ -305,6 +302,8 @@ class Joint(ODEObject.ODEObject):
             writer.writeLine("Axis3Anchor %d" %self.Axis3Anchor)
 
 
+        if self.MotorMode != None:
+            writer.writeLine("MotorMode %d" %self.MotorMode)
 
         if self.NumAxes != None:
             writer.writeLine("NumAxes %d" %self.NumAxes)

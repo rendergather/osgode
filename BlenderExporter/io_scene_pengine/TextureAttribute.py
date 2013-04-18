@@ -70,7 +70,7 @@ class TextureAttribute(Writable.Writable):
         self.Texture = texture
         self.Image = None
         self.Wrap = "REPEAT"
-        self.MaxAnisotropy = 16
+        self.MaxAnisotropy = 1
 ############################################################################
 
 
@@ -97,7 +97,7 @@ class TextureAttribute(Writable.Writable):
             self.Image = Image.Image(self.Data, self.Texture.texture.image)
             self.addChild(self.Image)
 
-        self.MaxAnisotropy = 16
+        self.MaxAnisotropy = 1
 
 
         return self.traverseBuild()

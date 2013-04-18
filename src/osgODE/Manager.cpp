@@ -238,7 +238,10 @@ Manager::run(void)
 
 
 
-        OpenThreads::Thread::YieldCurrentThread() ;
+//         OpenThreads::Thread::YieldCurrentThread() ;
+
+        const double    sleep_time = osg::maximum(0.0, m_step_size - t) ;
+        OpenThreads::Thread::microSleep( sleep_time * 1.0e3 ) ;
 
     } // while ! done
 

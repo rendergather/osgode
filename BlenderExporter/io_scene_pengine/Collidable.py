@@ -33,8 +33,8 @@ from mathutils import Vector
 
 ############################################################################
 # ........................................................................ #
-STATIC_BIT = 1
-DYNAMIC_BIT = 2
+#STATIC_BIT = 1
+#DYNAMIC_BIT = 2
 # ........................................................................ #
 ############################################################################
 
@@ -87,12 +87,41 @@ class Collidable(RigidBody.RigidBody):
 
         self.Size = Vector(self.Object.dimensions)
 
-        if self.Object.game.physics_type == 'STATIC':
-            self.CategoryBits = STATIC_BIT
-            self.CollideBits = DYNAMIC_BIT
-        else:
-            self.CategoryBits = DYNAMIC_BIT
-            self.CollideBits = DYNAMIC_BIT | STATIC_BIT
+        #if self.Object.game.physics_type == 'STATIC':
+            #self.CategoryBits = STATIC_BIT
+            #self.CollideBits = DYNAMIC_BIT
+        #else:
+            #self.CategoryBits = DYNAMIC_BIT
+            #self.CollideBits = DYNAMIC_BIT | STATIC_BIT
+
+
+
+
+        self.CollideBits = 0
+        self.CategoryBits = 0
+
+
+
+
+
+        temp = 1
+
+        for i in self.Object.game.collision_group:
+            if i:
+                self.CategoryBits = self.CategoryBits | temp
+            temp = temp << 1
+
+
+
+
+        temp = 1
+
+        for i in self.Object.game.collision_mask:
+            if i:
+                self.CollideBits = self.CollideBits | temp
+            temp = temp << 1
+
+
 
 
         from . import CollisionParameters

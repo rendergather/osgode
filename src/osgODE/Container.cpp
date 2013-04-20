@@ -289,12 +289,17 @@ Container::addObject(ODEObject* obj)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
+bool
 Container::removeObject(unsigned int idx, bool preserve_order)
 {
+    if( idx == ODEOBJECT_NOT_FOUND ) {
+        return true ;
+    }
+
+
     if( idx >= m_object_list.size() ) {
         PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
-        return ;
+        return false ;
     }
 
 
@@ -328,6 +333,23 @@ Container::removeObject(unsigned int idx, bool preserve_order)
     }
 
     obj->setWorldInternal(NULL) ;
+
+    return true ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Container::clear(void)
+{
+    for( unsigned int i=0; i<m_object_list.size(); i++ ) {
+        this->removeObject(0) ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

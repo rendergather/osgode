@@ -56,9 +56,11 @@ REGISTER_OBJECT_WRAPPER( CharacterBase,
     ADD_OBJECT_SERIALIZER( AngularMotor, osgODE::AMotorJoint, NULL ) ;
     ADD_OBJECT_SERIALIZER( LinearMotor, osgODE::LMotorJoint, NULL ) ;
     ADD_VEC3_SERIALIZER( UpVersor, osg::Z_AXIS ) ;
-    ADD_VEC3_SERIALIZER( SideVersor, osg::Y_AXIS ) ;
+    ADD_VEC3_SERIALIZER( SideVersor, osg::X_AXIS ) ;
+    ADD_VEC3_SERIALIZER( FrontVersor, -osg::Z_AXIS ) ;
     ADD_DOUBLE_SERIALIZER( Yaw, 0.0 ) ;
     ADD_DOUBLE_SERIALIZER( Pitch, osg::PI * 0.5 ) ;
+    ADD_UINT_SERIALIZER( Elasticity, 5 ) ;
     ADD_DOUBLE_SERIALIZER( Height, 1.75 ) ;
     ADD_DOUBLE_SERIALIZER( FootContactSpring, 10000 ) ;
     ADD_DOUBLE_SERIALIZER( FootContactDamper, 1500 ) ;

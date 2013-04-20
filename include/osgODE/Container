@@ -89,12 +89,21 @@ public:
     void    addObject(ODEObject* obj) ;
 
 
-    //! Remove the object by the list
-    inline bool     removeObject(ODEObject* obj, bool preserve_order=false) ;
+
+    //
+    // It's ambiguous with removeObject(0)
+    //
+//     //! Remove the object from the list
+//     inline bool     removeObject(ODEObject* obj, bool preserve_order=false) ;
 
 
-    //! Remove the object by the list
-    void            removeObject(unsigned int idx, bool preserve_order=false) ;
+    //! Remove the object from the list
+    bool            removeObject(unsigned int idx, bool preserve_order=false) ;
+
+
+    //! Remove all objects
+    virtual void    clear(void) ;
+
 
     ODEObject*          getObject(unsigned int idx) ;
     const ODEObject*    getObject(unsigned int idx) const ;

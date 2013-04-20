@@ -185,7 +185,7 @@ World::removeObject(ODEObject* obj)
 
         obj->setWorldInternal(NULL) ;
 
-        // The objects can be messy, so I nedd to do a linear search
+        // The objects can be messy, so I need to do a linear search
 
         unsigned int  size = m_objects.size() ;
 

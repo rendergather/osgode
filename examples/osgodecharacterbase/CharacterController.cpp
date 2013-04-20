@@ -49,9 +49,7 @@ CharacterController::CharacterController(Character* character):
     m_character(character),
 
     m_warp_pointer(false),
-    m_motion(NO_MOTION),
-
-    m_picked( NULL )
+    m_motion(NO_MOTION)
 {
 }
 /* ....................................................................... */
@@ -69,9 +67,7 @@ CharacterController::CharacterController(const CharacterController& other, const
     m_character(other.m_character),
 
     m_warp_pointer(other.m_warp_pointer),
-    m_motion( other.m_motion ),
-
-    m_picked( other.m_picked )
+    m_motion( other.m_motion )
 {
 }
 /* ....................................................................... */
@@ -321,37 +317,16 @@ CharacterController::_handleKEYUP(const osgGA::GUIEventAdapter& ea, osgGA::GUIAc
 bool
 CharacterController::_handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
 {
-    const int   bm = ea.getButtonMask() ;
-
-    const bool  primary = (bm & m_keys.PrimaryAction) != 0 ;
-
-
-
-    m_character->getWorld()->writeLock() ;
-
-
-
-    if( m_picked.valid() ) {
-        m_character->detach( m_picked ) ;
-    }
+//     const int   bm = ea.getButtonMask() ;
+// 
+//     const bool  fire = (bm & m_keys.PrimaryAction) != 0 ;
+//     const bool  aim = (bm & m_keys.SecondaryAction) != 0 ;
+// 
+//     m_character->aim(aim) ;
+//     m_character->shoot(fire) ;
 
 
-    if( primary ) {
-
-        m_picked = m_character->touch( 5 ) ;
-
-        if( m_picked.valid() ) {
-            m_character->attach( m_picked ) ;
-        }
-
-    }
-
-
-
-    m_character->getWorld()->writeUnlock() ;
-
-
-    return true ;
+    return false ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -364,31 +339,16 @@ CharacterController::_handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIAct
 bool
 CharacterController::_handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
 {
-    const int   bm = ea.getButtonMask() ;
-
-    const bool  primary = (bm & m_keys.PrimaryAction) != 0 ;
-
-
-
-    m_character->getWorld()->writeLock() ;
-
-
-
-    if( ! primary ) {
-
-        if( m_picked.valid() ) {
-            m_character->detach( m_picked ) ;
-        }
-    }
+//     const int   bm = ea.getButtonMask() ;
+// 
+//     const bool  fire = (bm & m_keys.PrimaryAction) != 0 ;
+//     const bool  aim = (bm & m_keys.SecondaryAction) != 0 ;
+// 
+//     m_character->aim(aim) ;
+//     m_character->shoot(fire) ;
 
 
-
-    m_character->getWorld()->writeUnlock() ;
-
-
-
-
-    return true ;
+    return false ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

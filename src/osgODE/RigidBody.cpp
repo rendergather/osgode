@@ -546,6 +546,10 @@ RigidBody::removeFromWorldInternal(World* world)
     }
 
 
+
+    PS_WARN("osgODE::RigidBody::removeFromWorldInternal(%p): world != getWorld()", this) ;
+
+
     return false ;
 }
 /* ....................................................................... */

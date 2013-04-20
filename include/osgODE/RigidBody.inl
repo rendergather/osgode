@@ -250,7 +250,7 @@ osgODE::RigidBody::addJointInternal(osgODE::Joint* joint)
 inline void
 osgODE::RigidBody::removeJointInternal(osgODE::Joint* joint)
 {
-    for(    Joints::iterator    iter = m_joints.begin();
+    for(    JointList::iterator    iter = m_joints.begin();
             iter != m_joints.end();
             iter++ ) {
 
@@ -259,6 +259,32 @@ osgODE::RigidBody::removeJointInternal(osgODE::Joint* joint)
             break ;
         }
     }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgODE::RigidBody::JointList&
+osgODE::RigidBody::getJointList(void)
+{
+    return m_joints ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgODE::RigidBody::JointList&
+osgODE::RigidBody::getJointList(void) const
+{
+    return m_joints ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

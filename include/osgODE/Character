@@ -82,6 +82,40 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Search for the nearest collidable in the front of the character
+    /*!
+     * Perform a ray cast from the position of the body along the front
+     * axis specified with CharacterBase::setFrontVersor
+     */
+    RigidBody*  touch( double distance_max = 1.0 ) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Attach a body to the character
+    /*!
+     * This function uses a FixedJoint to transform the body.\n
+     *
+     * @param   body    the body
+     * @param   erp     the erp to use for the joint
+     * @param   cfm     the cfm to use for the joint
+     */
+    bool            attach( RigidBody*  body,
+                            double      erp = 0.2,
+                            double      cfm = 1.0e-5 ) ;
+
+
+
+    //! Detach a previously attached body
+    bool            detach( RigidBody* body ) ;
 /* ======================================================================= */
 
 

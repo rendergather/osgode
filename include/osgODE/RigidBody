@@ -460,6 +460,17 @@ public:
      * joints when a body is created or destroyed
      */ 
     inline void     removeJointInternal(Joint* joint) ;
+
+
+
+
+    typedef std::vector< osg::observer_ptr<Joint> > JointList ;
+
+    //! Get the joints this body os attached to
+    inline JointList&           getJointList(void) ;
+
+    //! Get the const joints this body os attached to
+    inline const JointList&     getJointList(void) const ;
 /* ======================================================================= */
 
 
@@ -502,14 +513,13 @@ private:
 protected:
     dBodyID         m_ODE_body ;
 
-    bool        m_mass_negative ;
+    bool            m_mass_negative ;
 
 
 private:
-    typedef std::vector< osg::observer_ptr<Joint> > Joints ;
-    Joints  m_joints ;
+    JointList       m_joints ;
 
-    bool        m_update_interacting_sphere ;
+    bool            m_update_interacting_sphere ;
 
 
 

@@ -56,9 +56,13 @@ CharacterBase::CharacterBase(void):
     m_foot_ray_cast_result( new NearestNotMeRayCastResult() ),
     m_up_versor( osg::Z_AXIS ),
     m_side_versor( osg::X_AXIS ),
+    m_front_versor( -osg::Z_AXIS ),
     m_yaw(0.0),
     m_pitch(osg::PI * 0.5),
+    m_current_yaw(0.0),
+    m_current_pitch(osg::PI * 0.5),
     m_height( 1.75 ),
+    m_elasticity(5),
     m_foot_contact_spring(10000),
     m_foot_contact_damper(1500),
     m_motion_fmax(0.0),
@@ -84,9 +88,13 @@ CharacterBase::CharacterBase(const CharacterBase& other, const osg::CopyOp& copy
     m_foot_ray_cast_result( other.m_foot_ray_cast_result ),
     m_up_versor( other.m_up_versor ),
     m_side_versor( other.m_side_versor ),
+    m_front_versor( other.m_front_versor ),
     m_yaw(other.m_yaw),
     m_pitch(other.m_pitch),
+    m_current_yaw(other.m_current_yaw),
+    m_current_pitch(other.m_current_pitch),
     m_height( other.m_height ),
+    m_elasticity(other.m_elasticity),
     m_foot_contact_spring(other.m_foot_contact_spring),
     m_foot_contact_damper(other.m_foot_contact_damper),
     m_motion_velocity( other.m_motion_velocity ),
@@ -157,8 +165,11 @@ CharacterBase::_updateOrientation(double step_size)
 
     const osg::Vec3 side_versor_world = m_body->getQuaternion() * m_side_versor ;
 
+    m_current_pitch = (m_current_pitch * m_elasticity + m_pitch) / (m_elasticity + 1) ;
+    m_current_yaw = (m_current_yaw * m_elasticity + m_yaw) / (m_elasticity + 1) ;
 
-    osg::Quat   q = osg::Quat(m_pitch, m_side_versor) * osg::Quat(m_yaw, m_up_versor) ;
+
+    osg::Quat   q = osg::Quat(m_current_pitch, m_side_versor) * osg::Quat(m_current_yaw, m_up_versor) ;
 
 
     m_body->setQuaternion( q ) ;
@@ -408,9 +419,9 @@ CharacterBase:: _collideAgainstGround(double step_size)
 void
 CharacterBase::init(void)
 {
-    this->Container::removeObject( m_body.get() ) ;
-    this->Container::removeObject( m_amotor.get() ) ;
-    this->Container::removeObject( m_lmotor.get() ) ;
+    this->Container::removeObject(   getObjectIDX( m_body )    ) ;
+    this->Container::removeObject(   getObjectIDX( m_amotor )  ) ;
+    this->Container::removeObject(   getObjectIDX( m_lmotor )  ) ;
 
 
     //
@@ -505,13 +516,12 @@ CharacterBase::init(void)
 void
 CharacterBase::clear(void)
 {
-    this->Container::removeObject( m_body.get() ) ;
-    this->Container::removeObject( m_amotor.get() ) ;
-    this->Container::removeObject( m_lmotor.get() ) ;
-
     m_body = NULL ;
     m_amotor = NULL ;
     m_lmotor = NULL ;
+
+
+    this->Container::clear() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

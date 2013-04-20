@@ -78,36 +78,7 @@ main(int argc, char** argv)
 
 
     /*
-     * [3] Create some cubes
-     */
-    {
-        osg::ref_ptr<osgODE::Collidable>    cube = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("woodenbox1.osgb") ) ;
-        PS_ASSERT1( cube.valid() ) ;
-
-        cube->setDamping(1.0e-3, 1.0e-3) ;
-
-        cube->setCollisionParameters(NULL) ;
-
-        for( int r=-4; r<=4; r++ ) {
-
-            for( int c=-4; c<=4; c++ ) {
-
-
-
-                osgODE::Collidable*     coll = osg::clone( cube.get() ) ;
-
-                coll->setPosition( osg::Vec3(r*4, c*4, 5.0) ) ;
-
-                manager->getWorld()->addObject(coll) ;
-            }
-        }
-    }
-
-
-
-
-    /*
-     * [4] Create the character
+     * [3] Create the character
      */
     osgODE::Character*  character = new osgODE::Character() ;
     {
@@ -123,7 +94,7 @@ main(int argc, char** argv)
 
 
     /*
-     * [5] setup the view
+     * [4] setup the view
      */
 
     osgViewer::Viewer   viewer ;

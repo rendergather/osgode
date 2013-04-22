@@ -86,6 +86,10 @@ public:
 /* ======================================================================= */
 public:
     //! Set the world to use
+    /*!
+     * @note    DynamicParticleSystem::setWorld uses a osg::observer_ptr to
+     *          store the world
+     */
     inline void         setWorld(World* world) ;
 
     //! Get the world
@@ -160,8 +164,8 @@ public:
 
 /* ======================================================================= */
 private:
-    BodyList                m_body_list ;
-    osg::ref_ptr<World>     m_world ;
+    BodyList                    m_body_list ;
+    osg::observer_ptr<World>    m_world ;
 
     osg::ref_ptr<RigidBody> m_body_template ;
 

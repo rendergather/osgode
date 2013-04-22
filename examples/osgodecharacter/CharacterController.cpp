@@ -324,6 +324,7 @@ CharacterController::_handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIAct
     const int   bm = ea.getButtonMask() ;
 
     const bool  primary = (bm & m_keys.PrimaryAction) != 0 ;
+    const bool  secondary = (bm & m_keys.SecondaryAction) != 0 ;
 
 
 
@@ -337,6 +338,16 @@ CharacterController::_handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIAct
 
 
     if( primary ) {
+
+        if( m_picked.valid() ) {
+            const osg::Vec3 direction = m_character->getBody()->getQuaternion() * m_character->getFrontVersor() ;
+
+            m_picked->addForce( direction * 5.0e4 ) ;
+        }
+
+    }
+
+    else if( secondary ) {
 
         m_picked = m_character->touch( 5 ) ;
 
@@ -367,6 +378,7 @@ CharacterController::_handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUI
     const int   bm = ea.getButtonMask() ;
 
     const bool  primary = (bm & m_keys.PrimaryAction) != 0 ;
+    const bool  secondary = (bm & m_keys.SecondaryAction) != 0 ;
 
 
 
@@ -374,7 +386,7 @@ CharacterController::_handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUI
 
 
 
-    if( ! primary ) {
+    if( ! secondary ) {
 
         if( m_picked.valid() ) {
             m_character->detach( m_picked ) ;

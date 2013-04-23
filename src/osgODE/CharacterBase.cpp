@@ -61,16 +61,25 @@ CharacterBase::CharacterBase(void):
     m_pitch(osg::PI * 0.5),
     m_current_yaw(0.0),
     m_current_pitch(osg::PI * 0.5),
+    m_avg_side_velocity(0.0),
+    m_footstep_time(0.0),
     m_height( 1.75 ),
     m_elasticity(5),
-    m_foot_contact_spring(10000),
-    m_foot_contact_damper(1500),
     m_motion_fmax(0.0),
     m_jump_res_time(-1.0),
     m_foot_contact_joint(NULL),
     m_is_on_ground( false ),
     m_ground_contact_normal( osg::Z_AXIS )
 {
+
+    m_footstep_info.Magnitude       = 250.0 ;
+    m_footstep_info.PowerFactor     = 0.25 ;
+    m_footstep_info.TimeMultiplier  = 0.2 ;
+    m_footstep_info.SpeedThreshold  = 0.1 ;
+
+    m_foot_contact_info.Spring      = 1.0e4 ;
+    m_foot_contact_info.Damper      = 1.5e3 ;
+
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -93,17 +102,19 @@ CharacterBase::CharacterBase(const CharacterBase& other, const osg::CopyOp& copy
     m_pitch(other.m_pitch),
     m_current_yaw(other.m_current_yaw),
     m_current_pitch(other.m_current_pitch),
+    m_avg_side_velocity( other.m_avg_side_velocity ),
+    m_footstep_time( other.m_footstep_time ),
     m_height( other.m_height ),
     m_elasticity(other.m_elasticity),
-    m_foot_contact_spring(other.m_foot_contact_spring),
-    m_foot_contact_damper(other.m_foot_contact_damper),
     m_motion_velocity( other.m_motion_velocity ),
     m_motion_fmax( other.m_motion_fmax ),
     m_jump_force( other.m_jump_force ),
     m_jump_res_time( other.m_jump_res_time ),
     m_foot_contact_joint(NULL),
     m_is_on_ground( false ),
-    m_ground_contact_normal( osg::Z_AXIS )
+    m_ground_contact_normal( osg::Z_AXIS ),
+    m_foot_contact_info( other.m_foot_contact_info ),
+    m_footstep_info( other.m_footstep_info )
 {
 }
 /* ....................................................................... */
@@ -169,10 +180,26 @@ CharacterBase::_updateOrientation(double step_size)
     m_current_yaw = (m_current_yaw * m_elasticity + m_yaw) / (m_elasticity + 1) ;
 
 
-    osg::Quat   q = osg::Quat(m_current_pitch, m_side_versor) * osg::Quat(m_current_yaw, m_up_versor) ;
+
+    osg::Quat   quat = osg::Quat(m_current_pitch, m_side_versor) * osg::Quat(m_current_yaw, m_up_versor) ;
 
 
-    m_body->setQuaternion( q ) ;
+
+
+
+
+    // experimental
+    if( true ) {
+        const osg::Vec3 front = m_body->getQuaternion() * m_front_versor ;
+        const double    side_vel = side_versor_world * m_body->getLinearVelocity() ;
+
+        m_avg_side_velocity = (m_avg_side_velocity * m_elasticity + side_vel) / (m_elasticity + 1) ;
+
+        quat = quat * osg::Quat( m_avg_side_velocity * -0.01, front ) ;
+    }
+
+
+    m_body->setQuaternion( quat ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -225,6 +252,33 @@ CharacterBase::_move(double step_size)
     m_lmotor->setParam(dParamFMax,  fabs( force.x() )   ) ;
     m_lmotor->setParam(dParamFMax2, fabs( force.y() )   ) ;
     m_lmotor->setParam(dParamFMax3, fabs( force.z() )   ) ;
+
+
+
+
+    if( true ) {
+        const double    body_speed      = m_body->getLinearVelocity().length() ;
+
+        const osg::Vec3 down_versor     = m_up_versor * -1.0 ;
+
+        const double    step_speed      = body_speed >= m_footstep_info.SpeedThreshold ;
+
+        const double    time_multiplier = body_speed * m_footstep_info.TimeMultiplier ;
+        const double    power_factor    = body_speed * m_footstep_info.PowerFactor ;
+        const double    magnitude       = body_speed * m_footstep_info.Magnitude ;
+
+
+        m_footstep_time += step_size * time_multiplier ;
+
+
+        double  strength = sin( m_footstep_time * 2.0 * osg::PI )  * 0.5  +  0.5 ;
+
+        strength = pow( strength, power_factor ) ;
+
+
+
+        m_body->addForce( down_versor * magnitude * strength * step_speed ) ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -343,8 +397,8 @@ CharacterBase:: _collideAgainstGround(double step_size)
         // The contact joint acts as a spring and damper system
         {
             const float h = step_size ;
-            const float kp = m_foot_contact_spring ;
-            const float kd = m_foot_contact_damper ;
+            const float kp = m_foot_contact_info.Spring ;
+            const float kd = m_foot_contact_info.Damper ;
             const float hkp = h * kp ;
             const float hkpkd = hkp + kd ;
 

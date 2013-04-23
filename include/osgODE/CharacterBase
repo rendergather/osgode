@@ -96,6 +96,11 @@ public:
 
 
 
+
+
+
+
+
 /* ======================================================================= */
 public:
     //! Set the body
@@ -129,6 +134,11 @@ public:
     //! Get the const joint that translates the body
     inline const LMotorJoint*   getLinearMotor(void) const ;
 /* ======================================================================= */
+
+
+
+
+
 
 
 
@@ -191,25 +201,94 @@ public:
 
     //! Get the elasticity for yaw/pitch update (default: 5)
     inline unsigned int getElasticity(void) const ;
-
-
-
-
-    //! Foot contact spring (default: 1.0e5)
-    inline void     setFootContactSpring(double spring) ;
-
-
-    //! Foot contact spring (default: 1.0e5)
-    inline double   getFootContactSpring(void) const ;
-
-
-    //! Foot contact damper (default: 1.5e3)
-    inline void     setFootContactDamper(double damper) ;
-
-
-    //! Foot contact damper (default: 1.5e3)
-    inline double   getFootContactDamper(void) const ;
 /* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    struct FootContactInfo
+    {
+        double  Spring ;
+        double  Damper ;
+    } ;
+
+
+    //! Set the foot contact info. Default: { Spring = 1.0e4, Damper = 1.5e3 }
+    inline void     setFootContactInfo( const FootContactInfo& info ) ;
+
+    //! Get the const foot contact info. Default: { Spring = 1.0e4, Damper = 1.5e3 }
+    inline const FootContactInfo&  getFootContactInfo(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Parameters to simulate the footstep visual effect
+    /*!
+     * The CharacterBase applies a sinusoidal down force 'F' to the body
+     * along the up vector. According to the spring and damper nature of the
+     * foot contacts, this produces an oscillation.\n
+     * The magnitude of the force is defined as:
+     *
+     * @image html footstep_1.gif
+     * \n
+     * @image html footstep_2.gif
+     * \n
+     * @image html footstep_3.gif
+     * \n
+     * @image html footstep_4.gif
+     * \n
+     * Where:
+     * - body_speed is the length of the body velocity vector
+     * - dt is the current step size
+     * - H(x) is the unit step function
+     */
+    /*
+     * For inline reading:
+     *
+     *
+     *  M = Magnitude * body_speed
+     *
+     *  P = PowerFactor * body_speed
+     *
+     *  T += dt * TimeMultiplier * body_speed
+     *
+     *  F = M * ( body_speed >= SpeedThreshold ) *
+     *      pow( 0.5 + 0.5 * sin( 2 * pi * T ), P )
+     */
+    struct FootstepInfo
+    {
+        double  Magnitude ;
+        double  PowerFactor ;
+        double  TimeMultiplier ;
+        double  SpeedThreshold ;
+    } ;
+
+    //! Set the footstep info. Default: { Mag=250, Pow=0.25, Mul=0.2, Thres = 0.1 }
+    inline void     setFootstepInfo( const FootstepInfo& info ) ;
+
+    //! Get the const footstep info. Default: { Mag=250, Pow=0.25, Mul=0.2, Thres = 0.1 }
+    inline const FootstepInfo&  getFootstepInfo(void) const ;
+/* ======================================================================= */
+
+
+
+
+
 
 
 
@@ -243,11 +322,21 @@ public:
 
 
 
+
+
+
+
+
 /* ======================================================================= */
 public:
     //! Returns true if the character touches the ground
     inline bool     isOnGround(void) const ;
 /* ======================================================================= */
+
+
+
+
+
 
 
 
@@ -291,14 +380,14 @@ private:
     double      m_current_yaw ;
     double      m_current_pitch ;
 
+    double      m_avg_side_velocity ;
+
+    double      m_footstep_time ;
+
     double      m_height ;
 
 
     unsigned int    m_elasticity ;
-
-
-    double          m_foot_contact_spring ;
-    double          m_foot_contact_damper ;
 
     osg::Vec3       m_motion_velocity ;
     double          m_motion_fmax ;
@@ -313,6 +402,11 @@ private:
     bool        m_is_on_ground ;
 
     osg::Vec3   m_ground_contact_normal ;
+
+
+
+    FootContactInfo m_foot_contact_info ;
+    FootstepInfo    m_footstep_info ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

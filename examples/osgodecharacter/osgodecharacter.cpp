@@ -143,15 +143,10 @@ main(int argc, char** argv)
     /*
      * [4] Create the character
      */
-    osgODE::Character*  character = new osgODE::Character() ;
-    {
+    osgODE::Character*  character = dynamic_cast<osgODE::Character*>( osgDB::readObjectFile("character.osgt") ) ;
+    PS_ASSERT1( character != NULL ) ;
 
-        character->init() ;
-
-        character->getBody()->setPosition( osg::Z_AXIS * 5 + osg::Y_AXIS * -15 ) ;
-
-        manager->getWorld()->addObject( character ) ;
-    }
+    manager->getWorld()->addObject( character ) ;
 
 
 

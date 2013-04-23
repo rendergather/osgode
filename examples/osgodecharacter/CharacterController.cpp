@@ -343,6 +343,8 @@ CharacterController::_handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIAct
             const osg::Vec3 direction = m_character->getBody()->getQuaternion() * m_character->getFrontVersor() ;
 
             m_picked->addForce( direction * 5.0e4 ) ;
+
+            m_picked = NULL ;
         }
 
     }
@@ -390,6 +392,7 @@ CharacterController::_handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUI
 
         if( m_picked.valid() ) {
             m_character->detach( m_picked ) ;
+            m_picked = NULL ;
         }
     }
 
@@ -440,7 +443,7 @@ CharacterController::_moveCharacter(void)
 
     m_character->getWorld()->writeLock() ;
 
-    m_character->setMotion( axis * (m_motion != 0) * 10.0, 1000 ) ;
+    m_character->setMotion( axis * (m_motion != 0) * 40.0, 200 ) ;
 
     m_character->getWorld()->writeUnlock() ;
 }

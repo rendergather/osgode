@@ -46,7 +46,7 @@
 REGISTER_OBJECT_WRAPPER( Character,
                          new osgODE::Character,
                          osgODE::Character,
-                         "osg::Object osgODE::ODEObject osgODE::ODEObjectContainer osgODE::CharacterBase osgODE::Character" )
+                         "osg::Object osgODE::ODEObject osgODE::Container osgODE::CharacterBase osgODE::Character" )
 {
     (void) wrapper ;
 }

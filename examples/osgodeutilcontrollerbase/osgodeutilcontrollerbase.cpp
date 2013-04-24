@@ -11,6 +11,8 @@
 
 #include <osgViewer/Viewer>
 
+#include <osg/io_utils>
+
 
 
 
@@ -108,6 +110,54 @@ public:
         }
     }
 
+
+    void    LMB(const bool& pressed, bool& handled)
+    {
+        if( pressed ) {
+            std::cout << "LMB Down" << std::endl ;
+        } else {
+            std::cout << "LMB Up" << std::endl ;
+        }
+        handled = true ;
+    }
+
+
+    void    MMB(const bool& pressed, bool& handled)
+    {
+        if( pressed ) {
+            std::cout << "MMB Down" << std::endl ;
+        } else {
+            std::cout << "MMB Up" << std::endl ;
+        }
+        handled = true ;
+    }
+
+
+    void    RMB(const bool& pressed, bool& handled)
+    {
+        if( pressed ) {
+            std::cout << "RMB Down" << std::endl ;
+        } else {
+            std::cout << "RMB Up" << std::endl ;
+        }
+        handled = true ;
+    }
+
+
+    void    Move(const osg::Vec2& pos, bool& handled)
+    {
+        std::cout << pos << std::endl ;
+        handled = true ;
+    }
+
+
+    void    Frame(bool& request_warp, osg::Vec2& warp, bool& handled)
+    {
+        request_warp = true ;
+        warp.set(0,0) ;
+        handled = true ;
+    }
+
 private:
     osg::ref_ptr<osgODE::Joint>     m_joint ;
 } ;
@@ -129,7 +179,10 @@ main(int argc, char** argv)
 
 
 
-    osgODE::Joint*      j = new osgODE::AMotorJoint(osgODE::AMotorJoint::BODY1) ;
+    osgODE::MotorJoint*     j = new osgODE::AMotorJoint() ;
+    j->setAxis1Anchor( osgODE::MotorJoint::BODY1 ) ;
+    j->setAxis2Anchor( osgODE::MotorJoint::BODY1 ) ;
+    j->setAxis3Anchor( osgODE::MotorJoint::BODY1 ) ;
 
 
 
@@ -166,6 +219,11 @@ main(int argc, char** argv)
     osgODEUtil::ControllerBase* controller_base = new osgODEUtil::ControllerBase() ;
 
     controller_base->onKeyPressed()->connect( controller.get(), &Controller::keyDown ) ;
+    controller_base->onLeftMouseButton()->connect( controller.get(), &Controller::LMB ) ;
+    controller_base->onMiddleMouseButton()->connect( controller.get(), &Controller::MMB ) ;
+    controller_base->onRightMouseButton()->connect( controller.get(), &Controller::RMB ) ;
+    controller_base->onMouseMoved()->connect( controller.get(), &Controller::Move ) ;
+    controller_base->onFrame()->connect( controller.get(), &Controller::Frame ) ;
 
     viewer.getEventHandlers().push_back( controller_base ) ;
 

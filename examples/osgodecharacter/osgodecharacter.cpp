@@ -25,6 +25,7 @@
 
 #include <osgODEUtil/CreateTriMeshFromNode>
 #include <osgODEUtil/MatrixManipulator>
+#include <osgODEUtil/ControllerBase>
 
 #include <osgDB/WriteFile>
 #include <osgDB/ReadFile>
@@ -32,7 +33,7 @@
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
 
-#include "CharacterController"
+#include "CharacterEx"
 
 
 
@@ -71,7 +72,7 @@ main(int argc, char** argv)
 
     root->addChild( manager ) ;
 
-    manager->setup(false, true, 1.0/100.0) ;
+    manager->setup(false, true, 1.0/120.0) ;
 
     manager->setWorld( new osgODE::Space() ) ;
 
@@ -87,7 +88,7 @@ main(int argc, char** argv)
 
 
     /*
-     * [2] Create a kinematic plane as floor
+     * [2] Create a kinematic floor
      */
     {
         osgODE::Collidable* ground = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("large_ground.osgb") ) ;
@@ -123,11 +124,6 @@ main(int argc, char** argv)
 
             for( int c=-4; c<=4; c++ ) {
 
-                if(  ! ( r || c )   ) {
-                    continue ;
-                }
-
-
                 osgODE::Collidable*     coll = osg::clone( cube_template.get() ) ;
 
                 coll->setPosition( osg::Vec3(r*10, c*10, 5.0) ) ;
@@ -143,10 +139,15 @@ main(int argc, char** argv)
     /*
      * [4] Create the character
      */
-    osgODE::Character*  character = dynamic_cast<osgODE::Character*>( osgDB::readObjectFile("character.osgt") ) ;
-    PS_ASSERT1( character != NULL ) ;
+    osgODE::CharacterEx*    character = new osgODE::CharacterEx() ;
+    {
 
-    manager->getWorld()->addObject( character ) ;
+        character->init() ;
+
+        character->getBody()->setPosition( osg::Z_AXIS * 10 + osg::Y_AXIS * -15 ) ;
+
+        manager->getWorld()->addObject( character ) ;
+    }
 
 
 
@@ -161,11 +162,20 @@ main(int argc, char** argv)
     //
     // the controller
     //
-    osgODE::CharacterController*    controller = new osgODE::CharacterController( character ) ;
+    osgODEUtil::ControllerBase* controller = new osgODEUtil::ControllerBase() ;
     {
         viewer->addEventHandler( controller ) ;
 
-        controller->setSensitivity( 0.25 ) ;
+
+        controller->onKeyPressed()          ->connect( character, &osgODE::CharacterEx::handleKeyDown       ) ;
+        controller->onKeyReleased()         ->connect( character, &osgODE::CharacterEx::handleKeyUp         ) ;
+        controller->onMouseMoved()          ->connect( character, &osgODE::CharacterEx::handleMove          ) ;
+        controller->onLeftMouseButton()     ->connect( character, &osgODE::CharacterEx::handleLeftButton    ) ;
+        controller->onRightMouseButton()    ->connect( character, &osgODE::CharacterEx::handleRightButton   ) ;
+        controller->onFrame()               ->connect( character, &osgODE::CharacterEx::handleFrame         ) ;
+
+
+        character->setSensitivity( 0.125 ) ;
     }
 
 

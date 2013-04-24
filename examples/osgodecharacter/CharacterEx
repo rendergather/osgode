@@ -1,5 +1,5 @@
 /*!
- * @file CharacterController
+ * @file CharacterEx
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_CHARACTERCONTROLLER_HPP
-#define _OSGODE_CHARACTERCONTROLLER_HPP
+#ifndef _OSGODE_CHARACTEREX_HPP
+#define _OSGODE_CHARACTEREX_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgGA/GUIEventHandler>
+#include <osgODE/Character>
 /* ======================================================================= */
 
 
@@ -42,8 +42,6 @@ namespace osgODE
 
 
 /* ======================================================================= */
-class Character ;
-class RigidBody ;
 /* ======================================================================= */
 
 
@@ -55,53 +53,15 @@ class RigidBody ;
 /*!
  *
  */
-class OSG_EXPORT CharacterController: public osgGA::GUIEventHandler
+class OSG_EXPORT CharacterEx: public Character
 {
 /* ======================================================================= */
 public:
-             CharacterController(Character* character = NULL) ;
-             CharacterController(const CharacterController& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             CharacterEx(void) ;
+             CharacterEx(const CharacterEx& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~CharacterController(void) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-    class OSG_EXPORT Keys
-    {
-    public:
-        Keys(void) ;
-        Keys(const Keys& other) ;
-
-        //! w
-        int     MoveFront ;
-
-        //! s
-        int     MoveBack ;
-
-        //! a
-        int     MoveLeft ;
-
-        //! d
-        int     MoveRight ;
-
-        //! KEY_Space
-        int     Jump ;
-
-        //! LMB
-        int     PrimaryAction ;
-
-        //! RMB
-        int     SecondaryAction ;
-    } ;
+    virtual ~CharacterEx(void) ;
 /* ======================================================================= */
 
 
@@ -109,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, CharacterController) ;
+    META_Object(osgODE, CharacterEx) ;
 /* ======================================================================= */
 
 
@@ -122,9 +82,12 @@ public:
 
 /* ======================================================================= */
 public:
-    void                        setCharacter(Character* character) ;
-    inline Character*           getCharacter(void) ;
-    inline const Character*     getCharacter(void) const ;
+    void    handleKeyDown(const int& key, const int& mask, bool& handled) ;
+    void    handleKeyUp(const int& key, const int& mask, bool& handled) ;
+    void    handleLeftButton(const bool& pressed, bool& handled) ;
+    void    handleRightButton(const bool& pressed, bool& handled) ;
+    void    handleMove(const osg::Vec2& pos, bool& handled) ;
+    void    handleFrame(bool& warp_request, osg::Vec2& warp, bool& handled) ;
 /* ======================================================================= */
 
 
@@ -132,23 +95,8 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void         setKeys(const Keys& keys) ;
-    inline Keys&        getKeys(void) ;
-    inline const Keys&  getKeys(void) const ;
-
-    inline void         setSensitivity(float f) ;
-    inline float        getSensitivity(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual bool    handle( const osgGA::GUIEventAdapter& ea,
-                            osgGA::GUIActionAdapter& aa,
-                            osg::Object*,
-                            osg::NodeVisitor* ) ;
+    inline void     setSensitivity(float sensitivity) ;
+    inline float    getSensitivity(void) const ;
 /* ======================================================================= */
 
 
@@ -156,12 +104,6 @@ public:
 
 /* ======================================================================= */
 private:
-    bool    _handleMOVE(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
-    bool    _handleKEYDOWN(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
-    bool    _handleKEYUP(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
-    bool    _handlePUSH(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
-    bool    _handleRELEASE(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) ;
-
     void    _moveCharacter(void) ;
 /* ======================================================================= */
 
@@ -170,18 +112,7 @@ private:
 
 /* ======================================================================= */
 private:
-    Keys        m_keys ;
-    float       m_sensitivity ;
-
-    osg::ref_ptr<Character>  m_character ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-    bool    m_warp_pointer ;
+    float   m_sensitivity ;
 
 
     enum {
@@ -209,9 +140,9 @@ private:
 
 
 
-#include "CharacterController.inl"
+#include "CharacterEx.inl"
 
 
 
 
-#endif /* _OSGODE_CHARACTERCONTROLLER_HPP */
+#endif /* _OSGODE_CHARACTEREX_HPP */

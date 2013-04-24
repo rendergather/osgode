@@ -2,13 +2,13 @@
 #include <osgODE/Space>
 #include <osgODE/Box>
 #include <osgODE/TriMesh>
-#include <osgODE/Character>
 #include <osgODE/AMotorJoint>
 #include <osgODE/LMotorJoint>
 #include <osgODE/Notify>
 
 #include <osgODEUtil/CreateTriMeshFromNode>
 #include <osgODEUtil/MatrixManipulator>
+#include <osgODEUtil/ControllerBase>
 
 #include <osgDB/WriteFile>
 #include <osgDB/ReadFile>
@@ -16,7 +16,7 @@
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
 
-#include "CharacterController"
+#include "CharacterEx"
 
 
 
@@ -80,7 +80,7 @@ main(int argc, char** argv)
     /*
      * [3] Create the character
      */
-    osgODE::Character*  character = new osgODE::Character() ;
+    osgODE::CharacterEx*    character = new osgODE::CharacterEx() ;
     {
 
         character->init() ;
@@ -103,11 +103,18 @@ main(int argc, char** argv)
     //
     // the controller
     //
-    osgODE::CharacterController*    controller = new osgODE::CharacterController( character ) ;
+    osgODEUtil::ControllerBase* controller = new osgODEUtil::ControllerBase() ;
     {
         viewer.addEventHandler( controller ) ;
 
-        controller->setSensitivity( 0.25 ) ;
+
+        controller->onKeyPressed()  ->connect( character, &osgODE::CharacterEx::handleKeyDown   ) ;
+        controller->onKeyReleased() ->connect( character, &osgODE::CharacterEx::handleKeyUp     ) ;
+        controller->onMouseMoved()  ->connect( character, &osgODE::CharacterEx::handleMove      ) ;
+        controller->onFrame()       ->connect( character, &osgODE::CharacterEx::handleFrame     ) ;
+
+
+        character->setSensitivity( 0.25 ) ;
     }
 
 

@@ -1,9 +1,9 @@
 /*!
- * @file ControllerBase.inl
+ * @file CharacterEx.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,8 +22,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_CONTROLLERBASE_INL
-#define _OSGODEUTIL_CONTROLLERBASE_INL
+/* ======================================================================= */
+/* ....................................................................... */
+#include "CharacterEx"
+// #include <osgODE/CharacterEx>
+#include <osgODE/World>
+
+#include <osgGA/GUIEventAdapter>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -33,12 +43,17 @@
 
 
 
+using namespace osgODE ;
+
+
+
+
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal3<const int, const int, bool>*
-osgODEUtil::ControllerBase::onKeyPressed(void)
+CharacterEx::CharacterEx(void):
+    m_sensitivity(0.5),
+    m_motion(NO_MOTION)
 {
-    return m_on_key_pressed.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -48,10 +63,11 @@ osgODEUtil::ControllerBase::onKeyPressed(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal3<const int, const int, bool>*
-osgODEUtil::ControllerBase::onKeyReleased(void)
+CharacterEx::CharacterEx(const CharacterEx& other, const osg::CopyOp& copyop):
+    Character(other, copyop),
+    m_sensitivity( other.m_sensitivity ),
+    m_motion( other.m_motion )
 {
-    return m_on_key_released.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -61,10 +77,8 @@ osgODEUtil::ControllerBase::onKeyReleased(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal2<const bool, bool>*
-osgODEUtil::ControllerBase::onLeftMouseButton(void)
+CharacterEx::~CharacterEx(void)
 {
-    return m_on_left_button.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,10 +88,56 @@ osgODEUtil::ControllerBase::onLeftMouseButton(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal2<const bool, bool>*
-osgODEUtil::ControllerBase::onMiddleMouseButton(void)
+void
+CharacterEx::handleKeyDown(const int& key, const int& mask, bool& handled)
 {
-    return m_on_middle_button.get() ;
+
+
+    if( key == 'w' ) {
+        m_motion |= MOVE_FRONT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 's' ) {
+        m_motion |= MOVE_BACK ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 'a' ) {
+        m_motion |= MOVE_LEFT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 'd' ) {
+        m_motion |= MOVE_RIGHT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+
+
+
+
+    else if( key == osgGA::GUIEventAdapter::KEY_Space ) {
+
+        if( this->isOnGround()  &&  this->getWorld() != NULL ) {
+
+            this->getWorld()->writeLock() ;
+
+            this->setJump( osg::Z_AXIS * 1.0e3 / this->getWorld()->getCurrentStepSize(), 0.5 ) ;
+
+            this->getWorld()->writeUnlock() ;
+
+        }
+        handled = true ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -87,10 +147,35 @@ osgODEUtil::ControllerBase::onMiddleMouseButton(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal2<const bool, bool>*
-osgODEUtil::ControllerBase::onRightMouseButton(void)
+void
+CharacterEx::handleKeyUp(const int& key, const int& mask, bool& handled)
 {
-    return m_on_right_button.get() ;
+    if( key == 'w' ) {
+        m_motion &= ~MOVE_FRONT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 's' ) {
+        m_motion &= ~MOVE_BACK ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 'a' ) {
+        m_motion &= ~MOVE_LEFT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
+
+
+    else if( key == 'd' ) {
+        m_motion &= ~MOVE_RIGHT ;
+        _moveCharacter() ;
+        handled = true ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -100,10 +185,29 @@ osgODEUtil::ControllerBase::onRightMouseButton(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal2<const osg::Vec2, bool>*
-osgODEUtil::ControllerBase::onMouseMoved(void)
+void
+CharacterEx::handleMove(const osg::Vec2& pos, bool& handled)
 {
-    return m_on_mouse_moved.get() ;
+    handled = true ;
+
+
+    float   x = pos.x() * m_sensitivity ;
+    float   y = pos.y() * m_sensitivity ;
+
+    if( x==0.0 && y == 0.0 ) {
+        return ;
+    }
+
+    double  yaw = this->getYaw() - x * osg::PI ;
+    double  pitch = this->getPitch() + y * osg::PI ;
+
+
+
+    pitch = osg::clampTo(pitch, 0.0, osg::PI) ;
+
+
+    this->setYaw( yaw ) ;
+    this->setPitch( pitch ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -113,10 +217,13 @@ osgODEUtil::ControllerBase::onMouseMoved(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODEUtil::Signal3<bool, osg::Vec2, bool>*
-osgODEUtil::ControllerBase::onFrame(void)
+void
+CharacterEx::handleFrame(bool& warp_request, osg::Vec2& warp, bool& handled)
 {
-    return m_on_frame.get() ;
+    warp_request = true ;
+    warp.set(0,0) ;
+
+    handled = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -124,4 +231,40 @@ osgODEUtil::ControllerBase::onFrame(void)
 
 
 
-#endif /* _OSGODEUTIL_CONTROLLERBASE_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+void
+CharacterEx::_moveCharacter(void)
+{
+    osg::Vec3   axis ;
+
+    const osg::Vec3&    front_versor = this->getFrontVersor() ;
+    const osg::Vec3&    rhs_versor = this->getSideVersor() ;
+
+    if( m_motion & MOVE_FRONT ) {
+        axis += front_versor ;
+    }
+
+    if( m_motion & MOVE_BACK ) {
+        axis -= front_versor ;
+    }
+
+    if( m_motion & MOVE_RIGHT ) {
+        axis += rhs_versor ;
+    }
+
+    if( m_motion & MOVE_LEFT ) {
+        axis -= rhs_versor ;
+    }
+
+    axis.normalize() ;
+
+
+    this->getWorld()->writeLock() ;
+
+    this->setMotion( axis * (m_motion != 0) * 10, 1000 ) ;
+
+    this->getWorld()->writeUnlock() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

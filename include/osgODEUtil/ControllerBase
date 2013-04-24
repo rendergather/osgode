@@ -104,6 +104,27 @@ public:
 
     //! key, modifier key mask, handled
     inline Signal3<const int, const int, bool>* onKeyReleased(void) ;
+
+
+
+    //! pressed, handled
+    inline Signal2<const bool, bool>*       onLeftMouseButton(void) ;
+
+    //! pressed, handled
+    inline Signal2<const bool, bool>*       onMiddleMouseButton(void) ;
+
+    //! pressed, handled
+    inline Signal2<const bool, bool>*       onRightMouseButton(void) ;
+
+
+
+    //! normalized position, handled
+    inline Signal2<const osg::Vec2, bool>*  onMouseMoved(void) ;
+
+
+
+    //! request warp ponter, warp pointer (normalized), handled
+    inline Signal3<bool, osg::Vec2, bool>*  onFrame(void) ;
 /* ======================================================================= */
 
 
@@ -114,7 +135,19 @@ private:
     osg::ref_ptr< Signal3<const int, const int, bool> > m_on_key_pressed ;
     osg::ref_ptr< Signal3<const int, const int, bool> > m_on_key_released ;
 
+    osg::ref_ptr< Signal2<const bool, bool> >   m_on_left_button ;
+    osg::ref_ptr< Signal2<const bool, bool> >   m_on_middle_button ;
+    osg::ref_ptr< Signal2<const bool, bool> >   m_on_right_button ;
+
+    osg::ref_ptr< Signal2<const osg::Vec2, bool> >  m_on_mouse_moved ;
+
+    osg::ref_ptr< Signal3<bool, osg::Vec2, bool> >  m_on_frame ;
+
     std::map<int, bool>     m_key_down ;
+    unsigned int            m_button_mask ;
+
+
+    bool        m_requesting_warp ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

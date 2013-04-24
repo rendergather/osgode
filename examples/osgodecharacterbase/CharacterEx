@@ -1,5 +1,5 @@
 /*!
- * @file CharacterController.inl
+ * @file CharacterEx
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,28 +22,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_CHARACTERCONTROLLER_INL
-#define _OSGODE_CHARACTERCONTROLLER_INL
+#ifndef _OSGODE_CHARACTEREX_HPP
+#define _OSGODE_CHARACTEREX_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
+#include <osgODE/Character>
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::CharacterController::setKeys(const Keys& keys)
+namespace osgODE
 {
-    m_keys = keys ;
-}
-/* ....................................................................... */
+
+
+
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -51,80 +49,95 @@ osgODE::CharacterController::setKeys(const Keys& keys)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODE::CharacterController::Keys&
-osgODE::CharacterController::getKeys(void)
+//!
+/*!
+ *
+ */
+class OSG_EXPORT CharacterEx: public Character
 {
-    return m_keys ;
-}
-/* ....................................................................... */
+/* ======================================================================= */
+public:
+             CharacterEx(void) ;
+             CharacterEx(const CharacterEx& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~CharacterEx(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::CharacterController::Keys&
-osgODE::CharacterController::getKeys(void) const
-{
-    return m_keys ;
-}
-/* ....................................................................... */
+public:
+    META_Object(osgODE, CharacterEx) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    void    handleKeyDown(const int& key, const int& mask, bool& handled) ;
+    void    handleKeyUp(const int& key, const int& mask, bool& handled) ;
+    void    handleMove(const osg::Vec2& pos, bool& handled) ;
+    void    handleFrame(bool& warp_request, osg::Vec2& warp, bool& handled) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::CharacterController::setSensitivity(float f)
-{
-    m_sensitivity = f ;
-}
-/* ....................................................................... */
+public:
+    inline void     setSensitivity(float sensitivity) ;
+    inline float    getSensitivity(void) const ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline float
-osgODE::CharacterController::getSensitivity(void) const
-{
-    return m_sensitivity ;
-}
-/* ....................................................................... */
+private:
+    void    _moveCharacter(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline osgODE::Character*
-osgODE::CharacterController::getCharacter(void)
-{
-    return m_character.get() ;
-}
+private:
+    float   m_sensitivity ;
+
+
+    enum {
+        NO_MOTION = 0,
+        MOVE_FRONT = 1,
+        MOVE_BACK = 2,
+        MOVE_LEFT = 4,
+        MOVE_RIGHT = 8
+    } ;
+
+    unsigned int    m_motion ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::Character*
-osgODE::CharacterController::getCharacter(void) const
-{
-    return m_character.get() ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
+} // namespace osgODE
 
 
 
 
-#endif /* _OSGODE_CHARACTERCONTROLLER_INL */
+#include "CharacterEx.inl"
+
+
+
+
+#endif /* _OSGODE_CHARACTEREX_HPP */

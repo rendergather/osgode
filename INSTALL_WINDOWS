@@ -1,0 +1,101 @@
+//! @file INSTALL_WINDOWS
+//! @author Rocco Martino
+
+/*! @page WindowsBuild Windows build
+
+
+
+
+@section win_build  How to build osgODE with Visual Studio 2012 in Windows Seven
+\n
+- <b>[1]</b>
+    Download and install OSG as described
+    <a href="http://www.openscenegraph.com/index.php/documentation/getting-started">here</a> \n
+\n
+- <b>[2]</b>
+    Download and install TortoiseSVN 1.7.12
+    (<a href="http://tortoisesvn.net/">http://tortoisesvn.net/</a>) \n
+\n
+- <b>[3]</b>
+    Download and install CMake 2.8.10
+    (<a href="http://www.cmake.org/">http://www.cmake.org/</a>) \n
+\n
+\n
+\n
+\n
+- <b>[4]</b>
+    Create a folder called "ODE" somewhere, RMB on it and LMB on
+    "SVN Checkout..." \n
+
+@image html winbuild_checkout_ode.png
+
+\n
+\n
+\n
+\n
+- <b>[5]</b>
+    When the "Checkout" window appears, type
+    "http://opende.svn.sourceforge.net/svnroot/opende/trunk"
+    in the URL box. Then check for the right revision in osgODE-X.Y.Z/deps and
+    put it in the "Revision" box. Click OK \n
+
+@image html winbuild_checkout_ode_rev.png
+
+\n
+\n
+\n
+\n
+- <b>[6]</b>
+    Start TortoiseMerge and select the file named "ode_patch.diff" contained
+    in the "patches" subdirectory as "Diff file", then select the newly
+    created "ODE" folder in the "Directory" box. Click OK \n
+
+@image html winbuild_patch_ode.png
+
+\n
+\n
+\n
+\n
+- <b>[7]</b>
+    LMB on "Patch all items" in the appearing window: \n
+
+@image html winbuild_patch_all_items_ode.png
+
+\n
+\n
+\n
+\n
+- <b>[8]</b>
+    Use premake as described
+    <a href="http://ode-wiki.org/wiki/index.php?title=Manual:_Install_and_Use#Building_with_Premake">here</a>
+    with the following args to build the Visual Studio project files; then
+    compile the "ReleaseDouble" target using VisualStudio \n
+
+@verbatim
+premake4.exe --only-double --only-shared --with-builtin-threading-impl --with-libccd --with-ou vs2008
+@endverbatim
+
+\n
+\n
+\n
+\n
+- <b>[9]</b>
+    Start CMake, select the osgODE-X.Y.Z folder as source directory and
+    another folder as build directory.\n
+    LMB on the "configure" button. Make sure that the include, library and
+    binary paths are right and then LMB on "generate" \n
+
+@image html winbuild_cmake_osgode.png
+
+\n
+\n
+\n
+\n
+- <b>[10]</b>
+    Compile and install the library using VS \n
+\n
+- <b>[11]</b>
+    enjoy! \n
+
+
+*/

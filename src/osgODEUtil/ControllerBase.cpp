@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -116,9 +116,9 @@ ControllerBase::handle( const osgGA::GUIEventAdapter&   ea,
                         osg::Object*                    obj,
                         osg::NodeVisitor*               nv)
 {
-	(void) nv ;
-	(void) obj ;
-	(void) aa ;
+    (void) nv ;
+    (void) obj ;
+    (void) aa ;
 
 
     const int   key = ea.getKey() ;
@@ -192,6 +192,10 @@ ControllerBase::handle( const osgGA::GUIEventAdapter&   ea,
                 m_on_mouse_moved->emit( osg::Vec2( ea.getXnormalized(), ea.getYnormalized() ), handled ) ;
 
             } else {
+#ifdef WIN32
+                m_on_mouse_moved->emit( osg::Vec2( ea.getXnormalized(), ea.getYnormalized() ), handled ) ;
+#endif
+
                 m_requesting_warp = false ;
             }
         }

@@ -63,6 +63,12 @@ SET(TARGET_SRC
 
 
 
+IF( WIN32 )
+    ADD_DEFINITIONS( "/wd4250" )
+ENDIF( WIN32 )
+
+
+
 SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
 
 OSGODE_SETUP_PLUGIN()

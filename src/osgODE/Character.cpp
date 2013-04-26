@@ -178,7 +178,7 @@ Character::touch( double max_distance )
     PS_ASSERT1( world != NULL ) ;
 
 
-    Space*  space = getWorld()->asSpace() ;
+    Space*  space = world->asSpace() ;
 
     if( ! space ) {
         return NULL ;

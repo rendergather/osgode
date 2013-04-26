@@ -252,7 +252,13 @@ CharacterEx::handleRightButton(const bool& pressed, bool& handled)
         m_picked = this->touch( 5 ) ;
 
         if( m_picked.valid() ) {
-            this->attach( m_picked ) ;
+
+            if( m_picked->getKinematic() ) {
+                m_picked = NULL ;
+
+            } else {
+                this->attach( m_picked ) ;
+            }
         }
 
     } else {

@@ -42,6 +42,7 @@ namespace {
 
 static bool checkFootContactInfo( const osgODE::CharacterBase& obj )
 {
+    (void) obj ;
     return true ;
 }
 
@@ -92,6 +93,7 @@ static bool readFootContactInfo( osgDB::InputStream& is, osgODE::CharacterBase& 
 
 static bool checkFootstepInfo( const osgODE::CharacterBase& obj )
 {
+    (void) obj ;
     return true ;
 }
 

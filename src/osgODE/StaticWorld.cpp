@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -54,7 +54,7 @@ StaticWorld::StaticWorld(void)
     OpenThreads::Thread::Init() ;
 
     dInitODE2(0) ;
-    dAllocateODEDataForThread(dAllocateMaskAll) ;
+    dAllocateODEDataForThread( (unsigned int) dAllocateMaskAll ) ;
 
 
     m_ODE_world = dWorldCreate() ;

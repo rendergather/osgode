@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -107,7 +107,7 @@ ADD_AXIS_FUNC(Axis3) ;
 
 
 #define ADD_PAR_FUNC(PAR_PROP) \
-static bool check##PAR_PROP(const osgODE::Joint& joint) { return true ; } \
+static bool check##PAR_PROP(const osgODE::Joint& joint) { (void) joint ; return true ; } \
 static bool write##PAR_PROP(osgDB::OutputStream& os, const osgODE::Joint& joint) \
 { \
     double  par = const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) ; \

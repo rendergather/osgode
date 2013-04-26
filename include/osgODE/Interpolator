@@ -268,7 +268,8 @@ protected:
 
 
     struct PointCompClass {
-        bool    operator()(const Interpolator::Point& a, const Interpolator::Point& b) {
+        // http://msdn.microsoft.com/it-it/library/tsx7wabs(v=vs.100).aspx
+        bool    operator()(const typename Interpolator::Point& a, const typename Interpolator::Point& b) {
             return (a.first < b.first ) ;
         }
     } m_point_comp_instance ;

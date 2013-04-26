@@ -32,7 +32,9 @@
 
 #include <osg/Timer>
 
-#include <unistd.h>
+#ifndef WIN32
+    #include <unistd.h>
+#endif
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -207,7 +209,7 @@ Manager::run(void)
 
 
     PS_DBG("osgODE::Manager::run(%p): dAllocateODEDataForThread", this) ;
-    dAllocateODEDataForThread(dAllocateMaskAll) ;
+    dAllocateODEDataForThread( (unsigned int) dAllocateMaskAll ) ;
 
 
     setDone(false) ;

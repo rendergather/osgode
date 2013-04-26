@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -242,6 +242,7 @@ DefaultNearCallback::entryPoint(OverlappingPair* op)
     PS_ASSERT1( op->getCollidable1()->getWorld() == op->getCollidable2()->getWorld() ) ;
     PS_ASSERT1( op->getCollidable1()->getWorld()->asSpace() != NULL ) ;
 
+	(void) op ;
 
     m_collision_result.resetInternal() ;
 }

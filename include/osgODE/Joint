@@ -291,6 +291,9 @@ public:
 
 /* ======================================================================= */
 protected:
+    bool    m_ensure_two_bodies ;
+
+
     osg::ref_ptr<RigidBody>     m_body1 ;
     osg::ref_ptr<RigidBody>     m_body2 ;
 

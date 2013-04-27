@@ -66,6 +66,9 @@ Hinge2Joint::Hinge2Joint(void)
 
     m_functions.SetParam    = dJointSetHinge2Param ;
     m_functions.GetParam    = dJointGetHinge2Param ;
+
+
+    this->Joint::m_ensure_two_bodies = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -91,50 +94,6 @@ Hinge2Joint::~Hinge2Joint(void)
 {
     if(m_ODE_joint) {
         dJointDestroy(m_ODE_joint) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-Hinge2Joint::finalize(void)
-{
-    PS_DBG2("osgODE::Hinge2Joint::finalize(%p)", this) ;
-
-
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
-
-
-    if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
-
-    } else {
-        b1 = NULL ;
-    }
-
-
-
-    if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-
-    } else {
-        b2 = NULL ;
-    }
-
-
-
-
-    if(b1 && b2) {
-        dJointAttach(m_ODE_joint, b1, b2) ;
-
-
-        _restoreParams() ;
     }
 }
 /* ....................................................................... */

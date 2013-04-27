@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -49,7 +49,8 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-Joint::Joint(void)
+Joint::Joint(void):
+    m_ensure_two_bodies( false )
 {
     _initParams() ;
 }
@@ -63,6 +64,7 @@ Joint::Joint(void)
 /* ....................................................................... */
 Joint::Joint(const Joint& other, const osg::CopyOp& copyop):
     Transformable(other, copyop),
+    m_ensure_two_bodies( other.m_ensure_two_bodies ),
     m_functions( other.m_functions ),
     m_anchor1(other.m_anchor1),
     m_anchor2(other.m_anchor2),
@@ -240,10 +242,13 @@ Joint::finalize(void)
 
 
 
-    dJointAttach(m_ODE_joint, b1, b2) ;
+    if(    ( ! m_ensure_two_bodies )     ||     ( b1 && b2 )    ) {
+
+        dJointAttach(m_ODE_joint, b1, b2) ;
 
 
-    _restoreParams() ;
+        _restoreParams() ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

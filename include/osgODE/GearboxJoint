@@ -93,14 +93,6 @@ public:
 
 /* ======================================================================= */
 protected:
-    //! Check against dangerous situations
-    /*!
-     * If one of the attached bodies is the static environment (NULL) ODE
-     * generates an abort. This method takes care that both bodies are valid
-     */
-    virtual void        finalize(void) ;
-
-
     virtual dJointID    cloneODEJoint(dWorldID world) const ;
 /* ======================================================================= */
 

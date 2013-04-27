@@ -61,6 +61,9 @@ GearboxJoint::GearboxJoint(void)
 
     m_functions.SetParam    = dJointSetGearboxParam ;
     m_functions.GetParam    = dJointGetGearboxParam ;
+
+
+    this->Joint::m_ensure_two_bodies = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -86,49 +89,6 @@ GearboxJoint::~GearboxJoint(void)
 {
     if(m_ODE_joint) {
         dJointDestroy(m_ODE_joint) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-GearboxJoint::finalize(void)
-{
-    PS_DBG2("osgODE::GearboxJoint::finalize(%p)", this) ;
-
-
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
-
-
-    if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
-
-    } else {
-        b1 = NULL ;
-    }
-
-
-
-    if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-
-    } else {
-        b2 = NULL ;
-    }
-
-
-
-
-    if(b1 && b2) {
-        dJointAttach(m_ODE_joint, b1, b2) ;
-
-        _restoreParams() ;
     }
 }
 /* ....................................................................... */

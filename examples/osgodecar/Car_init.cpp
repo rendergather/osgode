@@ -5,7 +5,7 @@
 #include <osgODE/Cylinder>
 #include <osgODE/SuspensionJoint>
 #include <osgODE/Notify>
-#include <osgODE/GearboxJoint>
+#include <osgODE/DifferentialJoint>
 #include <osgODE/SwaybarJoint>
 
 #include <pSound/Source>
@@ -241,28 +241,27 @@ Car::init(void)
 
     // differentials
     {
-        GearboxJoint*   front = new GearboxJoint() ;
-        GearboxJoint*   rear = new GearboxJoint() ;
+        m_front_differential = new DifferentialJoint() ;
+        m_rear_differential = new DifferentialJoint() ;
 
-        front->setBody1(m_wheel_FL) ;
-        front->setBody2(m_wheel_FR) ;
+        m_front_differential->setBody1(m_wheel_FL) ;
+        m_front_differential->setBody2(m_wheel_FR) ;
 
-        rear->setBody1(m_wheel_RL) ;
-        rear->setBody2(m_wheel_RR) ;
+        m_rear_differential->setBody1(m_wheel_RL) ;
+        m_rear_differential->setBody2(m_wheel_RR) ;
 
-        front->setAxis1( - osg::X_AXIS ) ;
-        front->setAxis2(   osg::X_AXIS ) ;
+        m_front_differential->setAxis1( - osg::X_AXIS ) ;
+        m_front_differential->setAxis2(   osg::X_AXIS ) ;
 
-        rear->setAxis1( - osg::X_AXIS ) ;
-        rear->setAxis2(   osg::X_AXIS ) ;
+        m_rear_differential->setAxis1( - osg::X_AXIS ) ;
+        m_rear_differential->setAxis2(   osg::X_AXIS ) ;
+
+        m_front_differential->setFriction( 1.0 - 1.0e-2 ) ;
+        m_rear_differential->setFriction( 1.0 - 1.0e-2 ) ;
 
 
-        front->setFriction( 0.9 ) ; // quietly locked
-        rear->setFriction( 0.9 ) ;  // quietly locked
-
-
-        this->Container::addObject( front ) ;
-        this->Container::addObject( rear ) ;
+        this->Container::addObject( m_front_differential ) ;
+        this->Container::addObject( m_rear_differential ) ;
     }
 
 
@@ -288,8 +287,8 @@ Car::init(void)
         rear->setAxis1( osg::Z_AXIS ) ;
 
 
-        front->setRigidity(0.25) ;
-        rear->setRigidity(0.25) ;
+        front->setRigidity( 0.75 ) ;
+        rear->setRigidity( 0.75 ) ;
 
 
         this->Container::addObject( front ) ;

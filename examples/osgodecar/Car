@@ -15,6 +15,7 @@ namespace osgODE {
 
 class Cylinder ;
 class SuspensionJoint ;
+class DifferentialJoint ;
 
 
 
@@ -57,15 +58,17 @@ private:
 
 
 private:
-    osg::ref_ptr<osgODE::RigidBody>         m_body ;
-    osg::ref_ptr<osgODE::Cylinder>          m_wheel_RL ;
-    osg::ref_ptr<osgODE::Cylinder>          m_wheel_RR ;
-    osg::ref_ptr<osgODE::Cylinder>          m_wheel_FR ;
-    osg::ref_ptr<osgODE::Cylinder>          m_wheel_FL ;
-    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_RL ;
-    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_RR ;
-    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_FR ;
-    osg::ref_ptr<osgODE::SuspensionJoint>   m_hinge_FL ;
+    osg::ref_ptr<RigidBody>             m_body ;
+    osg::ref_ptr<Cylinder>              m_wheel_RL ;
+    osg::ref_ptr<Cylinder>              m_wheel_RR ;
+    osg::ref_ptr<Cylinder>              m_wheel_FR ;
+    osg::ref_ptr<Cylinder>              m_wheel_FL ;
+    osg::ref_ptr<SuspensionJoint>       m_hinge_RL ;
+    osg::ref_ptr<SuspensionJoint>       m_hinge_RR ;
+    osg::ref_ptr<SuspensionJoint>       m_hinge_FR ;
+    osg::ref_ptr<SuspensionJoint>       m_hinge_FL ;
+    osg::ref_ptr<DifferentialJoint>     m_front_differential ;
+    osg::ref_ptr<DifferentialJoint>     m_rear_differential ;
 
 
     bool    m_steering_left ;

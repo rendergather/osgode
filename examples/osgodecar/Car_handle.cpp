@@ -1,6 +1,6 @@
 #include "Car"
 
-#include <osgODE/SuspensionJoint>
+#include <osgODE/DifferentialJoint>
 #include <osgODE/Notify>
 
 
@@ -16,9 +16,8 @@ Car::handleKeyDown(const int& key, const int& mod_key_mask, bool& handled)
 {
     const double    F_FORCE = 25 ;
     const double    R_FORCE = 50 ;
-    const double    VEL = 12.5 * 2.0 * osg::PI ;
-    const double    BRAKE_VEL = 0.0 * 2.0 * osg::PI ;
-    const double    R_BRAKE_FORCE = FLT_MAX ;
+    const double    VEL = 12.5 * 2.0 * 2.0 * osg::PI ;
+    const double    R_BRAKE_FORCE = 50.0 ;
     const double    F_BRAKE_FORCE = 100.0 ;
 
 
@@ -30,17 +29,11 @@ Car::handleKeyDown(const int& key, const int& mod_key_mask, bool& handled)
     switch( key )
     {
         case 'w':
-            m_hinge_RL->setParam(dParamVel2, -VEL) ;
-            m_hinge_RL->setParam(dParamFMax2, R_FORCE) ;
+            m_rear_differential->setParam(dParamVel, VEL) ;
+            m_rear_differential->setParam(dParamFMax, R_FORCE) ;
 
-            m_hinge_RR->setParam(dParamVel2,  VEL) ;
-            m_hinge_RR->setParam(dParamFMax2, R_FORCE) ;
-
-            m_hinge_FL->setParam(dParamVel2, -VEL) ;
-            m_hinge_FL->setParam(dParamFMax2, F_FORCE) ;
-
-            m_hinge_FR->setParam(dParamVel2,  VEL) ;
-            m_hinge_FR->setParam(dParamFMax2, F_FORCE) ;
+            m_front_differential->setParam(dParamVel, VEL) ;
+            m_front_differential->setParam(dParamFMax, F_FORCE) ;
 
             handled = true ;
         break ;
@@ -49,18 +42,11 @@ Car::handleKeyDown(const int& key, const int& mod_key_mask, bool& handled)
 
 
         case 's':
-            m_hinge_RL->setParam(dParamVel2,  BRAKE_VEL) ;
-            m_hinge_RL->setParam(dParamFMax2, R_BRAKE_FORCE) ;
+            m_rear_differential->setParam(dParamVel, 0.0) ;
+            m_rear_differential->setParam(dParamFMax, R_BRAKE_FORCE) ;
 
-            m_hinge_RR->setParam(dParamVel2, -BRAKE_VEL) ;
-            m_hinge_RR->setParam(dParamFMax2, R_BRAKE_FORCE) ;
-
-
-            m_hinge_FL->setParam(dParamVel2,  BRAKE_VEL) ;
-            m_hinge_FL->setParam(dParamFMax2, F_BRAKE_FORCE) ;
-
-            m_hinge_FR->setParam(dParamVel2, -BRAKE_VEL) ;
-            m_hinge_FR->setParam(dParamFMax2, F_BRAKE_FORCE) ;
+            m_front_differential->setParam(dParamVel, 0.0) ;
+            m_front_differential->setParam(dParamFMax, F_BRAKE_FORCE) ;
 
             handled = true ;
         break ;
@@ -104,18 +90,11 @@ Car::handleKeyUp(const int& key, const int& mod_key_mask, bool& handled)
     switch( key )
     {
         case 'w':
-            m_hinge_RL->setParam(dParamVel2, 0.0) ;
-            m_hinge_RL->setParam(dParamFMax2, R_FORCE) ;
+            m_rear_differential->setParam(dParamVel, 0.0) ;
+            m_rear_differential->setParam(dParamFMax, R_FORCE) ;
 
-            m_hinge_RR->setParam(dParamVel2, 0.0) ;
-            m_hinge_RR->setParam(dParamFMax2, R_FORCE) ;
-
-
-            m_hinge_FL->setParam(dParamVel2, 0.0) ;
-            m_hinge_FL->setParam(dParamFMax2, F_FORCE) ;
-
-            m_hinge_FR->setParam(dParamVel2, 0.0) ;
-            m_hinge_FR->setParam(dParamFMax2, F_FORCE) ;
+            m_front_differential->setParam(dParamVel, 0.0) ;
+            m_front_differential->setParam(dParamFMax, F_FORCE) ;
 
             handled = true ;
         break ;
@@ -124,18 +103,11 @@ Car::handleKeyUp(const int& key, const int& mod_key_mask, bool& handled)
 
 
         case 's':
-            m_hinge_RL->setParam(dParamVel2, 0.0) ;
-            m_hinge_RL->setParam(dParamFMax2, R_FORCE) ;
+            m_rear_differential->setParam(dParamVel, 0.0) ;
+            m_rear_differential->setParam(dParamFMax, R_FORCE) ;
 
-            m_hinge_RR->setParam(dParamVel2, 0.0) ;
-            m_hinge_RR->setParam(dParamFMax2, R_FORCE) ;
-
-
-            m_hinge_FL->setParam(dParamVel2, 0.0) ;
-            m_hinge_FL->setParam(dParamFMax2, F_FORCE) ;
-
-            m_hinge_FR->setParam(dParamVel2, 0.0) ;
-            m_hinge_FR->setParam(dParamFMax2, F_FORCE) ;
+            m_front_differential->setParam(dParamVel, 0.0) ;
+            m_front_differential->setParam(dParamFMax, F_FORCE) ;
 
             handled = true ;
         break ;

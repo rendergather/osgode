@@ -1,200 +1,346 @@
+Index: include/ode/lmplus_api.h
+===================================================================
+--- include/ode/lmplus_api.h	(revision 0)
++++ include/ode/lmplus_api.h	(revision 0)
+@@ -0,0 +1,192 @@
++/*************************************************************************
++ *                                                                       *
++ * LMPlus for Open Dynamics Engine.  Copyright (C) 2012 Joseph Cooper.   *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++
++/**
++ * @brief Create a new joint of the LMPlus type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateLMPlus (dWorldID, dJointGroupID);
++
++/**
++ * @brief set joint parameter
++ * @remarks This is how the degree of freedom is controlled
++ * if the histop==lostop then the constraint is a hard constraint
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusParam( dJointID j, int parameter, dReal value );
++
++/**
++ * @brief get joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetLMPlusParam( dJointID j, int parameter );
++
++/**
++ * @brief set the anchors for both bodies
++ * @remarks the anchor points are expected to be in global coordinates
++ * the distance between the anchors will be constrained along
++ * the specified axis.
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusAnchors( dJointID j, dReal x1, dReal y1, dReal z1, dReal x2, dReal y2, dReal z2);
++ODE_API void dJointSetLMPlusAnchorsV( dJointID j, const dVector3 a1, const dVector3 a2);
++ODE_API void dJointSetLMPlusAnchorsRel( dJointID j, dReal x1, dReal y1, dReal z1, dReal x2, dReal y2, dReal z2);
++ODE_API void dJointSetLMPlusAnchorsRelV( dJointID j, const dVector3 a1, const dVector3 a2);
++
++/**
++ * @brief set the anchors for the first body
++ * @remarks the anchor point is expected to be in global coordinates
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusAnchor1( dJointID j, dReal x1, dReal y1, dReal z1);
++ODE_API void dJointSetLMPlusAnchor1V( dJointID j, const dVector3 a1);
++ODE_API void dJointSetLMPlusAnchor1Rel( dJointID j, dReal x1, dReal y1, dReal z1);
++ODE_API void dJointSetLMPlusAnchor1RelV( dJointID j, const dVector3 a1);
++
++/**
++ * @brief set the anchors for the second body
++ * @remarks the anchor point is expected to be in global coordinates
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusAnchor2( dJointID j, dReal x2, dReal y2, dReal z2);
++ODE_API void dJointSetLMPlusAnchor2V( dJointID j, const dVector3 a2);
++ODE_API void dJointSetLMPlusAnchor2Rel( dJointID j, dReal x2, dReal y2, dReal z2);
++ODE_API void dJointSetLMPlusAnchor2RelV( dJointID j, const dVector3 a2);
++
++/**
++ * @brief Set the LMPlus axis.
++ * @param anum selects the axis to change (0, 1 or 2).
++ * @param frame Each axis can be fixed relative to one of three reference frames
++ * \li 0: The axis is anchored to the world.
++ * \li 1: The axis is anchored to the first body.
++ * \li 2: The axis is anchored to the second body.
++ * @remarks This defines the axis of constraint for the two anchor points
++ * This function is unnecessary for spherical mode
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusAxis( dJointID j, int anum, int frame,  dReal x, dReal y, dReal z);
++ODE_API void dJointSetLMPlusAxisV( dJointID j, int anum, int frame, const dVector3 ax);
++ODE_API void dJointSetLMPlusAxisRel( dJointID j, int anum, int frame,  dReal x, dReal y, dReal z);
++ODE_API void dJointSetLMPlusAxisRelV( dJointID j, int anum, int frame, const dVector3 ax);
++
++/**
++ * @brief set AMPlus mode for the specified axis
++ * @param anum selects the axis to change (0,1 or 2).
++ * 
++ * @param mode Each axis can have one of three modes
++ * \li dLMPlusPlanar: The directed distance between the anchor points
++ * along the specifed axis is constrained.  If the distance is set
++ * to zero, a single constraint axis keeps the anchors in
++ * the same plane.
++ * \li dLMPlusCylindrical: The absolute distance between the anchor
++ * points projected onto a plane orthogonal to the specified axis is
++ * constrained.  If the distance is set to a constant, then one anchor
++ * point is kept on the surface of an infinite cylinder relative to the other.
++ * \li dLMPlusSpherical: The absolute distance between the anchor
++ * points is constrained.  The axis specified for this @param anum has
++ * no effect.  If the distance is set to a constant, then one anchor
++ * point is kept on the surface of a sphere relative to the other.
++ * @ingroup joints
++ */
++ODE_API void dJointSetLMPlusMode( dJointID j, int anum, int mode);
++
++/**
++ * @brief Get the LMPlus anchor point for body1, in world coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAnchor1( const dJointID j, dVector3 res);
++
++/**
++ * @brief Get the LMPlus anchor point for body1, in body1 coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAnchor1Rel( const dJointID j, dVector3 res);
++
++/**
++ * @brief Get the LMPlus anchor point for body2, in world coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAnchor2( const dJointID j, dVector3 res);
++
++/**
++ * @brief Get the LMPlus anchor point for body2, in body2 coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAnchor2Rel( const dJointID j, dVector3 res);
++
++/**
++ * @brief Get the LMPlus axis for degree of freedom specified by @param anum (0,1,2)
++ * In world coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAxis( const dJointID j, int anum, dVector3 res);
++
++/**
++ * @brief Get the LMPlus axis for degree of freedom specified by @param anum (0,1,2)
++ * In the DoF's specified FoR's coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusAxisRel( const dJointID j, int anum, dVector3 res);
++
++/**
++ * @brief Get the frame of reference designated for the degree of freedom
++ * specified by @param anum
++ * @ingroup joints
++ */
++ODE_API int dJointGetLMPlusAxisFrame( const dJointID j, int anum);
++
++/**
++ * @brief Get the mode (planar, cylindrical, spherical) designated 
++ * for the degree of freedom specified by @param anum (0,1,2)
++ * @ingroup joints
++ */
++ODE_API int dJointGetLMPlusMode( const dJointID j, int anum);
++
++/**
++ * @brief Get the effective axis of constraint
++ * In Planar mode, this is the same as GetLMPlusAxis.
++ * In Spherical mode, this will be the normalized vector between the
++ * two anchor points.
++ * In Cylindrical mode, this be the projection of the vector
++ * between the two anchor points onto the plane defined by
++ * by the axis
++ * @ingroup joints
++ */
++ODE_API void dJointGetLMPlusEffectiveAxis( const dJointID j, int anum, dVector3 res );
++
++/**
++ * @brief The distance between the anchor points along the effective axis.
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetLMPlusSeparation( const dJointID j, int anum );
++
++/**
++ * @brief Time derivative of teh distance between the anchor points along the 
++ * effective axis.
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetLMPlusSeparationRate( const dJointID j, int anum );
++
+Index: include/ode/odemath.h
+===================================================================
+--- include/ode/odemath.h	(revision 1929)
++++ include/ode/odemath.h	(working copy)
+@@ -423,6 +423,17 @@
+  */
+ 
+ ODE_API void dPlaneSpace (const dVector3 n, dVector3 p, dVector3 q);
++
++/*
++ * Given unit normal vector 'n', find normalized projection 'p' of vector
++ * 'd' onto the planespace and orthonormal vector 'q'.
++ * If 'n' is parallel to 'd', then this will be the same as dPlaneSpace
++ * and return value will be 0.
++ * Otherwise, return value is 1.
++ */
++ODE_API int dDirectedPlaneSpace  (const dVector3 n, const dVector3 d, dVector3 p, dVector3 q);
++
++
+ /* Makes sure the matrix is a proper rotation */
+ ODE_API void dOrthogonalizeR(dMatrix3 m);
+ 
+Index: include/ode/differential_api.h
+===================================================================
+--- include/ode/differential_api.h	(revision 0)
++++ include/ode/differential_api.h	(revision 0)
+@@ -0,0 +1,93 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++
++/**
++ * @brief Create a new joint of the differential type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateDifferential (dWorldID, dJointGroupID);
++
++/**
++ * @brief set the axis relative to body 1 for the differential joint
++ * @remarks This is first axis. It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetDifferentialAxis1(dJointID, dReal x, dReal y, dReal z);
++
++/**
++ * @brief set the axis relative to body 2 for the differential joint
++ * @remarks This is second axis. It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetDifferentialAxis2(dJointID, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get the first axis for the differential joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetDifferentialAxis1(dJointID, dVector3 result);
++
++/**
++ * @brief get the second axis for the differential joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetDifferentialAxis2(dJointID, dVector3 result);
++
++/**
++ * @brief set differential joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetDifferentialParam(dJointID, int parameter, dReal value);
++
++/**
++ * @brief get differential joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetDifferentialParam(dJointID, int parameter);
++
++/**
++ * @brief set the differential ratio for the first body
++ * @ingroup joints
++ */
++ODE_API void dJointSetDifferentialRatio1( dJointID j, dReal value );
++
++/**
++ * @brief get the differential ratio for the first body
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetDifferentialRatio1( dJointID j );
++
++/**
++ * @brief set the differential ratio for the second body
++ * @ingroup joints
++ */
++ODE_API void dJointSetDifferentialRatio2( dJointID j, dReal value );
++
++/**
++ * @brief get the differential ratio for the second body
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetDifferentialRatio2( dJointID j );
 Index: include/ode/objects.h
 ===================================================================
 --- include/ode/objects.h	(revision 1929)
 +++ include/ode/objects.h	(working copy)
-@@ -1710,8 +1710,32 @@
-  */
- ODE_API dJointID dJointCreateDHinge (dWorldID, dJointGroupID);
- 
-+/**
-+ * @brief Create a new joint of the gearbox type.
-+ * @ingroup joints
-+ * @param dJointGroupID set to 0 to allocate the joint normally.
-+ * If it is nonzero the joint is allocated in the given joint group.
-+ */
-+ODE_API dJointID dJointCreateGearbox (dWorldID, dJointGroupID);
- 
- /**
-+ * @brief Create a new joint of the swaybar type.
-+ * @ingroup joints
-+ * @param dJointGroupID set to 0 to allocate the joint normally.
-+ * If it is nonzero the joint is allocated in the given joint group.
-+ */
-+ODE_API dJointID dJointCreateSwaybar (dWorldID, dJointGroupID);
-+
-+/**
-+ * @brief Create a new joint of the target type.
-+ * @ingroup joints
-+ * @param dJointGroupID set to 0 to allocate the joint normally.
-+ * If it is nonzero the joint is allocated in the given joint group.
-+ */
-+ODE_API dJointID dJointCreateTarget (dWorldID, dJointGroupID);
-+
-+
-+/**
-  * @brief Destroy a joint.
-  * @ingroup joints
-  *
-@@ -3008,6 +3032,9 @@
+@@ -3008,6 +3008,13 @@
   */
  ODE_API dReal dJointGetFixedParam (dJointID, int parameter);
  
 +/* The objects.h file is way too big. */
 +#include <ode/lmplus_api.h>
 +#include <ode/amplus_api.h>
++#include <ode/gearbox_api.h>
++#include <ode/swaybar_api.h>
++#include <ode/target_api.h>
++#include <ode/differential_api.h>
  
  /**
   * @brief set anchor1 for double ball joint
-@@ -3105,12 +3132,149 @@
-  */
- ODE_API dReal dJointGetDHingeParam(dJointID, int parameter);
+@@ -3107,7 +3114,6 @@
  
-+/**
-+ * @brief set first axis for the gearbox joint
-+ * @remarks This is the axis around which the first body is allowed to
-+ * revolve and is attached to it.  It is given in global coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxAxis1(dJointID, dReal x, dReal y, dReal z);
  
-+/**
-+ * @brief get first axis for the gearbox joint
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetGearboxAxis1(dJointID, dVector3 result);
  
-+/**
-+ * @brief set second axis for the gearbox joint
-+ * @remarks This is the axis around which the second body is allowed to
-+ * revolve and is attached to it.  It is given in global coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxAxis2(dJointID, dReal x, dReal y, dReal z);
- 
+-
  /**
-+ * @brief get second axis for the gearbox joint
   * @ingroup joints
   */
-+ODE_API void dJointGetGearboxAxis2(dJointID, dVector3 result);
-+
-+/**
-+ * @brief set gearbox joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxParam(dJointID, int parameter, dReal value);
-+
-+/**
-+ * @brief get gearbox joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetGearboxParam(dJointID, int parameter);
-+
-+/**
-+ * @brief set gearbox ratio
-+ * @remarks
-+ * This is the ratio of the angular velocity of the first body to that
-+ * of the second body along the joint axis.  If the ratio is N then
-+ * the first body is constrained to rotate N times faster than the
-+ * second body.  Set it to 1 / N or reverse the bodies for the reverse
-+ * effect.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxRatio( dJointID j, dReal value );
-+
-+/**
-+ * @brief get gearbox ratio
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetGearboxRatio( dJointID j );
-+
-+/**
-+ * @brief set the sliding axis for the swaybar joint
-+ * @remarks This is the sliding axis. It is given in global coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetSwaybarAxis(dJointID, dReal x, dReal y, dReal z);
-+
-+/**
-+ * @brief get the sliding axis for the swaybar joint
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetSwaybarAxis(dJointID, dVector3 result);
-+
-+/**
-+ * @brief set swaybar joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetSwaybarParam(dJointID, int parameter, dReal value);
-+
-+/**
-+ * @brief get swaybar joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetSwaybarParam(dJointID, int parameter);
-+
-+/**
-+ * @brief Get the swaybar linear position (i.e. the slider's extension)
-+ *
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetSwaybarPosition (dJointID);
-+
-+/**
-+ * @brief set target joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetParam(dJointID, int parameter, dReal value);
-+
-+/**
-+ * @brief get target joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetParam(dJointID, int parameter);
-+
-+/**
-+ * @brief set target position
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetPosition(dJointID, dReal time, dReal x, dReal y, dReal z);
-+
-+/**
-+ * @brief get target position
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetTargetPosition(dJointID, dVector3 result);
-+
-+/**
-+ * @brief get target position time
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetPositionTime(dJointID);
-+
-+/**
-+ * @brief set target quaternion
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetQuaternion(dJointID, dReal time, const dReal* quaternion);
-+
-+/**
-+ * @brief get target quaternion
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetTargetQuaternion(dJointID, dQuaternion result);
-+
-+/**
-+ * @brief get target quaternion time
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetQuaternionTime(dJointID);
-+
-+
-+
-+/**
-+ * @ingroup joints
-+ */
- ODE_API dJointID dConnectingJoint (dBodyID, dBodyID);
- 
- /**
 Index: include/ode/amplus_api.h
 ===================================================================
 --- include/ode/amplus_api.h	(revision 0)
@@ -442,14 +588,14 @@ Index: include/ode/amplus_api.h
 +ODE_API void dJointAddAMPlusTorque(dJointID j,int anum, dReal torque);
 +
 +
-Index: include/ode/lmplus_api.h
+Index: include/ode/swaybar_api.h
 ===================================================================
---- include/ode/lmplus_api.h	(revision 0)
-+++ include/ode/lmplus_api.h	(revision 0)
-@@ -0,0 +1,192 @@
+--- include/ode/swaybar_api.h	(revision 0)
++++ include/ode/swaybar_api.h	(revision 0)
+@@ -0,0 +1,63 @@
 +/*************************************************************************
 + *                                                                       *
-+ * LMPlus for Open Dynamics Engine.  Copyright (C) 2012 Joseph Cooper.   *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
 + *                                                                       *
 + *                                                                       *
 + * This library is free software; you can redistribute it and/or         *
@@ -472,205 +618,212 @@ Index: include/ode/lmplus_api.h
 +
 +
 +/**
-+ * @brief Create a new joint of the LMPlus type.
++ * @brief Create a new joint of the swaybar type.
 + * @ingroup joints
 + * @param dJointGroupID set to 0 to allocate the joint normally.
 + * If it is nonzero the joint is allocated in the given joint group.
 + */
-+ODE_API dJointID dJointCreateLMPlus (dWorldID, dJointGroupID);
++ODE_API dJointID dJointCreateSwaybar (dWorldID, dJointGroupID);
 +
 +/**
-+ * @brief set joint parameter
-+ * @remarks This is how the degree of freedom is controlled
-+ * if the histop==lostop then the constraint is a hard constraint
++ * @brief set the sliding axis for the swaybar joint
++ * @remarks This is the sliding axis. It is given in global coordinates.
 + * @ingroup joints
 + */
-+ODE_API void dJointSetLMPlusParam( dJointID j, int parameter, dReal value );
++ODE_API void dJointSetSwaybarAxis(dJointID, dReal x, dReal y, dReal z);
 +
 +/**
-+ * @brief get joint parameter
++ * @brief get the sliding axis for the swaybar joint
 + * @ingroup joints
 + */
-+ODE_API dReal dJointGetLMPlusParam( dJointID j, int parameter );
++ODE_API void dJointGetSwaybarAxis(dJointID, dVector3 result);
 +
 +/**
-+ * @brief set the anchors for both bodies
-+ * @remarks the anchor points are expected to be in global coordinates
-+ * the distance between the anchors will be constrained along
-+ * the specified axis.
++ * @brief set swaybar joint parameter
 + * @ingroup joints
 + */
-+ODE_API void dJointSetLMPlusAnchors( dJointID j, dReal x1, dReal y1, dReal z1, dReal x2, dReal y2, dReal z2);
-+ODE_API void dJointSetLMPlusAnchorsV( dJointID j, const dVector3 a1, const dVector3 a2);
-+ODE_API void dJointSetLMPlusAnchorsRel( dJointID j, dReal x1, dReal y1, dReal z1, dReal x2, dReal y2, dReal z2);
-+ODE_API void dJointSetLMPlusAnchorsRelV( dJointID j, const dVector3 a1, const dVector3 a2);
++ODE_API void dJointSetSwaybarParam(dJointID, int parameter, dReal value);
 +
 +/**
-+ * @brief set the anchors for the first body
-+ * @remarks the anchor point is expected to be in global coordinates
++ * @brief get swaybar joint parameter
 + * @ingroup joints
 + */
-+ODE_API void dJointSetLMPlusAnchor1( dJointID j, dReal x1, dReal y1, dReal z1);
-+ODE_API void dJointSetLMPlusAnchor1V( dJointID j, const dVector3 a1);
-+ODE_API void dJointSetLMPlusAnchor1Rel( dJointID j, dReal x1, dReal y1, dReal z1);
-+ODE_API void dJointSetLMPlusAnchor1RelV( dJointID j, const dVector3 a1);
++ODE_API dReal dJointGetSwaybarParam(dJointID, int parameter);
 +
 +/**
-+ * @brief set the anchors for the second body
-+ * @remarks the anchor point is expected to be in global coordinates
++ * @brief Get the swaybar linear position (i.e. the slider's extension)
++ *
 + * @ingroup joints
 + */
-+ODE_API void dJointSetLMPlusAnchor2( dJointID j, dReal x2, dReal y2, dReal z2);
-+ODE_API void dJointSetLMPlusAnchor2V( dJointID j, const dVector3 a2);
-+ODE_API void dJointSetLMPlusAnchor2Rel( dJointID j, dReal x2, dReal y2, dReal z2);
-+ODE_API void dJointSetLMPlusAnchor2RelV( dJointID j, const dVector3 a2);
-+
-+/**
-+ * @brief Set the LMPlus axis.
-+ * @param anum selects the axis to change (0, 1 or 2).
-+ * @param frame Each axis can be fixed relative to one of three reference frames
-+ * \li 0: The axis is anchored to the world.
-+ * \li 1: The axis is anchored to the first body.
-+ * \li 2: The axis is anchored to the second body.
-+ * @remarks This defines the axis of constraint for the two anchor points
-+ * This function is unnecessary for spherical mode
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetLMPlusAxis( dJointID j, int anum, int frame,  dReal x, dReal y, dReal z);
-+ODE_API void dJointSetLMPlusAxisV( dJointID j, int anum, int frame, const dVector3 ax);
-+ODE_API void dJointSetLMPlusAxisRel( dJointID j, int anum, int frame,  dReal x, dReal y, dReal z);
-+ODE_API void dJointSetLMPlusAxisRelV( dJointID j, int anum, int frame, const dVector3 ax);
-+
-+/**
-+ * @brief set AMPlus mode for the specified axis
-+ * @param anum selects the axis to change (0,1 or 2).
-+ * 
-+ * @param mode Each axis can have one of three modes
-+ * \li dLMPlusPlanar: The directed distance between the anchor points
-+ * along the specifed axis is constrained.  If the distance is set
-+ * to zero, a single constraint axis keeps the anchors in
-+ * the same plane.
-+ * \li dLMPlusCylindrical: The absolute distance between the anchor
-+ * points projected onto a plane orthogonal to the specified axis is
-+ * constrained.  If the distance is set to a constant, then one anchor
-+ * point is kept on the surface of an infinite cylinder relative to the other.
-+ * \li dLMPlusSpherical: The absolute distance between the anchor
-+ * points is constrained.  The axis specified for this @param anum has
-+ * no effect.  If the distance is set to a constant, then one anchor
-+ * point is kept on the surface of a sphere relative to the other.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetLMPlusMode( dJointID j, int anum, int mode);
-+
-+/**
-+ * @brief Get the LMPlus anchor point for body1, in world coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAnchor1( const dJointID j, dVector3 res);
-+
-+/**
-+ * @brief Get the LMPlus anchor point for body1, in body1 coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAnchor1Rel( const dJointID j, dVector3 res);
-+
-+/**
-+ * @brief Get the LMPlus anchor point for body2, in world coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAnchor2( const dJointID j, dVector3 res);
-+
-+/**
-+ * @brief Get the LMPlus anchor point for body2, in body2 coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAnchor2Rel( const dJointID j, dVector3 res);
-+
-+/**
-+ * @brief Get the LMPlus axis for degree of freedom specified by @param anum (0,1,2)
-+ * In world coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAxis( const dJointID j, int anum, dVector3 res);
-+
-+/**
-+ * @brief Get the LMPlus axis for degree of freedom specified by @param anum (0,1,2)
-+ * In the DoF's specified FoR's coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusAxisRel( const dJointID j, int anum, dVector3 res);
-+
-+/**
-+ * @brief Get the frame of reference designated for the degree of freedom
-+ * specified by @param anum
-+ * @ingroup joints
-+ */
-+ODE_API int dJointGetLMPlusAxisFrame( const dJointID j, int anum);
-+
-+/**
-+ * @brief Get the mode (planar, cylindrical, spherical) designated 
-+ * for the degree of freedom specified by @param anum (0,1,2)
-+ * @ingroup joints
-+ */
-+ODE_API int dJointGetLMPlusMode( const dJointID j, int anum);
-+
-+/**
-+ * @brief Get the effective axis of constraint
-+ * In Planar mode, this is the same as GetLMPlusAxis.
-+ * In Spherical mode, this will be the normalized vector between the
-+ * two anchor points.
-+ * In Cylindrical mode, this be the projection of the vector
-+ * between the two anchor points onto the plane defined by
-+ * by the axis
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetLMPlusEffectiveAxis( const dJointID j, int anum, dVector3 res );
-+
-+/**
-+ * @brief The distance between the anchor points along the effective axis.
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetLMPlusSeparation( const dJointID j, int anum );
-+
-+/**
-+ * @brief Time derivative of teh distance between the anchor points along the 
-+ * effective axis.
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetLMPlusSeparationRate( const dJointID j, int anum );
-+
-Index: include/ode/odemath.h
++ODE_API dReal dJointGetSwaybarPosition (dJointID);
+Index: include/ode/target_api.h
 ===================================================================
---- include/ode/odemath.h	(revision 1929)
-+++ include/ode/odemath.h	(working copy)
-@@ -423,6 +423,17 @@
-  */
- 
- ODE_API void dPlaneSpace (const dVector3 n, dVector3 p, dVector3 q);
+--- include/ode/target_api.h	(revision 0)
++++ include/ode/target_api.h	(revision 0)
+@@ -0,0 +1,79 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
 +
-+/*
-+ * Given unit normal vector 'n', find normalized projection 'p' of vector
-+ * 'd' onto the planespace and orthonormal vector 'q'.
-+ * If 'n' is parallel to 'd', then this will be the same as dPlaneSpace
-+ * and return value will be 0.
-+ * Otherwise, return value is 1.
++
++/**
++ * @brief Create a new joint of the target type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
 + */
-+ODE_API int dDirectedPlaneSpace  (const dVector3 n, const dVector3 d, dVector3 p, dVector3 q);
++ODE_API dJointID dJointCreateTarget (dWorldID, dJointGroupID);
 +
++/**
++ * @brief set target joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetParam(dJointID, int parameter, dReal value);
 +
- /* Makes sure the matrix is a proper rotation */
- ODE_API void dOrthogonalizeR(dMatrix3 m);
- 
++/**
++ * @brief get target joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetParam(dJointID, int parameter);
++
++/**
++ * @brief set target position
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetPosition(dJointID, dReal time, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get target position
++ * @ingroup joints
++ */
++ODE_API void dJointGetTargetPosition(dJointID, dVector3 result);
++
++/**
++ * @brief get target position time
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetPositionTime(dJointID);
++
++/**
++ * @brief set target quaternion
++ * @ingroup joints
++ */
++ODE_API void dJointSetTargetQuaternion(dJointID, dReal time, const dReal* quaternion);
++
++/**
++ * @brief get target quaternion
++ * @ingroup joints
++ */
++ODE_API void dJointGetTargetQuaternion(dJointID, dQuaternion result);
++
++/**
++ * @brief get target quaternion time
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetTargetQuaternionTime(dJointID);
+Index: include/ode/gearbox_api.h
+===================================================================
+--- include/ode/gearbox_api.h	(revision 0)
++++ include/ode/gearbox_api.h	(revision 0)
+@@ -0,0 +1,65 @@
++/**
++ * @brief Create a new joint of the gearbox type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateGearbox (dWorldID, dJointGroupID);
++
++/**
++ * @brief set first axis for the gearbox joint
++ * @remarks This is the axis around which the first body is allowed to
++ * revolve and is attached to it.  It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxAxis1(dJointID, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get first axis for the gearbox joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetGearboxAxis1(dJointID, dVector3 result);
++
++/**
++ * @brief set second axis for the gearbox joint
++ * @remarks This is the axis around which the second body is allowed to
++ * revolve and is attached to it.  It is given in global coordinates.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxAxis2(dJointID, dReal x, dReal y, dReal z);
++
++/**
++ * @brief get second axis for the gearbox joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetGearboxAxis2(dJointID, dVector3 result);
++
++/**
++ * @brief set gearbox joint parameter
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxParam(dJointID, int parameter, dReal value);
++
++/**
++ * @brief get gearbox joint parameter
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetGearboxParam(dJointID, int parameter);
++
++/**
++ * @brief set gearbox ratio
++ * @remarks
++ * This is the ratio of the angular velocity of the first body to that
++ * of the second body along the joint axis.  If the ratio is N then
++ * the first body is constrained to rotate N times faster than the
++ * second body.  Set it to 1 / N or reverse the bodies for the reverse
++ * effect.
++ * @ingroup joints
++ */
++ODE_API void dJointSetGearboxRatio( dJointID j, dReal value );
++
++/**
++ * @brief get gearbox ratio
++ * @ingroup joints
++ */
++ODE_API dReal dJointGetGearboxRatio( dJointID j );
 Index: include/ode/Makefile.am
 ===================================================================
 --- include/ode/Makefile.am	(revision 1929)
 +++ include/ode/Makefile.am	(working copy)
-@@ -15,6 +15,8 @@
+@@ -15,6 +15,12 @@
  				collision.h \
  				error.h \
  				objects.h \
-+                        amplus_api.h \
++			amplus_api.h \
 +                        lmplus_api.h \
++                        gearbox_api.h \
++                        swaybar_api.h \
++                        target_api.h \
++                        differential_api.h \
  				rotation.h \
  				collision_space.h \
  				export-dif.h \
@@ -694,7 +847,7 @@ Index: include/ode/common.h
  #define dFMod(a,b) (fmod((a),(b)))
  #define dFloor(x) floor(x)
  #define dCeil(x) ceil(x)
-@@ -211,7 +213,12 @@
+@@ -211,7 +213,13 @@
    dJointTypePU,
    dJointTypePiston,
    dJointTypeDBall,
@@ -704,11 +857,12 @@ Index: include/ode/common.h
 +  dJointTypeAMPlus,
 +  dJointTypeGearbox,
 +  dJointTypeSwaybar,
-+  dJointTypeTarget
++  dJointTypeTarget,
++  dJointTypeDifferential
  } dJointType;
  
  
-@@ -253,6 +260,8 @@
+@@ -253,6 +261,8 @@
    dParamLoStop = start, \
    dParamHiStop, \
    dParamVel, \
@@ -717,7 +871,7 @@ Index: include/ode/common.h
    dParamFMax, \
    dParamFudgeFactor, \
    dParamBounce, \
-@@ -278,6 +287,8 @@
+@@ -278,6 +288,8 @@
    dParamLoStop ## x = start, \
    dParamHiStop ## x, \
    dParamVel ## x, \
@@ -726,7 +880,7 @@ Index: include/ode/common.h
    dParamFMax ## x, \
    dParamFudgeFactor ## x, \
    dParamBounce ## x, \
-@@ -310,7 +321,19 @@
+@@ -310,7 +322,19 @@
    dAMotorEuler = 1
  };
  
@@ -2702,11 +2856,11 @@ Index: ode/src/joints/swaybar.cpp
 ===================================================================
 --- ode/src/joints/swaybar.cpp	(revision 0)
 +++ ode/src/joints/swaybar.cpp	(revision 0)
-@@ -0,0 +1,172 @@
+@@ -0,0 +1,173 @@
 +/*************************************************************************
 + *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
 + *                                                                       *
 + * This library is free software; you can redistribute it and/or         *
 + * modify it under the terms of EITHER:                                  *
@@ -2717,11 +2871,12 @@ Index: ode/src/joints/swaybar.cpp
 + *       file LICENSE.TXT.                                               *
 + *   (2) The BSD-style license that is included with this library in     *
 + *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
 + *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
 + *                                                                       *
 + *************************************************************************/
 +
@@ -2879,17 +3034,18 @@ Index: ode/src/joints/joints.h
 ===================================================================
 --- ode/src/joints/joints.h	(revision 1929)
 +++ ode/src/joints/joints.h	(working copy)
-@@ -30,6 +30,9 @@
+@@ -30,6 +30,10 @@
  #include "ball.h"
  #include "dball.h"
  #include "dhinge.h"
 +#include "gearbox.h"
 +#include "swaybar.h"
 +#include "target.h"
++#include "differential.h"
  #include "hinge.h"
  #include "slider.h"
  #include "contact.h"
-@@ -43,5 +46,7 @@
+@@ -43,5 +47,7 @@
  #include "pu.h"
  #include "pr.h"
  #include "piston.h"
@@ -3361,11 +3517,11 @@ Index: ode/src/joints/target.cpp
 ===================================================================
 --- ode/src/joints/target.cpp	(revision 0)
 +++ ode/src/joints/target.cpp	(revision 0)
-@@ -0,0 +1,351 @@
+@@ -0,0 +1,352 @@
 +/*************************************************************************
 + *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
 + *                                                                       *
 + * This library is free software; you can redistribute it and/or         *
 + * modify it under the terms of EITHER:                                  *
@@ -3376,11 +3532,12 @@ Index: ode/src/joints/target.cpp
 + *       file LICENSE.TXT.                                               *
 + *   (2) The BSD-style license that is included with this library in     *
 + *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
 + *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
 + *                                                                       *
 + *************************************************************************/
 +
@@ -3717,7 +3874,7 @@ Index: ode/src/joints/gearbox.cpp
 ===================================================================
 --- ode/src/joints/gearbox.cpp	(revision 0)
 +++ ode/src/joints/gearbox.cpp	(revision 0)
-@@ -0,0 +1,187 @@
+@@ -0,0 +1,181 @@
 +/*************************************************************************
 + *                                                                       *
 + * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
@@ -3801,12 +3958,6 @@ Index: ode/src/joints/gearbox.cpp
 +
 +
 +    info->cfm[0] = cfm ;
-+    
-+    // dVector3 d;
-+    // dAddScaledVectors3(d, node[0].body->avel, node[1].body->avel,
-+    // 		       1.0, ratio);
-+
-+    // printf("d: %f\n", dCalcVectorDot3(globalAxis1, d));
 +}
 +
 +void dJointSetGearboxAxis1( dJointID j, dReal x, dReal y, dReal z )
@@ -4021,6 +4172,63 @@ Index: ode/src/joints/amotor.cpp
      return joint->angle[anum];
  }
  
+Index: ode/src/joints/differential.h
+===================================================================
+--- ode/src/joints/differential.h	(revision 0)
++++ ode/src/joints/differential.h	(revision 0)
+@@ -0,0 +1,52 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++#ifndef _ODE_JOINT_DIFFERENTIAL_
++#define _ODE_JOINT_DIFFERENTIAL_
++
++#include "joint.h"
++
++struct dxJointDifferential : public dxJoint
++{
++    dVector3 axis1, axis2;
++
++    dReal   ratio1 ;
++    dReal   ratio2 ;
++    dReal   erp ;
++    dReal   cfm1 ;
++    dReal   cfm2 ;
++    dReal   vel ;
++    dReal   fmax ;
++    
++    dxJointDifferential(dxWorld *w);
++
++    virtual void getSureMaxInfo( SureMaxInfo* info );
++    virtual void getInfo1( Info1* info );
++    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
++    virtual dJointType type() const;
++    virtual size_t size() const;
++
++};
++
++
++#endif
 Index: ode/src/joints/amplus.h
 ===================================================================
 --- ode/src/joints/amplus.h	(revision 0)
@@ -4810,11 +5018,11 @@ Index: ode/src/joints/swaybar.h
 ===================================================================
 --- ode/src/joints/swaybar.h	(revision 0)
 +++ ode/src/joints/swaybar.h	(revision 0)
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,45 @@
 +/*************************************************************************
 + *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
 + *                                                                       *
 + * This library is free software; you can redistribute it and/or         *
 + * modify it under the terms of EITHER:                                  *
@@ -4825,11 +5033,12 @@ Index: ode/src/joints/swaybar.h
 + *       file LICENSE.TXT.                                               *
 + *   (2) The BSD-style license that is included with this library in     *
 + *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
 + *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
 + *                                                                       *
 + *************************************************************************/
 +
@@ -5273,17 +5482,18 @@ Index: ode/src/joints/Makefile.am
 ===================================================================
 --- ode/src/joints/Makefile.am	(revision 1929)
 +++ ode/src/joints/Makefile.am	(working copy)
-@@ -10,6 +10,9 @@
+@@ -10,6 +10,10 @@
                          ball.h ball.cpp \
                          dball.h dball.cpp \
                          dhinge.h dhinge.cpp \
 +                        gearbox.h gearbox.cpp \
 +                        swaybar.h swaybar.cpp \
 +                        target.h target.cpp \
++                        differential.h differential.cpp \
                          hinge.h hinge.cpp \
                          slider.h slider.cpp \
                          contact.h contact.cpp \
-@@ -22,5 +25,7 @@
+@@ -22,5 +26,7 @@
                          plane2d.h plane2d.cpp \
                          pu.h pu.cpp \
                          pr.h pr.cpp \
@@ -5364,11 +5574,11 @@ Index: ode/src/joints/target.h
 ===================================================================
 --- ode/src/joints/target.h	(revision 0)
 +++ ode/src/joints/target.h	(revision 0)
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,52 @@
 +/*************************************************************************
 + *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
 + *                                                                       *
 + * This library is free software; you can redistribute it and/or         *
 + * modify it under the terms of EITHER:                                  *
@@ -5379,11 +5589,12 @@ Index: ode/src/joints/target.h
 + *       file LICENSE.TXT.                                               *
 + *   (2) The BSD-style license that is included with this library in     *
 + *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
 + *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
 + *                                                                       *
 + *************************************************************************/
 +
@@ -5467,11 +5678,269 @@ Index: ode/src/joints/gearbox.h
 +
 +
 +#endif
+Index: ode/src/joints/differential.cpp
+===================================================================
+--- ode/src/joints/differential.cpp	(revision 0)
++++ ode/src/joints/differential.cpp	(revision 0)
+@@ -0,0 +1,253 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++
++#include <ode/odeconfig.h>
++#include "config.h"
++#include "differential.h"
++#include "joint_internal.h"
++
++/*
++ * Differential joint
++ */
++
++dxJointDifferential::dxJointDifferential(dxWorld* w) :
++    dxJoint(w)
++{
++    flags |= dJOINT_TWOBODIES;
++
++    dSetZero(axis1, 3);
++    dSetZero(axis2, 3);
++
++    axis1[0] = 1.0 ;
++    axis2[1] = 1.0 ;
++
++    ratio1 = 1.0;
++    ratio2 = 1.0;
++
++    erp = 1.0;
++    cfm1 = 0.0;
++    cfm2 = dInfinity;
++    vel = 0.0 ;
++    fmax = 0.0 ;
++}
++
++
++void
++dxJointDifferential::getSureMaxInfo( SureMaxInfo* info )
++{
++    info->max_m = 2;
++}
++
++
++void
++dxJointDifferential::getInfo1( dxJoint::Info1* info )
++{
++    info->m = 1;
++    info->nub = 0;
++
++
++    if( cfm2 < dInfinity ) {
++        info->m++ ;
++        info->nub++ ;
++    }
++}
++
++
++void
++dxJointDifferential::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
++{
++    (void) worldFPS ;
++    (void) worldERP ;
++
++    const int   rowskip = info->rowskip ;
++
++
++    dVector3 globalAxis1, globalAxis2;
++
++    dBodyVectorToWorld(node[0].body, axis1[0], axis1[1], axis1[2], globalAxis1);
++    dBodyVectorToWorld(node[1].body, axis2[0], axis2[1], axis2[2], globalAxis2);
++
++    globalAxis1[0] *= ratio1 ;
++    globalAxis1[1] *= ratio1 ;
++    globalAxis1[2] *= ratio1 ;
++
++    globalAxis2[0] *= ratio2 ;
++    globalAxis2[1] *= ratio2 ;
++    globalAxis2[2] *= ratio2 ;
++
++    info->J1a[0] = globalAxis1[0];
++    info->J1a[1] = globalAxis1[1];
++    info->J1a[2] = globalAxis1[2];
++    
++    info->J2a[0] = - globalAxis2[0];
++    info->J2a[1] = - globalAxis2[1];
++    info->J2a[2] = - globalAxis2[2];
++
++    info->cfm[0] = cfm1 ;
++    info->c[0] = vel ;
++    info->lo[0] = -fmax ;
++    info->hi[0] = fmax ;
++
++
++    if( cfm2 < dInfinity ) {
++        info->J1a[rowskip+0] = globalAxis1[0];
++        info->J1a[rowskip+1] = globalAxis1[1];
++        info->J1a[rowskip+2] = globalAxis1[2];
++
++        info->J2a[rowskip+0] = globalAxis2[0];
++        info->J2a[rowskip+1] = globalAxis2[1];
++        info->J2a[rowskip+2] = globalAxis2[2];
++
++        info->cfm[1] = cfm2 ;
++        info->c[1] = 0.0 ;
++    }
++}
++
++void dJointSetDifferentialAxis1( dJointID j, dReal x, dReal y, dReal z )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorFromWorld(joint->node[0].body, x, y, z, joint->axis1);
++    dNormalize3(joint->axis1);
++}
++
++void dJointSetDifferentialAxis2( dJointID j, dReal x, dReal y, dReal z )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorFromWorld(joint->node[1].body, x, y, z, joint->axis2);
++    dNormalize3(joint->axis2);
++}
++
++void dJointGetDifferentialAxis1( dJointID j, dVector3 result )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorToWorld(joint->node[0].body,
++                       joint->axis1[0], joint->axis1[1], joint->axis1[2],
++                       result);
++}
++
++void dJointGetDifferentialAxis2( dJointID j, dVector3 result )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    dBodyVectorToWorld(joint->node[1].body,
++                       joint->axis2[0], joint->axis2[1], joint->axis2[2],
++                       result);
++}
++
++void dJointSetDifferentialParam( dJointID j, int parameter, dReal value )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            joint->cfm1 = value;
++            break;
++        case dParamCFM2:
++            joint->cfm2 = value;
++            break;
++        case dParamERP:
++            joint->erp = value;
++            break;
++        case dParamVel:
++            joint->vel = value;
++            break;
++        case dParamFMax:
++            joint->fmax = value;
++            break;
++    }
++}
++
++
++dReal dJointGetDifferentialParam( dJointID j, int parameter )
++{
++    dxJointDifferential* joint = static_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    switch ( parameter ) {
++        case dParamCFM:
++            return joint->cfm1;
++        case dParamCFM2:
++            return joint->cfm2;
++        case dParamERP:
++            return joint->erp;
++        case dParamVel:
++            return joint->vel;
++        case dParamFMax:
++            return joint->fmax;
++        default:
++            return 0;
++    }
++}
++
++dJointType
++dxJointDifferential::type() const
++{
++    return dJointTypeDifferential;
++}
++
++size_t
++dxJointDifferential::size() const
++{
++    return sizeof( *this );
++}
++
++void dJointSetDifferentialRatio1( dJointID j, dReal value )
++{
++    dxJointDifferential* joint = dynamic_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    joint->ratio1 = value;
++}
++
++dReal dJointGetDifferentialRatio1( dJointID j )
++{
++    dxJointDifferential* joint = dynamic_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    return joint->ratio1;
++}
++
++void dJointSetDifferentialRatio2( dJointID j, dReal value )
++{
++    dxJointDifferential* joint = dynamic_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    joint->ratio2 = value;
++}
++
++dReal dJointGetDifferentialRatio2( dJointID j )
++{
++    dxJointDifferential* joint = dynamic_cast<dxJointDifferential*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++    return joint->ratio2;
++}
 Index: ode/src/ode.cpp
 ===================================================================
 --- ode/src/ode.cpp	(revision 1929)
 +++ ode/src/ode.cpp	(working copy)
-@@ -1269,7 +1269,36 @@
+@@ -1269,7 +1269,42 @@
      return createJoint<dxJointDHinge> (w,group);
  }
  
@@ -5503,6 +5972,12 @@ Index: ode/src/ode.cpp
 +{
 +    dAASSERT (w);
 +    return createJoint<dxJointTarget> (w,group);
++}
++
++dxJoint * dJointCreateDifferential (dWorldID w, dJointGroupID group)
++{
++    dAASSERT (w);
++    return createJoint<dxJointDifferential> (w,group);
 +}
 +
  static void FinalizeAndDestroyJointInstance(dxJoint *j, bool delete_it)

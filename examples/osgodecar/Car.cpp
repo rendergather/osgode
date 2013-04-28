@@ -2,6 +2,7 @@
 
 #include <osgODE/Cylinder>
 #include <osgODE/SuspensionJoint>
+#include <osgODE/DifferentialJoint>
 
 
 

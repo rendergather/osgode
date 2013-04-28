@@ -110,7 +110,7 @@ public:
 public:
     //! Advance by 1 frame
     /*!
-     * It step_size is not positive, returns immediately
+     * Returns immediately if step_size is not positive
      */
     void    step(double step_size) ;
 

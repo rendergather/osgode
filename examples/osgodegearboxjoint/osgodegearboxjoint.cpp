@@ -41,7 +41,7 @@ main(int argc, char** argv)
     osgODE::GearboxJoint*   j = new osgODE::GearboxJoint() ;
 
 
-    // also works with negative ratio
+    // also works with negative ratios
     j->setRatio(1.0/2.0) ;
 
 //     j->setFriction(0.25) ;
@@ -52,8 +52,7 @@ main(int argc, char** argv)
 
 
     /*
-     * [3] Creates two bodies: a motionless one to the right side and a
-     *     dynamic one to the left
+     * [3] Creates two bodies
      */
     osg::Node*      weight = osgDB::readNodeFile("companioncube.osgb") ;
 
@@ -113,22 +112,8 @@ main(int argc, char** argv)
 
 
 
-//     {
-//         osgODE::Joint*  hinge = new osgODE::HingeJoint() ;
-// 
-//         hinge->setBody1(b2) ;
-// 
-//         hinge->setAnchor1( b2->getPosition() ) ;
-//         hinge->setAxis1( osg::Y_AXIS ) ;
-// 
-// 
-//         manager->getWorld()->addObject(hinge) ;
-//     }
-
-
-
     /*
-     * [5] store the graph
+     * [5] write the graph
      */
     osgDB::writeNodeFile(*manager, "output.osgb") ;
 

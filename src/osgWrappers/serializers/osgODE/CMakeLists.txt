@@ -24,6 +24,8 @@ SET(TARGET_SRC
     DifferentialJoint_serializer.cpp
     DynamicParticleGeode_serializer.cpp
     DynamicParticleSystem_serializer.cpp
+    EngineBase_serializer.cpp
+    Engine_serializer.cpp
     FixedJoint_serializer.cpp
     GearboxJoint_serializer.cpp
     Hinge2Joint_serializer.cpp
@@ -34,6 +36,7 @@ SET(TARGET_SRC
     Joint_serializer.cpp
     LMPlusJoint_serializer.cpp
     LMotorJoint_serializer.cpp
+    LinearInterpolator_serializer.cpp
     LinearQuatInterpolator_serializer.cpp
     LinearVec3Interpolator_serializer.cpp
     ManagerUpdateCallback_serializer.cpp
@@ -46,6 +49,7 @@ SET(TARGET_SRC
     PistonJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RigidBody_serializer.cpp
+    ScalarInterpolator_serializer.cpp
     Sensor_serializer.cpp
     SliderJoint_serializer.cpp
     Space_serializer.cpp

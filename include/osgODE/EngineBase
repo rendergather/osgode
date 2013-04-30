@@ -1,0 +1,234 @@
+/*!
+ * @file EngineBase
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_ENGINEBASE_HPP
+#define _OSGODE_ENGINEBASE_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osgODE/ODEObject>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+//! Convert value from rpm to radians per sec
+inline double   inRPM( double value )
+{
+    return value * 0.10471975511965977 ;
+}
+
+
+//! Convert value from kilometre per hour to metre per second
+inline double   inKmh( double value )
+{
+    return value * 0.27777777777777778 ;
+}
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//! A quick and dirty approximation of a generic vehicle engine
+/*!
+ *
+ */
+class OSG_EXPORT EngineBase: public osg::Object
+{
+/* ======================================================================= */
+public:
+             EngineBase(void) ;
+             EngineBase(const EngineBase& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~EngineBase(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, EngineBase) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the current speed
+    inline void     setSpeed( double speed ) ;
+
+    //! Get the current speed
+    inline double   getSpeed(void) const ;
+
+
+    //! Set the speed limit. Default: FLT_MAX
+    /*!
+     * torque is applied only if the abs speed is less than this value
+     */
+    inline void     setSpeedLimit( double speed_limit ) ;
+
+    //! Get the speed limit. Default: FLT_MAX
+    /*!
+     * torque is applied only if the abs speed is less than this value
+     */
+    inline double   getSpeedLimit(void) const ;
+
+
+    //! Set the torque
+    inline void     setFMax( double fmax ) ;
+
+    //! Get the torque
+    inline double   getFMax(void) const ;
+
+
+    //! Set the velocity to reach
+    inline void     setVel( double vel ) ;
+
+    //! Get the velocity to reach
+    inline double   getVel(void) const ;
+
+
+    //! Set the inertia. Default: 1
+    inline void     setInertia( double inertia ) ;
+
+    //! Get the inertia. Default: 1
+    inline double   getInertia(void) const ;
+
+
+    //! Set the drag. Default: 0
+    inline void     setDrag( double drag ) ;
+
+    //! Get the drag. Default: 0
+    inline double   getDrag(void) const ;
+
+
+    //! Set the friction between the two plates in [0,1]. Default: 0.0
+    inline void     setFriction( double friction ) ;
+
+    //! Get the friction between the two plates in [0,1]. Default: 0.0
+    inline double   getFriction(void) const ;
+
+
+    //! Set the ratio. Default: 1
+    inline void     setRatio( double ratio ) ;
+
+    //! Get the ratio. Default: 1
+    inline double   getRatio(void) const ;
+
+
+    //! Set the gas [0,1]
+    inline void     setGas( double gas ) ;
+
+    //! Get the gas [0,1]
+    inline double   getGas(void) const ;
+
+
+    //! Set the minimum speed. Default: 0
+    inline void     setSpeedStall( double speed_stall ) ;
+
+    //! Get the minimum speed. Default: 0
+    inline double   getSpeedStall(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Calculate the torque
+    /*!
+     * Assert:
+     *  - fmax >= 0.0
+     *  - inertia > 0.0
+     *  - drag >= 0.0
+     */
+    /*virtual*/ void    propagate( double step_size, double& vel_out, double& fmax_out ) ;
+
+
+    //! Read back the speed
+    /*!
+     * Assert:
+     *  - friction >= 0.0
+     */
+    /*virtual*/ void    feedback( double step_size, double speed_in ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    double      m_speed ;
+    double      m_fmax ;
+    double      m_vel ;
+    double      m_inertia ;
+    double      m_drag ;
+    double      m_friction ;
+    double      m_ratio ;
+    double      m_speed_limit ;
+    double      m_gas ;
+    double      m_speed_stall ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "EngineBase.inl"
+
+
+
+
+#endif /* _OSGODE_ENGINEBASE_HPP */

@@ -45,6 +45,10 @@ SET(TARGET_H
     ${HEADER_PATH}/DynamicParticleGeode.inl
     ${HEADER_PATH}/DynamicParticleSystem
     ${HEADER_PATH}/DynamicParticleSystem.inl
+    ${HEADER_PATH}/Engine
+    ${HEADER_PATH}/Engine.inl
+    ${HEADER_PATH}/EngineBase
+    ${HEADER_PATH}/EngineBase.inl
     ${HEADER_PATH}/FixedJoint
     ${HEADER_PATH}/GearboxJoint
     ${HEADER_PATH}/GearboxJoint.inl
@@ -63,6 +67,7 @@ SET(TARGET_H
     ${HEADER_PATH}/LMPlusJoint
     ${HEADER_PATH}/LMotorJoint
     ${HEADER_PATH}/LMotorJoint.inl
+    ${HEADER_PATH}/LinearInterpolator
     ${HEADER_PATH}/LinearQuatInterpolator
     ${HEADER_PATH}/LinearVec3Interpolator
     ${HEADER_PATH}/Manager
@@ -145,6 +150,8 @@ SET(TARGET_SRC
     DifferentialJoint.cpp
     DynamicParticleGeode.cpp
     DynamicParticleSystem.cpp
+    Engine.cpp
+    EngineBase.cpp
     FixedJoint.cpp
     GearboxJoint.cpp
     Hinge2Joint.cpp
@@ -156,6 +163,7 @@ SET(TARGET_SRC
     Joint_implementations.cpp
     LMPlusJoint.cpp
     LMotorJoint.cpp
+    LinearInterpolator.cpp
     LinearQuatInterpolator.cpp
     LinearVec3Interpolator.cpp
     Manager.cpp

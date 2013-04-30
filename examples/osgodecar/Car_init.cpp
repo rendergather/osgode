@@ -1,12 +1,38 @@
+/*!
+ * @file Car_init.cpp
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "Car"
 
 #include <osgDB/ReadFile>
 
+#include <osgODE/Engine>
 #include <osgODE/Cylinder>
 #include <osgODE/SuspensionJoint>
 #include <osgODE/Notify>
 #include <osgODE/DifferentialJoint>
 #include <osgODE/SwaybarJoint>
+#include <osgODE/LinearInterpolator>
 
 #include <pSound/Source>
 
@@ -25,17 +51,8 @@ public:
 META_Object(osgODE, WheelCallback) ;
 
 
-    WheelCallback(pSound::Buffer* buffer = NULL)
+    WheelCallback(void)
     {
-        PS_ASSERT1( buffer != NULL ) ;
-
-        m_source = new pSound::Source() ;
-        m_source->setBuffer(buffer) ;
-
-        m_source->setParam(pSound::Source::GAIN, 0.0) ;
-        m_source->setParam(pSound::Source::LOOPING, true) ;
-
-        m_source->play() ;
     }
 
 
@@ -44,11 +61,6 @@ META_Object(osgODE, WheelCallback) ;
     WheelCallback(const WheelCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY):
         ODECallback(other, copyop)
     {
-        if( other.m_source.valid() ) {
-            m_source = new pSound::Source(*other.m_source, copyop) ;
-
-            m_source->play() ;
-        }
     }
 
 
@@ -56,8 +68,6 @@ META_Object(osgODE, WheelCallback) ;
     // Compute the axis in world frame and adjust the sound
     virtual void    operator()(ODEObject* obj)
     {
-        PS_ASSERT1( m_source.valid() ) ;
-
         RigidBody*  body = obj->asRigidBody() ;
         PS_ASSERT1( body != NULL ) ;
 
@@ -65,21 +75,10 @@ META_Object(osgODE, WheelCallback) ;
 
         body->setFiniteRotationAxis(axis) ;
 
-
-
-        const double    speed = fabs( axis * body->getAngularVelocity() ) ;
-
-        const double    f = osg::clampTo(speed / 75.0, 0.2, 1.0) ;
-
-        // We have four wheels, so the contribute of each one is 1/4
-        m_source->setParam(pSound::Source::GAIN, f * 0.25) ;
-        m_source->setParam(pSound::Source::PITCH, f * 2.0) ;
-
         traverse(obj) ;
     }
 
 private:
-    osg::ref_ptr<pSound::Source>    m_source ;
 } ;
 
 
@@ -125,6 +124,71 @@ public:
 private:
     osg::ref_ptr<pSound::Source>    m_source ;
 } ;
+
+
+
+
+class OSG_EXPORT EngineCallback: public osgODE::ODECallback
+{
+public:
+    EngineCallback(pSound::Buffer* buffer = NULL)
+    {
+        PS_ASSERT1( buffer != NULL ) ;
+
+        m_source = new pSound::Source() ;
+        m_source->setBuffer(buffer) ;
+
+        m_source->setParam(pSound::Source::GAIN, 0.0) ;
+        m_source->setParam(pSound::Source::LOOPING, true) ;
+
+        m_source->play() ;
+
+        m_source2 = osg::clone( m_source.get() ) ;
+        m_source2->play() ;
+    }
+
+
+
+
+    // Adjust the wind sound
+    virtual void    operator()(ODEObject* obj)
+    {
+        PS_ASSERT1( m_source.valid() ) ;
+        PS_ASSERT1( m_source2.valid() ) ;
+
+        Car*    car = dynamic_cast<Car*>( obj ) ;
+        PS_ASSERT1( car != NULL ) ;
+
+
+        const double    f = car->getEngine()->getSpeed() / car->getEngine()->getSpeedLimit() ;
+
+
+        {
+            const double    gain0 = m_source->getParam(pSound::Source::GAIN) ;
+            const double    gain1 = osg::maximum(0.1, f * 2.0 * car->getEngine()->getGas()) ;
+
+            const double    pitch0 = m_source->getParam(pSound::Source::PITCH) ;
+            const double    pitch1 = osg::maximum(0.1, f * 2.0) ;
+
+            const double    N = 10 ;
+
+            m_source->setParam(pSound::Source::GAIN, (gain0 * N + gain1) / (N+1) ) ;
+            m_source->setParam(pSound::Source::PITCH, (pitch0 * N + pitch1) / (N+1) ) ;
+        }
+
+
+
+
+        m_source2->setParam(pSound::Source::GAIN, osg::maximum(0.5, f)) ;
+        m_source2->setParam(pSound::Source::PITCH, osg::maximum(0.125, f)) ;
+
+        traverse(obj) ;
+    }
+
+private:
+    osg::ref_ptr<pSound::Source>    m_source ;
+    osg::ref_ptr<pSound::Source>    m_source2 ;
+} ;
 }
 
 
@@ -138,17 +202,29 @@ Car::init(void)
 
 
 
+    /*
+     * [1] create the wheels
+     * [2] create the body
+     * [3] connect the wheels to the body
+     * [4] create the differentials
+     * [5] create the swaybars
+     * [6] create the engine
+     */
 
+
+
+
+
+    //
+    // [1] Wheels:
+    //
     {
         // the wheel
         osg::ref_ptr<Cylinder>      wheel = dynamic_cast<Cylinder*>( osgDB::readObjectFile("car_wheel.osgb") ) ;
         PS_ASSERT1( wheel.valid() ) ;
 
 
-        // engine sound
-        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("engine.wav") ) ;
-        PS_ASSERT1( buffer ) ;
-
+        wheel->setMass( 25.0 ) ;
 
 
         // clear the local parameters, if there are any
@@ -159,20 +235,22 @@ Car::init(void)
         wheel->setAutoDisableFlag(false) ;
 
         // This callback handles the sound and the rotation axis
-        wheel->addUpdateCallback( new WheelCallback(buffer) ) ;
+        wheel->addUpdateCallback( new WheelCallback() ) ;
+
+
+        // ODE could have a problem with this, but there is a patch
+        // TODO: apply the gyroscopic patch
+        wheel->setGyroscopicMode( false ) ;
 
 
 
         // Now create and position the wheels
 
 
-        // I use DEEP_COPY_CALLBACKS because each wheel must have a
-        // separate sound source
-
-        m_wheel_RL = osg::clone(wheel.get(), osg::CopyOp::DEEP_COPY_CALLBACKS) ;
-        m_wheel_RR = osg::clone(wheel.get(), osg::CopyOp::DEEP_COPY_CALLBACKS) ;
-        m_wheel_FR = osg::clone(wheel.get(), osg::CopyOp::DEEP_COPY_CALLBACKS) ;
-        m_wheel_FL = osg::clone(wheel.get(), osg::CopyOp::DEEP_COPY_CALLBACKS) ;
+        m_wheel_RL = osg::clone( wheel.get() ) ;
+        m_wheel_RR = osg::clone( wheel.get() ) ;
+        m_wheel_FR = osg::clone( wheel.get() ) ;
+        m_wheel_FL = osg::clone( wheel.get() ) ;
 
 
         m_wheel_RL->setPosition( osg::Vec3(-1, -1.5, 0.0) ) ;
@@ -193,21 +271,28 @@ Car::init(void)
 
 
 
-
+    //
+    // [2] Body:
+    //
     {
         m_body = dynamic_cast<RigidBody*>( osgDB::readObjectFile("car_body.osgb") ) ;
         PS_ASSERT1( m_body.valid() ) ;
+
+
+        m_body->setGyroscopicMode( false ) ;
 
 
         pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("wind.wav") ) ;
         PS_ASSERT1( buffer ) ;
 
 
-        // The mass
-        m_body->setMass( m_body->getMass(), osg::Vec3(1.5, 3, 1), dBoxClass ) ;
-
         // This callback handles the sound source
         m_body->addUpdateCallback( new BodyCallback(buffer) ) ;
+
+
+        // The mass
+//         m_body->setMass( m_body->getMass(), osg::Vec3(1.5, 3, 1), dBoxClass ) ;
+        m_body->setMass( 800, osg::Vec3(1.5, 3, 1), dBoxClass ) ;
 
 
         this->Container::addObject( m_body ) ;
@@ -219,7 +304,9 @@ Car::init(void)
 
 
 
-
+    //
+    // [3] Suspensions
+    //
     {
         osg::ref_ptr<osg::Node>     joint_graphics = osgDB::readNodeFile("car_suspension.osgb") ;
         PS_ASSERT1( joint_graphics.valid() ) ;
@@ -239,7 +326,10 @@ Car::init(void)
 
 
 
-    // differentials
+
+    //
+    // [4] differentials
+    //
     {
         m_front_differential = new DifferentialJoint() ;
         m_rear_differential = new DifferentialJoint() ;
@@ -256,8 +346,11 @@ Car::init(void)
         m_rear_differential->setAxis1( - osg::X_AXIS ) ;
         m_rear_differential->setAxis2(   osg::X_AXIS ) ;
 
-        m_front_differential->setFriction( 1.0 - 1.0e-2 ) ;
-        m_rear_differential->setFriction( 1.0 - 1.0e-2 ) ;
+
+
+        m_front_differential->setFriction( 1.0 - 1.0e-1 ) ;
+
+        m_rear_differential->setFriction(  1.0 - 1.0e-3 ) ;
 
 
         this->Container::addObject( m_front_differential ) ;
@@ -266,7 +359,10 @@ Car::init(void)
 
 
 
-    // sway bars
+
+    //
+    // [5] sway bars
+    //
     {
         SwaybarJoint*   front = new SwaybarJoint() ;
         SwaybarJoint*   rear = new SwaybarJoint() ;
@@ -288,13 +384,83 @@ Car::init(void)
 
 
         front->setRigidity( 0.75 ) ;
-        rear->setRigidity( 0.75 ) ;
+        rear->setRigidity( 0.5 ) ;
 
 
         this->Container::addObject( front ) ;
         this->Container::addObject( rear ) ;
     }
+
+
+
+
+
+    //
+    // [6] The engine:
+    //
+    {
+        m_engine = new Engine() ;
+
+        m_engine->setFriction   ( 1.0 ) ;
+        m_engine->setInertia    ( 1.0/25.0 ) ;
+        m_engine->setDrag       ( 25.0 ) ;
+
+
+
+        LinearInterpolator* torque = new LinearInterpolator() ;
+
+        m_engine->setTorqueCurve(torque) ;
+
+
+
+
+        torque->addPoint( inRPM(   0),  50 ) ;
+        torque->addPoint( inRPM(1000),  50 ) ;
+        torque->addPoint( inRPM(2000),  60 ) ;
+        torque->addPoint( inRPM(3000),  80 ) ;
+        torque->addPoint( inRPM(4000),  110 ) ;
+        torque->addPoint( inRPM(5000),  120 ) ;
+        torque->addPoint( inRPM(6000),  120 ) ;
+        torque->addPoint( inRPM(7000),  100 ) ;
+        torque->addPoint( inRPM(8000),  0 ) ;
+
+
+        m_engine->setSpeedLimit( inRPM(7250.0) ) ;
+        m_engine->setSpeedStall( inRPM(1000.0) ) ;
+
+
+
+        Engine::GearList    gears ;
+
+        gears.push_back( -1.0/20.0 ) ;
+        gears.push_back( 0.0 ) ;
+        gears.push_back( 1.0/17.0 ) ;
+        gears.push_back( 1.0/11.0 ) ;
+        gears.push_back( 1.0/8.0 ) ;
+        gears.push_back( 1.0/6.0 ) ;
+        gears.push_back( 1.0/5.0 ) ;
+        gears.push_back( 1.0/4.0 ) ;
+
+        m_engine->setGearList( gears ) ;
+
+        m_engine->setCurrentGear(1) ;
+
+
+
+        //
+        // engine sound
+        //
+        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("engine.wav") ) ;
+        PS_ASSERT1( buffer ) ;
+
+        this->addUpdateCallback( new EngineCallback(buffer) ) ;
+    }
 }
+
+
+
+
+
 
 
 
@@ -302,10 +468,10 @@ Car::init(void)
 SuspensionJoint*
 Car::_createSuspension(RigidBody* wheel, const osg::Vec3& axis2, osg::Node* graphics)
 {
-    const double    SPRING = 2000.0 ;
-    const double    DAMPER_BOUND = 250.0 ;
-    const double    DAMPER_REBOUND = 250.0 ;
-    const double    PRELOAD = 500.0 ;
+    const double    SPRING = 20000.0 ;
+    const double    DAMPER_BOUND = 2000.0 ;
+    const double    DAMPER_REBOUND = 2000.0 ;
+    const double    PRELOAD = 5000.0 ;
 
 
 

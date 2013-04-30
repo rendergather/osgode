@@ -1,5 +1,5 @@
 /*!
- * @file DifferentialJoint
+ * @file HUD
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,14 +22,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DIFFERENTIALJOINT_HPP
-#define _OSGODE_DIFFERENTIALJOINT_HPP
+#ifndef _OSGODE_HUD_HPP
+#define _OSGODE_HUD_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osg/Camera>
+#include <osg/PositionAttitudeTransform>
 /* ======================================================================= */
 
 
@@ -42,6 +43,7 @@ namespace osgODE
 
 
 /* ======================================================================= */
+class Car ;
 /* ======================================================================= */
 
 
@@ -49,19 +51,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! It's similar to a viscous coupling
+//!
 /*!
- * Axis2 and Axis2 are the separated wheels' rotation axes
+ *
  */
-class OSG_EXPORT DifferentialJoint: public Joint
+class OSG_EXPORT HUD: public osg::Camera
 {
 /* ======================================================================= */
 public:
-             DifferentialJoint(void) ;
-             DifferentialJoint(const DifferentialJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             HUD(Car* car = NULL) ;
+             HUD(const HUD& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~DifferentialJoint(void) ;
+    virtual ~HUD(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +71,9 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, DifferentialJoint) ;
+    META_Object(osgODE, HUD) ;
+
+    virtual void    traverse( osg::NodeVisitor& nv ) ;
 /* ======================================================================= */
 
 
@@ -82,38 +86,7 @@ public:
 
 /* ======================================================================= */
 public:
-    //! friction must be in the range [0,1] Default: 0
-    inline void             setFriction(double friction) ;
-
-    //! friction must be in the range [0,1] Default: 0
-    inline double           getFriction(void) const ;
-
-
-    //! Set the ratio for the first body. Default: 1
-    inline void     setRatio1(double ratio) ;
-
-    //! Get the ratio for the first body. Default: 1
-    inline double   getRatio1(void) const ;
-
-
-    //! Set the ratio for the second body. Default: 1
-    inline void     setRatio2(double ratio) ;
-
-    //! Get the ratio for the second body. Default: 1
-    inline double   getRatio2(void) const ;
-
-
-
-    //! Get the angular speed around the differential axis
-    double          getAngleRate(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    void    init( double aspect ) ;
 /* ======================================================================= */
 
 
@@ -121,6 +94,23 @@ protected:
 
 /* ======================================================================= */
 private:
+    osg::Node*  _createStaticObjects(void) ;
+    osg::Node*  _createDynamicObjects(void) ;
+
+
+    osg::PositionAttitudeTransform*   _createHand(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<Car>                   m_car ;
+
+
+    osg::ref_ptr<osg::PositionAttitudeTransform>    m_speed_hand ;
+    osg::ref_ptr<osg::PositionAttitudeTransform>    m_rpm_hand ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -134,9 +124,9 @@ private:
 
 
 
-#include "DifferentialJoint.inl"
+// #include "HUD.inl"
 
 
 
 
-#endif /* _OSGODE_DIFFERENTIALJOINT_HPP */
+#endif /* _OSGODE_HUD_HPP */

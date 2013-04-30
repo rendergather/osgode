@@ -1,5 +1,5 @@
 /*!
- * @file DifferentialJoint
+ * @file LinearInterpolator
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DIFFERENTIALJOINT_HPP
-#define _OSGODE_DIFFERENTIALJOINT_HPP
+#ifndef _OSGODE_LINEARINTERPOLATOR_HPP
+#define _OSGODE_LINEARINTERPOLATOR_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osgODE/Interpolator>
 /* ======================================================================= */
 
 
@@ -49,19 +49,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! It's similar to a viscous coupling
+//!
 /*!
- * Axis2 and Axis2 are the separated wheels' rotation axes
+ *
  */
-class OSG_EXPORT DifferentialJoint: public Joint
+class OSG_EXPORT LinearInterpolator: public ScalarInterpolator
 {
 /* ======================================================================= */
 public:
-             DifferentialJoint(void) ;
-             DifferentialJoint(const DifferentialJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             LinearInterpolator(void) ;
+             LinearInterpolator(const LinearInterpolator& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~DifferentialJoint(void) ;
+    virtual ~LinearInterpolator(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, DifferentialJoint) ;
+    META_Object(osgODE, LinearInterpolator) ;
 /* ======================================================================= */
 
 
@@ -82,30 +82,6 @@ public:
 
 /* ======================================================================= */
 public:
-    //! friction must be in the range [0,1] Default: 0
-    inline void             setFriction(double friction) ;
-
-    //! friction must be in the range [0,1] Default: 0
-    inline double           getFriction(void) const ;
-
-
-    //! Set the ratio for the first body. Default: 1
-    inline void     setRatio1(double ratio) ;
-
-    //! Get the ratio for the first body. Default: 1
-    inline double   getRatio1(void) const ;
-
-
-    //! Set the ratio for the second body. Default: 1
-    inline void     setRatio2(double ratio) ;
-
-    //! Get the ratio for the second body. Default: 1
-    inline double   getRatio2(void) const ;
-
-
-
-    //! Get the angular speed around the differential axis
-    double          getAngleRate(void) ;
 /* ======================================================================= */
 
 
@@ -113,7 +89,7 @@ public:
 
 /* ======================================================================= */
 protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    virtual void    interpolateImplementation(double x, double& result) ;
 /* ======================================================================= */
 
 
@@ -134,9 +110,9 @@ private:
 
 
 
-#include "DifferentialJoint.inl"
+// #include "LinearInterpolator.inl"
 
 
 
 
-#endif /* _OSGODE_DIFFERENTIALJOINT_HPP */
+#endif /* _OSGODE_LINEARINTERPOLATOR_HPP */

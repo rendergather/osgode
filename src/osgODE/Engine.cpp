@@ -1,5 +1,5 @@
 /*!
- * @file DifferentialJoint
+ * @file Engine.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,26 +22,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DIFFERENTIALJOINT_HPP
-#define _OSGODE_DIFFERENTIALJOINT_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osgODE/Joint>
+/* ....................................................................... */
+#include <osgODE/Engine>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-namespace osgODE
+using namespace osgODE ;
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+Engine::Engine(void):
+    m_current_gear  (0)
 {
-
-
-
-
-/* ======================================================================= */
+}
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,94 +50,80 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! It's similar to a viscous coupling
-/*!
- * Axis2 and Axis2 are the separated wheels' rotation axes
- */
-class OSG_EXPORT DifferentialJoint: public Joint
+Engine::Engine(const Engine& other, const osg::CopyOp& copyop):
+    EngineBase(other, copyop),
+
+    m_torque_curve  ( osg::clone(other.m_torque_curve.get(), copyop) ),
+    m_gear_list     ( other.m_gear_list ),
+    m_current_gear  ( other.m_current_gear )
 {
-/* ======================================================================= */
-public:
-             DifferentialJoint(void) ;
-             DifferentialJoint(const DifferentialJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~DifferentialJoint(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Object(osgODE, DifferentialJoint) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    //! friction must be in the range [0,1] Default: 0
-    inline void             setFriction(double friction) ;
-
-    //! friction must be in the range [0,1] Default: 0
-    inline double           getFriction(void) const ;
-
-
-    //! Set the ratio for the first body. Default: 1
-    inline void     setRatio1(double ratio) ;
-
-    //! Get the ratio for the first body. Default: 1
-    inline double   getRatio1(void) const ;
-
-
-    //! Set the ratio for the second body. Default: 1
-    inline void     setRatio2(double ratio) ;
-
-    //! Get the ratio for the second body. Default: 1
-    inline double   getRatio2(void) const ;
-
-
-
-    //! Get the angular speed around the differential axis
-    double          getAngleRate(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
+/* ======================================================================= */
+/* ....................................................................... */
+Engine::~Engine(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-#include "DifferentialJoint.inl"
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Engine::propagate( double step_size, double& vel_out, double& fmax_out )
+{
+
+    // find current torque
+    //
+    if( m_torque_curve.valid() ) {
+
+        const double    fmax = m_torque_curve->interpolate( getSpeed() ) ;
+
+        setFMax( fmax ) ;
+        setVel( FLT_MAX ) ;
+    }
 
 
 
 
-#endif /* _OSGODE_DIFFERENTIALJOINT_HPP */
+
+    if( m_gear_list.size() > 0 ) {
+
+        m_current_gear = osg::minimum( m_current_gear, (unsigned int)(m_gear_list.size() - 1) ) ;
+
+        const double    current_ratio = getRatio() ;
+        const double    new_ratio = m_gear_list[m_current_gear] ;
+
+
+
+        const double    N = 10 ;
+        const double    interpolated_ratio = (current_ratio * N + new_ratio) / (N+1) ;
+
+
+        const double    EPSILON = 1.0e-3 ;
+
+
+        if( fabs(new_ratio) > EPSILON   &&   fabs(current_ratio) > EPSILON ) {
+
+            setRatio( interpolated_ratio ) ;
+
+        } else {
+
+            setRatio( new_ratio ) ;
+        }
+    }
+
+
+
+    this->EngineBase::propagate( step_size, vel_out, fmax_out ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

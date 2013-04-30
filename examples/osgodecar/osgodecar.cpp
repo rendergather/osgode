@@ -4,6 +4,7 @@
 
 
 #include "Car"
+#include "HUD"
 
 #include <osgDB/ReadFile>
 
@@ -96,75 +97,156 @@ main(int argc, char** argv)
     // The graph
     osg::Group*     root = create_light( NO_FX ) ;
 
+
+
 #else
+
     osg::Group*     root = create_light( true ) ;
+
 #endif
+
+
+
+
+
+
+
+
+
+    //
+    // Screen aspect:
+    //
+    osg::GraphicsContext::ScreenIdentifier  si ;
+    si.readDISPLAY() ;
+    si.setUndefinedScreenDetailsToDefaultScreen() ;
+    osg::GraphicsContext::ScreenSettings    settings ;
+    osg::GraphicsContext::getWindowingSystemInterface()->getScreenSettings(si, settings) ;
+
+    const double    screen_aspect = (double)settings.width / (double)settings.height ;
+
+
+
+
+
 
 
 
     //
     // create and configure the manager
     //
-
     osg::ref_ptr<Manager>   manager = new Manager() ;
+    Space*                  space   = new Space() ;
+    {
 
-    root->addChild( manager ) ;
+        root->addChild( manager ) ;
 
-    // The space
-    Space*  space = new Space() ;
-    manager->setWorld( space ) ;
 
-    // quick setup
-    manager->setup( false,      // threaded
-                    true,       // accept visitors
-                    1.0/121.0   // step size
-                  ) ;
+        // The space
+        manager->setWorld( space ) ;
+
+
+        // quick setup
+        manager->setup( false,      // threaded
+                        true,       // accept visitors
+                        1.0/120.0   // step size
+                      ) ;
+    }
+
+
+
+
+
 
 
 
     //
-    // Create a system with hard contacts (high ERP, low CFM)
+    // Configure world and collision callback
     //
-    CollisionParameters*            cp = new CollisionParameters() ;
-    osgODE::DefaultNearCallback*    near_cbk = new osgODE::DefaultNearCallback() ;
+    {
+        osgODE::DefaultNearCallback*    near_cbk = new osgODE::DefaultNearCallback() ;
+        CollisionParameters*            cp = new CollisionParameters() ;
 
-    near_cbk->setCollisionParameters(cp) ;
-    space->setNearCallback( near_cbk ) ;
 
-    cp->setMode( dContactApprox1 | dContactSoftERP | dContactSoftCFM | dContactFDir1 /*| dContactMu2*/ ) ;
-
-    cp->setSoftERP(0.8) ;
-    cp->setSoftCFM(1.0e-5) ;
-    cp->setMu(0.5) ;
-//     cp->setMu2(0.75) ;
+        near_cbk->setCollisionParameters(cp) ;
+        space->setNearCallback( near_cbk ) ;
 
 
 
-    // The world is quite responsive
-    space->setERP(0.9) ;
-    space->setCFM(1.0e-5) ;
+        cp->setMode( dContactApprox1 | dContactSoftERP/* | dContactSoftCFM*/ | dContactFDir1 /*| dContactMu2*/ ) ;
+
+        cp->setSoftERP(0.2) ;
+        cp->setSoftCFM(1.0e-5) ;
+
+
+        cp->setMu(0.5) ;
+        cp->setMu2(0.75) ;
+
+
+
+
+        // The world is very responsive
+        space->setERP(0.9) ;
+        space->setCFM(1.0e-5) ;
+    }
+
+
+
 
 
 
 
     // the ground:
+    {
+        osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgb") ) ;
 
-    osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgb") ) ;
-    PS_ASSERT1( ground.valid() ) ;
+        PS_ASSERT1( ground.valid() ) ;
 
-    space->addObject(ground) ;
+        space->addObject(ground) ;
 
-    // reset any local collision parameters
-    ground->asCollidable()->setCollisionParameters(NULL) ;
-
-
+        // reset local collision parameters
+        ground->asCollidable()->setCollisionParameters(NULL) ;
+    }
 
 
+
+
+
+
+
+    //
     // the car:
+    //
     Car*    car = new Car() ;
-    car->init() ;
+    {
+        car->init() ;
 
-    space->addObject( car ) ;
+        space->addObject( car ) ;
+    }
+
+
+
+
+
+
+
+
+    // HUD
+    //
+    HUD*    hud = NULL ;
+
+    if( true ) {
+        hud = new HUD(car) ;
+
+        hud->init( screen_aspect ) ;
+
+        root->addChild( hud ) ;
+    }
+
+
+
+
+
+
 
 
 
@@ -179,7 +261,7 @@ main(int argc, char** argv)
     viewer.setEnableFullScreenEffects( ! NO_FX ) ;
 
     if( LOW ) {
-        viewer.setRenderPass( pViewer::createLo() ) ;
+        viewer.setRenderPass( pViewer::createLo(SKY_CUBE_PREFIX) ) ;
     } else {
         viewer.setRenderPass( pViewer::createHi(BLOOM, HDR, SKY_CUBE_PREFIX) ) ;
     }
@@ -187,50 +269,88 @@ main(int argc, char** argv)
 #else
 
     osgViewer::Viewer   viewer ;
+
+
 #endif
+
+
 
     viewer.setSceneData(root) ;
 
 
 
+
+
+
+
+
+
+    //
     // the controller
+    //
+    {
+        ControllerBase* controller = new ControllerBase() ;
 
-    ControllerBase* controller = new ControllerBase() ;
+        controller->onKeyPressed()->connect( car, &Car::handleKeyDown ) ;
+        controller->onKeyReleased()->connect( car, &Car::handleKeyUp ) ;
 
-    controller->onKeyPressed()->connect( car, &Car::handleKeyDown ) ;
-    controller->onKeyReleased()->connect( car, &Car::handleKeyUp ) ;
+        viewer.addEventHandler( controller ) ;
+    }
 
-    viewer.addEventHandler( controller ) ;
+
+
+
+
+
+
 
 
 
     //
-    // the camera manipulator:
+    // setup the camera manipulator:
     //
+    {
+        Transformable*  body = car->getBody() ;
 
-    car->getBody()->setCameraManipulator( new osgODEUtil::MatrixManipulator() ) ;
 
-    // the eye is behind the car
-    car->getBody()->setCameraManipulatorCenter( osg::Vec3(0.0, -7.5, 1.0) ) ;
+        osgGA::CameraManipulator*   manipulator = new osgODEUtil::MatrixManipulator() ;
 
-    // The camera looks toward the local Y axis
-    car->getBody()->setCameraManipulatorDirection( osg::Y_AXIS ) ;
 
-    // The "up" axis is the global Z
-    car->getBody()->setCameraManipulatorUp( osg::Z_AXIS ) ;
-    car->getBody()->setCameraManipulatorUpObjectSpace( false ) ;
+        body->setCameraManipulator( manipulator ) ;
 
-    // soft motion
-    car->getBody()->setCameraManipulatorElasticity( 10 ) ;
-
-    viewer.setCameraManipulator( car->getBody()->getCameraManipulator() ) ;
+        viewer.setCameraManipulator( manipulator ) ;
 
 
 
-    osgViewer::StatsHandler*    stats = new osgViewer::StatsHandler() ;
-    stats->setKeyEventTogglesOnScreenStats('0') ;
 
-    viewer.addEventHandler(stats) ;
+        // the eye is behind the car
+        body->setCameraManipulatorCenter( osg::Vec3(0.0, -7.5, 1.0) ) ;
+
+        // The camera looks toward the local Y axis
+        body->setCameraManipulatorDirection( osg::Y_AXIS ) ;
+
+        // The "up" axis is the global Z
+        body->setCameraManipulatorUp( osg::Z_AXIS ) ;
+        body->setCameraManipulatorUpObjectSpace( false ) ;
+
+        // soft motion
+        body->setCameraManipulatorElasticity( 10 ) ;
+    }
+
+
+
+
+
+
+
+    {
+        osgViewer::StatsHandler*    stats = new osgViewer::StatsHandler() ;
+        stats->setKeyEventTogglesOnScreenStats('0') ;
+
+        viewer.addEventHandler(stats) ;
+    }
+
+
 
 
 
@@ -238,13 +358,7 @@ main(int argc, char** argv)
 
     // Projection matrix
 
-    osg::GraphicsContext::ScreenIdentifier  si ;
-    si.readDISPLAY() ;
-    si.setUndefinedScreenDetailsToDefaultScreen() ;
-    osg::GraphicsContext::ScreenSettings    settings ;
-    osg::GraphicsContext::getWindowingSystemInterface()->getScreenSettings(si, settings) ;
-
-    viewer.getCamera()->setProjectionMatrixAsPerspective(45.0, (double)settings.width / (double)settings.height, 0.1, 1000.0) ;
+    viewer.getCamera()->setProjectionMatrixAsPerspective(45.0, screen_aspect, 0.1, 1000.0) ;
 
 
 
@@ -265,6 +379,9 @@ create_light(bool nofx)
 {
     osg::Group* group = NULL ;
 
+    osg::Vec3   position = osg::Vec3(-1, 0, 0.5) ;
+    position.normalize() ;
+
 
 #if USE_PVIEWER
 
@@ -272,39 +389,48 @@ create_light(bool nofx)
         group = new osg::Group() ;
 
 
-        pViewer::Light* light = new pViewer::Light() ;
+        {
+            pViewer::Light* light = new pViewer::Light() ;
 
-        osg::Vec3   position = osg::Vec3(1, -2, 2) ;
-        position.normalize() ;
+            light->setPosition( osg::Vec4(position, 0.0) ) ;
+            light->setDirection( osg::Vec4(-position, 0.0) ) ;
+            light->setAmbient( osg::Vec4(0.0, 0.0, 0.0, 1.0) ) ;
+            light->setDiffuse( osg::Vec4(1.0, 0.99, 0.98, 1.0) ) ;
+            light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
 
-        light->setPosition( osg::Vec4(position, 0.0) ) ;
-        light->setDirection( osg::Vec4(-position, 0.0) ) ;
-        light->setAmbient( osg::Vec4(0.0, 0.0, 0.0, 1.0) ) ;
-        light->setDiffuse( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
-        light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
+            light->setShadowEnabled(true) ;
+            light->setShadowBufferSize(1024) ;
+            light->setShadowBias(4.0) ;
+            light->setShadowFrustumSize(15) ;
 
-        light->setShadowEnabled(true) ;
-        light->setShadowBufferSize(1024) ;
-        light->setShadowBias(4.0) ;
-        light->setShadowFrustumSize(15) ;
+            light->setType( pViewer::Light::DIRECTIONAL ) ;
 
-        light->setType( pViewer::Light::DIRECTIONAL ) ;
+            group->addChild(light) ;
+        }
 
-        group->addChild(light) ;
+
+        {
+            pViewer::Light* light = new pViewer::Light() ;
+
+            light->setAmbient( osg::Vec4(0.15, 0.16, 0.17, 1.0) ) ;
+
+            light->setShadowEnabled(false) ;
+
+            light->setType( pViewer::Light::AMBIENT ) ;
+
+            group->addChild(light) ;
+        }
 
     } else {
 
         osg::LightSource*   ls = new osg::LightSource() ;
         osg::Light* light = new osg::Light() ;
 
-        osg::Vec3   position = osg::Vec3(1, -2, 2) ;
-        position.normalize() ;
-
         light->setLightNum(0) ;
         light->setPosition( osg::Vec4(position, 0.0) ) ;
         light->setDirection( -position ) ;
-        light->setAmbient( osg::Vec4(0.0, 0.0, 0.0, 1.0) ) ;
-        light->setDiffuse( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
+        light->setAmbient( osg::Vec4(0.15, 0.16, 0.17, 1.0) ) ;
+        light->setDiffuse( osg::Vec4(1.0, 0.99, 0.98, 1.0) ) ;
         light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
 
         ls->setLight(light) ;
@@ -323,14 +449,11 @@ create_light(bool nofx)
         osg::LightSource*   ls = new osg::LightSource() ;
         osg::Light* light = new osg::Light() ;
 
-        osg::Vec3   position = osg::Vec3(1, -2, 2) ;
-        position.normalize() ;
-
         light->setLightNum(0) ;
         light->setPosition( osg::Vec4(position, 0.0) ) ;
         light->setDirection( -position ) ;
-        light->setAmbient( osg::Vec4(0.0, 0.0, 0.0, 1.0) ) ;
-        light->setDiffuse( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
+        light->setAmbient( osg::Vec4(0.15, 0.16, 0.17, 1.0) ) ;
+        light->setDiffuse( osg::Vec4(1.0, 0.99, 0.98, 1.0) ) ;
         light->setSpecular( osg::Vec4(1.0, 1.0, 1.0, 1.0) ) ;
 
         ls->setLight(light) ;

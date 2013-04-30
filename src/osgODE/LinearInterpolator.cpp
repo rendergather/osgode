@@ -1,5 +1,5 @@
 /*!
- * @file DifferentialJoint
+ * @file LinearInterpolator.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,26 +22,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DIFFERENTIALJOINT_HPP
-#define _OSGODE_DIFFERENTIALJOINT_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osgODE/Joint>
+/* ....................................................................... */
+#include <osgODE/LinearInterpolator>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-namespace osgODE
+using namespace osgODE ;
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+LinearInterpolator::LinearInterpolator(void)
 {
-
-
-
-
-/* ======================================================================= */
+}
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,94 +49,74 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! It's similar to a viscous coupling
-/*!
- * Axis2 and Axis2 are the separated wheels' rotation axes
- */
-class OSG_EXPORT DifferentialJoint: public Joint
+LinearInterpolator::LinearInterpolator(const LinearInterpolator& other, const osg::CopyOp& copyop):
+    ScalarInterpolator(other, copyop)
 {
-/* ======================================================================= */
-public:
-             DifferentialJoint(void) ;
-             DifferentialJoint(const DifferentialJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~DifferentialJoint(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Object(osgODE, DifferentialJoint) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    //! friction must be in the range [0,1] Default: 0
-    inline void             setFriction(double friction) ;
-
-    //! friction must be in the range [0,1] Default: 0
-    inline double           getFriction(void) const ;
-
-
-    //! Set the ratio for the first body. Default: 1
-    inline void     setRatio1(double ratio) ;
-
-    //! Get the ratio for the first body. Default: 1
-    inline double   getRatio1(void) const ;
-
-
-    //! Set the ratio for the second body. Default: 1
-    inline void     setRatio2(double ratio) ;
-
-    //! Get the ratio for the second body. Default: 1
-    inline double   getRatio2(void) const ;
-
-
-
-    //! Get the angular speed around the differential axis
-    double          getAngleRate(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
+/* ======================================================================= */
+/* ....................................................................... */
+LinearInterpolator::~LinearInterpolator(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-#include "DifferentialJoint.inl"
+/* ======================================================================= */
+/* ....................................................................... */
+void
+LinearInterpolator::interpolateImplementation(double x, double& result)
+{
+    unsigned int            size = m_points.size() ;
+
+
+    switch( size ) {
+        /*
+         * No points...
+         */
+        case 0 :
+            result = 0.0 ;
+            return ;
+            break ;
+
+
+        /* one point */
+        case 1:
+            result = m_points[0].second ;
+            return ;
+            break ;
+
+
+        default:
+            break ;
+    }
 
 
 
 
-#endif /* _OSGODE_DIFFERENTIALJOINT_HPP */
+
+    unsigned int    x0 = findX0(x) ;
+
+    /* calculate f(x) */
+
+    const Point&    p1 = m_points[x0] ;
+    const Point&    p2 = m_points[x0+1] ;
+
+
+    /*
+     * f(x) = y1   +   (x - x1)(y2 - y1)
+     *                 -----------------
+     *                     (x2 - x1)
+     */
+    result = p1.second + ( (p2.second - p1.second) * (x - p1.first)  / (p2.first - p1.first) ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

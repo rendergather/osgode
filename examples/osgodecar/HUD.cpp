@@ -27,6 +27,7 @@
 // #include <osgODE/HUD>
 #include "HUD"
 #include "Car"
+#include "Text"
 
 #include <osgODE/RigidBody>
 #include <osgODE/Engine>
@@ -111,6 +112,24 @@ HUD::traverse(osg::NodeVisitor& nv)
             const double    angle = 0.5 * osg::PI - osg::PI * rpm / 9000 ;
 
             m_rpm_hand->setAttitude( osg::Quat( angle, osg::Z_AXIS ) ) ;
+        }
+
+
+        {
+            const unsigned int  gear = m_car->getEngine()->getCurrentGear() ;
+
+            if( gear > 1 ) {
+                char    buf[2] ;
+                buf[0] = '0' + gear - 1 ;
+                buf[1] = 0 ;
+                m_gear_text->setText( buf ) ;
+            }
+            else if( gear == 0 ) {
+                m_gear_text->setText( "R" ) ;
+            }
+            else {
+                m_gear_text->setText("N") ;
+            }
         }
 
 
@@ -242,6 +261,7 @@ HUD::_createStaticObjects(void)
 #endif
 
 
+
     return static_objects ;
 }
 /* ....................................................................... */
@@ -281,6 +301,36 @@ HUD::_createDynamicObjects(void)
 
     // always on top
     state_set->setAttributeAndModes( new osg::PolygonOffset(0, -1) ) ;
+
+
+
+
+
+    {
+        m_gear_text  = new Text() ;
+
+        m_gear_text->setText( " " ) ;
+
+
+        osg::Image* image = osgDB::readImageFile("alphadigit.png") ;
+
+        PS_ASSERT1( image ) ;
+
+        osg::Texture2D* texture = new osg::Texture2D( image ) ;
+
+        m_gear_text->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON) ;
+
+
+        osg::Geode* geode = new osg::Geode() ;
+        geode->addDrawable( m_gear_text ) ;
+
+        dynamic_objects->addChild( geode ) ;
+
+
+        m_gear_text->setScale( 1.0/3.0 ) ;
+
+        m_gear_text->setPosition( osg::Vec2( -0.5 * m_gear_text->getScale(), -0.9  ) ) ;
+    }
 
 
 

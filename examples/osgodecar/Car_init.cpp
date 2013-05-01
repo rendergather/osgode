@@ -434,12 +434,12 @@ Car::init(void)
 
         gears.push_back( -1.0/20.0 ) ;
         gears.push_back( 0.0 ) ;
-        gears.push_back( 1.0/17.0 ) ;
-        gears.push_back( 1.0/11.0 ) ;
-        gears.push_back( 1.0/8.0 ) ;
-        gears.push_back( 1.0/6.0 ) ;
+        gears.push_back( 1.0/16.0 ) ;
+        gears.push_back( 1.0/9.0 ) ;
+        gears.push_back( 1.0/6.5 ) ;
         gears.push_back( 1.0/5.0 ) ;
         gears.push_back( 1.0/4.0 ) ;
+        gears.push_back( 1.0/3.5 ) ;
 
         m_engine->setGearList( gears ) ;
 

@@ -1,5 +1,5 @@
 /*!
- * @file HUD
+ * @file Text
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,15 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_HUD_HPP
-#define _OSGODE_HUD_HPP
+#ifndef _OSGODE_TEXT_HPP
+#define _OSGODE_TEXT_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osg/Camera>
-#include <osg/PositionAttitudeTransform>
+#include <osg/Drawable>
 /* ======================================================================= */
 
 
@@ -43,8 +42,6 @@ namespace osgODE
 
 
 /* ======================================================================= */
-class Car ;
-class Text ;
 /* ======================================================================= */
 
 
@@ -56,15 +53,15 @@ class Text ;
 /*!
  *
  */
-class OSG_EXPORT HUD: public osg::Camera
+class OSG_EXPORT Text: public osg::Drawable
 {
 /* ======================================================================= */
 public:
-             HUD(Car* car = NULL) ;
-             HUD(const HUD& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             Text(void) ;
+             Text(const Text& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~HUD(void) ;
+    virtual ~Text(void) ;
 /* ======================================================================= */
 
 
@@ -72,9 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, HUD) ;
-
-    virtual void    traverse( osg::NodeVisitor& nv ) ;
+    META_Object(osgODE, Text) ;
 /* ======================================================================= */
 
 
@@ -87,7 +82,42 @@ public:
 
 /* ======================================================================= */
 public:
-    void    init( double aspect ) ;
+    //! Set the scale
+    inline void     setScale( float scale ) ;
+
+    //! Get the scale
+    inline float    getScale(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    drawImplementation(osg::RenderInfo& info) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the text
+    inline void                 setText( const std::string& text ) ;
+
+    //! Get the text
+    inline const std::string&   getText(void) const ;
+
+    //! Set the position
+    inline void             setPosition( const osg::Vec2& position ) ;
+
+    //! Get the position
+    inline const osg::Vec2& getPosition(void) const ;
 /* ======================================================================= */
 
 
@@ -95,11 +125,7 @@ public:
 
 /* ======================================================================= */
 private:
-    osg::Node*  _createStaticObjects(void) ;
-    osg::Node*  _createDynamicObjects(void) ;
-
-
-    osg::PositionAttitudeTransform*   _createHand(void) ;
+    osg::Vec2   _findCoord( char c ) const ;
 /* ======================================================================= */
 
 
@@ -107,13 +133,11 @@ private:
 
 /* ======================================================================= */
 private:
-    osg::ref_ptr<Car>                   m_car ;
+    std::string     m_text ;
 
+    float           m_scale ;
 
-    osg::ref_ptr<osg::PositionAttitudeTransform>    m_speed_hand ;
-    osg::ref_ptr<osg::PositionAttitudeTransform>    m_rpm_hand ;
-
-    osg::ref_ptr< Text >        m_gear_text ;
+    osg::Vec2       m_position ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -127,9 +151,9 @@ private:
 
 
 
-// #include "HUD.inl"
+#include "Text.inl"
 
 
 
 
-#endif /* _OSGODE_HUD_HPP */
+#endif /* _OSGODE_TEXT_HPP */

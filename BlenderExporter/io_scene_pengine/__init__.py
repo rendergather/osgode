@@ -27,7 +27,7 @@ import bpy
 
 from bpy_extras.io_utils import ExportHelper
 
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty
 
 
 if "osgt_exporter" in locals():
@@ -78,8 +78,13 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
 
     export_selected = BoolProperty( name="Export only selected", default=False)
+
+
     #export_lights = BoolProperty( name="Export lights", default=True)
     export_lights = False
+
+
+    max_anisotropy = FloatProperty( name="Max anisotropy", default=1, min=0)
     world_step = EnumProperty(  items = (
                                     ("dWorldStep", "dWorldStep", "Accuracy"),
                                     ("dWorldQuickStep", "dWorldQuickStep", "Performance")
@@ -116,6 +121,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.ExportSelected = self.export_selected
         data.ExportLights = self.export_lights
         data.WorldStep = self.world_step
+        data.MaxAnisotropy = self.max_anisotropy
 
         return exporter.export()
 ############################################################################

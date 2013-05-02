@@ -70,7 +70,7 @@ class TextureAttribute(Writable.Writable):
         self.Texture = texture
         self.Image = None
         self.Wrap = "REPEAT"
-        self.MaxAnisotropy = 1
+        self.MaxAnisotropy = data.MaxAnisotropy
 ############################################################################
 
 
@@ -97,7 +97,7 @@ class TextureAttribute(Writable.Writable):
             self.Image = Image.Image(self.Data, self.Texture.texture.image)
             self.addChild(self.Image)
 
-        self.MaxAnisotropy = 1
+        self.MaxAnisotropy = self.Data.MaxAnisotropy
 
 
         return self.traverseBuild()
@@ -121,7 +121,7 @@ class TextureAttribute(Writable.Writable):
             writer.writeLine("MIN_FILTER LINEAR_MIPMAP_LINEAR")
             writer.writeLine("MAG_FILTER LINEAR")
 
-            writer.writeLine("MaxAnisotropy %d" %self.MaxAnisotropy)
+            writer.writeLine("MaxAnisotropy %f" %self.MaxAnisotropy)
 
 
             if self.Image:

@@ -34,7 +34,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/export"
+#define OSGODE_DATA_PATH "../../data"
 #endif
 
 
@@ -179,7 +179,8 @@ main(int argc, char** argv)
 
 
         cp->setMu(0.5) ;
-        cp->setMu2(0.75) ;
+//         cp->setMu(0.75) ;
+        cp->setMu2(1.0) ;
 
 
 
@@ -187,6 +188,13 @@ main(int argc, char** argv)
         // The world is very responsive
         space->setERP(0.9) ;
         space->setCFM(1.0e-5) ;
+
+
+
+        /*
+         * Really need a wheel private collision callback to customize
+         * fdir1, static vs kinetic friction and collision response
+         */
     }
 
 
@@ -197,6 +205,7 @@ main(int argc, char** argv)
 
     // the ground:
     {
+//         osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("carpark.osgb") ) ;
         osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgb") ) ;
 
         PS_ASSERT1( ground.valid() ) ;
@@ -401,7 +410,7 @@ create_light(bool nofx)
             light->setShadowEnabled(true) ;
             light->setShadowBufferSize(1024) ;
             light->setShadowBias(4.0) ;
-            light->setShadowFrustumSize(15) ;
+            light->setShadowFrustumSize(25) ;
 
             light->setType( pViewer::Light::DIRECTIONAL ) ;
 

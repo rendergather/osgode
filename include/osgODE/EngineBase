@@ -187,7 +187,7 @@ public:
      *  - inertia > 0.0
      *  - drag >= 0.0
      */
-    /*virtual*/ void    propagate( double step_size, double& vel_out, double& fmax_out ) ;
+    virtual void    propagate( double step_size, double& vel_out, double& fmax_out ) ;
 
 
     //! Read back the speed

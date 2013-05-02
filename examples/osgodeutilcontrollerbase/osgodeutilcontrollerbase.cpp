@@ -17,7 +17,7 @@
 
 
 #ifndef OSGODE_DATA_PATH
-#define OSGODE_DATA_PATH "../../data/export"
+#define OSGODE_DATA_PATH "../../data"
 #endif
 
 

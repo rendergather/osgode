@@ -783,6 +783,9 @@ RigidBody::_cloneODEBody(dBodyID src, dBodyID dst)
         dBodySetFiniteRotationAxis(dst, fra[0], fra[1], fra[2]) ;
 
         dBodySetGravityMode(dst, dBodyGetGravityMode(src)) ;
+
+
+        dBodySetGyroscopicMode( dst, dBodyGetGyroscopicMode(src) ) ;
     }
 
 

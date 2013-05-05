@@ -44,8 +44,8 @@ main(int argc, char** argv)
     b1->getMatrixTransform()->addChild(graphics) ;
     b2->getMatrixTransform()->addChild(graphics) ;
 
-    b1->setPosition( osg::X_AXIS * -1.0 ) ;
-    b2->setPosition( osg::X_AXIS *  1.0 ) ;
+    b1->setPosition( osg::X_AXIS * -1.0 + osg::Z_AXIS ) ;
+    b2->setPosition( osg::X_AXIS *  1.0 - osg::Z_AXIS ) ;
 
 
 

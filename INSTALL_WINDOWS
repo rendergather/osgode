@@ -9,16 +9,16 @@
 @section win_build  How to build osgODE with Visual Studio 2012 in Windows Seven
 \n
 - <b>[1]</b>
+    Download and install CMake 2.8.10
+    (<a href="http://www.cmake.org/">http://www.cmake.org/</a>) \n
+\n
+- <b>[2]</b>
     Download and install OSG as described
     <a href="http://www.openscenegraph.com/index.php/documentation/getting-started">here</a> \n
 \n
-- <b>[2]</b>
+- <b>[3]</b>
     Download and install TortoiseSVN 1.7.12
     (<a href="http://tortoisesvn.net/">http://tortoisesvn.net/</a>) \n
-\n
-- <b>[3]</b>
-    Download and install CMake 2.8.10
-    (<a href="http://www.cmake.org/">http://www.cmake.org/</a>) \n
 \n
 \n
 \n

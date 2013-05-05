@@ -151,8 +151,8 @@ EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
 
 
     if( fabs(m_ratio) > EPSILON ) {
-        vel_out = m_speed * m_ratio ;
         fmax_out = fabs(fmax - m_drag) * m_friction / fabs(m_ratio) ;
+        vel_out = m_speed * m_ratio * ( fmax >= m_drag ) ;
     } else {
         vel_out = 0.0 ;
         fmax_out = 0.0 ;

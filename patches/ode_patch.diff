@@ -592,7 +592,7 @@ Index: include/ode/swaybar_api.h
 ===================================================================
 --- include/ode/swaybar_api.h	(revision 0)
 +++ include/ode/swaybar_api.h	(revision 0)
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,79 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -625,12 +625,19 @@ Index: include/ode/swaybar_api.h
 + */
 +ODE_API dJointID dJointCreateSwaybar (dWorldID, dJointGroupID);
 +
++
++
++
 +/**
 + * @brief set the sliding axis for the swaybar joint
++
 + * @remarks This is the sliding axis. It is given in global coordinates.
 + * @ingroup joints
 + */
 +ODE_API void dJointSetSwaybarAxis(dJointID, dReal x, dReal y, dReal z);
++
++
++
 +
 +/**
 + * @brief get the sliding axis for the swaybar joint
@@ -638,17 +645,26 @@ Index: include/ode/swaybar_api.h
 + */
 +ODE_API void dJointGetSwaybarAxis(dJointID, dVector3 result);
 +
++
++
++
 +/**
 + * @brief set swaybar joint parameter
 + * @ingroup joints
 + */
 +ODE_API void dJointSetSwaybarParam(dJointID, int parameter, dReal value);
 +
++
++
++
 +/**
 + * @brief get swaybar joint parameter
 + * @ingroup joints
 + */
 +ODE_API dReal dJointGetSwaybarParam(dJointID, int parameter);
++
++
++
 +
 +/**
 + * @brief Get the swaybar linear position (i.e. the slider's extension)
@@ -2856,7 +2872,7 @@ Index: ode/src/joints/swaybar.cpp
 ===================================================================
 --- ode/src/joints/swaybar.cpp	(revision 0)
 +++ ode/src/joints/swaybar.cpp	(revision 0)
-@@ -0,0 +1,173 @@
+@@ -0,0 +1,175 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -2896,9 +2912,11 @@ Index: ode/src/joints/swaybar.cpp
 +    flags |= dJOINT_TWOBODIES;
 +
 +    dSetZero(axis, 3);
-+    axis[2] = 1.0 ;
 +
 +    limot.init ( world );
++
++    limot.set(dParamERP, 1.0) ;
++    limot.set(dParamCFM, 0.0) ;
 +}
 +
 +
@@ -5682,7 +5700,7 @@ Index: ode/src/joints/differential.cpp
 ===================================================================
 --- ode/src/joints/differential.cpp	(revision 0)
 +++ ode/src/joints/differential.cpp	(revision 0)
-@@ -0,0 +1,253 @@
+@@ -0,0 +1,266 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -5748,8 +5766,13 @@ Index: ode/src/joints/differential.cpp
 +void
 +dxJointDifferential::getInfo1( dxJoint::Info1* info )
 +{
-+    info->m = 1;
++    info->m = 0;
 +    info->nub = 0;
++
++
++    if( cfm1 < dInfinity ) {
++        info->m++ ;
++    }
 +
 +
 +    if( cfm2 < dInfinity ) {
@@ -5781,18 +5804,26 @@ Index: ode/src/joints/differential.cpp
 +    globalAxis2[1] *= ratio2 ;
 +    globalAxis2[2] *= ratio2 ;
 +
-+    info->J1a[0] = globalAxis1[0];
-+    info->J1a[1] = globalAxis1[1];
-+    info->J1a[2] = globalAxis1[2];
-+    
-+    info->J2a[0] = - globalAxis2[0];
-+    info->J2a[1] = - globalAxis2[1];
-+    info->J2a[2] = - globalAxis2[2];
 +
-+    info->cfm[0] = cfm1 ;
-+    info->c[0] = vel ;
-+    info->lo[0] = -fmax ;
-+    info->hi[0] = fmax ;
++
++
++
++    if( cfm1 < dInfinity ) {
++        info->J1a[0] = globalAxis1[0];
++        info->J1a[1] = globalAxis1[1];
++        info->J1a[2] = globalAxis1[2];
++
++        info->J2a[0] = - globalAxis2[0];
++        info->J2a[1] = - globalAxis2[1];
++        info->J2a[2] = - globalAxis2[2];
++
++        info->cfm[0] = cfm1 ;
++        info->c[0] = vel ;
++        info->lo[0] = -fmax ;
++        info->hi[0] = fmax ;
++    }
++
++
 +
 +
 +    if( cfm2 < dInfinity ) {

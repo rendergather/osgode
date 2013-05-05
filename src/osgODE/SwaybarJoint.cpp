@@ -69,6 +69,9 @@ SwaybarJoint::SwaybarJoint(void):
     setParam(dParamCFM, 0.0) ;
     setParam(dParamStopERP, 1.0) ;
     setParam(dParamStopCFM, 0.0) ;
+
+
+    this->Joint::m_ensure_two_bodies = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -153,11 +156,6 @@ SwaybarJoint::cloneODEJoint(dWorldID world) const
 
 
     dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
-
-    dVector3    axis ;
-    dJointGetSwaybarAxis( m_ODE_joint, axis ) ;
-    dJointSetSwaybarAxis( j, axis[0], axis[1], axis[2] ) ;
 
 
     return j ;

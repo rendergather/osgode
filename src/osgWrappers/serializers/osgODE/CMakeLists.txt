@@ -8,6 +8,7 @@ SET(TARGET_SRC
     AerodynamicDevice_serializer.cpp
     BallJoint_serializer.cpp
     Box_serializer.cpp
+    BypassJoint_serializer.cpp
     Capsule_serializer.cpp
     CharacterBase_serializer.cpp
     Character_serializer.cpp

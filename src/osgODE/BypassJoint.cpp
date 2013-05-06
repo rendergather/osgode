@@ -1,5 +1,5 @@
 /*!
- * @file GearboxJoint.cpp
+ * @file BypassJoint.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,28 +14,20 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/GearboxJoint>
+#include <osgODE/BypassJoint>
 #include <osgODE/StaticWorld>
 #include <osgODE/World>
 #include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -49,15 +41,9 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-GearboxJoint::GearboxJoint(void):
-    m_ratio     ( 1.0 ),
-    m_friction  ( 1.0 ),
-    m_axis1     ( osg::Z_AXIS ),
-    m_axis2     ( osg::Z_AXIS )
+BypassJoint::BypassJoint(void)
 {
-
-
-    this->setInfo(1, 1, 1) ;
+    m_ODE_joint = dJointCreateBypass(StaticWorld::instance()->getODEWorld(), NULL) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -67,12 +53,8 @@ GearboxJoint::GearboxJoint(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-GearboxJoint::GearboxJoint(const GearboxJoint& other, const osg::CopyOp& copyop):
-    BypassJoint ( other, copyop ),
-    m_ratio     ( other.m_ratio ),
-    m_friction  ( other.m_friction ),
-    m_axis1     ( other.m_axis1 ),
-    m_axis2     ( other.m_axis2 )
+BypassJoint::BypassJoint(const BypassJoint& other, const osg::CopyOp& copyop):
+    Joint(other, copyop)
 {
 }
 /* ....................................................................... */
@@ -83,8 +65,11 @@ GearboxJoint::GearboxJoint(const GearboxJoint& other, const osg::CopyOp& copyop)
 
 /* ======================================================================= */
 /* ....................................................................... */
-GearboxJoint::~GearboxJoint(void)
+BypassJoint::~BypassJoint(void)
 {
+    if(m_ODE_joint) {
+        dJointDestroy(m_ODE_joint) ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -95,26 +80,27 @@ GearboxJoint::~GearboxJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-GearboxJoint::update( double step_size )
+BypassJoint::setRow(    unsigned int row,
+                        const osg::Vec3& J1a,
+                        const osg::Vec3& J1l,
+                        const osg::Vec3& J2a,
+                        const osg::Vec3& J2l,
+                        double rhs,
+                        double cfm )
 {
-    osg::Vec3   axis1 = m_axis1 ;
-    osg::Vec3   axis2 = m_axis2 ;
+
+    PS_ASSERT1( row < 6 ) ;
 
 
-    if( m_body1.valid() ) {
-        axis1 = m_body1->getQuaternion() * m_axis1 ;
-    }
+    dVector3    a, b, c, d ;
+
+    dOPE(a, =, J1a) ;
+    dOPE(b, =, J1l) ;
+    dOPE(c, =, J2a) ;
+    dOPE(d, =, J2l) ;
 
 
-    if( m_body2.valid() ) {
-        axis2 = m_body2->getQuaternion() * m_axis2 ;
-    }
-
-
-    this->setRow( 0, axis1, osg::Vec3(), axis2 * m_ratio, osg::Vec3(), 0.0, -1.0 + 1.0 / m_friction ) ;
-
-
-    this->BypassJoint::update( step_size ) ;
+    dJointSetBypassRow(m_ODE_joint, row, a, b, c, d, rhs, cfm) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -125,64 +111,80 @@ GearboxJoint::update( double step_size )
 /* ======================================================================= */
 /* ....................................................................... */
 void
-GearboxJoint::setAxis1Implementation(const osg::Vec3& axis)
+BypassJoint::getRow(    unsigned int row,
+                        osg::Vec3& J1a,
+                        osg::Vec3& J1l,
+                        osg::Vec3& J2a,
+                        osg::Vec3& J2l,
+                        double& rhs,
+                        double& cfm ) const
 {
-    if( m_body1.valid() ) {
-        m_axis1 = m_body1->getQuaternion().inverse() * axis ;
+
+    PS_ASSERT1( row < 6 ) ;
+
+    dVector3    a, b, c, d ;
+    dReal   k, l ;
+
+
+    dJointGetBypassRow(m_ODE_joint, row, a, b, c, d, &k, &l) ;
+
+    J1a.set( a[0], a[1], a[2] ) ;
+    J1l.set( b[0], b[1], b[2] ) ;
+    J2a.set( c[0], c[1], c[2] ) ;
+    J2l.set( d[0], d[1], d[2] ) ;
+
+    rhs = k ;
+    cfm = l ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+dJointID
+BypassJoint::cloneODEJoint(dWorldID world) const
+{
+    PS_DBG2("osgODE::BypassJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+
+
+    dJointID    j = dJointCreateBypass(world, NULL) ;
+
+
+    if(dJointIsEnabled(m_ODE_joint)) {
+        dJointEnable(j) ;
+
     } else {
-        m_axis1 = axis ;
+        dJointDisable(j) ;
     }
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
 
+    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-void
-GearboxJoint::readAxis1Implementation(osg::Vec3& axis)
-{
-    if( m_body1.valid() ) {
-        axis = m_body1->getQuaternion() * m_axis1 ;
-    } else {
-        axis = m_axis1 ;
+    {
+        dVector3    J1a, J1l, J2a, J2l ;
+        dReal   cfm, rhs ;
+
+
+        for( unsigned int i=0; i<6; i++ ) {
+            dJointGetBypassRow(m_ODE_joint, i, J1a, J1l, J2a, J2l, &rhs, &cfm) ;
+            dJointSetBypassRow(j, i, J1a, J1l, J2a, J2l, rhs, cfm) ;
+        }
     }
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
 
+    {
+        unsigned int    max_m, m, nub ;
 
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-GearboxJoint::setAxis2Implementation(const osg::Vec3& axis)
-{
-    if( m_body2.valid() ) {
-        m_axis2 = m_body2->getQuaternion().inverse() * axis ;
-    } else {
-        m_axis2 = axis ;
+        dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
+        dJointSetBypassInfo(j, max_m, m, nub) ;
     }
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
 
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-GearboxJoint::readAxis2Implementation(osg::Vec3& axis)
-{
-    if( m_body2.valid() ) {
-        axis = m_body2->getQuaternion() * m_axis2 ;
-    } else {
-        axis = m_axis2 ;
-    }
+    return j ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

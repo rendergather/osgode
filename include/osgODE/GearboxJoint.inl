@@ -38,7 +38,7 @@
 inline void
 osgODE::GearboxJoint::setRatio(double ratio)
 {
-    dJointSetGearboxRatio(m_ODE_joint, ratio) ;
+    m_ratio = ratio ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -51,7 +51,7 @@ osgODE::GearboxJoint::setRatio(double ratio)
 inline double
 osgODE::GearboxJoint::getRatio(void) const
 {
-    return dJointGetGearboxRatio(m_ODE_joint) ;
+    return m_ratio ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -64,7 +64,8 @@ osgODE::GearboxJoint::getRatio(void) const
 inline void
 osgODE::GearboxJoint::setFriction(double friction)
 {
-    this->setParam(dParamCFM, -1.0 + 1.0 / friction) ;
+    m_friction = friction ;
+//     this->setParam(dParamCFM, -1.0 + 1.0 / friction) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -77,9 +78,12 @@ osgODE::GearboxJoint::setFriction(double friction)
 inline double
 osgODE::GearboxJoint::getFriction(void) const
 {
-    const double    c = const_cast<GearboxJoint*>(this)->getParam(dParamStopCFM) ;
+//     const double    c = const_cast<GearboxJoint*>(this)->getParam(dParamStopCFM) ;
 
-    return 1 / (c + 1) ;
+//     return 1 / (c + 1) ;
+
+
+    return m_friction ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

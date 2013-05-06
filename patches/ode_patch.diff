@@ -1,3 +1,101 @@
+Index: include/ode/bypass_api.h
+===================================================================
+--- include/ode/bypass_api.h	(revision 0)
++++ include/ode/bypass_api.h	(revision 0)
+@@ -0,0 +1,93 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++
++/**
++ * @brief Create a new joint of the bypass type.
++ * @ingroup joints
++ * @param dJointGroupID set to 0 to allocate the joint normally.
++ * If it is nonzero the joint is allocated in the given joint group.
++ */
++ODE_API dJointID dJointCreateBypass (dWorldID, dJointGroupID);
++
++
++
++
++/**
++ * @brief set the specified row
++ * @param row selects the row (0,1,2,3,4 or 5)
++ * @ingroup joints
++ */
++ODE_API void dJointSetBypassRow(    dJointID,
++                                    unsigned int row,
++                                    const dReal* J1a,
++                                    const dReal* J1l,
++                                    const dReal* J2a,
++                                    const dReal* J2l,
++                                    dReal rhs,
++                                    dReal cfm
++                               );
++
++
++
++
++/**
++ * @brief get the specified row
++ * @param row selects the row (0,1,2,3,4 or 5)
++ * @ingroup joints
++ */
++ODE_API void dJointGetBypassRow(    dJointID,
++                                    unsigned int row,
++                                    dVector3 J1a,
++                                    dVector3 J1l,
++                                    dVector3 J2a,
++                                    dVector3 J2l,
++                                    dReal* rhs,
++                                    dReal* cfm
++                               );
++
++
++
++
++/**
++ * @brief set SureMaxInfo and Info1 for the bypass joint
++ * @ingroup joints
++ */
++ODE_API void dJointSetBypassInfo(   dJointID,
++                                    unsigned int max_m,
++                                    unsigned int m,
++                                    unsigned int nub
++                               );
++
++
++
++
++/**
++ * @brief get SureMaxInfo and Info1 for the bypass joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetBypassInfo(   dJointID,
++                                    unsigned int* max_m,
++                                    unsigned int* m,
++                                    unsigned int* nub
++                               );
 Index: include/ode/lmplus_api.h
 ===================================================================
 --- include/ode/lmplus_api.h	(revision 0)
@@ -326,10 +424,10 @@ Index: include/ode/objects.h
 +/* The objects.h file is way too big. */
 +#include <ode/lmplus_api.h>
 +#include <ode/amplus_api.h>
-+#include <ode/gearbox_api.h>
 +#include <ode/swaybar_api.h>
 +#include <ode/target_api.h>
 +#include <ode/differential_api.h>
++#include <ode/bypass_api.h>
  
  /**
   * @brief set anchor1 for double ball joint
@@ -756,76 +854,6 @@ Index: include/ode/target_api.h
 + * @ingroup joints
 + */
 +ODE_API dReal dJointGetTargetQuaternionTime(dJointID);
-Index: include/ode/gearbox_api.h
-===================================================================
---- include/ode/gearbox_api.h	(revision 0)
-+++ include/ode/gearbox_api.h	(revision 0)
-@@ -0,0 +1,65 @@
-+/**
-+ * @brief Create a new joint of the gearbox type.
-+ * @ingroup joints
-+ * @param dJointGroupID set to 0 to allocate the joint normally.
-+ * If it is nonzero the joint is allocated in the given joint group.
-+ */
-+ODE_API dJointID dJointCreateGearbox (dWorldID, dJointGroupID);
-+
-+/**
-+ * @brief set first axis for the gearbox joint
-+ * @remarks This is the axis around which the first body is allowed to
-+ * revolve and is attached to it.  It is given in global coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxAxis1(dJointID, dReal x, dReal y, dReal z);
-+
-+/**
-+ * @brief get first axis for the gearbox joint
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetGearboxAxis1(dJointID, dVector3 result);
-+
-+/**
-+ * @brief set second axis for the gearbox joint
-+ * @remarks This is the axis around which the second body is allowed to
-+ * revolve and is attached to it.  It is given in global coordinates.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxAxis2(dJointID, dReal x, dReal y, dReal z);
-+
-+/**
-+ * @brief get second axis for the gearbox joint
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetGearboxAxis2(dJointID, dVector3 result);
-+
-+/**
-+ * @brief set gearbox joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxParam(dJointID, int parameter, dReal value);
-+
-+/**
-+ * @brief get gearbox joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetGearboxParam(dJointID, int parameter);
-+
-+/**
-+ * @brief set gearbox ratio
-+ * @remarks
-+ * This is the ratio of the angular velocity of the first body to that
-+ * of the second body along the joint axis.  If the ratio is N then
-+ * the first body is constrained to rotate N times faster than the
-+ * second body.  Set it to 1 / N or reverse the bodies for the reverse
-+ * effect.
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetGearboxRatio( dJointID j, dReal value );
-+
-+/**
-+ * @brief get gearbox ratio
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetGearboxRatio( dJointID j );
 Index: include/ode/Makefile.am
 ===================================================================
 --- include/ode/Makefile.am	(revision 1929)
@@ -836,10 +864,10 @@ Index: include/ode/Makefile.am
  				objects.h \
 +			amplus_api.h \
 +                        lmplus_api.h \
-+                        gearbox_api.h \
 +                        swaybar_api.h \
 +                        target_api.h \
 +                        differential_api.h \
++                        bypass_api.h \
  				rotation.h \
  				collision_space.h \
  				export-dif.h \
@@ -871,10 +899,10 @@ Index: include/ode/common.h
 +  dJointTypeDHinge,
 +  dJointTypeLMPlus,
 +  dJointTypeAMPlus,
-+  dJointTypeGearbox,
 +  dJointTypeSwaybar,
 +  dJointTypeTarget,
-+  dJointTypeDifferential
++  dJointTypeDifferential,
++  dJointTypeBypass
  } dJointType;
  
  
@@ -920,15 +948,7 @@ Index: build/premake4.lua
 ===================================================================
 --- build/premake4.lua	(revision 1929)
 +++ build/premake4.lua	(working copy)
-@@ -22,6 +22,7 @@
-     "dhinge",
-     "feedback",
-     "friction",
-+    "gearbox",
-     "gyroscopic",
-     "heightfield",
-     "hinge",
-@@ -32,6 +33,8 @@
+@@ -32,6 +32,8 @@
      "kinematic",
      "motion",
      "motor",
@@ -1445,240 +1465,6 @@ Index: ode/demo/demo_amplus.cpp
 +  dCloseODE();
 +  return 0;
 +}
-Index: ode/demo/demo_gearbox.cpp
-===================================================================
---- ode/demo/demo_gearbox.cpp	(revision 0)
-+++ ode/demo/demo_gearbox.cpp	(revision 0)
-@@ -0,0 +1,229 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+#include <ode/ode.h>
-+#include <drawstuff/drawstuff.h>
-+#include "texturepath.h"
-+
-+#ifdef dDOUBLE
-+#define dsDrawCylinder dsDrawCylinderD
-+#define dsDrawLine dsDrawLineD
-+#define dsDrawSphere dsDrawSphereD
-+#endif
-+
-+#define L_1 (2 - tan(THETA))
-+#define L_2 (1 / cos(THETA))
-+#define RATIO L_2 / L_1
-+
-+dReal THETA = M_PI / 4;
-+
-+dWorldID world;
-+dSpaceID space;
-+dBodyID body1, body2;
-+dGeomID geom1, geom2;
-+dJointID hinge1, hinge2, gearbox;
-+dJointFeedback feedback;
-+
-+void setup() {
-+    dMatrix3 R;
-+    
-+    dBodySetPosition(body1, 1, 0, 1);
-+    dBodySetPosition(body2, -1, 0, 2);
-+    dRFromZAxis (R, cos(THETA), 0, sin(THETA));
-+    dBodySetRotation (body2, R);
-+
-+    dJointSetHingeAnchor(hinge1, 1, 0, 1);
-+    dJointSetHingeAxis(hinge1, 0, 0, 1);
-+    dJointSetHingeParam(hinge1, dParamVel, 5);
-+    dJointSetHingeParam(hinge1, dParamFMax, 1);
-+
-+    dJointSetHingeAnchor(hinge2, -1, 0, 2);
-+    dJointSetHingeAxis(hinge2, cos(THETA), 0, sin(THETA));
-+    // dBodyAddRelTorque (body1, 0, 0, 1);
-+
-+    dJointSetGearboxAxis1(gearbox, 0, 0, 1);
-+    dJointSetGearboxAxis2(gearbox, cos(THETA), 0, sin(THETA));
-+    dJointSetGearboxRatio(gearbox, RATIO);
-+}
-+
-+void start()
-+{
-+    dMass mass;
-+    
-+    world = dWorldCreate();
-+    dWorldSetGravity (world,0,0,-9.8);
-+
-+    dWorldSetDamping(world, 1e-4, 1e-5);
-+    dWorldSetERP(world, 0.2);
-+
-+    space = dSimpleSpaceCreate (0);
-+    
-+    body1 = dBodyCreate(world);
-+    body2 = dBodyCreate(world);
-+
-+    dBodySetFiniteRotationMode(body1, 1);
-+    dBodySetFiniteRotationMode(body2, 1);
-+
-+    geom1 = dCreateCylinder(space, 0.2, 0.5);
-+    dGeomSetBody(geom1, body1);
-+    dMassSetCylinder(&mass, 100, 3, 0.2, 0.5);
-+    dBodySetMass(body1, &mass);
-+    
-+    geom2 = dCreateCylinder(space, 0.2, 0.5);
-+    dGeomSetBody(geom2, body2);
-+    dMassSetCylinder(&mass, 100, 3, 0.2, 0.5);
-+    dBodySetMass(body2, &mass);
-+
-+    hinge1 = dJointCreateHinge(world, 0);
-+    dJointAttach(hinge1, body1, 0);
-+    
-+    hinge2 = dJointCreateHinge(world, 0);
-+    dJointAttach(hinge2, body2, 0);
-+
-+    gearbox = dJointCreateGearbox(world, 0);
-+    dJointAttach(gearbox, body1, body2);
-+    dJointSetFeedback(gearbox, &feedback);
-+
-+    setup();
-+
-+    // initial camera position
-+    static float xyz[3] = {1.15,-2.78,4.1};
-+    static float hpr[3] = {105,-45.5,0};
-+    dsSetViewpoint (xyz,hpr);
-+
-+    printf ("Press '[' to decrease angle between gears and ']' to increase it.\n");
-+}
-+
-+void stop()
-+{
-+    dSpaceDestroy(space);
-+
-+    dWorldDestroy(world);
-+}
-+
-+void drawGeom(dGeomID g)
-+{
-+    int gclass = dGeomGetClass(g);
-+    const dReal *pos = dGeomGetPosition(g);
-+    const dReal *rot = dGeomGetRotation(g);
-+
-+    switch (gclass) {
-+        case dCylinderClass:
-+        {
-+            dReal length, radius;
-+
-+	    if (g == geom1) {
-+		dsSetColorAlpha(1, 0, 0, 1);
-+	    } else {
-+		dsSetColorAlpha(0, 1, 0, 1);
-+	    }
-+
-+            dsSetTexture (DS_WOOD);
-+            dGeomCylinderGetParams(g, &radius, &length);
-+            dsDrawCylinder(pos, rot, length, radius);
-+            break;
-+        }
-+        
-+        default:
-+	{
-+	    abort();
-+	}
-+    }
-+}
-+
-+void simLoop(int pause)
-+{
-+    if (!pause) {
-+
-+        static dReal t = 0;
-+
-+        const dReal step = 0.005;
-+        const unsigned nsteps = 4;
-+
-+        for (unsigned i=0; i<nsteps; ++i) {
-+            dWorldQuickStep(world, step);
-+        }
-+    }
-+
-+    // printf ("1: %f, %f, %f\n",
-+    // 	    feedback.t1[0], feedback.t1[1], feedback.t1[2]);
-+
-+    // printf ("2: %f, %f, %f\n",
-+    // 	    feedback.t2[0], feedback.t2[1], feedback.t2[2]);
-+
-+    // now we draw everything
-+    unsigned ngeoms = dSpaceGetNumGeoms(space);
-+    for (unsigned i=0; i<ngeoms; ++i) {
-+        dGeomID g = dSpaceGetGeom(space, i);
-+
-+        drawGeom(g);
-+    }
-+
-+    const dReal *p_1 = dGeomGetPosition(geom1);
-+    const dReal *R_1 = dGeomGetRotation(geom1);
-+    const dReal *p_2 = dGeomGetPosition(geom2);
-+    const dReal *R_2 = dGeomGetRotation(geom2);
-+
-+    dsSetColorAlpha(0, 0, 1, 0.5);
-+    dsDrawCylinder(p_1, R_1, 0.05, L_1);
-+    dsDrawCylinder(p_2, R_2, 0.05, L_2);
-+}
-+
-+static void command (int cmd)
-+{
-+  if (cmd == '[') {
-+      if (THETA > 0.1) {
-+          THETA -= 0.1;
-+
-+          setup();
-+          printf ("Gear angle set to %.3f deg.\n", THETA / M_PI * 180);
-+      }
-+  } else if (cmd == ']') {
-+      if (THETA < 0.9) {
-+          THETA += 0.1;
-+
-+          setup();
-+          printf ("Gear angle set to %.3f deg.\n", THETA / M_PI * 180);
-+      }
-+  } 
-+}
-+
-+int main(int argc, char **argv)
-+{
-+    // setup pointers to drawstuff callback functions
-+    dsFunctions fn;
-+    fn.version = DS_VERSION;
-+    fn.start = &start;
-+    fn.step = &simLoop;
-+    fn.command = &command;
-+    fn.stop = stop;
-+    fn.path_to_textures = DRAWSTUFF_TEXTURE_PATH;
-+    
-+    // create world
-+    dInitODE();
-+
-+    // run demo
-+    dsSimulationLoop (argc, argv, 800, 600, &fn);
-+
-+    dCloseODE();
-+    return 0;
-+}
 Index: ode/demo/demo_lmplus.cpp
 ===================================================================
 --- ode/demo/demo_lmplus.cpp	(revision 0)
@@ -2174,15 +1960,7 @@ Index: ode/demo/Makefile.am
 ===================================================================
 --- ode/demo/Makefile.am	(revision 1929)
 +++ ode/demo/Makefile.am	(working copy)
-@@ -24,6 +24,7 @@
-                 demo_cylvssphere \
-                 demo_dball \
-                 demo_dhinge \
-+                demo_gearbox \
-                 demo_feedback \
-                 demo_friction \
-                 demo_gyroscopic \
-@@ -36,6 +37,8 @@
+@@ -36,6 +36,8 @@
                  demo_kinematic \
                  demo_motion \
                  demo_motor \
@@ -2191,15 +1969,7 @@ Index: ode/demo/Makefile.am
                  demo_ode \
                  demo_piston \
                  demo_plane2d \
-@@ -58,6 +61,7 @@
- demo_cylvssphere_SOURCES = demo_cylvssphere.cpp
- demo_dball_SOURCES = demo_dball.cpp
- demo_dhinge_SOURCES = demo_dhinge.cpp
-+demo_gearbox_SOURCES = demo_gearbox.cpp
- demo_feedback_SOURCES = demo_feedback.cpp
- demo_friction_SOURCES = demo_friction.cpp
- demo_gyroscopic_SOURCES = demo_gyroscopic.cpp
-@@ -70,6 +74,8 @@
+@@ -70,6 +72,8 @@
  demo_kinematic_SOURCES = demo_kinematic.cpp
  demo_motion_SOURCES = demo_motion.cpp
  demo_motor_SOURCES = demo_motor.cpp
@@ -2868,6 +2638,67 @@ Index: ode/src/joints/amplus.cpp
 +
 +
 +
+Index: ode/src/joints/bypass.h
+===================================================================
+--- ode/src/joints/bypass.h	(revision 0)
++++ ode/src/joints/bypass.h	(revision 0)
+@@ -0,0 +1,56 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++#ifndef _ODE_JOINT_BYPASS_
++#define _ODE_JOINT_BYPASS_
++
++#include "joint.h"
++
++struct dxJointBypass : public dxJoint
++{
++    dVector3    m_J1a[6] ;
++    dVector3    m_J1l[6] ;
++    dVector3    m_J2a[6] ;
++    dVector3    m_J2l[6] ;
++
++    dReal   m_rhs[6];
++
++    dReal   m_cfm[6] ;
++
++    unsigned int    m_info_max_m ;
++    unsigned int    m_info_m ;
++    unsigned int    m_info_nub ;
++
++    
++    dxJointBypass(dxWorld *w);
++
++    virtual void getSureMaxInfo( SureMaxInfo* info );
++    virtual void getInfo1( Info1* info );
++    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
++    virtual dJointType type() const;
++    virtual size_t size() const;
++
++};
++
++
++#endif
 Index: ode/src/joints/swaybar.cpp
 ===================================================================
 --- ode/src/joints/swaybar.cpp	(revision 0)
@@ -3056,10 +2887,10 @@ Index: ode/src/joints/joints.h
  #include "ball.h"
  #include "dball.h"
  #include "dhinge.h"
-+#include "gearbox.h"
 +#include "swaybar.h"
 +#include "target.h"
 +#include "differential.h"
++#include "bypass.h"
  #include "hinge.h"
  #include "slider.h"
  #include "contact.h"
@@ -3210,53 +3041,6 @@ Index: ode/src/joints/hinge2.cpp
  
      // set parameter for the suspension
      info->cfm[0] = susp_cfm;
-Index: ode/src/joints/pr.cpp
-===================================================================
---- ode/src/joints/pr.cpp	(revision 1929)
-+++ ode/src/joints/pr.cpp	(working copy)
-@@ -180,7 +180,9 @@
- void 
- dxJointPR::getSureMaxInfo( SureMaxInfo* info )
- {
--    info->max_m = 6;
-+  info->max_m = 4 + 
-+    limotR.countSureMaxRows() +
-+    limotP.countSureMaxRows();
- }
- 
- 
-@@ -203,7 +205,8 @@
-     }
- 
-     // powered needs an extra constraint row
--    if ( limotP.limit || limotP.fmax > 0 ) info->m++;
-+    info->m += limotP.countRows();
-+    info->nub += limotP.countUBRows();
- 
- 
-     // see if we're at a joint limit.
-@@ -430,7 +433,7 @@
-     int row = 4;
-     if (  node[1].body || !(flags & dJOINT_REVERSE) )
-     {
--        row += limotP.addLimot ( this, worldFPS, info, 4, axP, 0 );
-+        row += limotP.addLinearLimot ( this, worldFPS, info, axP, 4 );
-     }
-     else
-     {
-@@ -438,10 +441,10 @@
-         rAxP[0] = -axP[0];
-         rAxP[1] = -axP[1];
-         rAxP[2] = -axP[2];
--        row += limotP.addLimot ( this, worldFPS, info, 4, rAxP, 0 );
-+        row += limotP.addLinearLimot ( this, worldFPS, info, rAxP, 4 );
-     }
- 
--    limotR.addLimot ( this, worldFPS, info, row, ax1, 1 );
-+    limotR.addRotationalLimot ( this, worldFPS, info, ax1, row );
- }
- 
- 
 Index: ode/src/joints/lmplus.h
 ===================================================================
 --- ode/src/joints/lmplus.h	(revision 0)
@@ -3346,6 +3130,53 @@ Index: ode/src/joints/lmplus.h
 +
 +#endif
 +
+Index: ode/src/joints/pr.cpp
+===================================================================
+--- ode/src/joints/pr.cpp	(revision 1929)
++++ ode/src/joints/pr.cpp	(working copy)
+@@ -180,7 +180,9 @@
+ void 
+ dxJointPR::getSureMaxInfo( SureMaxInfo* info )
+ {
+-    info->max_m = 6;
++  info->max_m = 4 + 
++    limotR.countSureMaxRows() +
++    limotP.countSureMaxRows();
+ }
+ 
+ 
+@@ -203,7 +205,8 @@
+     }
+ 
+     // powered needs an extra constraint row
+-    if ( limotP.limit || limotP.fmax > 0 ) info->m++;
++    info->m += limotP.countRows();
++    info->nub += limotP.countUBRows();
+ 
+ 
+     // see if we're at a joint limit.
+@@ -430,7 +433,7 @@
+     int row = 4;
+     if (  node[1].body || !(flags & dJOINT_REVERSE) )
+     {
+-        row += limotP.addLimot ( this, worldFPS, info, 4, axP, 0 );
++        row += limotP.addLinearLimot ( this, worldFPS, info, axP, 4 );
+     }
+     else
+     {
+@@ -438,10 +441,10 @@
+         rAxP[0] = -axP[0];
+         rAxP[1] = -axP[1];
+         rAxP[2] = -axP[2];
+-        row += limotP.addLimot ( this, worldFPS, info, 4, rAxP, 0 );
++        row += limotP.addLinearLimot ( this, worldFPS, info, rAxP, 4 );
+     }
+ 
+-    limotR.addLimot ( this, worldFPS, info, row, ax1, 1 );
++    limotR.addRotationalLimot ( this, worldFPS, info, ax1, row );
+ }
+ 
+ 
 Index: ode/src/joints/slider.cpp
 ===================================================================
 --- ode/src/joints/slider.cpp	(revision 1929)
@@ -3888,192 +3719,6 @@ Index: ode/src/joints/target.cpp
 +{
 +    return sizeof( *this );
 +}
-Index: ode/src/joints/gearbox.cpp
-===================================================================
---- ode/src/joints/gearbox.cpp	(revision 0)
-+++ ode/src/joints/gearbox.cpp	(revision 0)
-@@ -0,0 +1,181 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+
-+#include <ode/odeconfig.h>
-+#include "config.h"
-+#include "gearbox.h"
-+#include "joint_internal.h"
-+
-+/*
-+ * Gearbox joint
-+ */
-+
-+dxJointGearbox::dxJointGearbox(dxWorld* w) :
-+    dxJoint(w)
-+{
-+    ratio = 1.0;
-+    flags |= dJOINT_TWOBODIES;
-+
-+    dSetZero(axis1, 3);
-+    dSetZero(axis2, 3);
-+
-+    erp = world->global_erp;
-+    cfm = world->global_cfm;
-+}
-+
-+
-+void
-+dxJointGearbox::getSureMaxInfo( SureMaxInfo* info )
-+{
-+    info->max_m = 1;
-+}
-+
-+
-+void
-+dxJointGearbox::getInfo1( dxJoint::Info1* info )
-+{
-+    info->m = 1;
-+    info->nub = 1;
-+}
-+
-+
-+void
-+dxJointGearbox::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
-+{
-+    (void) worldFPS ;
-+    (void) worldERP ;
-+
-+
-+    dVector3 globalAxis1, globalAxis2;
-+
-+    dBodyVectorToWorld(node[0].body, axis1[0], axis1[1], axis1[2], globalAxis1);
-+    dBodyVectorToWorld(node[1].body, axis2[0], axis2[1], axis2[2], globalAxis2);
-+
-+    info->J1a[0] = globalAxis1[0];
-+    info->J1a[1] = globalAxis1[1];
-+    info->J1a[2] = globalAxis1[2];
-+    
-+    info->J2a[0] = ratio * globalAxis2[0];
-+    info->J2a[1] = ratio * globalAxis2[1];
-+    info->J2a[2] = ratio * globalAxis2[2];
-+
-+
-+    info->cfm[0] = cfm ;
-+}
-+
-+void dJointSetGearboxAxis1( dJointID j, dReal x, dReal y, dReal z )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    dBodyVectorFromWorld(joint->node[0].body, x, y, z, joint->axis1);
-+    dNormalize3(joint->axis1);
-+}
-+
-+void dJointSetGearboxAxis2( dJointID j, dReal x, dReal y, dReal z )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    dBodyVectorFromWorld(joint->node[1].body, x, y, z, joint->axis2);
-+    dNormalize3(joint->axis2);
-+}
-+
-+void dJointGetGearboxAxis1( dJointID j, dVector3 result )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    dBodyVectorToWorld(joint->node[0].body,
-+                       joint->axis1[0], joint->axis1[1], joint->axis1[2],
-+                       result);
-+}
-+
-+void dJointGetGearboxAxis2( dJointID j, dVector3 result )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    dBodyVectorToWorld(joint->node[1].body,
-+                       joint->axis2[0], joint->axis2[1], joint->axis2[2],
-+                       result);
-+}
-+
-+void dJointSetGearboxRatio( dJointID j, dReal value )
-+{
-+    dxJointGearbox* joint = dynamic_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    joint->ratio = value;
-+}
-+
-+dReal dJointGetGearboxRatio( dJointID j )
-+{
-+    dxJointGearbox* joint = dynamic_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    return joint->ratio;
-+}
-+
-+void dJointSetGearboxParam( dJointID j, int parameter, dReal value )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    switch ( parameter ) {
-+        case dParamCFM:
-+            joint->cfm = value;
-+            break;
-+        case dParamERP:
-+            joint->erp = value;
-+            break;
-+    }
-+}
-+
-+
-+dReal dJointGetGearboxParam( dJointID j, int parameter )
-+{
-+    dxJointGearbox* joint = static_cast<dxJointGearbox*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+
-+    switch ( parameter ) {
-+        case dParamCFM:
-+            return joint->cfm;
-+        case dParamERP:
-+            return joint->erp;
-+        default:
-+            return 0;
-+    }
-+}
-+
-+dJointType
-+dxJointGearbox::type() const
-+{
-+    return dJointTypeGearbox;
-+}
-+
-+size_t
-+dxJointGearbox::size() const
-+{
-+    return sizeof( *this );
-+}
 Index: ode/src/joints/joint.h
 ===================================================================
 --- ode/src/joints/joint.h	(revision 1929)
@@ -4247,6 +3892,256 @@ Index: ode/src/joints/differential.h
 +
 +
 +#endif
+Index: ode/src/joints/bypass.cpp
+===================================================================
+--- ode/src/joints/bypass.cpp	(revision 0)
++++ ode/src/joints/bypass.cpp	(revision 0)
+@@ -0,0 +1,245 @@
++/*************************************************************************
++ *                                                                       *
++ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
++ *                                                                       *
++ *                                                                       *
++ * This library is free software; you can redistribute it and/or         *
++ * modify it under the terms of EITHER:                                  *
++ *   (1) The GNU Lesser General Public License as published by the Free  *
++ *       Software Foundation; either version 2.1 of the License, or (at  *
++ *       your option) any later version. The text of the GNU Lesser      *
++ *       General Public License is included with this library in the     *
++ *       file LICENSE.TXT.                                               *
++ *   (2) The BSD-style license that is included with this library in     *
++ *       the file LICENSE-BSD.TXT.                                       *
++ *   (3) The zlib/libpng license that is included with this library in   *
++ *       the file LICENSE-ZLIB.TXT                                       *
++ *                                                                       *
++ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
++ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
++ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
++ *                                                                       *
++ *************************************************************************/
++
++
++#include <ode/odeconfig.h>
++#include "config.h"
++#include "bypass.h"
++#include "joint_internal.h"
++
++/*
++ * Bypass joint
++ */
++
++dxJointBypass::dxJointBypass(dxWorld* w) :
++    dxJoint(w)
++{
++
++    for( int i=0; i<6; i++ ) {
++        dSetZero(m_J1a[i], 3);
++        dSetZero(m_J1l[i], 3);
++        dSetZero(m_J2a[i], 3);
++        dSetZero(m_J2l[i], 3);
++        m_rhs[i] = 0 ;
++        m_cfm[i] = 0 ;
++    }
++
++
++    m_info_max_m = 6 ;
++    m_info_m = 6 ;
++    m_info_nub = 6 ;
++}
++
++
++
++
++
++
++
++
++
++void
++dxJointBypass::getSureMaxInfo( SureMaxInfo* info )
++{
++    info->max_m = m_info_max_m ;
++}
++
++
++
++
++
++
++
++
++
++void
++dxJointBypass::getInfo1( dxJoint::Info1* info )
++{
++    info->m = m_info_m ;
++    info->nub = m_info_nub ;
++}
++
++
++
++
++
++
++
++
++
++void
++dxJointBypass::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
++{
++    (void) worldFPS ;
++    (void) worldERP ;
++
++
++
++    const int   s = info->rowskip ;
++
++
++    for( int i=0; i<m_info_m; i++ ) {
++
++        const int   r = s * i ;
++
++        dCopyVector3( &(info->J1a[r]), m_J1a[i] ) ;
++        dCopyVector3( &(info->J1l[r]), m_J1l[i] ) ;
++        dCopyVector3( &(info->J2a[r]), m_J2a[i] ) ;
++        dCopyVector3( &(info->J2l[r]), m_J2l[i] ) ;
++
++
++        info->c[i] = m_rhs[i] ;
++        info->cfm[i] = m_cfm[i] ;
++    }
++}
++
++
++
++
++
++
++
++
++
++void dJointSetBypassRow(    dJointID j,
++                            unsigned int row,
++                            const dReal* J1a,
++                            const dReal* J1l,
++                            const dReal* J2a,
++                            const dReal* J2l,
++                            dReal rhs,
++                            dReal cfm
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++
++    if( row < 6 ) {
++        dCopyVector3(joint->m_J1a[row], J1a) ;
++        dCopyVector3(joint->m_J1l[row], J1l) ;
++        dCopyVector3(joint->m_J2a[row], J2a) ;
++        dCopyVector3(joint->m_J2l[row], J2l) ;
++        joint->m_rhs[row] = rhs ;
++        joint->m_cfm[row] = cfm ;
++    }
++}
++
++
++
++
++
++
++
++
++
++void dJointGetBypassRow(    dJointID j,
++                            unsigned int row,
++                            dVector3 J1a,
++                            dVector3 J1l,
++                            dVector3 J2a,
++                            dVector3 J2l,
++                            dReal* rhs,
++                            dReal* cfm
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++
++    if( row < 6 ) {
++        dCopyVector3(J1a, joint->m_J1a[row]) ;
++        dCopyVector3(J1l, joint->m_J1l[row]) ;
++        dCopyVector3(J2a, joint->m_J2a[row]) ;
++        dCopyVector3(J2l, joint->m_J2l[row]) ;
++        *rhs = joint->m_rhs[row] ;
++        *cfm = joint->m_cfm[row] ;
++    }
++}
++
++
++
++
++
++
++
++
++
++void dJointSetBypassInfo(   dJointID j,
++                            unsigned int max_m,
++                            unsigned int m,
++                            unsigned int nub
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++
++
++    joint->m_info_max_m = max_m ;
++    joint->m_info_m = m ;
++    joint->m_info_nub = nub ;
++}
++
++
++
++
++
++
++
++
++
++void dJointGetBypassInfo(   dJointID j,
++                            unsigned int* max_m,
++                            unsigned int* m,
++                            unsigned int* nub
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    dAASSERT( max_m );
++    dAASSERT( m );
++    dAASSERT( nub );
++
++
++    *max_m = joint->m_info_max_m ;
++    *m = joint->m_info_m ;
++    *nub = joint->m_info_nub ;
++}
++
++
++
++
++dJointType
++dxJointBypass::type() const
++{
++    return dJointTypeBypass;
++}
++
++
++
++
++size_t
++dxJointBypass::size() const
++{
++    return sizeof( *this );
++}
 Index: ode/src/joints/amplus.h
 ===================================================================
 --- ode/src/joints/amplus.h	(revision 0)
@@ -5504,10 +5399,10 @@ Index: ode/src/joints/Makefile.am
                          ball.h ball.cpp \
                          dball.h dball.cpp \
                          dhinge.h dhinge.cpp \
-+                        gearbox.h gearbox.cpp \
 +                        swaybar.h swaybar.cpp \
 +                        target.h target.cpp \
 +                        differential.h differential.cpp \
++                        bypass.h bypass.cpp \
                          hinge.h hinge.cpp \
                          slider.h slider.cpp \
                          contact.h contact.cpp \
@@ -5634,57 +5529,6 @@ Index: ode/src/joints/target.h
 +    dQuaternion target_rotation ;
 +    
 +    dxJointTarget(dxWorld *w);
-+
-+    virtual void getSureMaxInfo( SureMaxInfo* info );
-+    virtual void getInfo1( Info1* info );
-+    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
-+    virtual dJointType type() const;
-+    virtual size_t size() const;
-+
-+};
-+
-+
-+#endif
-Index: ode/src/joints/gearbox.h
-===================================================================
---- ode/src/joints/gearbox.h	(revision 0)
-+++ ode/src/joints/gearbox.h	(revision 0)
-@@ -0,0 +1,46 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
-+ * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *                                                                       *
-+ * This library is distributed in the hope that it will be useful,       *
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
-+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+#ifndef _ODE_JOINT_GEARBOX_
-+#define _ODE_JOINT_GEARBOX_
-+
-+#include "joint.h"
-+
-+struct dxJointGearbox : public dxJoint
-+{
-+    dVector3 axis1, axis2;
-+    dReal ratio;        // gearbox ratio
-+    dReal erp;          // error reduction
-+    dReal cfm;          // constraint force mix in
-+    
-+    dxJointGearbox(dxWorld *w);
 +
 +    virtual void getSureMaxInfo( SureMaxInfo* info );
 +    virtual void getInfo1( Info1* info );
@@ -5987,12 +5831,6 @@ Index: ode/src/ode.cpp
 +    return createJoint<dxJointAMPlus> (w,group);
 +}
 +
-+dxJoint * dJointCreateGearbox (dWorldID w, dJointGroupID group)
-+{
-+    dAASSERT (w);
-+    return createJoint<dxJointGearbox> (w,group);
-+}
-+
 +dxJoint * dJointCreateSwaybar (dWorldID w, dJointGroupID group)
 +{
 +    dAASSERT (w);
@@ -6009,6 +5847,12 @@ Index: ode/src/ode.cpp
 +{
 +    dAASSERT (w);
 +    return createJoint<dxJointDifferential> (w,group);
++}
++
++dxJoint * dJointCreateBypass (dWorldID w, dJointGroupID group)
++{
++    dAASSERT (w);
++    return createJoint<dxJointBypass> (w,group);
 +}
 +
  static void FinalizeAndDestroyJointInstance(dxJoint *j, bool delete_it)

@@ -1,5 +1,5 @@
 /*!
- * @file GearboxJoint_serializer.cpp
+ * @file BypassJoint.inl
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,21 +14,16 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/GearboxJoint>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_BYPASSJOINT_INL
+#define _OSGODE_BYPASSJOINT_INL
 
 
 
@@ -43,13 +38,32 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( GearboxJoint,
-                         new osgODE::GearboxJoint,
-                         osgODE::GearboxJoint,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::GearboxJoint" )
+inline void
+osgODE::BypassJoint::setInfo(   unsigned int max_m,
+                                unsigned int m,
+                                unsigned int nub )
 {
-    ADD_DOUBLE_SERIALIZER(Ratio, 1.0) ;
-    ADD_DOUBLE_SERIALIZER(Friction, 1.0) ;
+    dJointSetBypassInfo(m_ODE_joint, max_m, m, nub) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::BypassJoint::getInfo(   unsigned int& max_m,
+                                unsigned int& m,
+                                unsigned int& nub ) const
+{
+    dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_BYPASSJOINT_INL */

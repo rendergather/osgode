@@ -15,6 +15,8 @@ SET(TARGET_H
     ${HEADER_PATH}/AerodynamicDevice.inl
     ${HEADER_PATH}/BallJoint
     ${HEADER_PATH}/Box
+    ${HEADER_PATH}/BypassJoint
+    ${HEADER_PATH}/BypassJoint.inl
     ${HEADER_PATH}/Capsule
     ${HEADER_PATH}/Character
     ${HEADER_PATH}/CharacterBase
@@ -132,6 +134,7 @@ SET(TARGET_SRC
     AerodynamicDevice.cpp
     BallJoint.cpp
     Box.cpp
+    BypassJoint.cpp
     Capsule.cpp
     Character.cpp
     CharacterBase.cpp

@@ -1,5 +1,5 @@
 /*!
- * @file GearboxJoint
+ * @file BypassJoint
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,22 +14,22 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_GEARBOXJOINT_HPP
-#define _OSGODE_GEARBOXJOINT_HPP
+#ifndef _OSGODE_BYPASSJOINT_HPP
+#define _OSGODE_BYPASSJOINT_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/BypassJoint>
+#include <osgODE/Joint>
 /* ======================================================================= */
 
 
@@ -49,18 +49,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! A gear box
+//! Transmits the joint equation
 /*!
+ *
  */
-class OSG_EXPORT GearboxJoint: public BypassJoint
+class OSG_EXPORT BypassJoint: public Joint
 {
 /* ======================================================================= */
 public:
-             GearboxJoint(void) ;
-             GearboxJoint(const GearboxJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             BypassJoint(void) ;
+             BypassJoint(const BypassJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~GearboxJoint(void) ;
+    virtual ~BypassJoint(void) ;
 /* ======================================================================= */
 
 
@@ -68,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, GearboxJoint) ;
+    META_Object(osgODE, BypassJoint) ;
 /* ======================================================================= */
 
 
@@ -81,37 +82,45 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     setRatio(double ratio) ;
-    inline double   getRatio(void) const ;
+    //! Set the specified row
+    void setRow(    unsigned int row,
+                    const osg::Vec3& J1a,
+                    const osg::Vec3& J1l,
+                    const osg::Vec3& J2a,
+                    const osg::Vec3& J2l,
+                    double rhs,
+                    double cfm ) ;
 
-    inline void     setFriction(double friction) ;
-    inline double   getFriction(void) const ;
+
+
+    //! Get the specified row
+    void getRow(    unsigned int row,
+                    osg::Vec3& J1a,
+                    osg::Vec3& J1l,
+                    osg::Vec3& J2a,
+                    osg::Vec3& J2l,
+                    double& rhs,
+                    double& cfm ) const ;
+
+
+
+    //! Set SureMaxInfo and Info1
+    inline void setInfo(    unsigned int max_m,
+                            unsigned int m,
+                            unsigned int nub ) ;
+
+    //! Get SureMaxInfo and Info1
+    inline void getInfo(    unsigned int& max_m,
+                            unsigned int& m,
+                            unsigned int& nub ) const ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-public:
-    //! Set the axis relative to the first body
-    virtual void    setAxis1Implementation(const osg::Vec3& axis) ;
-
-    //! Get the axis relative to the first body
-    virtual void    readAxis1Implementation(osg::Vec3& axis) ;
-
-    //! Set the axis relative to the second body
-    virtual void    setAxis2Implementation(const osg::Vec3& axis) ;
-
-    //! Get the axis relative to the first body
-    virtual void    readAxis2Implementation(osg::Vec3& axis) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    update(double step_size) ;
+protected:
+    virtual dJointID    cloneODEJoint(dWorldID world) const ;
 /* ======================================================================= */
 
 
@@ -119,11 +128,6 @@ public:
 
 /* ======================================================================= */
 private:
-    double  m_ratio ;
-    double  m_friction ;
-
-    osg::Vec3   m_axis1 ;
-    osg::Vec3   m_axis2 ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -137,9 +141,9 @@ private:
 
 
 
-#include "GearboxJoint.inl"
+#include "BypassJoint.inl"
 
 
 
 
-#endif /* _OSGODE_GEARBOXJOINT_HPP */
+#endif /* _OSGODE_BYPASSJOINT_HPP */

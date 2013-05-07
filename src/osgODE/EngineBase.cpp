@@ -169,6 +169,9 @@ EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
 void
 EngineBase::feedback( double step_size, double speed_in )
 {
+    (void) step_size ;
+
+
     PS_ASSERT1( m_friction >= 0.0 ) ;
 
 

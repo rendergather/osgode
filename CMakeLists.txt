@@ -180,8 +180,8 @@ ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 
 IF( WIN32 )
-    SET(OSG_INCLUDE "C:\\Program Files\\OpenSceneGraph\\include" CACHE PATH "OSG Headers")
-    SET(ODE_INCLUDE "C:\\Program Files\\OpenDynamicsEngine\\include" CACHE PATH "ODE Headers")
+    SET(OSG_INCLUDE "$ENV{PROGRAMFILES}\\OpenSceneGraph\\include" CACHE PATH "OSG Headers")
+    SET(ODE_INCLUDE "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\include" CACHE PATH "ODE Headers")
 
 ELSE( WIN32 )
 
@@ -215,8 +215,8 @@ MESSAGE(STATUS "ODE include: ${ODE_INCLUDE}")
 
 
 IF( WIN32 )
-    SET(OSG_LIBRARIES "C:\\Program Files\\OpenSceneGraph\\lib" CACHE PATH "OSG Libraries")
-    SET(ODE_LIBRARIES "C:\\Program Files\\OpenDynamicsEngine\\lib" CACHE PATH "ODE Libraries")
+    SET(OSG_LIBRARIES "$ENV{PROGRAMFILES}\\OpenSceneGraph\\lib" CACHE PATH "OSG Libraries")
+    SET(ODE_LIBRARIES "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\lib" CACHE PATH "ODE Libraries")
 
 ELSE( WIN32 )
 
@@ -249,7 +249,7 @@ MESSAGE(STATUS "ODE libraries: ${ODE_LIBRARIES}")
 
 
 IF( WIN32 )
-    SET(OSG_BINARIES "C:\\Program Files\\OpenSceneGraph\\bin" CACHE PATH "OSG binaries")
+    SET(OSG_BINARIES "$ENV{PROGRAMFILES}\\OpenSceneGraph\\bin" CACHE PATH "OSG binaries")
     MESSAGE(STATUS "OSG binaries: ${OSG_BINARIES}")
 ENDIF( WIN32 )
 

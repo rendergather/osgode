@@ -117,7 +117,7 @@ class PureGraphics(Writable.Writable):
 
 
 
-        elif obj.type == 'SPEAKER':
+        elif obj.type == 'SPEAKER' and obj.parent == None:
             from . import Speaker
             speaker = Speaker.Speaker(self.Data, obj)
 

@@ -53,6 +53,7 @@ class Speaker(Writable.Writable):
     Object = None
     CullingActive = None
     AutoPlay = None
+    AutoComputeVelocity = None
     PITCH = None
     GAIN = None
     MAX_DISTANCE = None
@@ -87,6 +88,7 @@ class Speaker(Writable.Writable):
         self.Object = obj
         self.CullingActive = False
         self.AutoPlay = True
+        self.AutoComputeVelocity = False
         self.PITCH = 1.0
         self.GAIN = 1.0
         self.MAX_DISTANCE = 3.40282e+38
@@ -200,6 +202,11 @@ class Speaker(Writable.Writable):
             writer.writeLine("AutoPlay TRUE")
         else:
             writer.writeLine("AutoPlay FALSE")
+
+        if self.AutoComputeVelocity:
+            writer.writeLine("AutoComputeVelocity TRUE")
+        else:
+            writer.writeLine("AutoComputeVelocity FALSE")
 
 
         writer.writeLine("PITCH %f" %self.PITCH)

@@ -341,19 +341,19 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
 
 
 
-    int contacts_num = dCollide(geom1, geom2, m_collision_parameters->getMaxContactNum(), &(m_contacts->geom), sizeof(dContact)) ;
+    int num_contacts = dCollide(geom1, geom2, m_collision_parameters->getMaxContactNum(), &(m_contacts->geom), sizeof(dContact)) ;
 
 
+    PS_DBG3("osgODE::DefaultNearCallback::generateContacts(%p, ...): %p <=> %p num contacts: %d", this, collidable1, collidable2, num_contacts) ;
 
 
-    if(contacts_num > 0) {
-        PS_DBG3("osgODE::DefaultNearCallback::generateContacts(%p, ...): colliding %p <=> %p", this, collidable1, collidable2) ;
+    if(num_contacts > 0) {
 
         m_collision_result.setCollidable1(collidable1) ;
         m_collision_result.setCollidable2(collidable2) ;
 
         dContact*           contact = m_contacts ;
-        dContact*           contact_end = &m_contacts[contacts_num] ;
+        dContact*           contact_end = &m_contacts[num_contacts] ;
 
 
         osg::Vec3   p = osg::Vec3(contact->geom.pos[0], contact->geom.pos[1], contact->geom.pos[2]) ;
@@ -491,7 +491,7 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
     }
 
 
-    return contacts_num ;
+    return num_contacts ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -256,7 +256,7 @@ CharacterBase::_move(double step_size)
 
 
 
-    if( true ) {
+    {
         const double    body_speed      = m_body->getLinearVelocity().length() ;
 
         const osg::Vec3 down_versor     = m_up_versor * -1.0 ;

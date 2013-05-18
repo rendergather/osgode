@@ -55,7 +55,7 @@ The first thing you do you will probably be to build and install ODE.\n
 To make everything work, it should be appropriate we use the same
 configuration options. Here are mine:
 @verbatim
-$ svn checkout http://opende.svn.sourceforge.net/svnroot/opende/trunk ODE -r 1929
+$ svn checkout svn://svn.code.sf.net/p/opende/code/trunk ODE -r 1939
 $ cd ODE
 $ patch -p0 -i /path/to/osgODE-X.Y.Z/patches/ode_patch.diff
 $ ./bootstrap
@@ -76,7 +76,7 @@ Password:
 # exit
 $
 @endverbatim
-The revision 1929 is just an example, check for the right one in
+The revision 1939 is just an example, check for the right one in
 osgODE-X.Y.Z/deps \n
 \n
 \n

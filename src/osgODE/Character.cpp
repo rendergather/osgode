@@ -226,3 +226,70 @@ Character::touch( double max_distance )
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+RigidBody*
+Character::touch( double max_distance, osg::Vec3& position, osg::Vec3& normal )
+{
+
+    World*  world = getWorld() ;
+    PS_ASSERT1( world != NULL ) ;
+
+
+    Space*  space = world->asSpace() ;
+
+    if( ! space ) {
+        return NULL ;
+    }
+
+
+
+
+
+    RigidBody*  body = getBody() ;
+
+
+    if( NULL == body ) {
+        PS_WARN("osgODE::Character::touch(%p): no rigid body", this) ;
+        return NULL ;
+    }
+
+
+
+
+
+
+    const osg::Vec3     from = body->getPosition() ;
+
+    const osg::Vec3     to = from + body->getQuaternion() * getFrontVersor() * max_distance ;
+
+
+
+
+    osg::ref_ptr<NearestNotMeRayCastResult> result = new NearestNotMeRayCastResult( body->asCollidable() ) ;
+
+
+    space->rayCast( from,
+                    to,
+                    result.get(),
+                    8,
+                    false,      // first contact
+                    true,       // back face cull
+                    true        // closest hit
+           ) ;
+
+
+
+    position.set( result->getPosition() ) ;
+    normal.set( result->getNormal() ) ;
+
+
+
+    return result->getCollidable() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

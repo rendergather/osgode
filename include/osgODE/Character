@@ -88,6 +88,15 @@ public:
      * axis specified with CharacterBase::setFrontVersor
      */
     RigidBody*  touch( double distance_max = 1.0 ) ;
+
+
+
+    //! Search for the nearest collidable in the front of the character
+    /*!
+     * Perform a ray cast from the position of the body along the front
+     * axis specified with CharacterBase::setFrontVersor
+     */
+    RigidBody*  touch( double distance_max, osg::Vec3& position, osg::Vec3& normal ) ;
 /* ======================================================================= */
 
 

@@ -35,7 +35,7 @@
 \n
 - <b>[5]</b>
     When the "Checkout" window appears, type
-    "http://opende.svn.sourceforge.net/svnroot/opende/trunk"
+    "svn://svn.code.sf.net/p/opende/code/trunk"
     in the URL box. Then check for the right revision in osgODE-X.Y.Z/deps and
     put it in the "Revision" box. Click OK \n
 

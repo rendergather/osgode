@@ -228,10 +228,11 @@ class Speaker(Writable.Writable):
 
         writer.writeLine("POSITION 0.0 0.0 0.0")
         writer.writeLine("VELOCITY %f %f %f" %(self.VELOCITY[0], self.VELOCITY[1], self.VELOCITY[2]))
-        writer.writeLine("DIRECTION %f %f %f" %(self.DIRECTION[0], self.DIRECTION[1], self.DIRECTION[2]))
+        writer.writeLine("DIRECTION 0.0 0.0 -1.0")
 
 
         writer.writeLine("Position %f %f %f" %(self.POSITION[0], self.POSITION[1], self.POSITION[2]))
+        writer.writeLine("Direction %f %f %f" %(self.DIRECTION[0], self.DIRECTION[1], self.DIRECTION[2]))
 
 
 

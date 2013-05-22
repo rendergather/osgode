@@ -53,6 +53,9 @@ FixedJoint::FixedJoint(void)
 {
     m_ODE_joint = dJointCreateFixed(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
+
     m_functions.SetParam    = dJointSetFixedParam ;
     m_functions.GetParam    = dJointGetFixedParam ;
 }

@@ -54,6 +54,8 @@ AMotorJoint::AMotorJoint(void):
 {
     m_ODE_joint = dJointCreateAMotor(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     setNumAxes(3) ;
 
 
@@ -75,7 +77,6 @@ AMotorJoint::AMotorJoint(void):
 AMotorJoint::AMotorJoint(const AMotorJoint& other, const osg::CopyOp& copyop):
     MotorJoint(other, copyop)
 {
-
     setNumAxes( other.getNumAxes() ) ;
 }
 /* ....................................................................... */

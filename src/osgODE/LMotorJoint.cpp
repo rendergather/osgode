@@ -54,6 +54,8 @@ LMotorJoint::LMotorJoint(void):
 {
     m_ODE_joint = dJointCreateLMotor(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     setNumAxes(3) ;
 
 

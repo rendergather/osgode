@@ -53,6 +53,8 @@ DBallJoint::DBallJoint(void)
 {
     m_ODE_joint = dJointCreateDBall(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAnchor1  = dJointSetDBallAnchor1 ;
     m_functions.GetAnchor1  = dJointGetDBallAnchor1 ;
 

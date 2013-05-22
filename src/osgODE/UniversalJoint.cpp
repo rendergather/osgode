@@ -53,6 +53,8 @@ UniversalJoint::UniversalJoint(void)
 {
     m_ODE_joint = dJointCreateUniversal(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAxis1    = dJointSetUniversalAxis1 ;
     m_functions.GetAxis1    = dJointGetUniversalAxis1 ;
 

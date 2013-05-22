@@ -90,6 +90,8 @@ SET(TARGET_H
     ${HEADER_PATH}/ODECallback.inl
     ${HEADER_PATH}/ODEObject
     ${HEADER_PATH}/ODEObject.inl
+    ${HEADER_PATH}/OneWayFixedJoint
+    ${HEADER_PATH}/OneWayFixedJoint.inl
     ${HEADER_PATH}/OverlappingPair
     ${HEADER_PATH}/OverlappingPair.inl
     ${HEADER_PATH}/PistonJoint
@@ -179,6 +181,7 @@ SET(TARGET_SRC
     Notify_windows.c
     ODECallback.cpp
     ODEObject.cpp
+    OneWayFixedJoint.cpp
     OverlappingPair.cpp
     PistonJoint.cpp
     RigidBody.cpp

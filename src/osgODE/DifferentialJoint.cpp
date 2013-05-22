@@ -45,6 +45,8 @@ DifferentialJoint::DifferentialJoint(void)
 {
     m_ODE_joint = dJointCreateDifferential(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAxis1    = dJointSetDifferentialAxis1 ;
     m_functions.GetAxis1    = dJointGetDifferentialAxis1 ;
 

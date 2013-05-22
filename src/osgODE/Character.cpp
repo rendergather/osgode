@@ -25,7 +25,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 #include <osgODE/Character>
-#include <osgODE/FixedJoint>
+#include <osgODE/OneWayFixedJoint>
 #include <osgODE/CommonRayCastResults>
 #include <osgODE/Collidable>
 #include <osgODE/Space>
@@ -101,7 +101,7 @@ Character::attach(  RigidBody*  body,
     PS_DBG("osgODE::Character::attach(%p, body=%p)", this, body) ;
 
 
-    Joint*  joint = new FixedJoint() ;
+    OneWayFixedJoint*   joint = new OneWayFixedJoint() ;
 
 
     joint->setBody1( this->CharacterBase::getBody() ) ;
@@ -110,6 +110,8 @@ Character::attach(  RigidBody*  body,
 
     joint->setParam( dParamERP, erp ) ;
     joint->setParam( dParamCFM, cfm ) ;
+
+    joint->setMatrix( body->getMatrix() * osg::Matrix::inverse( getBody()->getMatrix() ) ) ;
 
 
 

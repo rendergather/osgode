@@ -55,6 +55,8 @@ SwaybarJoint::SwaybarJoint(void):
 {
     m_ODE_joint = dJointCreateSwaybar(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAxis1    = dJointSetSwaybarAxis ;
     m_functions.GetAxis1    = dJointGetSwaybarAxis ;
 

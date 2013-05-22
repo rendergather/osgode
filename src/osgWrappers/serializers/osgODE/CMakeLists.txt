@@ -47,6 +47,7 @@ SET(TARGET_SRC
     NearCallback_serializer.cpp
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
+    OneWayFixedJoint_serializer.cpp
     PistonJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RigidBody_serializer.cpp

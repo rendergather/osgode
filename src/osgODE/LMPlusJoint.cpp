@@ -62,6 +62,8 @@ LMPlusJoint::LMPlusJoint(void):
 {
     m_ODE_joint = dJointCreateLMPlus(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
 
     m_functions.SetParam = dJointSetLMPlusParam ;
     m_functions.GetParam = dJointGetLMPlusParam ;

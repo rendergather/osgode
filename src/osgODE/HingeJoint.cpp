@@ -53,6 +53,8 @@ HingeJoint::HingeJoint(void)
 {
     m_ODE_joint = dJointCreateHinge(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAxis1    = dJointSetHingeAxis ;
     m_functions.GetAxis1    = dJointGetHingeAxis ;
 

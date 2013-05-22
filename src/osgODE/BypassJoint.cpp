@@ -28,6 +28,68 @@
 #include <osgODE/StaticWorld>
 #include <osgODE/World>
 #include <osgODE/Notify>
+
+#include <iostream>
+#include <osg/io_utils>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+namespace {
+
+static void
+dJointSetBypassParam( dJointID j, int param, dReal value )
+{
+    PS_ASSERT1( j ) ;
+
+    osgODE::BypassJoint*    joint = static_cast<osgODE::Joint*>( dJointGetData(j) )->asBypassJoint() ;
+    PS_ASSERT1( joint ) ;
+
+
+    switch( param )
+    {
+        case dParamERP1: joint->setERP( 0, value ) ; break ;
+        case dParamERP2: joint->setERP( 1, value ) ; break ;
+        case dParamERP3: joint->setERP( 2, value ) ; break ;
+
+        case dParamCFM1: joint->setCFM( 0, value ) ; break ;
+        case dParamCFM2: joint->setCFM( 1, value ) ; break ;
+        case dParamCFM3: joint->setCFM( 2, value ) ; break ;
+
+        default:    break ;
+    }
+}
+
+
+
+static dReal
+dJointGetBypassParam( dJointID j, int param )
+{
+    PS_ASSERT1( j ) ;
+
+    osgODE::BypassJoint*    joint = static_cast<osgODE::Joint*>( dJointGetData(j) )->asBypassJoint() ;
+    PS_ASSERT1( joint ) ;
+
+
+    switch( param )
+    {
+        case dParamERP1: return joint->getERP( 0 ) ;
+        case dParamERP2: return joint->getERP( 1 ) ;
+        case dParamERP3: return joint->getERP( 2 ) ;
+
+        case dParamCFM1: return joint->getCFM( 0 ) ;
+        case dParamCFM2: return joint->getCFM( 1 ) ;
+        case dParamCFM3: return joint->getCFM( 2 ) ;
+
+        default:    return 0.0 ;
+    }
+}
+
+} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -43,7 +105,24 @@ using namespace osgODE ;
 /* ....................................................................... */
 BypassJoint::BypassJoint(void)
 {
+
     m_ODE_joint = dJointCreateBypass(StaticWorld::instance()->getODEWorld(), NULL) ;
+
+    dJointSetData( m_ODE_joint, this ) ;
+
+
+
+    m_functions.SetParam    = dJointSetBypassParam ;
+    m_functions.GetParam    = dJointGetBypassParam ;
+
+
+    setParam( dParamERP1, 1.0 ) ;
+    setParam( dParamERP2, 1.0 ) ;
+    setParam( dParamERP3, 1.0 ) ;
+
+    setParam( dParamCFM1, 0.0 ) ;
+    setParam( dParamCFM2, 0.0 ) ;
+    setParam( dParamCFM3, 0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -70,6 +149,116 @@ BypassJoint::~BypassJoint(void)
     if(m_ODE_joint) {
         dJointDestroy(m_ODE_joint) ;
     }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setRelativeRotation( double step_size, const osg::Quat& qrel, int& row, double erp, double cfm, BodyMask mask )
+{
+    if(  !  ( m_body1.valid() || m_body2.valid() )  ) {
+        return ;
+    }
+
+
+    osg::Quat   q1 = m_body1.valid() ? m_body1->getQuaternion()                 : osg::Quat(0,0,0,1) ;
+
+    osg::Quat   q2 = m_body2.valid() ? m_body2->getQuaternion() * q1.inverse()  : osg::Quat(0,0,0,1) ;
+
+    osg::Quat   qe = qrel.inverse() * q2 ;
+
+    osg::Vec3   c = osg::Vec3( qe.x(), qe.y(), qe.z() ) * 2.0 * erp / step_size ;
+
+    c = q1 * c ;
+
+    if( qe.w() < 0.0 ) {
+        c *= -1.0 ;
+    }
+
+
+    osg::Vec3   J1ax, J1ay, J1az ;
+    osg::Vec3   J2ax, J2ay, J2az ;
+
+    if( m_body1.valid() && (mask & CONSTRAIN_BODY1) ) {
+        J1ax = osg::X_AXIS ;
+        J1ay = osg::Y_AXIS ;
+        J1az = osg::Z_AXIS ;
+    }
+
+    if( m_body2.valid() && (mask & CONSTRAIN_BODY2) ) {
+        J2ax = -osg::X_AXIS ;
+        J2ay = -osg::Y_AXIS ;
+        J2az = -osg::Z_AXIS ;
+    }
+
+
+    this->setRow( row++, J1ax, osg::Vec3(), J2ax, osg::Vec3(), c.x(), cfm ) ;
+    this->setRow( row++, J1ay, osg::Vec3(), J2ay, osg::Vec3(), c.y(), cfm ) ;
+    this->setRow( row++, J1az, osg::Vec3(), J2az, osg::Vec3(), c.z(), cfm ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setRelativePosition( double step_size, const osg::Vec3& prel, int& row, double erp, double cfm, BodyMask mask )
+{
+    if(  !  ( m_body1.valid() || m_body2.valid() )  ) {
+        return ;
+    }
+
+
+    if( mask == CONSTRAIN_NONE ) {
+        return ;
+    }
+
+
+
+
+
+    osg::Vec3   p1 = m_body1.valid() ? prel * m_body1->getMatrix() : prel ;
+    osg::Vec3   p2 = m_body2.valid() ? m_body2->getPosition() : osg::Vec3() ;
+
+
+
+    osg::Vec3   c = (p2 - p1) * erp / step_size ;
+
+//     double      c = dir.normalize() * erp / step_size ;
+
+
+    if( c.length() == 0.0 ) {
+        return ;
+    }
+
+
+    osg::Vec3   J1lx, J1ly, J1lz ;
+    osg::Vec3   J2lx, J2ly, J2lz ;
+
+    if( m_body1.valid() && (mask & CONSTRAIN_BODY1) ) {
+        J1lx = osg::X_AXIS ;
+        J1ly = osg::Y_AXIS ;
+        J1lz = osg::Z_AXIS ;
+    }
+
+    if( m_body2.valid() && (mask & CONSTRAIN_BODY2) ) {
+        J2lx = -osg::X_AXIS ;
+        J2ly = -osg::Y_AXIS ;
+        J2lz = -osg::Z_AXIS ;
+    }
+
+
+    this->setRow( row++, osg::Vec3(), J1lx, osg::Vec3(), J2lx, c.x(), cfm ) ;
+    this->setRow( row++, osg::Vec3(), J1ly, osg::Vec3(), J2ly, c.y(), cfm ) ;
+    this->setRow( row++, osg::Vec3(), J1lz, osg::Vec3(), J2lz, c.z(), cfm ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -135,6 +324,19 @@ BypassJoint::getRow(    unsigned int row,
 
     rhs = k ;
     cfm = l ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+BypassJoint*
+BypassJoint::asBypassJoint(void)
+{
+    return this ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

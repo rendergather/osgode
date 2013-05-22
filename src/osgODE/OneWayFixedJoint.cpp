@@ -1,9 +1,9 @@
 /*!
- * @file PistonJoint.cpp
+ * @file OneWayFixedJoint.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,28 +14,20 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/PistonJoint>
+#include <osgODE/OneWayFixedJoint>
 #include <osgODE/StaticWorld>
 #include <osgODE/World>
 #include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -49,22 +41,9 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-PistonJoint::PistonJoint(void)
+OneWayFixedJoint::OneWayFixedJoint(void)
 {
-    m_ODE_joint = dJointCreatePiston(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    dJointSetData( m_ODE_joint, this ) ;
-
-    m_functions.SetAxis1    = dJointSetPistonAxis ;
-    m_functions.GetAxis1    = dJointGetPistonAxis ;
-
-    m_functions.SetAnchor1  = dJointSetPistonAnchor ;
-    m_functions.GetAnchor1  = dJointGetPistonAnchor ;
-
-    m_functions.GetAnchor2  = dJointGetPistonAnchor2 ;
-
-    m_functions.SetParam    = dJointSetPistonParam ;
-    m_functions.GetParam    = dJointGetPistonParam ;
+    this->setInfo(6, 6, 6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,8 +53,11 @@ PistonJoint::PistonJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-PistonJoint::PistonJoint(const PistonJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+OneWayFixedJoint::OneWayFixedJoint(const OneWayFixedJoint& other, const osg::CopyOp& copyop):
+    BypassJoint ( other, copyop ),
+    m_matrix    ( other.m_matrix ),
+    m_quat      ( other.m_quat ),
+    m_pos       ( other.m_pos )
 {
 }
 /* ....................................................................... */
@@ -86,11 +68,8 @@ PistonJoint::PistonJoint(const PistonJoint& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-PistonJoint::~PistonJoint(void)
+OneWayFixedJoint::~OneWayFixedJoint(void)
 {
-    if(m_ODE_joint) {
-        dJointDestroy(m_ODE_joint) ;
-    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -100,40 +79,38 @@ PistonJoint::~PistonJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-dJointID
-PistonJoint::cloneODEJoint(dWorldID world) const
+void
+OneWayFixedJoint::update( double step_size )
 {
-    PS_DBG2("osgODE::PistonJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    int row = 0 ;
 
-    dJointID    j = dJointCreatePiston(world, NULL) ;
 
-    if(dJointIsEnabled(m_ODE_joint)) {
-        dJointEnable(j) ;
-    } else {
-        dJointDisable(j) ;
-    }
-
-    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
+    this->BypassJoint::setRelativeRotation( step_size,
+                                            m_quat,
+                                            row,
+                                            m_erp[0],
+                                            m_cfm[0],
+                                            CONSTRAIN_BODY2
+                       ) ;
 
 
 
-    {
-        dVector3    v ;
-        dJointGetPistonAxis(m_ODE_joint, v) ;
-        dJointSetPistonAxis(j, v[0], v[1], v[2]) ;
-    }
-
-
-    {
-        dVector3    a ;
-        dJointGetPistonAnchor(m_ODE_joint, a) ;
-        dJointSetPistonAnchor(j, a[0], a[1], a[2]) ;
-    }
+    this->BypassJoint::setRelativePosition( step_size,
+                                            m_pos,
+                                            row,
+                                            m_erp[0],
+                                            m_cfm[0],
+                                            CONSTRAIN_BODY2
+                       ) ;
 
 
 
-    return j ;
+    this->BypassJoint::setInfo( row, row, row ) ;
+
+
+
+
+    this->BypassJoint::update( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

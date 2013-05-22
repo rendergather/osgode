@@ -53,6 +53,8 @@ DHingeJoint::DHingeJoint(void)
 {
     m_ODE_joint = dJointCreateDHinge(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAnchor1  = dJointSetDHingeAnchor1 ;
     m_functions.GetAnchor1  = dJointGetDHingeAnchor1 ;
 

@@ -82,6 +82,18 @@ public:
 
 /* ======================================================================= */
 public:
+    inline void     setERP( int i, double v ) ;
+    inline double   getERP( int i ) ;
+
+    inline void     setCFM( int i, double v ) ;
+    inline double   getCFM( int i ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     //! Set the specified row
     void setRow(    unsigned int row,
                     const osg::Vec3& J1a,
@@ -119,8 +131,58 @@ public:
 
 
 /* ======================================================================= */
+public:
+    virtual BypassJoint*    asBypassJoint(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    typedef enum {
+        CONSTRAIN_NONE  = 0,
+        CONSTRAIN_BODY1 = 1,
+        CONSTRAIN_BODY2 = 2,
+        CONSTRAIN_ALL   = CONSTRAIN_BODY1 | CONSTRAIN_BODY2
+    } BodyMask ;
+
+
+    //! Set the relative quaternion between the bodies
+    void    setRelativeRotation(    double              step_size,
+                                    const osg::Quat&    qrel,
+                                    int&                row,
+                                    double              erp = 1.0,
+                                    double              cfm = 0.0,
+                                    BodyMask            mask = CONSTRAIN_ALL
+                               ) ;
+
+
+    //! Set the distance between the bodies
+    void    setRelativePosition(    double              step_size,
+                                    const osg::Vec3&    prel,
+                                    int&                row,
+                                    double              erp = 1.0,
+                                    double              cfm = 0.0,
+                                    BodyMask            mask = CONSTRAIN_ALL
+                               ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
 protected:
     virtual dJointID    cloneODEJoint(dWorldID world) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    double      m_erp[3] ;
+    double      m_cfm[3] ;
 /* ======================================================================= */
 
 

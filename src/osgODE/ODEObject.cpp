@@ -261,6 +261,7 @@ ODEObject::callPostUpdateCallbackInternal(void)
 /* ....................................................................... */
 #define AS_NULL( NAME ) NAME* ODEObject::as##NAME(void) { return NULL ; }
 
+AS_NULL( BypassJoint ) ;
 AS_NULL( Collidable) ;
 AS_NULL( Joint ) ;
 AS_NULL( ODEObjectContainer ) ;

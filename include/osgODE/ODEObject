@@ -47,6 +47,7 @@ namespace osgODE
 
 
 /* ======================================================================= */
+class   BypassJoint ;
 class   Collidable ;
 class   Joint ;
 class   ODEObjectContainer ;
@@ -100,6 +101,9 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Quick dynamic cast
+    virtual BypassJoint*            asBypassJoint(void) ;
+
     //! Quick dynamic cast
     virtual Collidable*             asCollidable(void) ;
 

@@ -55,8 +55,6 @@ GearboxJoint::GearboxJoint(void):
     m_axis1     ( osg::Z_AXIS ),
     m_axis2     ( osg::Z_AXIS )
 {
-
-
     this->setInfo(1, 1, 1) ;
 }
 /* ....................................................................... */

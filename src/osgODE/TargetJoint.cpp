@@ -51,7 +51,10 @@ using namespace osgODE ;
 /* ....................................................................... */
 TargetJoint::TargetJoint(void)
 {
+
     m_ODE_joint = dJointCreateTarget(StaticWorld::instance()->getODEWorld(), NULL) ;
+
+    dJointSetData( m_ODE_joint, this ) ;
 
     m_functions.SetParam    = dJointSetTargetParam ;
     m_functions.GetParam    = dJointGetTargetParam ;

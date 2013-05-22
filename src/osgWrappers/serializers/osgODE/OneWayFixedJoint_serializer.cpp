@@ -1,9 +1,9 @@
 /*!
- * @file BallJoint.cpp
+ * @file OneWayFixedJoint_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,10 +24,9 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/BallJoint>
-#include <osgODE/StaticWorld>
-#include <osgODE/World>
-#include <osgODE/Notify>
+#include <osgODE/OneWayFixedJoint>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -42,87 +41,14 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-BallJoint::BallJoint(void)
+REGISTER_OBJECT_WRAPPER( OneWayFixedJoint,
+                         new osgODE::OneWayFixedJoint,
+                         osgODE::OneWayFixedJoint,
+                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::OneWayFixedJoint" )
 {
-    m_ODE_joint = dJointCreateBall(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    dJointSetData( m_ODE_joint, this ) ;
-
-    m_functions.SetAnchor1  = dJointSetBallAnchor ;
-    m_functions.GetAnchor1  = dJointGetBallAnchor ;
-
-    m_functions.GetAnchor2  = dJointGetBallAnchor2 ;
-
-    m_functions.SetParam    = dJointSetBallParam ;
-    m_functions.GetParam    = dJointGetBallParam ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-BallJoint::BallJoint(const BallJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-BallJoint::~BallJoint(void)
-{
-    if(m_ODE_joint) {
-        dJointDestroy(m_ODE_joint) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-dJointID
-BallJoint::cloneODEJoint(dWorldID world) const
-{
-    PS_DBG2("osgODE::BallJoint::cloneODEJoint(%p, world=%p)", this, world) ;
-
-
-    dJointID    j = dJointCreateBall(world, NULL) ;
-
-
-    if(dJointIsEnabled(m_ODE_joint)) {
-        dJointEnable(j) ;
-
-    } else {
-        dJointDisable(j) ;
-    }
-
-
-    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
-
-    dVector3    anchor ;
-    dJointGetBallAnchor(m_ODE_joint, anchor) ;
-    dJointSetBallAnchor(j, anchor[0], anchor[1], anchor[2]) ;
-
-
-    return j ;
+    ADD_MATRIX_SERIALIZER( Matrix, osg::Matrix::identity() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -53,6 +53,8 @@ SliderJoint::SliderJoint(void)
 {
     m_ODE_joint = dJointCreateSlider(StaticWorld::instance()->getODEWorld(), NULL) ;
 
+    dJointSetData( m_ODE_joint, this ) ;
+
     m_functions.SetAxis1    = dJointSetSliderAxis ;
     m_functions.GetAxis1    = dJointGetSliderAxis ;
 

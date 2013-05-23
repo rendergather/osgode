@@ -93,20 +93,20 @@ static bool readGravity(osgDB::InputStream& is, osgODE::World& world)
 
 static bool checkWorldStepFunction(const osgODE::World& world)
 {
-    osgODE::World::WorldStepPrototype   ws = world.getWorldStepFunction() ;
-    return ws != dWorldStep ;
+    (void) world ;
+
+    return true ;
 }
 
 static bool writeWorldStepFunction(osgDB::OutputStream& os, const osgODE::World& world)
 {
     osgODE::World::WorldStepPrototype   ws = world.getWorldStepFunction() ;
 
-    if( ws == dWorldStep ) {
-        return false ;
-    }
-
     if( ws == dWorldQuickStep ) {
         os << "dWorldQuickStep" << std::endl ;
+
+    } else {
+        os << "dWorldStep" << std::endl ;
     }
 
     return true ;
@@ -117,10 +117,11 @@ static bool readWorldStepFunction(osgDB::InputStream& is, osgODE::World& world)
     std::string ws ;
     is >> ws ;
 
-    if( ws == "dWorldStep" ) {
-        world.setWorldStepFunction(dWorldStep) ;
-    } else if( ws == "dWorldQuickStep" ) {
+    if( ws == "dWorldQuickStep" ) {
         world.setWorldStepFunction(dWorldQuickStep) ;
+
+    } else {
+        world.setWorldStepFunction(dWorldStep) ;
     }
 
     return true ;

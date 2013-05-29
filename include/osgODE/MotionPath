@@ -50,7 +50,7 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! This class works as an update callback attached to a TargetJoint
+//! This class works as an update callback attached to a body
 /*!
  */
 class OSG_EXPORT MotionPath: public ODECallback
@@ -111,9 +111,9 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Move the target joint
+    //! Move the body
     /*!
-     * SIGSEGV (or assert) when obj is not a TargetJoint
+     * SIGSEGV (or assert) when obj is not a RigidBody
      */
     virtual void        operator()(ODEObject* object) ;
 /* ======================================================================= */

@@ -320,6 +320,15 @@ class Joint(ODEObject.ODEObject):
     def selectJointTypeBy6DOF(self, constraint):
         super(Joint, self).buildGraph()
 
+
+
+
+        #
+        # need amplus + lmplus here
+        #
+
+
+
         lx = constraint.use_limit_x
         ly = constraint.use_limit_y
         lz = constraint.use_limit_z

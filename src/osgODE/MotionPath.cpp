@@ -25,7 +25,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 #include <osgODE/MotionPath>
-#include <osgODE/TargetJoint>
+#include <osgODE/RigidBody>
 #include <osgODE/World>
 #include <osgODE/Notify>
 /* ....................................................................... */
@@ -92,9 +92,9 @@ MotionPath::~MotionPath(void)
 void
 MotionPath::operator()(ODEObject* object)
 {
-    TargetJoint*    joint = object->asTargetJoint() ;
+    RigidBody*  body = object->asRigidBody() ;
 
-    PS_ASSERT1( joint != NULL ) ;
+    PS_ASSERT1( body != NULL ) ;
 
 
     switch( m_status )
@@ -105,18 +105,22 @@ MotionPath::operator()(ODEObject* object)
 
 
         case PLAY:
+        {
 
-            m_time = osg::maximum(m_time, 0.0) + joint->getWorld()->getCurrentStepSize() ;
+            m_time = osg::maximum(m_time, 0.0) + body->getWorld()->getCurrentStepSize() ;
 
-            if( m_position ) {
-                joint->setPosition( m_position->interpolate( m_time ) ) ;
-                joint->setPositionTime( 0.0 ) ;
-            }
+            osg::Matrix m ;
 
             if( m_quaternion ) {
-                joint->setQuaternion( m_quaternion->interpolate( m_time ) ) ;
-                joint->setQuaternionTime( 0.0 ) ;
+                m.makeRotate( m_quaternion->interpolate( m_time ) ) ;
             }
+
+            if( m_position ) {
+                m = m * osg::Matrix::translate( m_position->interpolate( m_time ) ) ;
+            }
+
+            body->setMatrix( m ) ;
+        }
         break ;
 
 

@@ -58,7 +58,6 @@ SET(TARGET_SRC
     Sphere_serializer.cpp
     SuspensionJoint_serializer.cpp
     SwaybarJoint_serializer.cpp
-    TargetJoint_serializer.cpp
     Transformable_serializer.cpp
     TriMesh_serializer.cpp
     UniversalJoint_serializer.cpp

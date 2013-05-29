@@ -232,8 +232,6 @@ BypassJoint::setRelativePosition( double step_size, const osg::Vec3& prel, int& 
 
     osg::Vec3   c = (p2 - p1) * erp / step_size ;
 
-//     double      c = dir.normalize() * erp / step_size ;
-
 
     if( c.length() == 0.0 ) {
         return ;

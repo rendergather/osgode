@@ -152,6 +152,18 @@ class RigidBody(ODEObject.ODEObject):
 
 
 
+        if self.Object.animation_data and self.Object.animation_data.action:
+
+            from . import MotionPath
+
+            mp = MotionPath.MotionPath( self.Data, self.Object )
+
+            self.UpdateCallback = mp
+
+            mp.buildGraph()
+
+
+
         return self.ODETransform.buildGraph()
 ############################################################################
 

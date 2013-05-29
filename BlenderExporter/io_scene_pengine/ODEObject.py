@@ -49,6 +49,8 @@ class ODEObject(Writable.Writable):
 ############################################################################
     Object = None
     ID = 0
+
+    UpdateCallback = None
 ############################################################################
 
 
@@ -65,6 +67,7 @@ class ODEObject(Writable.Writable):
 
         self.Object = obj
         self.ID = 0
+        self.UpdateCallback = None
 ############################################################################
 
 
@@ -108,6 +111,12 @@ class ODEObject(Writable.Writable):
 
 
         writer.writeLine("ID %s" %self.ID)
+
+
+        if self.UpdateCallback:
+                writer.moveIn("UpdateCallback TRUE")
+                self.UpdateCallback.writeToStream(writer)
+                writer.moveOut("UpdateCallback TRUE")
 
 
         return True

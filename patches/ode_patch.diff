@@ -1230,7 +1230,7 @@ Index: include/ode/objects.h
 ===================================================================
 --- include/ode/objects.h	(revision 1939)
 +++ include/ode/objects.h	(working copy)
-@@ -3008,6 +3008,13 @@
+@@ -3008,6 +3008,12 @@
   */
  ODE_API dReal dJointGetFixedParam (dJointID, int parameter);
  
@@ -1238,13 +1238,12 @@ Index: include/ode/objects.h
 +#include <ode/lmplus_api.h>
 +#include <ode/amplus_api.h>
 +#include <ode/swaybar_api.h>
-+#include <ode/target_api.h>
 +#include <ode/differential_api.h>
 +#include <ode/bypass_api.h>
  
  /**
   * @brief set anchor1 for double ball joint
-@@ -3107,7 +3114,6 @@
+@@ -3107,7 +3113,6 @@
  
  
  
@@ -1583,102 +1582,17 @@ Index: include/ode/swaybar_api.h
 + * @ingroup joints
 + */
 +ODE_API dReal dJointGetSwaybarPosition (dJointID);
-Index: include/ode/target_api.h
-===================================================================
---- include/ode/target_api.h	(revision 0)
-+++ include/ode/target_api.h	(revision 0)
-@@ -0,0 +1,79 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
-+ *                                                                       *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *   (3) The zlib/libpng license that is included with this library in   *
-+ *       the file LICENSE-ZLIB.TXT                                       *
-+ *                                                                       *
-+ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
-+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
-+ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+
-+/**
-+ * @brief Create a new joint of the target type.
-+ * @ingroup joints
-+ * @param dJointGroupID set to 0 to allocate the joint normally.
-+ * If it is nonzero the joint is allocated in the given joint group.
-+ */
-+ODE_API dJointID dJointCreateTarget (dWorldID, dJointGroupID);
-+
-+/**
-+ * @brief set target joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetParam(dJointID, int parameter, dReal value);
-+
-+/**
-+ * @brief get target joint parameter
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetParam(dJointID, int parameter);
-+
-+/**
-+ * @brief set target position
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetPosition(dJointID, dReal time, dReal x, dReal y, dReal z);
-+
-+/**
-+ * @brief get target position
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetTargetPosition(dJointID, dVector3 result);
-+
-+/**
-+ * @brief get target position time
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetPositionTime(dJointID);
-+
-+/**
-+ * @brief set target quaternion
-+ * @ingroup joints
-+ */
-+ODE_API void dJointSetTargetQuaternion(dJointID, dReal time, const dReal* quaternion);
-+
-+/**
-+ * @brief get target quaternion
-+ * @ingroup joints
-+ */
-+ODE_API void dJointGetTargetQuaternion(dJointID, dQuaternion result);
-+
-+/**
-+ * @brief get target quaternion time
-+ * @ingroup joints
-+ */
-+ODE_API dReal dJointGetTargetQuaternionTime(dJointID);
 Index: include/ode/Makefile.am
 ===================================================================
 --- include/ode/Makefile.am	(revision 1939)
 +++ include/ode/Makefile.am	(working copy)
-@@ -15,6 +15,12 @@
+@@ -15,6 +15,11 @@
  				collision.h \
  				error.h \
  				objects.h \
 +			amplus_api.h \
 +                        lmplus_api.h \
 +                        swaybar_api.h \
-+                        target_api.h \
 +                        differential_api.h \
 +                        bypass_api.h \
  				rotation.h \
@@ -1704,7 +1618,7 @@ Index: include/ode/common.h
  #define dFMod(a,b) (fmod((a),(b)))
  #define dFloor(x) floor(x)
  #define dCeil(x) ceil(x)
-@@ -211,7 +213,13 @@
+@@ -211,7 +213,12 @@
    dJointTypePU,
    dJointTypePiston,
    dJointTypeDBall,
@@ -1713,13 +1627,12 @@ Index: include/ode/common.h
 +  dJointTypeLMPlus,
 +  dJointTypeAMPlus,
 +  dJointTypeSwaybar,
-+  dJointTypeTarget,
 +  dJointTypeDifferential,
 +  dJointTypeBypass
  } dJointType;
  
  
-@@ -253,6 +261,8 @@
+@@ -253,6 +260,8 @@
    dParamLoStop = start, \
    dParamHiStop, \
    dParamVel, \
@@ -1728,7 +1641,7 @@ Index: include/ode/common.h
    dParamFMax, \
    dParamFudgeFactor, \
    dParamBounce, \
-@@ -278,6 +288,8 @@
+@@ -278,6 +287,8 @@
    dParamLoStop ## x = start, \
    dParamHiStop ## x, \
    dParamVel ## x, \
@@ -1737,7 +1650,7 @@ Index: include/ode/common.h
    dParamFMax ## x, \
    dParamFudgeFactor ## x, \
    dParamBounce ## x, \
-@@ -310,7 +322,19 @@
+@@ -310,7 +321,19 @@
    dAMotorEuler = 1
  };
  
@@ -3696,18 +3609,17 @@ Index: ode/src/joints/joints.h
 ===================================================================
 --- ode/src/joints/joints.h	(revision 1939)
 +++ ode/src/joints/joints.h	(working copy)
-@@ -30,6 +30,10 @@
+@@ -30,6 +30,9 @@
  #include "ball.h"
  #include "dball.h"
  #include "dhinge.h"
 +#include "swaybar.h"
-+#include "target.h"
 +#include "differential.h"
 +#include "bypass.h"
  #include "hinge.h"
  #include "slider.h"
  #include "contact.h"
-@@ -43,5 +47,7 @@
+@@ -43,5 +46,7 @@
  #include "pu.h"
  #include "pr.h"
  #include "piston.h"
@@ -4175,363 +4087,6 @@ Index: ode/src/joints/plane2d.cpp
  }
  
  
-Index: ode/src/joints/target.cpp
-===================================================================
---- ode/src/joints/target.cpp	(revision 0)
-+++ ode/src/joints/target.cpp	(revision 0)
-@@ -0,0 +1,352 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
-+ *                                                                       *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *   (3) The zlib/libpng license that is included with this library in   *
-+ *       the file LICENSE-ZLIB.TXT                                       *
-+ *                                                                       *
-+ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
-+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
-+ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+
-+#include <ode/odeconfig.h>
-+#include "config.h"
-+#include "target.h"
-+#include "joint_internal.h"
-+
-+
-+
-+
-+
-+// slerp
-+// Reference: OpenSceneGraph src/osg/Quat.cpp
-+namespace {
-+
-+
-+// Spherical Linear Interpolation
-+// As t goes from 0 to 1, the Quat object goes from "from" to "to"
-+// Reference: Shoemake at SIGGRAPH 89
-+// See also
-+// http://www.gamasutra.com/features/programming/19980703/quaternions_01.htm
-+void _slerp( dQuaternion q, dReal t, const dReal* from, const dReal* to )
-+{
-+    const dReal epsilon = 0.00001;
-+    double omega, cosomega, sinomega, scale_from, scale_to ;
-+
-+    dQuaternion quatTo ;
-+    dCopyVector4( quatTo, to ) ;
-+
-+    // this is a dot product
-+
-+    cosomega =  from[0] * to[0] +
-+                from[1] * to[1] +
-+                from[2] * to[2] +
-+                from[3] * to[3] ;
-+
-+    if ( cosomega <0.0 )
-+    {
-+        cosomega = -cosomega;
-+        quatTo[0] *= -1.0 ;
-+        quatTo[1] *= -1.0 ;
-+        quatTo[2] *= -1.0 ;
-+        quatTo[3] *= -1.0 ;
-+    }
-+
-+    if( (1.0 - cosomega) > epsilon )
-+    {
-+        omega= acos(cosomega) ;  // 0 <= omega <= Pi (see man acos)
-+        sinomega = sin(omega) ;  // this sinomega should always be +ve so
-+        // could try sinomega=sqrt(1-cosomega*cosomega) to avoid a sin()?
-+        scale_from = sin((1.0-t)*omega)/sinomega ;
-+        scale_to = sin(t*omega)/sinomega ;
-+    }
-+    else
-+    {
-+        /* --------------------------------------------------
-+           The ends of the vectors are very close
-+           we can use simple linear interpolation - no need
-+           to worry about the "spherical" interpolation
-+           -------------------------------------------------- */
-+        scale_from = 1.0 - t ;
-+        scale_to = t ;
-+    }
-+
-+    q[0] = from[0] * scale_from + quatTo[0] * scale_to ;
-+    q[1] = from[1] * scale_from + quatTo[1] * scale_to ;
-+    q[2] = from[2] * scale_from + quatTo[2] * scale_to ;
-+    q[3] = from[3] * scale_from + quatTo[3] * scale_to ;
-+
-+    // so that we get a Vec4
-+}
-+
-+
-+} // anon namespace ;
-+
-+
-+
-+
-+
-+/*
-+ * Target joint
-+ */
-+
-+dxJointTarget::dxJointTarget(dxWorld* w) :
-+    dxJoint(w)
-+{
-+    erp = world->global_erp;
-+    cfm = world->global_cfm;
-+
-+    translation_time = 0.0 ;
-+    rotation_time = 0.0 ;
-+    rotation_time_delta = 0.0 ;
-+
-+    dSetZero( target_position, 3 ) ;
-+    dQSetIdentity( target_rotation ) ;
-+}
-+
-+
-+
-+
-+void
-+dxJointTarget::getSureMaxInfo( SureMaxInfo* info )
-+{
-+    info->max_m = 6 ;
-+}
-+
-+
-+
-+
-+void
-+dxJointTarget::getInfo1( dxJoint::Info1* info )
-+{
-+    info->m = 6 ;
-+    info->nub = 6 ;
-+}
-+
-+
-+
-+
-+void
-+dxJointTarget::getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info )
-+{
-+    (void) worldERP ;
-+
-+
-+    const dReal     step_size = 1.0 / worldFPS ;
-+
-+
-+    {
-+        if( step_size >= translation_time ) {
-+            translation_time = step_size ;
-+        }
-+
-+        const dReal     t = this->erp / translation_time ;
-+
-+
-+
-+        dVector3    offset ;
-+
-+        dSubtractVectors3( offset, target_position, node[0].body->posr.pos ) ;
-+        dScaleVector3( offset, t ) ;
-+
-+
-+        info->J1l[ 0 ] = 1 ;
-+
-+        info->J1l[ info->rowskip + 1 ] = 1 ;
-+
-+        info->J1l[ 2 * info->rowskip + 2 ] = 1 ;
-+
-+        info->c[0] = offset[0] ;
-+        info->c[1] = offset[1] ;
-+        info->c[2] = offset[2] ;
-+
-+        info->cfm[0] = this->cfm ;
-+        info->cfm[1] = this->cfm ;
-+        info->cfm[2] = this->cfm ;
-+
-+
-+
-+        translation_time -= step_size ;
-+    }
-+
-+
-+    {
-+        rotation_time_delta += step_size ;
-+
-+        if( rotation_time < step_size ) {
-+            rotation_time = step_size ;
-+        }
-+
-+
-+        if( rotation_time_delta > rotation_time ) {
-+            rotation_time_delta = rotation_time ;
-+        }
-+
-+        const dReal     t = this->erp * rotation_time_delta / rotation_time ;
-+
-+
-+        dQuaternion quat ;
-+        _slerp( quat, t, node[0].body->q, target_rotation ) ;
-+
-+
-+        setFixedOrientation ( this, worldFPS, worldERP, info, quat, 3 ) ;
-+
-+        info->cfm[3] = this->cfm ;
-+        info->cfm[4] = this->cfm ;
-+        info->cfm[5] = this->cfm ;
-+    }
-+}
-+
-+
-+
-+
-+void dJointSetTargetParam( dJointID j, int parameter, dReal value )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+    switch ( parameter ) {
-+        case dParamCFM:
-+            joint->cfm = value;
-+            break;
-+        case dParamERP:
-+            joint->erp = value;
-+            break;
-+    }
-+}
-+
-+
-+
-+
-+dReal dJointGetTargetParam( dJointID j, int parameter )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+    switch ( parameter ) {
-+        case dParamCFM:
-+            return joint->cfm;
-+        case dParamERP:
-+            return joint->erp;
-+        default:
-+            return 0;
-+    }
-+}
-+
-+
-+
-+
-+void dJointSetTargetPosition( dJointID j, dReal time, dReal x, dReal y, dReal z )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    joint->target_position[0] = x ;
-+    joint->target_position[1] = y ;
-+    joint->target_position[2] = z ;
-+
-+    joint->translation_time = time ;
-+}
-+
-+
-+
-+
-+void dJointGetTargetPosition( dJointID j, dVector3 result )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    dCopyVector3( result, joint->target_position ) ;
-+}
-+
-+
-+
-+
-+dReal dJointGetTargetPositionTime( dJointID j )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    return joint->translation_time ;
-+}
-+
-+
-+
-+
-+void dJointSetTargetQuaternion( dJointID j, dReal time, const dReal* quaternion)
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    dCopyVector4( joint->target_rotation, quaternion ) ;
-+
-+    joint->rotation_time = time ;
-+    joint->rotation_time_delta = 0.0 ;
-+}
-+
-+
-+
-+
-+void dJointGetTargetQuaternion( dJointID j, dQuaternion result )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    dCopyVector4( result, joint->target_rotation ) ;
-+}
-+
-+
-+
-+
-+dReal dJointGetTargetQuaternionTime( dJointID j )
-+{
-+    dxJointTarget* joint = static_cast<dxJointTarget*>(j);
-+    dUASSERT( joint, "bad joint argument" );
-+    checktype ( joint, Target );
-+
-+
-+    return joint->rotation_time ;
-+}
-+
-+
-+
-+
-+dJointType
-+dxJointTarget::type() const
-+{
-+    return dJointTypeTarget;
-+}
-+
-+
-+
-+
-+size_t
-+dxJointTarget::size() const
-+{
-+    return sizeof( *this );
-+}
 Index: ode/src/joints/joint.h
 ===================================================================
 --- ode/src/joints/joint.h	(revision 1939)
@@ -6208,18 +5763,17 @@ Index: ode/src/joints/Makefile.am
 ===================================================================
 --- ode/src/joints/Makefile.am	(revision 1939)
 +++ ode/src/joints/Makefile.am	(working copy)
-@@ -10,6 +10,10 @@
+@@ -10,6 +10,9 @@
                          ball.h ball.cpp \
                          dball.h dball.cpp \
                          dhinge.h dhinge.cpp \
 +                        swaybar.h swaybar.cpp \
-+                        target.h target.cpp \
 +                        differential.h differential.cpp \
 +                        bypass.h bypass.cpp \
                          hinge.h hinge.cpp \
                          slider.h slider.cpp \
                          contact.h contact.cpp \
-@@ -22,5 +26,7 @@
+@@ -22,5 +25,7 @@
                          plane2d.h plane2d.cpp \
                          pu.h pu.cpp \
                          pr.h pr.cpp \
@@ -6296,63 +5850,6 @@ Index: ode/src/joints/hinge.cpp
  }
  
  
-Index: ode/src/joints/target.h
-===================================================================
---- ode/src/joints/target.h	(revision 0)
-+++ ode/src/joints/target.h	(revision 0)
-@@ -0,0 +1,52 @@
-+/*************************************************************************
-+ *                                                                       *
-+ * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
-+ *                                                                       *
-+ *                                                                       *
-+ * This library is free software; you can redistribute it and/or         *
-+ * modify it under the terms of EITHER:                                  *
-+ *   (1) The GNU Lesser General Public License as published by the Free  *
-+ *       Software Foundation; either version 2.1 of the License, or (at  *
-+ *       your option) any later version. The text of the GNU Lesser      *
-+ *       General Public License is included with this library in the     *
-+ *       file LICENSE.TXT.                                               *
-+ *   (2) The BSD-style license that is included with this library in     *
-+ *       the file LICENSE-BSD.TXT.                                       *
-+ *   (3) The zlib/libpng license that is included with this library in   *
-+ *       the file LICENSE-ZLIB.TXT                                       *
-+ *                                                                       *
-+ * This library is distributed WITHOUT ANY WARRANTY, including implied   *
-+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.      *
-+ * See the files LICENSE.TXT or LICENSE-BSD.TXT or LICENSE-ZLIB.TXT      *
-+ *                                                                       *
-+ *************************************************************************/
-+
-+#ifndef _ODE_JOINT_TARGET_
-+#define _ODE_JOINT_TARGET_
-+
-+#include "joint.h"
-+
-+struct dxJointTarget : public dxJoint
-+{
-+    dReal   erp;    // error reduction
-+    dReal   cfm;    // constraint force mix in
-+
-+    dReal   translation_time ;
-+    dReal   rotation_time ;
-+    dReal   rotation_time_delta ;
-+
-+    dVector3    target_position ;
-+    dQuaternion target_rotation ;
-+    
-+    dxJointTarget(dxWorld *w);
-+
-+    virtual void getSureMaxInfo( SureMaxInfo* info );
-+    virtual void getInfo1( Info1* info );
-+    virtual void getInfo2( dReal worldFPS, dReal worldERP, const Info2Descr* info );
-+    virtual dJointType type() const;
-+    virtual size_t size() const;
-+
-+};
-+
-+
-+#endif
 Index: ode/src/joints/differential.cpp
 ===================================================================
 --- ode/src/joints/differential.cpp	(revision 0)
@@ -6628,7 +6125,7 @@ Index: ode/src/ode.cpp
 ===================================================================
 --- ode/src/ode.cpp	(revision 1939)
 +++ ode/src/ode.cpp	(working copy)
-@@ -1269,7 +1269,42 @@
+@@ -1269,7 +1269,36 @@
      return createJoint<dxJointDHinge> (w,group);
  }
  
@@ -6648,12 +6145,6 @@ Index: ode/src/ode.cpp
 +{
 +    dAASSERT (w);
 +    return createJoint<dxJointSwaybar> (w,group);
-+}
-+
-+dxJoint * dJointCreateTarget (dWorldID w, dJointGroupID group)
-+{
-+    dAASSERT (w);
-+    return createJoint<dxJointTarget> (w,group);
 +}
 +
 +dxJoint * dJointCreateDifferential (dWorldID w, dJointGroupID group)

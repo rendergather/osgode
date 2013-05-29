@@ -113,8 +113,6 @@ SET(TARGET_H
     ${HEADER_PATH}/SuspensionJoint.inl
     ${HEADER_PATH}/SwaybarJoint
     ${HEADER_PATH}/SwaybarJoint.inl
-    ${HEADER_PATH}/TargetJoint
-    ${HEADER_PATH}/TargetJoint.inl
     ${HEADER_PATH}/Transformable
     ${HEADER_PATH}/Transformable.inl
     ${HEADER_PATH}/TriMesh
@@ -194,7 +192,6 @@ SET(TARGET_SRC
     StaticWorld.cpp
     SuspensionJoint.cpp
     SwaybarJoint.cpp
-    TargetJoint.cpp
     Transformable.cpp
     TriMesh.cpp
     UniversalJoint.cpp

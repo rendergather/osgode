@@ -118,17 +118,6 @@ class Space(Writable.Writable):
                 self.ODEObjects.append(joint)
 
 
-
-        from . import TargetJoint
-
-        for rigid_body in rigid_bodies:
-
-            if rigid_body.animation_data and rigid_body.animation_data.action:
-                joint = TargetJoint.TargetJoint(self.Data, rigid_body)
-                self.addChild(joint)
-                self.ODEObjects.append(joint)
-
-
         return self.traverseBuild()
 ############################################################################
 

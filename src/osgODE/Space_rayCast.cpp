@@ -127,6 +127,97 @@ _rayNearCallback(void* data, dGeomID o1, dGeomID o2)
 
 
 
+
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+unsigned int
+Space::performRayCast(  const osg::Vec3&    from,
+                        const osg::Vec3&    to,
+                        RayCastResult*      result,
+                        unsigned int        max_contacts,
+                        unsigned int        param_mask,
+                        int                 collide_bits,
+                        int                 category_bits )
+{
+
+    PS_DBG3("osgODE::Space::performRayCast(%p, [%f, %f, %f], [%f, %f, %f])",
+            this,
+            from.x(), from.y(), from.z(),
+            to.x(), to.y(), to.z()
+           ) ;
+
+
+
+    PS_ASSERT1( result != NULL ) ;
+
+
+    /*
+     * [1] create the ray
+     */
+    osg::Vec3   dir = to - from ;
+
+    dGeomID     ray = dCreateRay(m_ODE_space, dir.normalize()) ;
+
+    dGeomRaySet(    ray,
+                    from.x(), from.y(), from.z(),
+                    dir.x(), dir.y(), dir.z() ) ;
+
+    /*
+     * [2] Set ray properties
+     */
+    bool    first_contact =     0  !=  ( param_mask & FIRST_CONTACT ) ;
+    bool    backface_cull =     0  !=  ( param_mask & BACKFACE_CULL ) ;
+    bool    closest_hit =       0  !=  ( param_mask & CLOSEST_HIT ) ;
+
+    dGeomRaySetParams(ray, first_contact, backface_cull) ;
+    dGeomRaySetClosestHit(ray, closest_hit) ;
+
+
+    // I use this number to mark the first body
+    dGeomSetData(ray, (void*)(0xdeadbeef)) ;
+
+
+    // category and collide bits
+    dGeomSetCategoryBits( ray, category_bits ) ;
+    dGeomSetCollideBits( ray, collide_bits ) ;
+
+
+
+
+    /*
+     * [3] ray cast
+     */
+    RayNearCallbackData     rnc_data(result, max_contacts) ;
+
+    dSpaceCollide2(ray, (dGeomID)m_ODE_space, &rnc_data, _rayNearCallback) ;
+
+
+
+
+    /*
+     * [4] Done, Destroy everything
+     */
+    dGeomDestroy(ray) ;
+
+    PS_DBG3("osgODE::Space::rayCast(%p, ...): %u contacts", this, rnc_data.NumContacts) ;
+
+    return rnc_data.NumContacts ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
 /* ======================================================================= */
 /* ....................................................................... */
 unsigned int
@@ -168,7 +259,7 @@ Space::rayCast( const osg::Vec3&    from,
     dGeomRaySetClosestHit(ray, closest_hit) ;
 
 
-    // I need this to make sure that the ray is the first body
+    // I use this number to mark the first body
     dGeomSetData(ray, (void*)(0xdeadbeef)) ;
 
 

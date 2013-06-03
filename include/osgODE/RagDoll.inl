@@ -1,5 +1,5 @@
 /*!
- * @file OneWayFixedJoint.inl
+ * @file RagDoll.inl
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,8 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ONEWAYFIXEDJOINT_INL
-#define _OSGODE_ONEWAYFIXEDJOINT_INL
+#ifndef _OSGODE_RAGDOLL_INL
+#define _OSGODE_RAGDOLL_INL
 
 
 
@@ -38,16 +38,10 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::OneWayFixedJoint::setMatrix( const osg::Matrix& matrix )
+inline osgAnimation::Bone*
+osgODE::RagDoll::getRootBone(void)
 {
-    m_matrix = matrix ;
-
-
-    osg::Quat   so ;
-    osg::Vec3   s ;
-
-    matrix.decompose(m_pos, m_quat, s, so) ;
+    return m_root_bone.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -57,10 +51,10 @@ osgODE::OneWayFixedJoint::setMatrix( const osg::Matrix& matrix )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline const osg::Matrix&
-osgODE::OneWayFixedJoint::getMatrix(void) const
+inline osgODE::RigidBody*
+osgODE::RagDoll::getRootBody(void)
 {
-    return m_matrix ;
+    return m_root_body.get() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -71,9 +65,9 @@ osgODE::OneWayFixedJoint::getMatrix(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::OneWayFixedJoint::setConstrainRotation( bool rotation_mode )
+osgODE::RagDoll::dirty(void)
 {
-    m_rotation_mode = rotation_mode ;
+    m_dirty = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -83,10 +77,10 @@ osgODE::OneWayFixedJoint::setConstrainRotation( bool rotation_mode )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline bool
-osgODE::OneWayFixedJoint::getConstrainRotation(void) const
+inline void
+osgODE::RagDoll::setSkeleton( osgAnimation::Skeleton* skeleton )
 {
-    return m_rotation_mode ;
+    m_skeleton = skeleton ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -94,4 +88,30 @@ osgODE::OneWayFixedJoint::getConstrainRotation(void) const
 
 
 
-#endif /* _OSGODE_ONEWAYFIXEDJOINT_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgAnimation::Skeleton*
+osgODE::RagDoll::getSkeleton(void)
+{
+    return m_skeleton ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgAnimation::Skeleton*
+osgODE::RagDoll::getSkeleton(void) const
+{
+    return m_skeleton ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_RAGDOLL_INL */

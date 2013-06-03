@@ -87,6 +87,7 @@ Character::~Character(void)
 /* ....................................................................... */
 bool
 Character::attach(  RigidBody*  body,
+                    bool        constrain_rotation,
                     double      erp,
                     double      cfm
                  )
@@ -112,6 +113,8 @@ Character::attach(  RigidBody*  body,
     joint->setParam( dParamCFM, cfm ) ;
 
     joint->setMatrix( body->getMatrix() * osg::Matrix::inverse( getBody()->getMatrix() ) ) ;
+
+    joint->setConstrainRotation( constrain_rotation ) ;
 
 
 

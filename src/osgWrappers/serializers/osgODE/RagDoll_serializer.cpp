@@ -1,9 +1,9 @@
 /*!
- * @file OneWayFixedJoint.inl
+ * @file RagDoll_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,22 +14,19 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ONEWAYFIXEDJOINT_INL
-#define _OSGODE_ONEWAYFIXEDJOINT_INL
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/RagDoll>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -38,60 +35,20 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::OneWayFixedJoint::setMatrix( const osg::Matrix& matrix )
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+REGISTER_OBJECT_WRAPPER( RagDoll,
+                         new osgODE::RagDoll,
+                         osgODE::RagDoll,
+                         "osg::Object osgODE::ODEObject osgODE::Container osgODE::RagDoll" )
 {
-    m_matrix = matrix ;
-
-
-    osg::Quat   so ;
-    osg::Vec3   s ;
-
-    matrix.decompose(m_pos, m_quat, s, so) ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osg::Matrix&
-osgODE::OneWayFixedJoint::getMatrix(void) const
-{
-    return m_matrix ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::OneWayFixedJoint::setConstrainRotation( bool rotation_mode )
-{
-    m_rotation_mode = rotation_mode ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline bool
-osgODE::OneWayFixedJoint::getConstrainRotation(void) const
-{
-    return m_rotation_mode ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_ONEWAYFIXEDJOINT_INL */

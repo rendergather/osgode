@@ -96,6 +96,8 @@ SET(TARGET_H
     ${HEADER_PATH}/OverlappingPair.inl
     ${HEADER_PATH}/PistonJoint
     ${HEADER_PATH}/PistonJoint.inl
+    ${HEADER_PATH}/RagDoll
+    ${HEADER_PATH}/RagDoll.inl
     ${HEADER_PATH}/RigidBody
     ${HEADER_PATH}/RigidBody.inl
     ${HEADER_PATH}/ScopedTimer
@@ -182,6 +184,7 @@ SET(TARGET_SRC
     OneWayFixedJoint.cpp
     OverlappingPair.cpp
     PistonJoint.cpp
+    RagDoll.cpp
     RigidBody.cpp
     ScopedTimer.cpp
     Sensor.cpp

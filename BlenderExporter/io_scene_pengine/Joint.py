@@ -376,28 +376,18 @@ class Joint(ODEObject.ODEObject):
             axis_order = (0, 1, 2)
             err = False
 
-        elif a3 and yl and ly and zl and lz and not (xl and lx) :
-            joint_type = "osgODE::SliderJoint"
-            axis_order = (0, 1, 2)
-            if lx:
-                self.LoStop = xm
-                self.HiStop = xM
-            err = False
 
-        elif a3 and xl and lx and zl and lz and not (yl and ly) :
-            joint_type = "osgODE::SliderJoint"
-            axis_order = (1, 2, 0)
-            if ly:
-                self.LoStop = ym
-                self.HiStop = yM
-            err = False
+        elif not(lx or ly or lz) and ax and ay:
+            joint_type = "osgODE::UniversalJoint"
+            axis_order = (0,1,2)
 
-        elif a3 and xl and lx and yl and ly and not (zl and lz) :
-            joint_type = "osgODE::SliderJoint"
-            axis_order = (2, 0, 1)
-            if lz:
-                self.LoStop = zm
-                self.HiStop = zM
+            self.LoStop = am
+            self.HiStop = aM
+
+            self.LoStop2 = bm
+            self.HiStop2 = bM
+
+
             err = False
 
 

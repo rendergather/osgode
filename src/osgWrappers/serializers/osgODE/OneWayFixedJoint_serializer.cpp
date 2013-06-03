@@ -48,7 +48,8 @@ REGISTER_OBJECT_WRAPPER( OneWayFixedJoint,
                          osgODE::OneWayFixedJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::OneWayFixedJoint" )
 {
-    ADD_MATRIX_SERIALIZER( Matrix, osg::Matrix::identity() ) ;
+    ADD_MATRIX_SERIALIZER   ( Matrix,               osg::Matrix::identity() ) ;
+    ADD_BOOL_SERIALIZER     ( ConstrainRotation,    true ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

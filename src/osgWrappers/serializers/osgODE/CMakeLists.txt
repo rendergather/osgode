@@ -50,6 +50,7 @@ SET(TARGET_SRC
     OneWayFixedJoint_serializer.cpp
     PistonJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
+    RagDoll_serializer.cpp
     RigidBody_serializer.cpp
     ScalarInterpolator_serializer.cpp
     Sensor_serializer.cpp

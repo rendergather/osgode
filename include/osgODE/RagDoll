@@ -1,5 +1,5 @@
 /*!
- * @file OneWayFixedJoint
+ * @file RagDoll
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,14 +22,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_ONEWAYFIXEDJOINT_HPP
-#define _OSGODE_ONEWAYFIXEDJOINT_HPP
+#ifndef _OSGODE_RAGDOLL_HPP
+#define _OSGODE_RAGDOLL_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/BypassJoint>
+#include <osgODE/Container>
+
+#include <osgAnimation/Skeleton>
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+namespace osgAnimation {
+    class   Bone ;
+}
 /* ======================================================================= */
 
 
@@ -53,15 +64,15 @@ namespace osgODE
 /*!
  *
  */
-class OSG_EXPORT OneWayFixedJoint: public BypassJoint
+class OSG_EXPORT RagDoll: public Container
 {
 /* ======================================================================= */
 public:
-             OneWayFixedJoint(void) ;
-             OneWayFixedJoint(const OneWayFixedJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             RagDoll(void) ;
+             RagDoll(const RagDoll& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~OneWayFixedJoint(void) ;
+    virtual ~RagDoll(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +80,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, OneWayFixedJoint) ;
+    META_Object(osgODE, RagDoll) ;
 /* ======================================================================= */
 
 
@@ -82,18 +93,14 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the matrix that transforms body1 to body2
-    inline void                 setMatrix( const osg::Matrix& matrix ) ;
+    //! Set the skeleton
+    inline void setSkeleton( osgAnimation::Skeleton* skeleton ) ;
 
-    //! Get the matrix that transforms body1 to body2
-    inline const osg::Matrix&   getMatrix(void) const ;
+    //! Get the skeleton
+    inline osgAnimation::Skeleton*  getSkeleton(void) ;
 
-
-    //! Set whether to constrain the rotation. Default: true
-    inline void setConstrainRotation( bool rotation_mode ) ;
-
-    //! Get if the joint constrains the rotation. Default: true
-    inline bool getConstrainRotation(void) const ;
+    //! Get the const skeleton
+    inline const osgAnimation::Skeleton*    getSkeleton(void) const ;
 /* ======================================================================= */
 
 
@@ -101,7 +108,39 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    update(double step_size) ;
+    inline osgAnimation::Bone*  getRootBone(void) ;
+    inline RigidBody*           getRootBody(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void     dirty(void) ;
+
+
+    //! Calls _initRagDoll and returns
+    virtual void    init(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    postUpdate( double step_size ) ;
+    virtual void    accept( osg::NodeVisitor& nv ) ;
+
+    virtual const osg::BoundingSphere&  getBound(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    void    _initRagDoll(void) ;
 /* ======================================================================= */
 
 
@@ -109,10 +148,14 @@ public:
 
 /* ======================================================================= */
 private:
-    osg::Matrix     m_matrix ;
-    osg::Quat       m_quat ;
-    osg::Vec3       m_pos ;
-    bool            m_rotation_mode ;
+    bool        m_dirty ;
+
+    osg::ref_ptr<osgAnimation::Skeleton>    m_skeleton ;
+    osg::ref_ptr<osgAnimation::Bone>        m_root_bone ;
+    osg::ref_ptr<RigidBody>                 m_root_body ;
+
+
+    osg::BoundingSphere     m_bounding_sphere ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -126,9 +169,9 @@ private:
 
 
 
-#include "OneWayFixedJoint.inl"
+#include "RagDoll.inl"
 
 
 
 
-#endif /* _OSGODE_ONEWAYFIXEDJOINT_HPP */
+#endif /* _OSGODE_RAGDOLL_HPP */

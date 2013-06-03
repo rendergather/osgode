@@ -114,10 +114,12 @@ public:
      * This function uses a FixedJoint to transform the body.\n
      *
      * @param   body    the body
+     * @param   constrain_rotation  wheter to constrain the orientation
      * @param   erp     the erp to use for the joint
      * @param   cfm     the cfm to use for the joint
      */
     bool            attach( RigidBody*  body,
+                            bool        constrain_rotation = true,
                             double      erp = 0.2,
                             double      cfm = 1.0e-5 ) ;
 

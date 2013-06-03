@@ -41,7 +41,8 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-OneWayFixedJoint::OneWayFixedJoint(void)
+OneWayFixedJoint::OneWayFixedJoint(void):
+    m_rotation_mode ( true )
 {
     this->setInfo(6, 6, 6) ;
 }
@@ -54,10 +55,11 @@ OneWayFixedJoint::OneWayFixedJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 OneWayFixedJoint::OneWayFixedJoint(const OneWayFixedJoint& other, const osg::CopyOp& copyop):
-    BypassJoint ( other, copyop ),
-    m_matrix    ( other.m_matrix ),
-    m_quat      ( other.m_quat ),
-    m_pos       ( other.m_pos )
+    BypassJoint     ( other, copyop ),
+    m_matrix        ( other.m_matrix ),
+    m_quat          ( other.m_quat ),
+    m_pos           ( other.m_pos ),
+    m_rotation_mode ( other.m_rotation_mode )
 {
 }
 /* ....................................................................... */
@@ -85,13 +87,16 @@ OneWayFixedJoint::update( double step_size )
     int row = 0 ;
 
 
-    this->BypassJoint::setRelativeRotation( step_size,
-                                            m_quat,
-                                            row,
-                                            m_erp[0],
-                                            m_cfm[0],
-                                            CONSTRAIN_BODY2
-                       ) ;
+    if( m_rotation_mode ) {
+
+        this->BypassJoint::setRelativeRotation( step_size,
+                                                m_quat,
+                                                row,
+                                                m_erp[0],
+                                                m_cfm[0],
+                                                CONSTRAIN_BODY2
+                        ) ;
+    }
 
 
 

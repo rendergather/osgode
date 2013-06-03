@@ -104,14 +104,66 @@ public:
     } ;
 
 
-    //! Perform a ray cast in the space
+
+
+
+
+    //! Ray parameters
+    typedef enum {
+        //! Return when the first collision between the ray and a trimesh occours
+        FIRST_CONTACT   = 1,
+
+        //! Do not collide against back facing triangles
+        BACKFACE_CULL   = 2,
+
+        //! Return the closest collision when collide with a trimesh
+        CLOSEST_HIT     = 4,
+
+        //! Default mode used
+        DEFAULT_MODE    = BACKFACE_CULL | CLOSEST_HIT
+    } RayParameter ;
+
+
+
+
+
+
+    //! Perform a ray cast
     /*!
      * @param   from            where the ray starts
      *
      * @param   to              where the ray ends
      *
-     * @param   result          this is mandatory. If it is NULL there will be
-     *                          a SIGSEGV (or assert)
+     * @param   result          If NULL there will be a SIGSEGV (or assert)
+     *
+     * @param   max_contacts    maximum number of contacts to generate
+     *
+     * @param   param_mask      See RayParameter
+     *
+     * @return  number of contacts
+     */
+    unsigned int    performRayCast( const osg::Vec3&    from,
+                                    const osg::Vec3&    to,
+                                    RayCastResult*      result,
+                                    unsigned int        max_contacts = 4,
+                                    unsigned int        param_mask = DEFAULT_MODE,
+                                    int                 collide_bits = -1,
+                                    int                 category_bits = -1
+                                  ) ;
+
+
+
+
+
+
+
+    //! Perform a ray cast
+    /*!
+     * @param   from            where the ray starts
+     *
+     * @param   to              where the ray ends
+     *
+     * @param   result          If NULL there will be a SIGSEGV (or assert)
      *
      * @param   max_contacts    maximum number of contacts to generate
      *

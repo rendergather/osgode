@@ -48,7 +48,7 @@ REGISTER_OBJECT_WRAPPER( RagDoll,
                          osgODE::RagDoll,
                          "osg::Object osgODE::ODEObject osgODE::Container osgODE::RagDoll" )
 {
-    (void) wrapper ;
+    ADD_OBJECT_SERIALIZER(  Skeleton, osgAnimation::Skeleton, NULL  ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

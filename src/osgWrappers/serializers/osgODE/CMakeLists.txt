@@ -70,6 +70,6 @@ SET(TARGET_SRC
 
 
 
-SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
+SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgAnimation osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
 
 OSGODE_SETUP_PLUGIN()

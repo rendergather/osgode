@@ -195,7 +195,7 @@ CharacterBase::_updateOrientation(double step_size)
 
         m_avg_side_velocity = (m_avg_side_velocity * m_elasticity + side_vel) / (m_elasticity + 1) ;
 
-        quat = quat * osg::Quat( m_avg_side_velocity * -0.01, front ) ;
+        quat = quat * osg::Quat( m_avg_side_velocity * -5.0e-3, front ) ;
     }
 
 
@@ -256,7 +256,7 @@ CharacterBase::_move(double step_size)
 
 
 
-    {
+    if( m_jump_res_time <= 0.0 ) {
         const double    body_speed      = m_body->getLinearVelocity().length() ;
 
         const osg::Vec3 down_versor     = m_up_versor * -1.0 ;

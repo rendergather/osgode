@@ -293,9 +293,14 @@ class Geode(Writable.Writable):
 
                 num_tex = len(self.MeshData.UVArray)
 
-                writer.moveIn("TexCoordData %d" %num_tex)
+                #writer.moveIn("TexCoordData %d" %num_tex)
+                writer.moveIn("TexCoordData 3")
 
                 for uv_array in self.MeshData.UVArray:
+
+                #uv_array = self.MeshData.UVArray[0]
+
+                #if True:
 
                     writer.moveIn("Data") ;
 
@@ -318,7 +323,56 @@ class Geode(Writable.Writable):
 
 
 
-                writer.moveOut("TexCoordData %d" %num_tex)
+                if len(self.MeshData.UVArray) < 3:
+                    uv_array = self.MeshData.UVArray[0]
+
+                    writer.moveIn("Data") ;
+
+                    array_id = self.Data.VertexID.generate()
+                    num_elements = len(uv_array)
+
+                    writer.moveIn("Array TRUE ArrayID %d Vec2fArray %d" %(array_id, num_elements))
+
+                    for uv in uv_array:
+                        writer.writeLine("%f %f" %(uv[0], uv[1]))
+
+                    writer.moveOut("Array TRUE ArrayID %d Vec2fArray %d" %(array_id, num_elements))
+
+
+                    writer.writeLine("Indices FALSE")
+                    writer.writeLine("Binding BIND_PER_VERTEX")
+                    writer.writeLine("Normalize 0")
+
+                    writer.moveOut("Data") ;
+
+
+
+                if len(self.MeshData.UVArray) < 2:
+                    uv_array = self.MeshData.UVArray[0]
+
+                    writer.moveIn("Data") ;
+
+                    array_id = self.Data.VertexID.generate()
+                    num_elements = len(uv_array)
+
+                    writer.moveIn("Array TRUE ArrayID %d Vec2fArray %d" %(array_id, num_elements))
+
+                    for uv in uv_array:
+                        writer.writeLine("%f %f" %(uv[0], uv[1]))
+
+                    writer.moveOut("Array TRUE ArrayID %d Vec2fArray %d" %(array_id, num_elements))
+
+
+                    writer.writeLine("Indices FALSE")
+                    writer.writeLine("Binding BIND_PER_VERTEX")
+                    writer.writeLine("Normalize 0")
+
+                    writer.moveOut("Data") ;
+
+
+
+                #writer.moveOut("TexCoordData %d" %num_tex)
+                writer.moveOut("TexCoordData 3")
 
 
 

@@ -196,6 +196,10 @@ BypassJoint::setRelativeRotation( double step_size, const osg::Quat& qrel, int& 
         J2az = -osg::Z_AXIS ;
     }
 
+//     if( ((mask & CONSTRAIN_BODY1) != 0)  ^  ((mask & CONSTRAIN_BODY2) != 0) ) {
+//         c *= 2.0 ;
+//     }
+
 
     this->setRow( row++, J1ax, osg::Vec3(), J2ax, osg::Vec3(), c.x(), cfm ) ;
     this->setRow( row++, J1ay, osg::Vec3(), J2ay, osg::Vec3(), c.y(), cfm ) ;
@@ -251,6 +255,10 @@ BypassJoint::setRelativePosition( double step_size, const osg::Vec3& prel, int& 
         J2lx = -osg::X_AXIS ;
         J2ly = -osg::Y_AXIS ;
         J2lz = -osg::Z_AXIS ;
+    }
+
+    if( ((mask & CONSTRAIN_BODY1) != 0)  ^  ((mask & CONSTRAIN_BODY2) != 0) ) {
+        c *= 2.0 ;
     }
 
 

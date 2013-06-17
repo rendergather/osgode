@@ -299,52 +299,52 @@ class MeshData(object):
             return uv_array
 
 
-        #for i in range(0, len(uv_textures), 1):
-            #uv_array.append([])
-        uv_array.append([])
+        for i in range(0, len(uv_textures), 1):
+            uv_array.append([])
+        #uv_array.append([])
 
 
         cur_face = 0
 
         for f in faces:
-            #for t in range(0, len(uv_textures), 1):
-                #tex = uv_textures[t]
-            t = 0
-            tex = uv_textures[t]
+            for t in range(0, len(uv_textures), 1):
+                tex = uv_textures[t]
+            #t = 0
+                tex = uv_textures[t]
 
-            if f.index < len(tex.data):
-                uvface = tex.data[f.index]
+                if f.index < len(tex.data):
+                    uvface = tex.data[f.index]
 
-                if len(f.vertices) == 3:
-                    #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
-                    #uv_array[t].append( (uvface.uv[1][0], uvface.uv[1][1]) )
-                    #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
-                    uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
-                    uv_array[t].append( (uvface.uv2[0], uvface.uv2[1]) )
-                    uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
+                    if len(f.vertices) == 3:
+                        #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
+                        #uv_array[t].append( (uvface.uv[1][0], uvface.uv[1][1]) )
+                        #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
+                        uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
+                        uv_array[t].append( (uvface.uv2[0], uvface.uv2[1]) )
+                        uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
 
-                elif len(f.vertices) == 4:
-                    #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
-                    #uv_array[t].append( (uvface.uv[1][0], uvface.uv[1][1]) )
-                    #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
-                    uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
-                    uv_array[t].append( (uvface.uv2[0], uvface.uv2[1]) )
-                    uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
+                    elif len(f.vertices) == 4:
+                        #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
+                        #uv_array[t].append( (uvface.uv[1][0], uvface.uv[1][1]) )
+                        #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
+                        uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
+                        uv_array[t].append( (uvface.uv2[0], uvface.uv2[1]) )
+                        uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
 
-                    #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
-                    #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
-                    #uv_array[t].append( (uvface.uv[3][0], uvface.uv[3][1]) )
-                    uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
-                    uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
-                    uv_array[t].append( (uvface.uv4[0], uvface.uv4[1]) )
+                        #uv_array[t].append( (uvface.uv[0][0], uvface.uv[0][1]) )
+                        #uv_array[t].append( (uvface.uv[2][0], uvface.uv[2][1]) )
+                        #uv_array[t].append( (uvface.uv[3][0], uvface.uv[3][1]) )
+                        uv_array[t].append( (uvface.uv1[0], uvface.uv1[1]) )
+                        uv_array[t].append( (uvface.uv3[0], uvface.uv3[1]) )
+                        uv_array[t].append( (uvface.uv4[0], uvface.uv4[1]) )
 
+                    else:
+                        print("Unhandled polygon type in %s, face: %d, num vertices: %d" % (mesh.name, cur_face, len(f.vertices)))
                 else:
-                    print("Unhandled polygon type in %s, face: %d, num vertices: %d" % (mesh.name, cur_face, len(f.vertices)))
-            else:
-                print("FUCK!!!")
+                    print("FUCK!!!")
 
 
-            cur_face += 1
+                cur_face += 1
 
 
 

@@ -414,4 +414,17 @@ osgODE::CharacterBase::getFootContactInfo(void) const
 
 
 
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::CharacterBase::getFootstepDerivative(void) const
+{
+    return m_footstep_derivative ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
 #endif /* _OSGODE_CHARACTERBASE_INL */

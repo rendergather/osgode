@@ -96,24 +96,24 @@ class ScaleTransform(Writable.Writable):
 
 
 
-        for child in self.Object.children:
-            if child.type == "LAMP":
-                if self.Data.ExportLights:
-                    from . import Light
-                    light = Light.Light(self.Data, child)
-                    self.addChild(light)
+        #for child in self.Object.children:
+            #if child.type == "LAMP":
+                #if self.Data.ExportLights:
+                    #from . import Light
+                    #light = Light.Light(self.Data, child)
+                    #self.addChild(light)
 
 
-            elif child.type == "MESH":
-                from . import MatrixTransform
-                matrix_transform = MatrixTransform.MatrixTransform(self.Data, child)
-                self.addChild(matrix_transform)
+            #elif child.type == "MESH":
+                #from . import MatrixTransform
+                #matrix_transform = MatrixTransform.MatrixTransform(self.Data, child)
+                #self.addChild(matrix_transform)
 
 
-            elif child.type == "SPEAKER":
-                from . import Speaker
-                speaker = Speaker.Speaker(self.Data, child)
-                self.addChild(speaker)
+            #elif child.type == "SPEAKER":
+                #from . import Speaker
+                #speaker = Speaker.Speaker(self.Data, child)
+                #self.addChild(speaker)
 
 
         return self.traverseBuild()

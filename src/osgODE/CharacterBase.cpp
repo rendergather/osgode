@@ -53,23 +53,24 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 CharacterBase::CharacterBase(void):
-    m_foot_ray_cast_result( new NearestNotMeRayCastResult() ),
-    m_up_versor( osg::Z_AXIS ),
-    m_side_versor( osg::X_AXIS ),
-    m_front_versor( -osg::Z_AXIS ),
-    m_yaw(0.0),
-    m_pitch(osg::PI * 0.5),
-    m_current_yaw(0.0),
-    m_current_pitch(osg::PI * 0.5),
-    m_avg_side_velocity(0.0),
-    m_footstep_time(0.0),
-    m_height( 1.75 ),
-    m_elasticity(5),
-    m_motion_fmax(0.0),
-    m_jump_res_time(-1.0),
-    m_foot_contact_joint(NULL),
-    m_is_on_ground( false ),
-    m_ground_contact_normal( osg::Z_AXIS )
+    m_foot_ray_cast_result  ( new NearestNotMeRayCastResult() ),
+    m_up_versor             ( osg::Z_AXIS ),
+    m_side_versor           ( osg::X_AXIS ),
+    m_front_versor          ( -osg::Z_AXIS ),
+    m_yaw                   ( 0.0 ),
+    m_pitch                 ( osg::PI * 0.5 ),
+    m_current_yaw           ( 0.0 ),
+    m_current_pitch         ( osg::PI * 0.5 ),
+    m_avg_side_velocity     ( 0.0 ),
+    m_footstep_time         ( 0.0 ),
+    m_height                ( 1.75 ),
+    m_elasticity            ( 5 ),
+    m_motion_fmax           ( 0.0),
+    m_jump_res_time         ( -1.0 ),
+    m_foot_contact_joint    ( NULL ),
+    m_is_on_ground          ( false ),
+    m_ground_contact_normal ( osg::Z_AXIS ),
+    m_footstep_derivative   ( 0.0 )
 {
 
     m_footstep_info.Magnitude       = 250.0 ;
@@ -90,31 +91,32 @@ CharacterBase::CharacterBase(void):
 /* ======================================================================= */
 /* ....................................................................... */
 CharacterBase::CharacterBase(const CharacterBase& other, const osg::CopyOp& copyop):
-    Container(other, copyop),
-    m_body( other.m_body ),
-    m_amotor( other.m_amotor ),
-    m_lmotor( other.m_lmotor ),
-    m_foot_ray_cast_result( other.m_foot_ray_cast_result ),
-    m_up_versor( other.m_up_versor ),
-    m_side_versor( other.m_side_versor ),
-    m_front_versor( other.m_front_versor ),
-    m_yaw(other.m_yaw),
-    m_pitch(other.m_pitch),
-    m_current_yaw(other.m_current_yaw),
-    m_current_pitch(other.m_current_pitch),
-    m_avg_side_velocity( other.m_avg_side_velocity ),
-    m_footstep_time( other.m_footstep_time ),
-    m_height( other.m_height ),
-    m_elasticity(other.m_elasticity),
-    m_motion_velocity( other.m_motion_velocity ),
-    m_motion_fmax( other.m_motion_fmax ),
-    m_jump_force( other.m_jump_force ),
-    m_jump_res_time( other.m_jump_res_time ),
-    m_foot_contact_joint(NULL),
-    m_is_on_ground( false ),
-    m_ground_contact_normal( osg::Z_AXIS ),
-    m_foot_contact_info( other.m_foot_contact_info ),
-    m_footstep_info( other.m_footstep_info )
+    Container               ( other, copyop ),
+    m_body                  ( other.m_body ),
+    m_amotor                ( other.m_amotor ),
+    m_lmotor                ( other.m_lmotor ),
+    m_foot_ray_cast_result  ( other.m_foot_ray_cast_result ),
+    m_up_versor             ( other.m_up_versor ),
+    m_side_versor           ( other.m_side_versor ),
+    m_front_versor          ( other.m_front_versor ),
+    m_yaw                   ( other.m_yaw ),
+    m_pitch                 ( other.m_pitch ),
+    m_current_yaw           ( other.m_current_yaw ),
+    m_current_pitch         ( other.m_current_pitch ),
+    m_avg_side_velocity     ( other.m_avg_side_velocity ),
+    m_footstep_time         ( other.m_footstep_time ),
+    m_height                ( other.m_height ),
+    m_elasticity            ( other.m_elasticity ),
+    m_motion_velocity       ( other.m_motion_velocity ),
+    m_motion_fmax           ( other.m_motion_fmax ),
+    m_jump_force            ( other.m_jump_force ),
+    m_jump_res_time         ( other.m_jump_res_time ),
+    m_foot_contact_joint    ( NULL ),
+    m_is_on_ground          ( false ),
+    m_ground_contact_normal ( osg::Z_AXIS ),
+    m_foot_contact_info     ( other.m_foot_contact_info ),
+    m_footstep_info         ( other.m_footstep_info ),
+    m_footstep_derivative   ( other.m_footstep_derivative )
 {
 }
 /* ....................................................................... */
@@ -271,7 +273,11 @@ CharacterBase::_move(double step_size)
         m_footstep_time += step_size * time_multiplier ;
 
 
-        double  strength = sin( m_footstep_time * 2.0 * osg::PI )  * 0.5  +  0.5 ;
+        const double    sin_arg = m_footstep_time * 2.0 * osg::PI ;
+
+        double  strength = sin( sin_arg )  * 0.5  +  0.5 ;
+
+        m_footstep_derivative = cos( sin_arg ) * osg::PI ;
 
         strength = pow( strength, power_factor ) ;
 

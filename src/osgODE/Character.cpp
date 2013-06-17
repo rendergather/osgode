@@ -85,7 +85,7 @@ Character::~Character(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
+Joint*
 Character::attach(  RigidBody*  body,
                     bool        constrain_rotation,
                     double      erp,
@@ -125,7 +125,7 @@ Character::attach(  RigidBody*  body,
 
     this->Container::addObject( joint ) ;
 
-    return true ;
+    return joint ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -135,12 +135,12 @@ Character::attach(  RigidBody*  body,
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
+void
 Character::detach(  RigidBody* body )
 {
     if( ! body ) {
         PS_WARN("osgODE::Character::detach(%p): null body", this) ;
-        return false ;
+        return ;
     }
 
 
@@ -158,14 +158,6 @@ Character::detach(  RigidBody* body )
     {
         removeObject(  getObjectIDX( itr->get() )    ) ;
     }
-
-
-
-
-
-//     removeObject( getObjectIDX(body) ) ;
-
-    return true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

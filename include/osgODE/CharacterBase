@@ -331,6 +331,10 @@ public:
 public:
     //! Returns true if the character touches the ground
     inline bool     isOnGround(void) const ;
+
+
+    //! Get the first derivative of the footstep sinusoidal function
+    inline double   getFootstepDerivative(void) const ;
 /* ======================================================================= */
 
 
@@ -407,6 +411,8 @@ private:
 
     FootContactInfo m_foot_contact_info ;
     FootstepInfo    m_footstep_info ;
+
+    double          m_footstep_derivative ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -265,6 +265,7 @@ AS_NULL( BypassJoint ) ;
 AS_NULL( Collidable) ;
 AS_NULL( Joint ) ;
 AS_NULL( ODEObjectContainer ) ;
+AS_NULL( OneWayFixedJoint ) ;
 AS_NULL( RigidBody ) ;
 AS_NULL( TargetJoint ) ;
 AS_NULL( Transformable ) ;

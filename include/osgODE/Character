@@ -118,7 +118,7 @@ public:
      * @param   erp     the erp to use for the joint
      * @param   cfm     the cfm to use for the joint
      */
-    bool            attach( RigidBody*  body,
+    Joint*          attach( RigidBody*  body,
                             bool        constrain_rotation = true,
                             double      erp = 0.2,
                             double      cfm = 1.0e-5 ) ;
@@ -126,7 +126,7 @@ public:
 
 
     //! Detach a previously attached body
-    bool            detach( RigidBody* body ) ;
+    void            detach( RigidBody* body ) ;
 /* ======================================================================= */
 
 

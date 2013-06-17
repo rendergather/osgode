@@ -51,6 +51,7 @@ class   BypassJoint ;
 class   Collidable ;
 class   Joint ;
 class   ODEObjectContainer ;
+class   OneWayFixedJoint ;
 class   RigidBody ;
 class   TargetJoint ;
 class   Transformable ;
@@ -112,6 +113,9 @@ public:
 
     //! Quick dynamic cast
     virtual ODEObjectContainer*     asODEObjectContainer(void) ;
+
+    //! Quick dynamic cast
+    virtual OneWayFixedJoint*       asOneWayFixedJoint(void) ;
 
     //! Quick dynamic cast
     virtual RigidBody*              asRigidBody(void) ;

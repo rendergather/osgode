@@ -172,9 +172,10 @@ class MotionPath(Writable.Writable):
 
         for i in range( 0, len(self.QuaternionPath[0]), 1):
             self.QuaternionPath[0][i] = self.QuaternionPath[0][i] / bpy.data.scenes[0].render.fps
-            self.QuaternionPath[1][i] = -self.QuaternionPath[1][i]
-            self.QuaternionPath[2][i] = -self.QuaternionPath[2][i]
-            self.QuaternionPath[3][i] = -self.QuaternionPath[3][i]
+            #self.QuaternionPath[1][i] = self.QuaternionPath[1][i]
+            #self.QuaternionPath[2][i] = self.QuaternionPath[2][i]
+            #self.QuaternionPath[3][i] = self.QuaternionPath[3][i]
+            #self.QuaternionPath[4][i] = self.QuaternionPath[4][i]
 
 
 

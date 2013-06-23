@@ -137,7 +137,7 @@ Manager::setup(bool separate_thread, bool accept_visitors, double step_size)
     setAutoStartThread( separate_thread ) ;
 
     if( ! separate_thread ) {
-        addUpdateCallback( new osgODE::ManagerUpdateCallback() ) ;
+        setUpdateCallback( new osgODE::ManagerUpdateCallback() ) ;
     }
 
     setAcceptVisitors( accept_visitors ) ;

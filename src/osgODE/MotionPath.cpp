@@ -27,6 +27,7 @@
 #include <osgODE/MotionPath>
 #include <osgODE/RigidBody>
 #include <osgODE/World>
+#include <osgODE/OneWayFixedJoint>
 #include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -92,9 +93,10 @@ MotionPath::~MotionPath(void)
 void
 MotionPath::operator()(ODEObject* object)
 {
-    RigidBody*  body = object->asRigidBody() ;
+    RigidBody*          body = object->asRigidBody() ;
+    OneWayFixedJoint*   one_way_fixed_joint = object->asOneWayFixedJoint() ;
 
-    PS_ASSERT1( body != NULL ) ;
+    PS_ASSERT1( body  ||  one_way_fixed_joint ) ;
 
 
     switch( m_status )
@@ -119,7 +121,8 @@ MotionPath::operator()(ODEObject* object)
                 m = m * osg::Matrix::translate( m_position->interpolate( m_time ) ) ;
             }
 
-            body->setMatrix( m ) ;
+            if      ( body )                    body->setMatrix( m ) ;
+            else if ( one_way_fixed_joint )     one_way_fixed_joint->setMatrix( m ) ;
         }
         break ;
 

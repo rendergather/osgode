@@ -98,9 +98,16 @@ class Manager(Writable.Writable):
             return False
 
 
+        writer.moveIn("UpdateCallback TRUE")
+        writer.moveIn("osgODE::ManagerUpdateCallback")
+        writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+        writer.moveOut("osgODE::ManagerUpdateCallback")
+        writer.moveOut("UpdateCallback TRUE")
+
+
         writer.writeLine("StepSize %f" %(self.StepSize))
 
-        writer.writeLine("AutoStartThread TRUE")
+        writer.writeLine("AutoStartThread FALSE")
         writer.writeLine("AcceptVisitors TRUE")
 
 

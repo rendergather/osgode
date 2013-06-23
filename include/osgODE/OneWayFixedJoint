@@ -101,6 +101,24 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set the quaternion
+    inline void             setQuaternion( const osg::Quat& quaternion ) ;
+
+    //! Get the const quaternion
+    inline const osg::Quat& getQuaternion(void) const ;
+
+    //! Set the position
+    inline void             setPosition( const osg::Vec3& position ) ;
+
+    //! Get the const position
+    inline const osg::Vec3& getPosition(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     virtual void    update(double step_size) ;
 /* ======================================================================= */
 

@@ -106,7 +106,10 @@ RagDoll::postUpdate( double step_size )
     }
 
     if( m_skeleton.valid() ) {
-        m_skeleton->setMatrix( osg::Matrix::identity() ) ;
+
+        PS_ASSERT1( m_root_bone.valid() ) ;
+
+        m_skeleton->setMatrix( m_root_body->getMatrix() ) ;
         m_skeleton->dirtyBound() ;
     }
 
@@ -192,15 +195,17 @@ namespace {
     class MyBoneUpdate: public osg::NodeCallback
     {
     public:
-        MyBoneUpdate(osgODE::RigidBody* body, const osg::Matrix& offset):
+        MyBoneUpdate(osgODE::RigidBody* body, const osg::Matrix& offset, osgAnimation::Skeleton* skeleton):
             m_body      ( body ),
-            m_offset    ( offset) {}
+            m_offset    ( offset),
+            m_skeleton  ( skeleton) {}
 
 
 
         virtual void    operator()(osg::Node* node, osg::NodeVisitor* nv)
         {
             PS_ASSERT1( dynamic_cast<osgAnimation::Bone*>( node ) ) ;
+            PS_ASSERT1( m_skeleton.valid() ) ;
 
             osgAnimation::Bone* bone = static_cast<osgAnimation::Bone*>( node ) ;
 
@@ -209,13 +214,13 @@ namespace {
 
             osg::Matrix m = m_offset * m_body->getMatrix() ;
 
-            bone->setMatrixInSkeletonSpace( m ) ;
+            bone->setMatrixInSkeletonSpace( m * osg::Matrix::inverse( m_skeleton->getMatrix() ) ) ;
 
             osgAnimation::Bone* parent = bone->getBoneParent() ;
             if( parent ) {
                 bone->setMatrix( m * osg::Matrix::inverse( parent->getMatrixInSkeletonSpace() ) ) ;
             } else {
-                bone->setMatrix( m ) ;
+                bone->setMatrix( bone->getMatrixInSkeletonSpace() ) ;
             }
 
 
@@ -223,8 +228,9 @@ namespace {
         }
 
     private:
-        osg::ref_ptr<osgODE::RigidBody> m_body ;
-        osg::Matrix                     m_offset ;
+        osg::ref_ptr<osgODE::RigidBody>         m_body ;
+        osg::Matrix                             m_offset ;
+        osg::ref_ptr<osgAnimation::Skeleton>    m_skeleton ;
     } ;
 } // anon namespace
 /* ....................................................................... */
@@ -340,7 +346,13 @@ RagDoll::_initRagDoll(void)
             continue ;
         }
 
-        bone->setUpdateCallback( new MyBoneUpdate( body, bone->getMatrixInSkeletonSpace() * osg::Matrix::inverse( body->getMatrix() ) ) ) ;
+        bone->setUpdateCallback(
+            new MyBoneUpdate(
+                body,
+                bone->getMatrixInSkeletonSpace() * osg::Matrix::inverse( body->getMatrix() ),
+                m_skeleton.get()
+            )
+        ) ;
     }
 
 

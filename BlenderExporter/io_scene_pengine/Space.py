@@ -174,23 +174,28 @@ class Space(Writable.Writable):
             return None
 
 
-        elif obj.game.physics_type in ['NO_COLLISION', 'RIGID_BODY']:
+        elif not obj.game.use_collision_bounds:
 
             from . import RigidBody
             return RigidBody.RigidBody(self.Data, obj)
 
 
 
-        elif obj.game.physics_type in ['STATIC', 'DYNAMIC']:
-            if not obj.game.use_collision_bounds:
+        elif obj.game.physics_type == 'NO_COLLISION' :
+
+            from . import RigidBody
+            return RigidBody.RigidBody(self.Data, obj)
+
+
+
+
+
+        elif obj.game.physics_type in ['STATIC', 'DYNAMIC', 'RIGID_BODY']:
+            if obj.game.collision_bounds_type == 'TRIANGLE_MESH':
                 from . import TriMesh
                 return TriMesh.TriMesh(self.Data, obj)
 
-            elif obj.game.collision_bounds_type == 'TRIANGLE_MESH':
-                from . import TriMesh
-                return TriMesh.TriMesh(self.Data, obj)
-
-            if obj.game.collision_bounds_type == 'BOX':
+            elif obj.game.collision_bounds_type == 'BOX':
                 from . import Box
                 return Box.Box(self.Data, obj)
 

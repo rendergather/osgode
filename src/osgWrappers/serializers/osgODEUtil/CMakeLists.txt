@@ -4,6 +4,7 @@ SET(MODULE_NAME osgdb_serializers_osgodeutil)
 
 
 SET(TARGET_SRC
+    AnimationHelper_serializer.cpp
     HashTable_serializer.cpp
     HashTablePair_serializer.cpp
 )

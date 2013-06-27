@@ -47,9 +47,7 @@ namespace {
         virtual void    operator()(osgODE::World* world)
         {
             if( m_joint.valid() ) {
-                world->traverseLock() ;
                 world->removeObject( m_joint.get() ) ;
-                world->traverseUnlock() ;
             }
         }
 

@@ -50,6 +50,8 @@ class ODEObject(Writable.Writable):
     Object = None
     ID = 0
 
+    UserValues = []
+
     UpdateCallback = None
 ############################################################################
 
@@ -67,6 +69,7 @@ class ODEObject(Writable.Writable):
 
         self.Object = obj
         self.ID = 0
+        self.UserValues = []
         self.UpdateCallback = None
 ############################################################################
 
@@ -95,6 +98,14 @@ class ODEObject(Writable.Writable):
         writer.moveOut("osgODE::ODEObject")
 
         return True
+#########################################################################
+
+
+
+
+############################################################################
+    def addUserValue(self, pName, pValue):
+        self.UserValues.append( ( str(pName), str(pValue) ) )
 ############################################################################
 
 
@@ -105,6 +116,41 @@ class ODEObject(Writable.Writable):
 
         if not super(ODEObject, self).writeToStream(writer) :
             return False
+
+
+
+
+        if self.UserValues != [] :
+            writer.moveIn( "UserDataContainer TRUE" )
+            writer.moveIn( "osg::DefaultUserDataContainer" )
+
+
+
+            writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() )
+
+            writer.moveIn( "UDC_UserObjects %d" %len(self.UserValues) )
+
+
+            for i in self.UserValues:
+                writer.moveIn( "osg::StringValueObject" ) ;
+
+                writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() ) ;
+
+                writer.writeLine( "Name \"%s\"" % str(i[0]) ) ;
+                writer.writeLine( "Value \"%s\"" % str(i[1]) ) ;
+
+                writer.moveOut( "osg::StringValueObject" ) ;
+
+
+            writer.moveOut( "UDC_UserObjects %d" %len(self.UserValues) )
+
+
+
+            writer.moveOut( "osg::DefaultUserDataContainer" )
+            writer.moveOut( "UserDataContainer TRUE" )
+
+
+
 
 
         writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))

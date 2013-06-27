@@ -1,5 +1,5 @@
 /*!
- * @file CommonWorldOperations
+ * @file AnimationHelper_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,103 +22,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_COMMONWORLDOPERATIONS_HPP
-#define _OSGODE_COMMONWORLDOPERATIONS_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osgODE/World>
+/* ....................................................................... */
+#include <osgODEUtil/AnimationHelper>
+
+#include <osgDB/Registry>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-namespace osgODE
+/* ======================================================================= */
+/* ....................................................................... */
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+REGISTER_OBJECT_WRAPPER( AnimationHelper,
+                         new osgODEUtil::AnimationHelper,
+                         osgODEUtil::AnimationHelper,
+                         "osg::Object osgODE::ODECallback osgODEUtil::AnimationHelper" )
 {
-
-
-
-
-/* ======================================================================= */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-class OSG_EXPORT RemoveObjectOperation: public World::Operation
-{
-public:
-             RemoveObjectOperation(ODEObject* object) ;
-             RemoveObjectOperation(const RemoveObjectOperation& other) ;
-
-
-    virtual void    operator()(World* world) ;
-
-private:
-    osg::ref_ptr<ODEObject> m_object ;
-    bool    m_acquire_traverse_lock ;
-} ;
+    (void) wrapper ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-class OSG_EXPORT AddObjectOperation: public World::Operation
-{
-public:
-             AddObjectOperation(ODEObject* object) ;
-             AddObjectOperation(const AddObjectOperation& other) ;
-
-
-    virtual void    operator()(World* world) ;
-
-private:
-    osg::ref_ptr<ODEObject> m_object ;
-    bool    m_acquire_traverse_lock ;
-} ;
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-class OSG_EXPORT ModifyCallbackOperation: public World::Operation
-{
-public:
-             ModifyCallbackOperation( ODEObject* object, ODECallback* cbk, void (ODEObject::*member)(ODECallback*) ) ;
-             ModifyCallbackOperation(const ModifyCallbackOperation& other) ;
-
-
-    virtual void    operator()(World* world) ;
-
-private:
-    osg::ref_ptr<ODEObject>     m_object ;
-    osg::ref_ptr<ODECallback>   m_cbk ;
-    void (ODEObject::*m_member)(ODECallback*) ;
-} ;
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-} // namespace osgODE
-
-
-
-
-// #include "CommonWorldOperations.inl"
-
-
-
-
-#endif /* _OSGODE_COMMONWORLDOPERATIONS_HPP */

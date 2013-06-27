@@ -24,7 +24,7 @@ main(int argc, char** argv)
 
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
 
-    manager->setup(false, true, 1.0/60.0) ;
+    manager->setup(true, 1.0/60.0) ;
 
     manager->setWorld( new osgODE::World() ) ;
 

@@ -56,13 +56,14 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 World::World(void):
-    m_world_step(dWorldStep),
-    m_current_frame(0),
-    m_simulation_time(0.0),
-    m_objects_sorted(true),
-    m_wind_frequency(0.0),
-    m_air_density(1.2929),
-    m_current_step_size(0.0)
+    m_world_step            ( dWorldStep ),
+    m_current_frame         ( 0 ),
+    m_simulation_time       ( 0.0 ),
+    m_objects_sorted        ( true ),
+    m_wind_frequency        ( 0.0 ),
+    m_air_density           ( 1.2929 ),
+    m_current_step_size     ( 0.0 ),
+    m_enable_interactions   ( false )
 {
 
 
@@ -85,16 +86,17 @@ World::World(void):
 /* ======================================================================= */
 /* ....................................................................... */
 World::World(const World& other, const osg::CopyOp& copyop):
-    osgODE::ODEObject(other, copyop),
-    m_world_step(other.m_world_step),
-    m_current_frame(other.m_current_frame),
-    m_simulation_time(other.m_simulation_time),
-    m_objects_sorted(true),
-    m_wind(other.m_wind),
-    m_wind_frequency(other.m_wind_frequency),
-    m_air_density(other.m_air_density),
-    m_current_wind( other.m_current_wind ),
-    m_current_step_size(other.m_current_step_size)
+    osgODE::ODEObject       ( other, copyop ),
+    m_world_step            ( other.m_world_step ),
+    m_current_frame         ( other.m_current_frame ),
+    m_simulation_time       ( other.m_simulation_time ),
+    m_objects_sorted        ( true ),
+    m_wind                  ( other.m_wind ),
+    m_wind_frequency        ( other.m_wind_frequency ),
+    m_air_density           ( other.m_air_density ),
+    m_current_wind          ( other.m_current_wind ),
+    m_current_step_size     ( other.m_current_step_size ),
+    m_enable_interactions   ( other.m_enable_interactions )
 {
 
 
@@ -281,6 +283,12 @@ World::step(double step_size)
 
 
     _callObjectsPostCallbacks(step_size) ;
+
+
+
+    if( m_enable_interactions ) {
+        findInteractions() ;
+    }
 
 
 
@@ -636,6 +644,8 @@ World::addToWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::addToWorldInternal(%p, world=%p)", this, world) ;
 
+	(void) world ;
+
     return true ;
 }
 /* ....................................................................... */
@@ -650,6 +660,8 @@ bool
 World::removeFromWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::removeFromWorldInternal(%p, world=%p)", this, world) ;
+
+	(void) world ;
 
     return true ;
 }

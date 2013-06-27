@@ -84,6 +84,10 @@ ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
         if( other.m_post_update_callback.valid() ) {
             m_post_update_callback = osg::clone( other.m_post_update_callback.get(), copyop ) ;
         }
+
+        if( other.m_interaction_callback.valid() ) {
+            m_interaction_callback = osg::clone( other.m_interaction_callback.get(), copyop ) ;
+        }
     }
 }
 /* ....................................................................... */

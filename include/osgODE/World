@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -76,31 +76,6 @@ public:
 
     //! Divert the visitor to each ODEObject
     void    traverse(osg::NodeVisitor& nv) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    //! read lock
-    inline void     readLock(void) ;
-
-    //! read unlock
-    inline void     readUnlock(void) ;
-
-    //! write lock
-    inline void     writeLock(void) ;
-
-    //! write unlock
-    inline void     writeUnlock(void) ;
-
-
-    //! special lock for traversing purpose. experimental
-    inline void     traverseLock(void) ;
-
-    //! special lock for traversing purpose. experimental
-    inline void     traverseUnlock(void) ;
 /* ======================================================================= */
 
 
@@ -383,6 +358,16 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set whether to enable the interaction system. Don't use it
+    inline void         setEnableInteractions( bool enable_interactions ) ;
+
+    //! Set whether to enable the interaction system. Don't use it
+    inline bool         getEnableInteractions(void) const ;
+
+
+
+
+
     class OSG_EXPORT InteractionCallback: public osg::Referenced
     {
     public:
@@ -406,7 +391,11 @@ public:
                                 const osg::BoundingSphere& sphere ) ;
 
     //! part of the interaction system, Don't use it
-    bool    findInteractions(   InteractionCallback* cbk ) ;
+    /*!
+     * This is called internally by World::step if m_enable_interactions is
+     * true
+     */
+    bool    findInteractions(   InteractionCallback* cbk = NULL ) ;
 /* ======================================================================= */
 
 
@@ -460,11 +449,6 @@ protected:
 private:
     WorldStepPrototype      m_world_step ;
 
-
-    OpenThreads::ReadWriteMutex     m_read_write_mutex ;
-
-    OpenThreads::Mutex              m_traverse_mutex ;
-
     dWorldID                m_ODE_world ;
 
 
@@ -485,6 +469,9 @@ private:
 
 
     double          m_current_step_size ;
+
+
+    bool            m_enable_interactions ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

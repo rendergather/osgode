@@ -111,6 +111,18 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set wheter to remove this callback when the motion ends. Def: false
+    inline void     setRemoveWhenDone( bool remove_when_done ) ;
+
+    //! Set wheter to remove this callback when the motion ends. Def: false
+    inline bool     getRemoveWhenDone(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     //! Move the body
     /*!
      * SIGSEGV (or assert) when obj is not a RigidBody
@@ -128,6 +140,8 @@ private:
 
     double      m_time ;
     Status      m_status ;
+
+    bool        m_remove_when_done ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -116,6 +116,7 @@ REGISTER_OBJECT_WRAPPER( ODEObject,
     ADD_USER_SERIALIZER( ID ) ;
     ADD_OBJECT_SERIALIZER( UpdateCallback, osgODE::ODECallback, NULL ) ;
     ADD_OBJECT_SERIALIZER( PostUpdateCallback, osgODE::ODECallback, NULL ) ;
+    ADD_OBJECT_SERIALIZER( InteractionCallback, osgODE::ODECallback, NULL ) ;
     ADD_OBJECT_SERIALIZER( UserObject, osg::Object, NULL ) ;
     ADD_USER_SERIALIZER( InteractingSphere ) ;
 }

@@ -52,7 +52,7 @@ main(int argc, char** argv)
 
         manager->setWorld( world ) ;
 
-        manager->setup(false, true, 1.0/100.0) ;
+        manager->setup(true, 1.0/100.0) ;
 
         world->setERP(1.0) ;
         world->setCFM(1.0e-5) ;

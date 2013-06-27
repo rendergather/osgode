@@ -35,9 +35,6 @@ main(int argc, char** argv)
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
 
 
-    // Ensure single threaded
-    manager->setAutoStartThread( false ) ;
-
     // ManagerUpdateCallback::operator() calls the Manager::frame method
     manager->addUpdateCallback( new osgODE::ManagerUpdateCallback() ) ;
 

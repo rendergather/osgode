@@ -34,7 +34,7 @@ main(int argc, char** argv)
      * [1] create the manager
      */
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
-    manager->setup(false, true, STEP_SIZE) ;
+    manager->setup(true, STEP_SIZE) ;
 
 
     /*

@@ -30,7 +30,7 @@ main(int argc, char** argv)
      * [1] Create the manager
      */
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
-    manager->setup(false, true, 1.0/60.0) ;
+    manager->setup(true, 1.0/60.0) ;
 
     /*
      * [2] Create the space

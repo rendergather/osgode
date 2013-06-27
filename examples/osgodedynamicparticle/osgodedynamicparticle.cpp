@@ -56,7 +56,7 @@ main(int argc, char** argv)
     {
         root->addChild( manager ) ;
 
-        manager->setup(false, true, 1.0/100.0) ;
+        manager->setup(true, 1.0/100.0) ;
 
         manager->setWorld( new osgODE::Space() ) ;
     }

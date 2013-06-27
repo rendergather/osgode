@@ -33,8 +33,6 @@
 
 #include <osg/Node>
 #include <osg/NodeVisitor>
-
-#include <OpenThreads/Thread>
 /* ======================================================================= */
 
 
@@ -52,11 +50,8 @@ namespace osgODE
 /*!
  * The better way to use this is to call the "frame" method during the update
  * traversal. The ManagerUpdateCallback does this job.\n
- * \n
- * The step invokes the World::writeLock.\n
- * The traverse invokes the World::traverseLock.\n
  */
-class OSG_EXPORT Manager: public osg::Node, public OpenThreads::Thread
+class OSG_EXPORT Manager: public osg::Node
 {
 /* ======================================================================= */
 public:
@@ -82,10 +77,7 @@ public:
     virtual osg::BoundingSphere computeBound(void) const ;
 
 
-    //! Start a new thread if it is not running and getAutoStartThread is true
-    /*!
-     * World::traverseLock
-     */
+    //! Divert the visitor to the world
     virtual void traverse(osg::NodeVisitor& nv) ;
 
 
@@ -105,20 +97,6 @@ public:
 
 /* ======================================================================= */
 public:
-    //! If true, the manager will start during the next cull visit (default false)
-    inline void     setAutoStartThread(bool flag) ;
-
-    //! If true, the manager will start during the next cull visit (default false)
-    inline bool     getAutoStartThread(void) const ;
-
-
-    //! If true, stop the mainloop
-    inline void     setDone(bool done) ;
-
-    //! If true, stop the mainloop
-    inline bool     getDone(void) const ;
-
-
     //! Set the step size (default: 1/60)
     inline void     setStepSize(double step_size) ;
 
@@ -148,20 +126,14 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Quick init
+    //! Quick init. Set the ManagerUpdateCallback as update callback
     /*!
-     * @param   separate_thread     if true will invoke
-     *                                  setAutoStartThread(true), 
-     *                              otherwise
-     *                                  invoke setAutoStartThread(false)
-     *                                  setup the ManagerUpdateCallback
-     *
      * @param   accept_visitors     invole setAcceptVisitors(accept_visitors)
      * @param   step_size           invole setStepSize( step_size )
      *
      * Must be called once before everything else
      */
-    void    setup(bool separate_thread=false, bool accept_visitors=true, double step_size=1.0/60.0) ;
+    void    setup(bool accept_visitors=true, double step_size=1.0/60.0) ;
 /* ======================================================================= */
 
 
@@ -169,22 +141,11 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Advance the simulation
+    //! Advance
     /*!
-     *  world->writeLock ;\n
-     *  world->getUpdateCallback()->callback ;\n
-     *  world->update ;\n
-     *  world->getPostUpdateCallback()->callback ;\n
-     *  world->writeUnlock \n
-     * \n
      * If step_size <= 0.0 returns immediately
      */
     void    frame(double step_size) ;
-
-
-
-    //! The mainloop. Use startThread to start it in another thread
-    virtual void    run(void) ;
 /* ======================================================================= */
 
 
@@ -205,11 +166,9 @@ public:
 private:
     double              m_delta ;
 
-    bool                m_done ;
     double              m_step_size ;
     double              m_time_multiplier ;
 
-    bool                m_auto_start_thread ;
     bool                m_accept_visitors ;
 
     osg::ref_ptr<World> m_world ;

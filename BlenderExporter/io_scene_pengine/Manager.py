@@ -107,7 +107,6 @@ class Manager(Writable.Writable):
 
         writer.writeLine("StepSize %f" %(self.StepSize))
 
-        writer.writeLine("AutoStartThread FALSE")
         writer.writeLine("AcceptVisitors TRUE")
 
 

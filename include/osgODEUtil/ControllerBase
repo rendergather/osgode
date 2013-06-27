@@ -118,6 +118,10 @@ public:
 
 
 
+    //! up=true, handled
+    inline Signal2<const bool, bool>*       onMouseWheel(void) ;
+
+
     //! normalized position, handled
     inline Signal2<const osg::Vec2, bool>*  onMouseMoved(void) ;
 
@@ -138,6 +142,8 @@ private:
     osg::ref_ptr< Signal2<const bool, bool> >   m_on_left_button ;
     osg::ref_ptr< Signal2<const bool, bool> >   m_on_middle_button ;
     osg::ref_ptr< Signal2<const bool, bool> >   m_on_right_button ;
+
+    osg::ref_ptr< Signal2<const bool, bool> >   m_on_mouse_wheel ;
 
     osg::ref_ptr< Signal2<const osg::Vec2, bool> >  m_on_mouse_moved ;
 

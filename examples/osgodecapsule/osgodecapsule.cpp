@@ -157,16 +157,11 @@ main(int argc, char** argv)
      */
     osgODE::Manager*    manager = new osgODE::Manager() ;
     {
-        // The mainloop will run in a separate thread
-        manager->setAutoStartThread(true) ;
-
-        manager->setAcceptVisitors(true) ;
+        manager->setup(true, STEP_SIZE) ;
 
         // setup the space
         osgODE::Space*  space = new osgODE::Space() ;
         manager->setWorld( space ) ;
-
-        manager->setStepSize(STEP_SIZE) ;
 
         space->setWorldStepFunction(dWorldQuickStep) ;
 

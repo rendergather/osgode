@@ -240,6 +240,8 @@ Space::addToWorldInternal(World* world)
 {
     PS_DBG2("osgODE::Space::addToWorldInternal(%p, world=%p)", this, world) ;
 
+	(void) world ;
+
     return true ;
 }
 /* ....................................................................... */
@@ -254,6 +256,8 @@ bool
 Space::removeFromWorldInternal(World* world)
 {
     PS_DBG2("osgODE::Space::removeFromWorldInternal(%p, world=%p)", this, world) ;
+
+	(void) world ;
 
     return true ;
 }

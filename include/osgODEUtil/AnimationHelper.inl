@@ -1,5 +1,5 @@
 /*!
- * @file Sensor_serializer.cpp
+ * @file AnimationHelper.inl
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,28 +22,28 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/Sensor>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
+#ifndef _OSGODEUTIL_ANIMATIONHELPER_INL
+#define _OSGODEUTIL_ANIMATIONHELPER_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( Sensor,
-                         new osgODE::Sensor,
-                         osgODE::Sensor,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Sensor" )
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODEUtil::AnimationHelper::dirty(void)
 {
-    ADD_VEC3_SERIALIZER( Position, osg::Vec3() ) ;
-    ADD_QUAT_SERIALIZER( Quaternion, osg::Quat() ) ;
-    ADD_DOUBLE_SERIALIZER( Radius, 0.0 ) ;
-    ADD_OBJECT_SERIALIZER( ActivationCallback, osgODE::ODECallback, NULL ) ;
+    m_dirty = true ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+#endif /* _OSGODEUTIL_ANIMATIONHELPER_INL */

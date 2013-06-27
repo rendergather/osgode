@@ -93,8 +93,7 @@ Scene::init(int argc, char** argv)
      * [1] Create and setup the manager
      */
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
-    manager->setAcceptVisitors(true) ;
-    manager->setAutoStartThread(true) ;
+    manager->setup(true, 1.0/60.0) ;
 
     manager->setWorld( new osgODE::Space() ) ;
 
@@ -310,111 +309,67 @@ Scene::handleKeyDown(const int& key, const int& mod, bool& handled)
 
 
     if( key == 'a' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_differential->setParam( dParamVel, m_differential->getParam( dParamVel ) + osg::PI * 1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'd' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_differential->setParam( dParamVel, m_differential->getParam( dParamVel ) - osg::PI * 1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 's' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_differential->setParam( dParamVel, 0.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'q' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_left_slider->setParam( dParamVel, -1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'w' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_left_slider->setParam( dParamVel, 1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'e' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_right_slider->setParam( dParamVel, -1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'r' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_right_slider->setParam( dParamVel, 1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'x' ) {
-        m_manager->getWorld()->writeLock() ;
-
         double  friction = osg::clampTo(m_differential->getFriction() + 0.05, 0.0, 1.0) ;
 
         m_differential->setFriction( friction ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'z' ) {
-        m_manager->getWorld()->writeLock() ;
-
         double  friction = osg::clampTo(m_differential->getFriction() - 0.05, 0.0, 1.0) ;
 
         m_differential->setFriction( friction ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'c' ) {
-        m_manager->getWorld()->writeLock() ;
-
         const double    ratio = m_differential->getRatio1() * 0.5 ;
 
         m_differential->setRatio1( ratio ) ;
         m_differential->setRatio2( 1.0 / ratio ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'v' ) {
-        m_manager->getWorld()->writeLock() ;
-
         const double    ratio = m_differential->getRatio1() * 2.0 ;
 
         m_differential->setRatio1( ratio ) ;
         m_differential->setRatio2( 1.0 / ratio ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
@@ -429,37 +384,21 @@ Scene::handleKeyUp(const int& key, const int& mod, bool& handled)
 
 
     if( key == 'q' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_left_slider->setParam( dParamVel, 0.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'w' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_left_slider->setParam( dParamVel, 0.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'e' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_right_slider->setParam( dParamVel, 0.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 
 
     if( key == 'r' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_right_slider->setParam( dParamVel, 0.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
     }
 }

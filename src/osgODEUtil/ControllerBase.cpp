@@ -47,20 +47,22 @@ using namespace osgODEUtil ;
 /* ======================================================================= */
 /* ....................................................................... */
 ControllerBase::ControllerBase(void):
-    m_on_key_pressed(   new Signal3<const int, const int, bool>() ),
-    m_on_key_released(  new Signal3<const int, const int, bool>() ),
+    m_on_key_pressed    ( new Signal3<const int, const int, bool>() ),
+    m_on_key_released   ( new Signal3<const int, const int, bool>() ),
 
-    m_on_left_button(   new Signal2<const bool, bool>() ),
-    m_on_middle_button( new Signal2<const bool, bool>() ),
-    m_on_right_button(  new Signal2<const bool, bool>() ),
+    m_on_left_button    ( new Signal2<const bool, bool>() ),
+    m_on_middle_button  ( new Signal2<const bool, bool>() ),
+    m_on_right_button   ( new Signal2<const bool, bool>() ),
 
-    m_on_mouse_moved( new Signal2<const osg::Vec2, bool>() ),
+    m_on_mouse_wheel    ( new Signal2<const bool, bool>() ),
 
-    m_on_frame( new Signal3<bool, osg::Vec2, bool>() ),
+    m_on_mouse_moved    ( new Signal2<const osg::Vec2, bool>() ),
 
-    m_button_mask(0),
+    m_on_frame          ( new Signal3<bool, osg::Vec2, bool>() ),
 
-    m_requesting_warp(false)
+    m_button_mask       ( 0 ),
+
+    m_requesting_warp   ( false )
 {
 }
 /* ....................................................................... */
@@ -74,19 +76,21 @@ ControllerBase::ControllerBase(void):
 ControllerBase::ControllerBase(const ControllerBase& other, const osg::CopyOp& copyop):
     osgGA::GUIEventHandler(other, copyop),
 
-    m_on_key_pressed(   other.m_on_key_pressed  ),
-    m_on_key_released(  other.m_on_key_released ),
+    m_on_key_pressed    ( other.m_on_key_pressed  ),
+    m_on_key_released   ( other.m_on_key_released ),
 
-    m_on_left_button(   other.m_on_left_button ),
-    m_on_middle_button( other.m_on_middle_button ),
-    m_on_right_button(  other.m_on_right_button ),
+    m_on_left_button    ( other.m_on_left_button ),
+    m_on_middle_button  ( other.m_on_middle_button ),
+    m_on_right_button   ( other.m_on_right_button ),
 
-    m_on_mouse_moved( other.m_on_mouse_moved ),
+    m_on_mouse_wheel    ( other.m_on_mouse_wheel ),
 
-    m_on_frame( other.m_on_frame ),
+    m_on_mouse_moved    ( other.m_on_mouse_moved ),
 
-    m_key_down( other.m_key_down ),
-    m_button_mask( other.m_button_mask ),
+    m_on_frame          ( other.m_on_frame ),
+
+    m_key_down          ( other.m_key_down ),
+    m_button_mask       ( other.m_button_mask ),
 
     m_requesting_warp( other.m_requesting_warp )
 {
@@ -197,6 +201,25 @@ ControllerBase::handle( const osgGA::GUIEventAdapter&   ea,
 #endif
 
                 m_requesting_warp = false ;
+            }
+        }
+        break ;
+
+
+
+
+        case osgGA::GUIEventAdapter::SCROLL:
+        {
+            int scrolling_motion = ea.getScrollingMotion() ;
+
+
+            if( scrolling_motion == osgGA::GUIEventAdapter::SCROLL_UP ) {
+                m_on_mouse_wheel->emit( true, handled ) ;
+            }
+
+
+            if( scrolling_motion == osgGA::GUIEventAdapter::SCROLL_DOWN ) {
+                m_on_mouse_wheel->emit( false, handled ) ;
             }
         }
         break ;

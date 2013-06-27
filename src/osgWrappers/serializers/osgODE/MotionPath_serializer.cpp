@@ -50,6 +50,8 @@ REGISTER_OBJECT_WRAPPER( MotionPath,
 {
     ADD_DOUBLE_SERIALIZER( Time, -1.0 ) ;
 
+    ADD_BOOL_SERIALIZER( RemoveWhenDone, false ) ;
+
 
 
     BEGIN_ENUM_SERIALIZER( Status, STOP ) ;

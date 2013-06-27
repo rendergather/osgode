@@ -112,10 +112,7 @@ main(int argc, char** argv)
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
 
 
-    manager->setAutoStartThread(true) ;
-    manager->setAcceptVisitors(true) ;
-
-    manager->setStepSize( 1.0 / 120.0 ) ;
+    manager->setup(true, 1.0/120.0) ;
 
     /*
      * [2] create the space

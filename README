@@ -271,11 +271,6 @@ mainloop {
 }
 @endcode
 \n
-I'm working to isolate the dynamics-related thread but the current solution is wrong,
-so don't use it.\n
-\n
-\n
-\n
 \n
 Thank you for reading,\n
 Martino \n

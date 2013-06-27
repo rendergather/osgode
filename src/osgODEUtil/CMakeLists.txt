@@ -9,6 +9,8 @@ SET(HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${MODULE_NAME})
 
 
 SET(TARGET_H
+    ${HEADER_PATH}/AnimationHelper
+    ${HEADER_PATH}/AnimationHelper.inl
     ${HEADER_PATH}/ControllerBase
     ${HEADER_PATH}/ControllerBase.inl
     ${HEADER_PATH}/CreateTriMeshFromNode
@@ -30,6 +32,7 @@ SET(TARGET_H
 
 
 SET(TARGET_SRC
+    AnimationHelper.cpp
     ControllerBase.cpp
     CreateTriMeshFromNode.cpp
     FindObjects.cpp
@@ -45,6 +48,6 @@ SET(TARGET_SRC
 
 
 SET( MODULE_LINK_LIBRARIES_GNU "osgODE osgGA osgDB osgUtil" )
-SET( MODULE_LINK_LIBRARIES_WIN "osgODE osgGA osgDB osgUtil osg OpenThreads opengl32 ODE_WIN" )
+SET( MODULE_LINK_LIBRARIES_WIN "osgODE osgAnimation osgGA osgDB osgUtil osg OpenThreads opengl32 ODE_WIN" )
 
 OSGODE_SETUP_LIBRARY()

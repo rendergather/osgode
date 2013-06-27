@@ -129,11 +129,7 @@ CharacterEx::handleKeyDown(const int& key, const int& mask, bool& handled)
 
         if( this->isOnGround()  &&  this->getWorld() != NULL ) {
 
-            this->getWorld()->writeLock() ;
-
             this->setJump( osg::Z_AXIS * 1.0e3 / this->getWorld()->getCurrentStepSize(), 0.5 ) ;
-
-            this->getWorld()->writeUnlock() ;
 
         }
         handled = true ;
@@ -260,11 +256,7 @@ CharacterEx::_moveCharacter(void)
     axis.normalize() ;
 
 
-    this->getWorld()->writeLock() ;
-
     this->setMotion( axis * (m_motion != 0) * 10, 1000 ) ;
-
-    this->getWorld()->writeUnlock() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

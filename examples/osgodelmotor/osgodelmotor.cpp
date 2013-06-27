@@ -24,8 +24,7 @@ main(int argc, char** argv)
 
 
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
-    manager->setAcceptVisitors(true) ;
-    manager->setAutoStartThread(true) ;
+    manager->setup(true, 1.0/60.0) ;
 
     manager->setWorld( new osgODE::World() ) ;
     manager->getWorld()->setGravity( osg::Vec3(0.0, 0.0, 0.0) ) ;

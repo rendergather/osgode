@@ -122,7 +122,7 @@ main(int argc, char** argv)
 
     manager->setWorld(world) ;
 
-    manager->setup(false, true, 1.0/100.0) ;
+    manager->setup(true, 1.0/100.0) ;
 
 
     world->setERP(0.8) ;

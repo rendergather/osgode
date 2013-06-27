@@ -24,6 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/Notify>
 #include <osgODE/CommonWorldOperations>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -46,9 +47,8 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-RemoveObjectOperation::RemoveObjectOperation(ODEObject* object, bool acquire_traverse_lock):
-    m_object(object),
-    m_acquire_traverse_lock(acquire_traverse_lock)
+RemoveObjectOperation::RemoveObjectOperation(ODEObject* object):
+    m_object(object)
 {
 }
 /* ....................................................................... */
@@ -61,19 +61,7 @@ RemoveObjectOperation::RemoveObjectOperation(ODEObject* object, bool acquire_tra
 /* ....................................................................... */
 RemoveObjectOperation::RemoveObjectOperation(const RemoveObjectOperation& other):
     World::Operation(other),
-    m_object( other.m_object ),
-    m_acquire_traverse_lock( other.m_acquire_traverse_lock )
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-RemoveObjectOperation::~RemoveObjectOperation(void)
+    m_object( other.m_object )
 {
 }
 /* ....................................................................... */
@@ -87,13 +75,7 @@ RemoveObjectOperation::~RemoveObjectOperation(void)
 void
 RemoveObjectOperation::operator()(World* world)
 {
-    if( m_acquire_traverse_lock ) {
-        world->traverseLock() ;
-        world->removeObject( m_object.get() ) ;
-        world->traverseUnlock() ;
-    } else {
-        world->removeObject( m_object.get() ) ;
-    }
+    world->removeObject( m_object.get() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -103,9 +85,8 @@ RemoveObjectOperation::operator()(World* world)
 
 /* ======================================================================= */
 /* ....................................................................... */
-AddObjectOperation::AddObjectOperation(ODEObject* object, bool acquire_traverse_lock):
-    m_object(object),
-    m_acquire_traverse_lock(acquire_traverse_lock)
+AddObjectOperation::AddObjectOperation(ODEObject* object):
+    m_object(object)
 {
 }
 /* ....................................................................... */
@@ -118,19 +99,7 @@ AddObjectOperation::AddObjectOperation(ODEObject* object, bool acquire_traverse_
 /* ....................................................................... */
 AddObjectOperation::AddObjectOperation(const AddObjectOperation& other):
     World::Operation(other),
-    m_object( other.m_object ),
-    m_acquire_traverse_lock( other.m_acquire_traverse_lock )
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-AddObjectOperation::~AddObjectOperation(void)
+    m_object( other.m_object )
 {
 }
 /* ....................................................................... */
@@ -144,13 +113,53 @@ AddObjectOperation::~AddObjectOperation(void)
 void
 AddObjectOperation::operator()(World* world)
 {
-    if( m_acquire_traverse_lock ) {
-        world->traverseLock() ;
-        world->addObject( m_object.get() ) ;
-        world->traverseUnlock() ;
-    } else {
-        world->addObject( m_object.get() ) ;
-    }
+    world->addObject( m_object.get() ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+ModifyCallbackOperation::ModifyCallbackOperation( ODEObject* object, ODECallback* cbk, void (ODEObject::*member)(ODECallback*) ):
+    m_object    ( object ),
+    m_cbk       ( cbk ),
+    m_member    ( member )
+{
+    PS_ASSERT1( m_object.valid() ) ;
+    PS_ASSERT1( m_cbk.valid() ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+ModifyCallbackOperation::ModifyCallbackOperation(const ModifyCallbackOperation& other):
+    World::Operation    ( other ),
+    m_object            ( other.m_object ),
+    m_cbk               ( other.m_cbk ),
+    m_member            ( other.m_member )
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+ModifyCallbackOperation::operator()(World* world)
+{
+    (void) world ;
+
+    (*m_object.*m_member)( m_cbk.get() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

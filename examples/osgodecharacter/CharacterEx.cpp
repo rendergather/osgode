@@ -132,11 +132,7 @@ CharacterEx::handleKeyDown(const int& key, const int& mask, bool& handled)
 
         if( this->isOnGround()  &&  this->getWorld() != NULL ) {
 
-            this->getWorld()->writeLock() ;
-
             this->setJump( osg::Z_AXIS * 1.0e3 / this->getWorld()->getCurrentStepSize(), 0.5 ) ;
-
-            this->getWorld()->writeUnlock() ;
 
         }
         handled = true ;
@@ -194,9 +190,6 @@ CharacterEx::handleLeftButton(const bool& pressed, bool& handled)
     handled = true ;
 
 
-    this->getWorld()->writeLock() ;
-
-
 
     if( m_picked.valid() ) {
         this->detach( m_picked ) ;
@@ -219,9 +212,6 @@ CharacterEx::handleLeftButton(const bool& pressed, bool& handled)
 
 
     m_picked = NULL ;
-
-
-    this->getWorld()->writeUnlock() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -237,16 +227,13 @@ CharacterEx::handleRightButton(const bool& pressed, bool& handled)
     handled = true ;
 
 
-    this->getWorld()->writeLock() ;
-
-
 
     if( m_picked.valid() ) {
         this->detach( m_picked ) ;
     }
 
 
-    
+
     if( pressed ) {
 
         m_picked = this->touch( 5 ) ;
@@ -263,8 +250,6 @@ CharacterEx::handleRightButton(const bool& pressed, bool& handled)
 
     } else {
     }
-
-    this->getWorld()->writeUnlock() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -349,11 +334,8 @@ CharacterEx::_moveCharacter(void)
     axis.normalize() ;
 
 
-    this->getWorld()->writeLock() ;
 
     this->setMotion( axis * (m_motion != 0) * 40, 250 ) ;
-
-    this->getWorld()->writeUnlock() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

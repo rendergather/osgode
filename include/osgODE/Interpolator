@@ -196,6 +196,20 @@ public:
         m_points.clear() ;
         setDirty(true) ;
     }
+
+
+    double  getDuration(void) {
+
+        if( getDirty() ) {
+            init() ;
+        }
+
+        if( m_points.size() ) {
+            return m_points[m_points.size() - 1].first - m_points[0].first ;
+        }
+
+        return 0.0 ;
+    }
 /* ======================================================================= */
 
 

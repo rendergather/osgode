@@ -146,8 +146,7 @@ main(int argc, char** argv)
 
 
         // quick setup
-        manager->setup( false,      // threaded
-                        true,       // accept visitors
+        manager->setup( true,       // accept visitors
                         1.0/120.0   // step size
                       ) ;
     }

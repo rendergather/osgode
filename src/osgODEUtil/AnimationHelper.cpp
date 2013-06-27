@@ -1,5 +1,5 @@
 /*!
- * @file Sensor.inl
+ * @file AnimationHelper.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,8 +22,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_SENSOR_INL
-#define _OSGODE_SENSOR_INL
+/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODEUtil/AnimationHelper>
+
+#include <osgODE/ODEObject>
+#include <osgODE/Notify>
+
+#include <osgAnimation/BasicAnimationManager>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -33,12 +44,16 @@
 
 
 
+using namespace osgODEUtil ;
+
+
+
+
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::Sensor::setPosition( const osg::Vec3& position )
+AnimationHelper::AnimationHelper(void):
+    m_dirty     ( true )
 {
-    m_position = position ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -48,10 +63,10 @@ osgODE::Sensor::setPosition( const osg::Vec3& position )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::Sensor::setQuaternion( const osg::Quat& quaternion )
+AnimationHelper::AnimationHelper(const AnimationHelper& other, const osg::CopyOp& copyop):
+    osgODE::ODECallback ( other, copyop ),
+    m_dirty             ( true )
 {
-    m_quaternion = quaternion ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -61,10 +76,8 @@ osgODE::Sensor::setQuaternion( const osg::Quat& quaternion )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::Sensor::setRadius(double radius)
+AnimationHelper::~AnimationHelper(void)
 {
-    m_radius = radius ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,92 +87,21 @@ osgODE::Sensor::setRadius(double radius)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline const osg::Vec3&
-osgODE::Sensor::getPosition(void) const
+void
+AnimationHelper::operator()( osgODE::ODEObject* object )
 {
-    return m_position ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
+    PS_ASSERT1( object ) ;
 
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osg::Quat&
-osgODE::Sensor::getQuaternion(void) const
-{
-    return m_quaternion ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline double
-osgODE::Sensor::getRadius(void) const
-{
-    return m_radius ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::Sensor::setActivationCallback(osgODE::ODECallback* cbk)
-{
-    m_callback = cbk ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline osgODE::ODECallback*
-osgODE::Sensor::getActivationCallback(void)
-{
-    return m_callback.get() ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::ODECallback*
-osgODE::Sensor::getActivationCallback(void) const
-{
-    return m_callback.get() ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::Sensor::addActivationCallback(osgODE::ODECallback* cbk)
-{
-    if( m_callback.valid() ) {
-        m_callback->addNestedCallback(cbk) ;
-    } else {
-        setActivationCallback(cbk) ;
+    if( m_dirty ) {
+        init( object ) ;
+        m_dirty = false ;
     }
+
+
+    update( object ) ;
+
+
+    traverse( object ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -169,17 +111,20 @@ osgODE::Sensor::addActivationCallback(osgODE::ODECallback* cbk)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::Sensor::removeActivationCallback(osgODE::ODECallback* cbk)
+void
+AnimationHelper::update( osgODE::ODEObject* object )
 {
-    if(cbk) {
-        if( cbk == m_callback.get()) {
-            m_callback = m_callback->getNestedCallback() ;
-        } else {
-            if( m_callback.valid() ) {
-                m_callback->removeNestedCallback(cbk) ;
-            }
+	(void) object ;
+
+    osgAnimation::Animation*    idle = m_animation_map["IDLE"] ;
+
+
+    if( idle ) {
+
+        if( ! m_bam->isPlaying(idle) ) {
+            m_bam->playAnimation(idle) ;
         }
+
     }
 }
 /* ....................................................................... */
@@ -188,4 +133,106 @@ osgODE::Sensor::removeActivationCallback(osgODE::ODECallback* cbk)
 
 
 
-#endif /* _OSGODE_SENSOR_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationHelper::init( osgODE::ODEObject* object )
+{
+    m_bam = _findBasicAnimationManager( object ) ;
+
+    PS_ASSERT1( m_bam.valid() ) ;
+
+
+    m_animation_map = _buildAnimationMap( m_bam.get() ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+const AnimationHelper::AnimationMap
+AnimationHelper::_buildAnimationMap( osgAnimation::BasicAnimationManager* bam )
+{
+    AnimationMap    animation_map ;
+
+    for( unsigned int i = 0; i < bam->getAnimationList().size(); i++ ) {
+
+        osgAnimation::Animation*    current = bam->getAnimationList()[i] ;
+
+        animation_map[ current->getName() ] = current ;
+
+        current->setPlayMode( osgAnimation::Animation::STAY ) ;
+    }
+
+
+    return animation_map ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+namespace {
+    class OSG_EXPORT BasicAnimationManagerFinder: public osg::NodeVisitor
+    {
+    public:
+            BasicAnimationManagerFinder(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
+
+
+        virtual void    apply( osg::Node& n )
+        {
+            if( ! m_bam.valid() ) {
+                osg::NodeCallback*  nc = n.getUpdateCallback() ;
+
+                while( nc != NULL ) {
+                    osgAnimation::BasicAnimationManager*    bam = dynamic_cast<osgAnimation::BasicAnimationManager*>( nc ) ;
+
+                    if( bam ) {
+                        m_bam = bam ;
+                    }
+
+                    nc = nc->getNestedCallback() ;
+                }
+
+
+            }
+
+            n.setCullingActive(false) ;
+                traverse(n) ;
+        }
+
+
+        osgAnimation::BasicAnimationManager*    getBAM(void)
+        {   return m_bam.get() ; }
+
+
+    private:
+        osg::ref_ptr<osgAnimation::BasicAnimationManager>   m_bam ;
+    } ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+osgAnimation::BasicAnimationManager*
+AnimationHelper::_findBasicAnimationManager( osgODE::ODEObject* object )
+{
+    osg::ref_ptr<BasicAnimationManagerFinder>   visitor = new BasicAnimationManagerFinder() ;
+
+    object->accept( *visitor ) ;
+
+
+    return visitor->getBAM() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

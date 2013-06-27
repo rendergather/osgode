@@ -1,5 +1,5 @@
 /*!
- * @file Sensor.cpp
+ * @file AnimationHelper
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,131 +22,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/Sensor>
-#include <osgODE/World>
-#include <osgODE/Notify>
-
-#include <iostream>
-#include <osg/io_utils>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODEUTIL_ANIMATIONHELPER_HPP
+#define _OSGODEUTIL_ANIMATIONHELPER_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
+#include <osgODE/ODECallback>
+
+#include <osg/observer_ptr>
+
+#include <map>
 /* ======================================================================= */
 
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
-/* ....................................................................... */
-Sensor::Sensor(void):
-    m_radius(0.0)
-{
+namespace osgAnimation {
+    class Animation ;
+    class BasicAnimationManager ;
 }
-/* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-Sensor::Sensor(const Sensor& other, const osg::CopyOp& copyop):
-    Transformable(other, copyop),
-    m_position( other.m_position ),
-    m_quaternion( other.m_quaternion ),
-    m_radius( other.m_radius ),
-    m_callback( other.m_callback )
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-Sensor::~Sensor(void)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-namespace {
-    class Interactor: public World::InteractionCallback
-    {
-    public:
-        virtual void    operator()(ODEObject* object, ODEObject*)
-        {   m_objects.push_back(object) ;   }
-
-        World::Objects& getObjects(void)
-        {   return m_objects ;  }
-
-    private:
-        World::Objects m_objects ;
-
-    } ;
-}
-/* ....................................................................... */
-void
-Sensor::postUpdate(double step_size)
+namespace osgODEUtil
 {
 
-    {
-        osg::Matrix     m = osg::Matrix::rotate( m_quaternion ) * osg::Matrix::translate( m_position ) ;
-
-        this->Transformable::getMatrixTransform()->setMatrix( m ) ;
-    }
 
 
 
-    World*  world = getWorld() ;
-
-    PS_ASSERT1( world != NULL ) ;
-
-    osg::BoundingSphere bs ;
-
-    bs.set( m_position, m_radius ) ;
-
-
-    osg::ref_ptr<Interactor> interactor = new Interactor() ;
-
-    world->findInteractions( interactor.get(), bs ) ;
-
-
-    if( world->findInteractions( interactor.get(), bs)  ) {
-
-        interaction() ;
-
-
-        if( m_callback.valid()  ) {
-
-            (*m_callback)(this) ;
-        }
-
-    }
-
-
-    this->ODEObject::postUpdate( step_size ) ;
-}
-/* ....................................................................... */
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -154,9 +63,98 @@ Sensor::postUpdate(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-Sensor::interaction(void)
+//!
+/*!
+ */
+class OSG_EXPORT AnimationHelper: public osgODE::ODECallback
 {
-}
+/* ======================================================================= */
+public:
+             AnimationHelper(void) ;
+             AnimationHelper(const AnimationHelper& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~AnimationHelper(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODEUtil, AnimationHelper) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    operator()( osgODE::ODEObject* object ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void     dirty(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    virtual void    init( osgODE::ODEObject* object ) ;
+    virtual void    update( osgODE::ODEObject* object ) ;
+
+
+    osgAnimation::BasicAnimationManager*    _findBasicAnimationManager( osgODE::ODEObject* object ) ;
+
+
+    typedef std::map< std::string, osg::ref_ptr<osgAnimation::Animation> >  AnimationMap ;
+
+    const AnimationMap  _buildAnimationMap( osgAnimation::BasicAnimationManager* bam ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    osg::observer_ptr<osgAnimation::BasicAnimationManager>  m_bam ;
+
+    AnimationMap    m_animation_map ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    bool    m_dirty ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+} // namespace osgODEUtil
+
+
+
+
+#include "AnimationHelper.inl"
+
+
+
+
+#endif /* _OSGODEUTIL_ANIMATIONHELPER_HPP */

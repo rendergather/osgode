@@ -28,6 +28,7 @@
 #include <osgODE/RigidBody>
 #include <osgODE/World>
 #include <osgODE/OneWayFixedJoint>
+#include <osgODE/CommonWorldOperations>
 #include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -51,8 +52,9 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 MotionPath::MotionPath(void):
-    m_time(-1.0),
-    m_status( STOP )
+    m_time              ( -1.0 ),
+    m_status            ( STOP ),
+    m_remove_when_done  ( false )
 {
 }
 /* ....................................................................... */
@@ -64,11 +66,12 @@ MotionPath::MotionPath(void):
 /* ======================================================================= */
 /* ....................................................................... */
 MotionPath::MotionPath(const MotionPath& other, const osg::CopyOp& copyop):
-    ODECallback(other, copyop),
-    m_position( other.m_position ),
-    m_quaternion( other.m_quaternion ),
-    m_time( other.m_time ),
-    m_status( other.m_status )
+    ODECallback         ( other, copyop ),
+    m_position          ( osg::clone(other.m_position.get(), copyop) ),
+    m_quaternion        ( osg::clone(other.m_quaternion.get(), copyop) ),
+    m_time              ( other.m_time ),
+    m_status            ( other.m_status ),
+    m_remove_when_done  ( other.m_remove_when_done )
 {
 }
 /* ....................................................................... */
@@ -121,8 +124,54 @@ MotionPath::operator()(ODEObject* object)
                 m = m * osg::Matrix::translate( m_position->interpolate( m_time ) ) ;
             }
 
+
+
             if      ( body )                    body->setMatrix( m ) ;
             else if ( one_way_fixed_joint )     one_way_fixed_joint->setMatrix( m ) ;
+
+
+
+            if( m_remove_when_done ) {
+
+                double  max_duration = 0.0 ;
+
+                if( m_quaternion ) {
+                    max_duration = osg::maximum( max_duration, m_quaternion->getDuration() ) ;
+
+                    if( m_quaternion->getLooping() ) {
+                        max_duration = FLT_MAX ;
+                    }
+                }
+
+                if( m_position ) {
+                    max_duration = osg::maximum( max_duration, m_position->getDuration() ) ;
+
+                    if( m_position->getLooping() ) {
+                        max_duration = FLT_MAX ;
+                    }
+                }
+
+
+                if( m_time > max_duration ) {
+
+                    ODEObject*  obj = NULL ;
+
+                    if      ( body )                    obj = body ;
+                    else if ( one_way_fixed_joint )     obj = one_way_fixed_joint ;
+
+
+
+                    World*  world = obj->getWorld() ;
+
+                    PS_ASSERT1( world ) ;
+
+
+                    world->addOperation( new ModifyCallbackOperation(obj, this, &ODEObject::removeUpdateCallback) ) ;
+                    world->addOperation( new ModifyCallbackOperation(obj, this, &ODEObject::removePostUpdateCallback) ) ;
+
+
+                }
+            }
         }
         break ;
 

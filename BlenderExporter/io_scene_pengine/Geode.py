@@ -157,6 +157,13 @@ class Geode(Writable.Writable):
                         pass
 
 
+                    try:
+                        if self.Object.water_enabled:
+                            self.NodeMask = WATER
+                    except:
+                        pass
+
+
         return self.traverseBuild()
 ############################################################################
 

@@ -83,7 +83,7 @@ Scene::init(int argc, char** argv)
      */
     m_manager = new osgODE::Manager() ;
 
-    m_manager->setup(false, true, 1.0/100.0) ;
+    m_manager->setup(true, 1.0/100.0) ;
 
     m_manager->setWorld( new osgODE::World() ) ;
 
@@ -170,138 +170,91 @@ Scene::handleKeyDown(const int& key, const int& mod, bool& handled)
 
 
     if( key == 'v' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setVel( m_engine->getVel() - 0.25 * osg::PI ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'V' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setVel( m_engine->getVel() + 0.25 * osg::PI ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'f' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setFMax( m_engine->getFMax() * 0.5 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'F' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setFMax( m_engine->getFMax() * 2.0 ) ;
 
         if( m_engine->getFMax() == 0.0 ) {
             m_engine->setFMax( 1.0 ) ;
         }
 
-        m_manager->getWorld()->writeUnlock() ;
-
         handled = true ;
     }
 
 
     if( key == 'z' ) {
-        m_manager->getWorld()->writeLock() ;
 
         m_engine->setFMax( 0.0 ) ;
         m_engine->setVel( 0.0 ) ;
 
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'i' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setInertia( m_engine->getInertia() * 0.5 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'I' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setInertia( m_engine->getInertia() * 2.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'd' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setDrag( m_engine->getDrag() - 0.1 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
-
         handled = true ;
     }
 
 
     if( key == 'D' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setDrag( m_engine->getDrag() + 0.1 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'r' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setRatio( m_engine->getRatio() * 0.5 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'R' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setRatio( m_engine->getRatio() * 2.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }
 
 
     if( key == 'n' ) {
-        m_manager->getWorld()->writeLock() ;
-
         m_engine->setDrag( 0.0 ) ;
         m_engine->setInertia( 1.0 ) ;
-
-        m_manager->getWorld()->writeUnlock() ;
 
         handled = true ;
     }

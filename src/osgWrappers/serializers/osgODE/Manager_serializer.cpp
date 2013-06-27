@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,8 +50,6 @@ REGISTER_OBJECT_WRAPPER( Manager,
 {
     ADD_DOUBLE_SERIALIZER(StepSize, 1.0/60.0) ;
     ADD_DOUBLE_SERIALIZER(TimeMultiplier, 1.0) ;
-    ADD_BOOL_SERIALIZER(Done, false) ;
-    ADD_BOOL_SERIALIZER(AutoStartThread, false) ;
     ADD_BOOL_SERIALIZER(AcceptVisitors, false) ;
     ADD_BOOL_SERIALIZER(ForceUpdateTraversal, false) ;
     ADD_OBJECT_SERIALIZER(World, osgODE::World, NULL) ;

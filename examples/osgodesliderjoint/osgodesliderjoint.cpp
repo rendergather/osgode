@@ -28,9 +28,7 @@ main(int argc, char** argv)
      * [1] Create and configure manager and world
      */
     osg::ref_ptr<osgODE::Manager>   manager = new osgODE::Manager() ;
-    manager->setAcceptVisitors(true) ;
-    manager->setAutoStartThread(true) ;
-    manager->setStepSize(1.0/60.0) ;
+    manager->setup(true, 1.0/60.0) ;
 
     manager->setWorld( new osgODE::World() ) ;
 

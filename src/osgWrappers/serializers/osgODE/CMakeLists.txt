@@ -53,7 +53,6 @@ SET(TARGET_SRC
     RagDoll_serializer.cpp
     RigidBody_serializer.cpp
     ScalarInterpolator_serializer.cpp
-    Sensor_serializer.cpp
     SliderJoint_serializer.cpp
     Space_serializer.cpp
     Sphere_serializer.cpp

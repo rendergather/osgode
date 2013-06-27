@@ -129,8 +129,7 @@ main(int argc, char** argv)
     osgODE::Manager*    manager = new osgODE::Manager() ;
 
 
-    manager->setAcceptVisitors(true) ;
-    manager->setAutoStartThread(true) ;
+    manager->setup(true, 1.0/60.0) ;
 
 
 

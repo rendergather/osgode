@@ -24,6 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/Notify>
 #include <osgODE/World>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -164,9 +165,7 @@ World::findInteractions(    InteractionCallback* cbk )
         const osg::BoundingSphere&  b1 = o1->getInteractingSphere() ;
 
 
-        if( ! b1.valid() ) {
-            continue ;
-        }
+        PS_ASSERT1( b1.valid() ) ;
 
 
 
@@ -183,15 +182,30 @@ World::findInteractions(    InteractionCallback* cbk )
             const osg::BoundingSphere&  b2 = o2->getInteractingSphere() ;
 
 
-            if( ! b2.valid() ) {
-                continue ;
-            }
+            PS_ASSERT1( b2.valid() ) ;
 
 
 
             if( _intersectSphereSphere(b1, b2) ) {
-                (*cbk)(o1, o2) ;
+
                 found = true ;
+
+                if( cbk ) {
+                    (*cbk)(o1, o2) ;
+
+
+                } else {
+                    ODECallback*    cbk1 = o1->getInteractionCallback() ;
+                    ODECallback*    cbk2 = o2->getInteractionCallback() ;
+
+                    if( cbk1 ) {
+                        (*cbk1)( o2 ) ;
+                    }
+
+                    if( cbk2 ) {
+                        (*cbk2)( o1 ) ;
+                    }
+                }
             }
         }
 

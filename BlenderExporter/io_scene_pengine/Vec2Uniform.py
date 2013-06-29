@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
-# file UniformList.py
+# file Vec2Uniform.py
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2013 by Rocco Martino                                   #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -24,9 +24,6 @@
 
 ############################################################################
 from . import Writable
-from . import Vec2Uniform
-from . import Vec4Uniform
-from . import FloatUniform
 ############################################################################
 
 
@@ -42,15 +39,17 @@ from . import FloatUniform
 
 ############################################################################
 # ........................................................................ #
-class UniformList(Writable.Writable):
-    """UniformList in a StateSet"""
+class Vec2Uniform(Writable.Writable):
+    """Vec2Uniform in the scene"""
 
 
 
 
 
 ############################################################################
-    Uniforms = []
+    Name = None
+    Value = None
+    ArrayID = None
 ############################################################################
 
 
@@ -62,34 +61,12 @@ class UniformList(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data):
-        super(UniformList, self).__init__(data)
+    def __init__(self, data, uni_name, uni_val):
+        super(Vec2Uniform, self).__init__(data)
 
-        self.Uniforms = []
-############################################################################
-
-
-
-
-############################################################################
-    def addVec2Uniform(self, uniform_name, vec2):
-        self.Uniforms.append( Vec2Uniform.Vec2Uniform(self.Data, uniform_name, vec2) )
-############################################################################
-
-
-
-
-############################################################################
-    def addVec4Uniform(self, uniform_name, vec4):
-        self.Uniforms.append( Vec4Uniform.Vec4Uniform(self.Data, uniform_name, vec4) )
-############################################################################
-
-
-
-
-############################################################################
-    def addFloatUniform(self, uniform_name, float_value):
-        self.Uniforms.append( FloatUniform.FloatUniform(self.Data, uniform_name, float_value) )
+        self.Name = uni_name
+        self.Value = uni_val
+        self.ArrayID = None
 ############################################################################
 
 
@@ -97,13 +74,15 @@ class UniformList(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(UniformList, self).buildGraph()
-
-        for uniform in self.Uniforms:
-            uniform.buildGraph()
+        super(Vec2Uniform, self).buildGraph()
 
 
-        return self.traverseBuild()
+        self.ArrayID = self.Data.VertexID.generate()
+
+
+        return True
+
+        #return self.traverseBuild()
 ############################################################################
 
 
@@ -111,17 +90,23 @@ class UniformList(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        num_uniforms = len(self.Uniforms)
+        writer.moveIn("osg::Uniform") ;
 
-        if num_uniforms:
-            writer.moveIn("UniformList %d" % num_uniforms)
-
-            for uniform in self.Uniforms:
-                uniform.writeToStream(writer)
-                writer.writeLine("Value OFF")
+        if not super(Vec2Uniform, self).writeToStream(writer) :
+            return False
 
 
-            writer.moveOut("UniformList %d" % num_uniforms)
+
+        writer.writeLine("Name \"%s\"" %self.Name)
+        writer.writeLine("Type FLOAT_VEC2")
+        writer.writeLine("NumElements 1")
+
+        writer.moveIn("Elements TRUE ArrayID %d FloatArray 2" %self.ArrayID)
+        writer.writeLine("%f %f" %(self.Value[0], self.Value[1]))
+        writer.moveOut("Elements TRUE ArrayID %d FloatArray 2" %self.ArrayID)
+
+
+        writer.moveOut("osg::Uniform")
 
         return True
 ############################################################################

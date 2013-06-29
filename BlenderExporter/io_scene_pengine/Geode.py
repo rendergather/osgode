@@ -153,6 +153,14 @@ class Geode(Writable.Writable):
                     try:
                         if self.Object.fog_enabled:
                             self.NodeMask = FOG
+
+
+                            speed = [0, 0]
+
+                            speed[0] = self.Object.fog_speed_x
+                            speed[1] = self.Object.fog_speed_y
+
+                            self.StateSet.UniformList.addVec2Uniform("uFogSpeed", speed)
                     except:
                         pass
 

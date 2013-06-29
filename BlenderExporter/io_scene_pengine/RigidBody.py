@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2013 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -151,6 +151,14 @@ class RigidBody(ODEObject.ODEObject):
 
 
         self.Data.RigidBodyCache.set(self.Object, self.UniqueID)
+
+
+
+        try:
+            if self.Object["oo_camera_path"]:
+                self.addUserValue( "oo_camera_path", 1 )
+        except:
+            pass
 
 
 

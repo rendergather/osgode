@@ -120,6 +120,12 @@ class ODEObject(Writable.Writable):
 
 
 
+
+        writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
+
+
+
+
         if self.UserValues != [] :
             writer.moveIn( "UserDataContainer TRUE" )
             writer.moveIn( "osg::DefaultUserDataContainer" )
@@ -148,12 +154,6 @@ class ODEObject(Writable.Writable):
 
             writer.moveOut( "osg::DefaultUserDataContainer" )
             writer.moveOut( "UserDataContainer TRUE" )
-
-
-
-
-
-        writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
 
 
         writer.writeLine("ID %s" %self.ID)

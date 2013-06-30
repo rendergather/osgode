@@ -354,6 +354,14 @@ public:
 
 
 /* ======================================================================= */
+public:
+    virtual CharacterBase*  asCharacterBase(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
 private:
     void    _updateOrientation(double step_size) ;
     void    _collideAgainstGround(double step_size) ;

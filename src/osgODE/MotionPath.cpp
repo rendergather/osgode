@@ -126,8 +126,14 @@ MotionPath::operator()(ODEObject* object)
 
 
 
-            if      ( body )                    body->setMatrix( m ) ;
-            else if ( one_way_fixed_joint )     one_way_fixed_joint->setMatrix( m ) ;
+            if( body ) {
+                body->setMatrix( m ) ;
+                body->setLinearVelocity( osg::Vec3() ) ;
+                body->setAngularVelocity( osg::Vec3() ) ;
+            }
+            else if( one_way_fixed_joint ) {
+                one_way_fixed_joint->setMatrix( m ) ;
+            }
 
 
 

@@ -109,6 +109,15 @@ class StateSet(Writable.Writable):
             self.ModeList.addMode("GL_NORMALIZE ON")
 
 
+            try:
+                if self.Object["oo_polygon_offset"] != 0.0:
+                    self.ModeList.addMode("GL_POLYGON_OFFSET_POINT ON")
+                    self.ModeList.addMode("GL_POLYGON_OFFSET_LINE ON")
+                    self.ModeList.addMode("GL_POLYGON_OFFSET_FILL ON")
+            except:
+                pass
+
+
 
 
             if self.Object.data.materials[0]  and self.Object.data.materials[0].use_transparency:
@@ -169,6 +178,30 @@ class StateSet(Writable.Writable):
 
         if self.ModeList:
             self.ModeList.writeToStream(writer)
+
+
+
+        try:
+            if self.Object["oo_polygon_offset"] != 0.0:
+
+                writer.moveIn("AttributeList 1")
+
+                writer.moveIn("osg::PolygonOffset")
+
+                writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate())
+                writer.writeLine("Factor %f" % -self.Object["oo_polygon_offset"])
+                writer.writeLine("Units %f" % -self.Object["oo_polygon_offset"])
+
+                writer.moveOut("osg::PolygonOffset")
+
+                writer.writeLine("Value OFF")
+
+                writer.moveOut("AttributeList 1")
+        except:
+            pass
+
+
+
 
         if self.TextureModeList:
             self.TextureModeList.writeToStream(writer)

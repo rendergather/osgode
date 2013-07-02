@@ -51,6 +51,7 @@ class MeshData(object):
     VertexArray = []
     NormalArray = []
     ColorArray = []
+    MaterialColor = []
     MaterialArray = []
     UVArray = []
     TBNArrayT = []
@@ -71,6 +72,7 @@ class MeshData(object):
         self.VertexArray = []
         self.NormalArray = []
         self.ColorArray = []
+        self.MaterialColor = []
         self.MaterialArray = []
         self.UVArray = []
         self.TBNArrayT = []
@@ -86,6 +88,7 @@ class MeshData(object):
         self.VertexArray = self.readVertexArray(mesh)
         self.NormalArray = self.readNormalArray(mesh)
         self.ColorArray = self.readColorArray(mesh)
+        self.MaterialColor = self.readMaterialColor(mesh)
         self.MaterialArray = self.readMaterialArray(mesh)
         self.UVArray = self.readUVArray(mesh)
 
@@ -223,9 +226,7 @@ class MeshData(object):
 
 
 ############################################################################
-    def readColorArray(self, mesh):
-
-        color_array = []
+    def readMaterialColor(self, mesh):
 
         c = []
 
@@ -241,8 +242,87 @@ class MeshData(object):
             c.append(1.0)
             c.append(1.0)
 
+        return c
+############################################################################
 
-        color_array.append(c)
+
+
+
+############################################################################
+    def readColorArray(self, mesh):
+
+        color_array = []
+
+        if bpy.app.version[0] == 2 and bpy.app.version[1] >= 63:
+            mesh.update(calc_tessface=True, calc_edges=True)
+            vcs = mesh.tessface_vertex_colors
+        else:
+            vcs = mesh.vertex_colors
+
+        if len(mesh.materials) > 0 and mesh.materials[0]  and  len(vcs) > 0 :
+            if bpy.app.version[0] == 2 and bpy.app.version[1] >= 63:
+                faces = mesh.polygons
+            else:
+                faces = mesh.faces
+
+            vertices = mesh.vertices
+
+            cur_face = 0
+
+            for f in faces:
+                if len(f.vertices) == 3:
+
+                    color = vcs[0].data[ f.index ].color1
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color2
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color3
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                elif len(f.vertices) == 4:
+
+                    color = vcs[0].data[ f.index ].color1
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color2
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color3
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color1
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color3
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+
+                    color = vcs[0].data[ f.index ].color4
+                    color_array.append( [color.r, color.g, color.b, 1.0] )
+
+                else:
+                    print("Unhandled polygon type in %s, face: %d, num vertices: %d" % (mesh.name, cur_face, len(f.vertices)))
+
+                cur_face += 1
+
+        else:
+            c = []
+            c.append( mesh.materials[0].diffuse_color.r )
+            c.append( mesh.materials[0].diffuse_color.g )
+            c.append( mesh.materials[0].diffuse_color.b )
+            c.append( mesh.materials[0].alpha )
+
+            color_array.append(c)
+
 
         return color_array
 ############################################################################
@@ -286,7 +366,7 @@ class MeshData(object):
         if bpy.app.version[0] == 2 and bpy.app.version[1] >= 63:
 
             #if len(mesh.tessface_uv_textures) == 0:
-            mesh.update(calc_tessface=True)
+            mesh.update(calc_tessface=True, calc_edges=True)
 
             faces = mesh.polygons
             uv_textures = mesh.tessface_uv_textures
@@ -308,7 +388,6 @@ class MeshData(object):
 
         for f in faces:
             for t in range(0, len(uv_textures), 1):
-                tex = uv_textures[t]
             #t = 0
                 tex = uv_textures[t]
 

@@ -126,7 +126,7 @@ class Geode(Writable.Writable):
 
 
                     self.StateSet.UniformList.addVec4Uniform("uMaterial", self.MeshData.MaterialArray[0])
-                    self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.ColorArray[0])
+                    self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.MaterialColor)
                     self.StateSet.UniformList.addFloatUniform("uEmission", self.Object.data.materials[0].emit)
 
                     if self.Object.data.materials[0].subsurface_scattering.use:
@@ -286,16 +286,23 @@ class Geode(Writable.Writable):
 
             array_id = self.Data.VertexID.generate()
 
-            writer.moveIn("Array TRUE ArrayID %d Vec4fArray 1" %(array_id))
+            num_elements = len(self.MeshData.ColorArray)
+
+            writer.moveIn("Array TRUE ArrayID %d Vec4fArray %d" %(array_id, num_elements))
 
             for v in self.MeshData.ColorArray:
                 writer.writeLine("%f %f %f %f" %(v[0], v[1], v[2], v[3]))
 
-            writer.moveOut("Array TRUE ArrayID %d Vec4fArray 1" %(array_id))
+            writer.moveOut("Array TRUE ArrayID %d Vec4fArray %d" %(array_id, num_elements))
 
 
             writer.writeLine("Indices FALSE")
-            writer.writeLine("Binding BIND_OVERALL")
+
+            if num_elements == 1 :
+                writer.writeLine("Binding BIND_OVERALL")
+            else:
+                writer.writeLine("Binding BIND_PER_VERTEX")
+
             writer.writeLine("Normalize 0")
 
 

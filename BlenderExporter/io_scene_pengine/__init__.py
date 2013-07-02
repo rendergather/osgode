@@ -84,7 +84,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_lights = False
 
 
-    max_anisotropy = FloatProperty( name="Max anisotropy", default=1, min=0)
+    max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
     world_step = EnumProperty(  items = (
                                     ("dWorldStep", "dWorldStep", "Accuracy"),
                                     ("dWorldQuickStep", "dWorldQuickStep", "Performance")

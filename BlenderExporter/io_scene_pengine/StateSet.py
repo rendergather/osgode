@@ -213,7 +213,7 @@ class StateSet(Writable.Writable):
             self.UniformList.writeToStream(writer)
 
 
-        if self.Transparent == True:
+        if (self.Transparent == True) and (self.Data.ExportLights == False):
             writer.writeLine("RenderingHint 2")
             writer.writeLine("RenderBinMode USE_RENDERBIN_DETAILS")
             writer.writeLine("BinNumber 10")

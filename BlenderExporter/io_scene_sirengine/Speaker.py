@@ -158,7 +158,7 @@ class Speaker(Writable.Writable):
                 self.BufferID = self.Data.Cache.get(speaker.sound)
             else:
                 self.BufferID = self.Data.UniqueID.generate()
-                self.FilePath = bpy.path.relpath(speaker.sound.filepath).replace("//", "")
+                self.FilePath = bpy.path.relpath(speaker.sound.filepath).replace("//", "").replace("\\", "/")
                 self.Data.Cache.set(speaker.sound, self.BufferID)
 
 

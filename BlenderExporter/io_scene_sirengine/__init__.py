@@ -41,7 +41,7 @@ if "osgt_exporter" in locals():
 ############################################################################
 # ........................................................................ #
 bl_info = {
-    "name"          :   "pEngine osgt format",
+    "name"          :   "SirEngine osgt format",
     "author"        :   "Rocco Martino",
     "blender"       :   (2, 6, 2),
     "location"      :   "File > Export",
@@ -80,8 +80,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_selected = BoolProperty( name="Export only selected", default=False)
 
 
-    #export_lights = BoolProperty( name="Export lights", default=True)
-    export_lights = False
+    export_lights = BoolProperty( name="Export lights", default=True)
+    #export_lights = False
 
 
     max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
@@ -138,7 +138,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 ############################################################################
 # ........................................................................ #
 def menu_func_export(self, context):
-    self.layout.operator(ExportOSGT.bl_idname, text = "pEngine (.osgt)")
+    self.layout.operator(ExportOSGT.bl_idname, text = "SirEngine (.osgt)")
 
 
 

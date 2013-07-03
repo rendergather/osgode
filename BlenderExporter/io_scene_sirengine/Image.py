@@ -80,7 +80,7 @@ class Image(Writable.Writable):
             self.Img = None
 
         else:
-            self.FilePath = bpy.path.relpath(self.Img.filepath).replace("//", "")
+            self.FilePath = bpy.path.relpath(self.Img.filepath).replace("//", "").replace("\\", "/")
             self.Data.Cache.set(self.Img, self.UniqueID)
 
 

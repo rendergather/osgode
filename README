@@ -210,7 +210,7 @@ graph->addChild( transform )
 
 mainloop {
     update_dynamic_world() ;
-    cull_draw_graph() ;
+    update_cull_draw_graph() ;
 }
 @endcode
 \n
@@ -267,7 +267,7 @@ mainloop {
     // update_dynamic_world() ;
     //
 
-    cull_draw_graph() ;
+    update_cull_draw_graph() ;
 }
 @endcode
 \n

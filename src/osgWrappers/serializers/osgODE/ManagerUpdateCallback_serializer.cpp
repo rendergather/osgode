@@ -49,6 +49,7 @@ REGISTER_OBJECT_WRAPPER( ManagerUpdateCallback,
                          osgODE::ManagerUpdateCallback,
                          "osg::Object osg::NodeCallback osgODE::ManagerUpdateCallback" )
 {
+    ADD_DOUBLE_SERIALIZER(MaxStepSize, -1.0) ;
     ADD_UINT_SERIALIZER(MaxFramesPerUpdate, 0) ;
 }
 /* ....................................................................... */

@@ -101,6 +101,7 @@ class Manager(Writable.Writable):
         writer.moveIn("UpdateCallback TRUE")
         writer.moveIn("osgODE::ManagerUpdateCallback")
         writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+        writer.writeLine("MaxStepSize 0.1")
         writer.moveOut("osgODE::ManagerUpdateCallback")
         writer.moveOut("UpdateCallback TRUE")
 

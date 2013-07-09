@@ -48,9 +48,10 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_tick(0),
-    m_delta(0.0),
-    m_max_frames_per_update(0)
+    m_last_s                ( -1.0 ),
+    m_delta                 ( 0.0 ),
+    m_max_frames_per_update ( 0 ),
+    m_max_step_size         ( -1.0 )
 {
 }
 /* ....................................................................... */
@@ -62,10 +63,11 @@ ManagerUpdateCallback::ManagerUpdateCallback(void):
 /* ======================================================================= */
 /* ....................................................................... */
 ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback(other, copyop),
-    m_last_tick(other.m_last_tick),
-    m_delta(other.m_delta),
-    m_max_frames_per_update( other.m_max_frames_per_update )
+    osg::NodeCallback       ( other, copyop ),
+    m_last_s                ( other.m_last_s ),
+    m_delta                 ( other.m_delta ),
+    m_max_frames_per_update ( other.m_max_frames_per_update ),
+    m_max_step_size         ( other.m_max_step_size )
 {
 }
 /* ....................................................................... */
@@ -90,21 +92,24 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 void
 ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 {
-    osg::Timer* timer = osg::Timer::instance() ;
-
     Manager*        manager = static_cast<Manager*>(n) ;
 
     const double    step_size = manager->getStepSize() ;
 
 
+    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
 
-    if( m_last_tick != 0 ) {
 
-        osg::Timer_t    cur_tick = timer->tick() ;
+    if( m_last_s > 0.0  &&  sim_time > m_last_s ) {
 
-        m_delta += timer->delta_s(m_last_tick, cur_tick) * manager->getTimeMultiplier() ;
+        m_delta += (sim_time - m_last_s) * manager->getTimeMultiplier() ;
 
-        m_last_tick = cur_tick ;
+        m_last_s = sim_time ;
+
+
+        if( m_max_step_size > 0.0 ) {
+            m_delta = osg::minimum( m_delta, m_max_step_size ) ;
+        }
 
 
         if( m_max_frames_per_update == 0 ) {
@@ -130,7 +135,7 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 
     } else {
 
-        m_last_tick = timer->tick() ;
+        m_last_s = sim_time ;
 
     }
 

@@ -30,7 +30,6 @@
 
 /* ======================================================================= */
 #include <osg/NodeCallback>
-#include <osg/Timer>
 /* ======================================================================= */
 
 
@@ -82,6 +81,14 @@ public:
 public:
     inline void setMaxFramesPerUpdate(unsigned int max_frames) ;
     inline unsigned int getMaxFramesPerUpdate(void) const ;
+
+
+
+    //! Set the max step size
+    inline void     setMaxStepSize( double max_step_size ) ;
+
+    //! Get the max step size
+    inline double   getMaxStepSize(void) const ;
 /* ======================================================================= */
 
 
@@ -97,9 +104,10 @@ public:
 
 /* ======================================================================= */
 private:
-    osg::Timer_t    m_last_tick ;
+    double          m_last_s ;
     double          m_delta ;
     unsigned int    m_max_frames_per_update ;
+    double          m_max_step_size ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

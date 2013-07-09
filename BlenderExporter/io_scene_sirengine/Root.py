@@ -24,6 +24,7 @@
 
 ############################################################################
 from . import Writable
+import bpy
 ############################################################################
 
 
@@ -48,6 +49,7 @@ class Root(Writable.Writable):
 
 ############################################################################
     StateSet = None
+    SceneName = None
 ############################################################################
 
 
@@ -66,6 +68,8 @@ class Root(Writable.Writable):
         from . import StateSet
         self.StateSet = StateSet.StateSet(self.Data, None)
 
+        self.SceneName = None
+
         self.Data.MasterStateSet = self.StateSet
 ############################################################################
 
@@ -75,6 +79,12 @@ class Root(Writable.Writable):
 ############################################################################
     def buildGraph(self):
         super(Root, self).buildGraph()
+
+
+        try:
+            self.SceneName = str( bpy.context.scene["oo_scene_name"] )
+        except:
+            pass
 
 
         from . import Manager
@@ -124,11 +134,18 @@ class Root(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        #writer.moveIn("pViewer::Root")
-        writer.moveIn("osg::Group")
+
+        if self.Data.ExportLights:
+            writer.moveIn("pViewer::Root")
+        else:
+            writer.moveIn("osg::Group")
 
         if not super(Root, self).writeToStream(writer) :
             return False
+
+
+        if self.SceneName:
+            writer.writeLine("Name \"%s\"" % self.SceneName)
 
 
         if self.StateSet:
@@ -146,8 +163,10 @@ class Root(Writable.Writable):
             writer.moveOut("Children %s" % num_children)
 
 
-        #writer.moveOut("pViewer::Root")
-        writer.moveOut("osg::Group")
+        if self.Data.ExportLights:
+            writer.moveOut("pViewer::Root")
+        else:
+            writer.moveOut("osg::Group")
 
         return True
 ############################################################################

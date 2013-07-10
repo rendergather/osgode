@@ -7,6 +7,7 @@ SET(TARGET_SRC
     AnimationHelper_serializer.cpp
     HashTable_serializer.cpp
     HashTablePair_serializer.cpp
+    Picker_serializer.cpp
 )
 
 

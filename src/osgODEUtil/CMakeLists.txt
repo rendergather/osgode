@@ -20,6 +20,8 @@ SET(TARGET_H
     ${HEADER_PATH}/Icosahedron
     ${HEADER_PATH}/Icosahedron.inl
     ${HEADER_PATH}/MatrixManipulator
+    ${HEADER_PATH}/Picker
+    ${HEADER_PATH}/Picker.inl
     ${HEADER_PATH}/Signal
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor
     ${HEADER_PATH}/TrianglesEmitterIndexVisitor.inl
@@ -39,6 +41,7 @@ SET(TARGET_SRC
     HashTable.cpp
     Icosahedron.cpp
     MatrixManipulator.cpp
+    Picker.cpp
     TrianglesEmitterIndexVisitor.cpp
     TrianglesEmitterPrimitiveIndexFunctor.cpp
     Version.cpp

@@ -67,8 +67,12 @@ typedef enum {
 
 #ifdef __cplusplus
 extern "C" OSG_EXPORT psLogLevelEnum    psLogLevel ;
+extern "C" OSG_EXPORT void              psSetLogLevel(psLogLevelEnum ll) ;
+extern "C" OSG_EXPORT psLogLevelEnum    psGetLogLevel(void) ;
 #else
 extern OSG_EXPORT psLogLevelEnum        psLogLevel ;
+extern OSG_EXPORT void                  psSetLogLevel(psLogLevelEnum ll) ;
+extern OSG_EXPORT psLogLevelEnum        psGetLogLevel(void) ;
 #endif
 /* ....................................................................... */
 /* ======================================================================= */

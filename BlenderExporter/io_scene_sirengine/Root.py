@@ -84,7 +84,7 @@ class Root(Writable.Writable):
         try:
             self.SceneName = str( bpy.context.scene["oo_scene_name"] )
         except:
-            pass
+            self.SceneName = str( "Default" )
 
 
         from . import Manager

@@ -7,7 +7,7 @@ oo_camera_path <unused>, Object property
 
 
 
-oo_polygon_offset <height:integer>, Object property
+oo_polygon_offset <height>, Object property
     displace a surface above the others.
     When two surfaces conicide, that one with the higher offset is shown.
     Technically, glPolygonOffset(-value, -value) is applied

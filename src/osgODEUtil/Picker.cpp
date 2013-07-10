@@ -26,11 +26,7 @@
 /* ....................................................................... */
 #include <osgODEUtil/Picker>
 
-#include <osgODE/ODEObject>
-#include <osgODE/Notify>
 #include <osgODE/CommonRayCastResults>
-
-#include <osgAnimation/BasicAnimationManager>
 /* ....................................................................... */
 /* ======================================================================= */
 

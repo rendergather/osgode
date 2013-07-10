@@ -1,0 +1,13 @@
+oo_camera_path <unused>, Object property
+    animate the camera.
+    When the guy is inside the radius of the object, he starts to move
+    according with the object animation data.
+    The object is removed from the scene while loading
+
+
+
+
+oo_polygon_offset <height:integer>, Object property
+    displace a surface above the others.
+    When two surfaces conicide, that one with the higher offset is shown.
+    Technically, glPolygonOffset(-value, -value) is applied

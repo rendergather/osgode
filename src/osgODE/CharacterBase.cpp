@@ -75,11 +75,11 @@ CharacterBase::CharacterBase(void):
 
     m_footstep_info.Magnitude       = 250.0 ;
     m_footstep_info.PowerFactor     = 0.25 ;
-    m_footstep_info.TimeMultiplier  = 0.2 ;
+    m_footstep_info.TimeMultiplier  = 0.5 ;
     m_footstep_info.SpeedThreshold  = 0.1 ;
 
     m_foot_contact_info.Spring      = 1.0e4 ;
-    m_foot_contact_info.Damper      = 1.5e3 ;
+    m_foot_contact_info.Damper      = 1.0e3 ;
 
 
     setInteractingSphere( osg::Vec3(), 1.0 ) ;

@@ -220,10 +220,10 @@ public:
     } ;
 
 
-    //! Set the foot contact info. Default: { Spring = 1.0e4, Damper = 1.5e3 }
+    //! Set the foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3 }
     inline void     setFootContactInfo( const FootContactInfo& info ) ;
 
-    //! Get the const foot contact info. Default: { Spring = 1.0e4, Damper = 1.5e3 }
+    //! Get the const foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3 }
     inline const FootContactInfo&  getFootContactInfo(void) const ;
 /* ======================================================================= */
 
@@ -278,10 +278,10 @@ public:
         double  SpeedThreshold ;
     } ;
 
-    //! Set the footstep info. Default: { Mag=250, Pow=0.25, Mul=0.2, Thres = 0.1 }
+    //! Set the footstep info. Default: { Mag=250, Pow=0.25, Mul=0.5, Thres = 0.1 }
     inline void     setFootstepInfo( const FootstepInfo& info ) ;
 
-    //! Get the const footstep info. Default: { Mag=250, Pow=0.25, Mul=0.2, Thres = 0.1 }
+    //! Get the const footstep info. Default: { Mag=250, Pow=0.25, Mul=0.5, Thres = 0.1 }
     inline const FootstepInfo&  getFootstepInfo(void) const ;
 /* ======================================================================= */
 

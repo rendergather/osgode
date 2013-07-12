@@ -1,4 +1,4 @@
-SET(TARGET_SRC Car_init.cpp HUD.cpp Car.cpp Text.cpp osgodecar.cpp Car_handle.cpp  )
+SET(TARGET_SRC HUD.cpp Car.cpp osgodecar.cpp Car_handle.cpp Text.cpp Car_init.cpp  )
 
 
 IF( WIN32 )

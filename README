@@ -37,7 +37,7 @@ Click @ref WindowsBuild "here" for Windows build instructions
 \n
 \n
 @section deps_section    Dependencies
-In order to use the osgODE namespace you need the ODE and the OSG.\n
+You need OSG and ODE to use this namespace.\n
 
 You can find the first at <a href="http://www.ode.org">www.ode.org</a>.\n
 The OSG is at

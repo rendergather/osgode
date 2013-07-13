@@ -1,5 +1,5 @@
 /*!
- * @file AnimationHelper.inl
+ * @file AnimationManager_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,54 +22,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_ANIMATIONHELPER_INL
-#define _OSGODEUTIL_ANIMATIONHELPER_INL
+/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODEUtil/AnimationManager>
+
+#include <osgDB/Registry>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
 
 /* ======================================================================= */
 /* ....................................................................... */
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODEUtil::AnimationHelper::setAnimationManagerList( const AnimationManagerList& animation_manager_list )
+REGISTER_OBJECT_WRAPPER( AnimationManager,
+                         new osgODEUtil::AnimationManager,
+                         osgODEUtil::AnimationManager,
+                         "osg::Object osg::NodeCallback osgAnimation::AnimationManagerBase osgAnimation::BasicAnimationManager osgODEUtil::AnimationManager" )
 {
-    m_animation_manager_list = animation_manager_list ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline osgODEUtil::AnimationHelper::AnimationManagerList&
-osgODEUtil::AnimationHelper::getAnimationManagerList(void)
-{
-    return m_animation_manager_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODEUtil::AnimationHelper::AnimationManagerList&
-osgODEUtil::AnimationHelper::getAnimationManagerList(void) const
-{
-    return m_animation_manager_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODEUTIL_ANIMATIONHELPER_INL */

@@ -1,5 +1,5 @@
 /*!
- * @file AnimationHelper.inl
+ * @file AnimationManager.inl
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,8 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_ANIMATIONHELPER_INL
-#define _OSGODEUTIL_ANIMATIONHELPER_INL
+#ifndef _OSGODEUTIL_ANIMATIONMANAGER_INL
+#define _OSGODEUTIL_ANIMATIONMANAGER_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -33,43 +33,4 @@
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODEUtil::AnimationHelper::setAnimationManagerList( const AnimationManagerList& animation_manager_list )
-{
-    m_animation_manager_list = animation_manager_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline osgODEUtil::AnimationHelper::AnimationManagerList&
-osgODEUtil::AnimationHelper::getAnimationManagerList(void)
-{
-    return m_animation_manager_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODEUtil::AnimationHelper::AnimationManagerList&
-osgODEUtil::AnimationHelper::getAnimationManagerList(void) const
-{
-    return m_animation_manager_list ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODEUTIL_ANIMATIONHELPER_INL */
+#endif /* _OSGODEUTIL_ANIMATIONMANAGER_INL */

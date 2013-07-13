@@ -1,5 +1,5 @@
 /*!
- * @file Serializer_HashTablePair.cpp
+ * @file HashTablePair_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************

@@ -11,6 +11,8 @@ SET(HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${MODULE_NAME})
 SET(TARGET_H
     ${HEADER_PATH}/AnimationHelper
     ${HEADER_PATH}/AnimationHelper.inl
+    ${HEADER_PATH}/AnimationManager
+    ${HEADER_PATH}/AnimationManager.inl
     ${HEADER_PATH}/ControllerBase
     ${HEADER_PATH}/ControllerBase.inl
     ${HEADER_PATH}/CreateTriMeshFromNode
@@ -35,6 +37,7 @@ SET(TARGET_H
 
 SET(TARGET_SRC
     AnimationHelper.cpp
+    AnimationManager.cpp
     ControllerBase.cpp
     CreateTriMeshFromNode.cpp
     FindObjects.cpp

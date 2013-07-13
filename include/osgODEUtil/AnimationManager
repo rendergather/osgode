@@ -1,5 +1,5 @@
 /*!
- * @file AnimationHelper
+ * @file AnimationManager
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,16 +22,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODEUTIL_ANIMATIONHELPER_HPP
-#define _OSGODEUTIL_ANIMATIONHELPER_HPP
+#ifndef _OSGODEUTIL_ANIMATIONMANAGER_HPP
+#define _OSGODEUTIL_ANIMATIONMANAGER_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/ODECallback>
+#include <osgAnimation/BasicAnimationManager>
+/* ======================================================================= */
 
-#include <osgODEUtil/AnimationManager>
+
+
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -44,6 +48,7 @@ namespace osgODEUtil
 
 
 /* ======================================================================= */
+class HashTable ;
 /* ======================================================================= */
 
 
@@ -54,15 +59,16 @@ namespace osgODEUtil
 //!
 /*!
  */
-class OSG_EXPORT AnimationHelper: public osgODE::ODECallback
+class OSG_EXPORT AnimationManager: public osgAnimation::BasicAnimationManager
 {
 /* ======================================================================= */
 public:
-             AnimationHelper(void) ;
-             AnimationHelper(const AnimationHelper& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             AnimationManager(void) ;
+             AnimationManager(const AnimationManager& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             AnimationManager(const osgAnimation::BasicAnimationManager& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~AnimationHelper(void) ;
+    virtual ~AnimationManager(void) ;
 /* ======================================================================= */
 
 
@@ -70,7 +76,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODEUtil, AnimationHelper) ;
+    META_Object(osgODEUtil, AnimationManager) ;
 /* ======================================================================= */
 
 
@@ -83,20 +89,8 @@ public:
 
 /* ======================================================================= */
 public:
-    typedef std::vector< osg::ref_ptr<AnimationManager> >   AnimationManagerList ;
-
-    //! Set the animation manager list
-    inline void     setAnimationManagerList( const AnimationManagerList& animation_manager_list ) ;
-
-    //! Get the animation manager list
-    inline AnimationManagerList&    getAnimationManagerList(void) ;
-
-    //! Get the const animation manager list
-    inline const AnimationManagerList&  getAnimationManagerList(void) const ;
-
-
-
-    void    collectAnimationManagers( osg::Node* graph ) ;
+    void    play(const std::string& name, float weight = 1.0f, float fadein = 0.0f, int priority = 0) ;
+    void    stop(const std::string& name, float fadeout = 0.0f) ;
 /* ======================================================================= */
 
 
@@ -104,10 +98,10 @@ public:
 
 /* ======================================================================= */
 public:
-    void    play( const std::string& name, float weight=1.0f, float fadein=0.0f ) ;
-    void    stop( const std::string& name, float fadeout=0.0f ) ;
+    virtual void    registerAnimation( osgAnimation::Animation* animation ) ;
+    virtual void    unregisterAnimation( osgAnimation::Animation* animation ) ;
 
-    bool    isPlaying( const std::string& name ) ;
+    virtual void    operator()(osg::Node* node, osg::NodeVisitor* nv) ;
 /* ======================================================================= */
 
 
@@ -115,7 +109,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    operator()( osgODE::ODEObject* object ) ;
+    static unsigned int replaceBasicAnimationManagers( osg::Node* graph ) ;
 /* ======================================================================= */
 
 
@@ -123,7 +117,7 @@ public:
 
 /* ======================================================================= */
 private:
-    AnimationManagerList    m_animation_manager_list ;
+    osg::ref_ptr<HashTable>     m_animation_table ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -137,9 +131,9 @@ private:
 
 
 
-#include "AnimationHelper.inl"
+#include "AnimationManager.inl"
 
 
 
 
-#endif /* _OSGODEUTIL_ANIMATIONHELPER_HPP */
+#endif /* _OSGODEUTIL_ANIMATIONMANAGER_HPP */

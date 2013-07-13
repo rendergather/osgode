@@ -1,5 +1,5 @@
 /*!
- * @file AnimationHelper.cpp
+ * @file AnimationManager.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -24,8 +24,8 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODEUtil/AnimationHelper>
 #include <osgODEUtil/AnimationManager>
+#include <osgODEUtil/HashTable>
 
 #include <osgODE/Notify>
 /* ....................................................................... */
@@ -49,7 +49,8 @@ using namespace osgODEUtil ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-AnimationHelper::AnimationHelper(void)
+AnimationManager::AnimationManager(void):
+    m_animation_table   ( new HashTable() )
 {
 }
 /* ....................................................................... */
@@ -60,9 +61,9 @@ AnimationHelper::AnimationHelper(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-AnimationHelper::AnimationHelper(const AnimationHelper& other, const osg::CopyOp& copyop):
-    osgODE::ODECallback         ( other, copyop ),
-    m_animation_manager_list    ( other.m_animation_manager_list )
+AnimationManager::AnimationManager(const AnimationManager& other, const osg::CopyOp& copyop):
+    osgAnimation::BasicAnimationManager ( other, copyop ),
+    m_animation_table                   ( osg::clone( other.m_animation_table.get(), copyop ) )
 {
 }
 /* ....................................................................... */
@@ -73,7 +74,24 @@ AnimationHelper::AnimationHelper(const AnimationHelper& other, const osg::CopyOp
 
 /* ======================================================================= */
 /* ....................................................................... */
-AnimationHelper::~AnimationHelper(void)
+AnimationManager::AnimationManager(const osgAnimation::BasicAnimationManager& other, const osg::CopyOp& copyop):
+    osgAnimation::BasicAnimationManager ( other, copyop ),
+    m_animation_table                   ( new HashTable() )
+{
+
+    for( unsigned  int i=0; i<_animations.size(); i++ ) {
+        m_animation_table->set( _animations[i]->getName(), _animations[i] ) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+AnimationManager::~AnimationManager(void)
 {
 }
 /* ....................................................................... */
@@ -85,9 +103,89 @@ AnimationHelper::~AnimationHelper(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-AnimationHelper::operator()( osgODE::ODEObject* object )
+AnimationManager::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
-    traverse( object ) ;
+    this->osgAnimation::BasicAnimationManager::operator()(node, nv) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationManager::play(const std::string& name, float weight, float fadein, int priority)
+{
+    osgAnimation::Animation*    animation = dynamic_cast<osgAnimation::Animation*>( m_animation_table->get(name) ) ;
+
+    PS_ASSERT1( animation != NULL ) ;
+
+    if( animation ) {
+        this->osgAnimation::BasicAnimationManager::playAnimation( animation, priority, weight ) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationManager::stop(const std::string& name, float fadeout)
+{
+    osgAnimation::Animation*    animation = dynamic_cast<osgAnimation::Animation*>( m_animation_table->get(name) ) ;
+
+    PS_ASSERT1( animation != NULL ) ;
+
+    if( animation ) {
+        this->osgAnimation::BasicAnimationManager::stopAnimation( animation ) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationManager::registerAnimation( osgAnimation::Animation* animation )
+{
+    PS_ASSERT1( animation != NULL ) ;
+
+
+
+    const std::string&  ani_name = animation->getName() ;
+
+    PS_ASSERT1( ! m_animation_table->get( ani_name ) ) ;
+
+
+    this->osgAnimation::BasicAnimationManager::registerAnimation( animation ) ;
+
+    m_animation_table->set( ani_name, animation ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationManager::unregisterAnimation( osgAnimation::Animation* animation )
+{
+    PS_ASSERT1( animation != NULL ) ;
+
+
+    this->osgAnimation::BasicAnimationManager::unregisterAnimation( animation ) ;
+
+    m_animation_table->reset( animation->getName() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -98,10 +196,10 @@ AnimationHelper::operator()( osgODE::ODEObject* object )
 /* ======================================================================= */
 /* ....................................................................... */
 namespace {
-    class OSG_EXPORT AnimationManagerCollector: public osg::NodeVisitor
+    class OSG_EXPORT BasicAnimationManagerFinder: public osg::NodeVisitor
     {
     public:
-            AnimationManagerCollector(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
+            BasicAnimationManagerFinder(void): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
 
 
         virtual void    apply( osg::Node& n )
@@ -109,23 +207,37 @@ namespace {
             osg::NodeCallback*  nc = n.getUpdateCallback() ;
 
             while( nc != NULL ) {
-                AnimationManager*   am = dynamic_cast<AnimationManager*>( nc ) ;
+                osgAnimation::BasicAnimationManager*    bam = dynamic_cast<osgAnimation::BasicAnimationManager*>( nc ) ;
 
-                if( am ) {
-                    m_ams.push_back( am ) ;
+                if( bam ) {
+                    m_bams.push_back( Bam(&n, bam) ) ;
                 }
 
                 nc = nc->getNestedCallback() ;
             }
+
+
+
+            n.setCullingActive(false) ;
+            traverse(n) ;
         }
 
 
-        AnimationHelper::AnimationManagerList&   getAnimationManagerList(void)
-                    { return m_ams ; }
+        class Bam
+        {
+        public:
+            Bam(osg::Node* n, osgAnimation::BasicAnimationManager* bam): mNode(n), mBam(bam) {}
+            osg::ref_ptr<osg::Node>                             mNode ;
+            osg::ref_ptr<osgAnimation::BasicAnimationManager>   mBam ;
+        } ;
+
+        typedef std::vector< Bam >  BamList ;
+
+        BamList&    getBamList(void) { return m_bams ; }
 
 
     private:
-        AnimationHelper::AnimationManagerList    m_ams ;
+        BamList     m_bams ;
     } ;
 }
 /* ....................................................................... */
@@ -136,62 +248,26 @@ namespace {
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-AnimationHelper::collectAnimationManagers( osg::Node* graph )
+unsigned int
+AnimationManager::replaceBasicAnimationManagers( osg::Node* graph )
 {
-    osg::ref_ptr< AnimationManagerCollector >   nv = new AnimationManagerCollector() ;
+    osg::ref_ptr< BasicAnimationManagerFinder > nv = new BasicAnimationManagerFinder() ;
     graph->accept(*nv) ;
 
-    setAnimationManagerList( nv->getAnimationManagerList() ) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
+    BasicAnimationManagerFinder::BamList&   bams = nv->getBamList() ;
 
+    for( unsigned int i=0; i<bams.size(); i++ ) {
+        const BasicAnimationManagerFinder::Bam&     bam = bams[i] ;
 
+        AnimationManager*    am = new AnimationManager( *(bam.mBam) ) ;
 
-/* ======================================================================= */
-/* ....................................................................... */
-void
-AnimationHelper::play( const std::string& name, float weight, float fadein )
-{
-    for( unsigned int i=0; i<m_animation_manager_list.size(); i++ ) {
-        m_animation_manager_list[i]->play( name, weight, fadein ) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-AnimationHelper::stop( const std::string& name, float fadeout )
-{
-    for( unsigned int i=0; i<m_animation_manager_list.size(); i++ ) {
-        m_animation_manager_list[i]->stop( name, fadeout ) ;
-    }
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-bool
-AnimationHelper::isPlaying( const std::string& name )
-{
-    for( unsigned int i=0; i<m_animation_manager_list.size(); i++ ) {
-        if( m_animation_manager_list[i]->isPlaying( name ) ) {
-            return true ;
-        }
+        bam.mNode->removeUpdateCallback( bam.mBam ) ;
+        bam.mNode->addUpdateCallback( am ) ;
     }
 
-    return false ;
+
+    return bams.size() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

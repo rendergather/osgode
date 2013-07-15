@@ -195,6 +195,19 @@ AnimationManager::unregisterAnimation( osgAnimation::Animation* animation )
 
 /* ======================================================================= */
 /* ....................................................................... */
+osgAnimation::Animation*
+AnimationManager::getAnimation( const std::string& name )
+{
+    return dynamic_cast<osgAnimation::Animation*>( m_animation_table->get( name ) ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 namespace {
     class OSG_EXPORT BasicAnimationManagerFinder: public osg::NodeVisitor
     {

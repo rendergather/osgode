@@ -91,6 +91,8 @@ public:
 public:
     void    play(const std::string& name, float weight = 1.0f, float fadein = 0.0f, int priority = 0) ;
     void    stop(const std::string& name, float fadeout = 0.0f) ;
+
+    osgAnimation::Animation*    getAnimation(const std::string& name) ;
 /* ======================================================================= */
 
 

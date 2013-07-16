@@ -105,7 +105,7 @@ public:
 /* ======================================================================= */
 public:
     void    play( const std::string& name, float weight=1.0f, float fadein=0.0f ) ;
-    void    stop( const std::string& name, float fadeout=0.0f ) ;
+    void    stop( const std::string& name ) ;
 
     bool    isPlaying( const std::string& name ) ;
 /* ======================================================================= */

@@ -168,10 +168,10 @@ AnimationHelper::play( const std::string& name, float weight, float fadein )
 /* ======================================================================= */
 /* ....................................................................... */
 void
-AnimationHelper::stop( const std::string& name, float fadeout )
+AnimationHelper::stop( const std::string& name )
 {
     for( unsigned int i=0; i<m_animation_manager_list.size(); i++ ) {
-        m_animation_manager_list[i]->stop( name, fadeout ) ;
+        m_animation_manager_list[i]->stop( name ) ;
     }
 }
 /* ....................................................................... */

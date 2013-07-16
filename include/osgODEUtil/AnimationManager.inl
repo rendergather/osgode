@@ -33,4 +33,21 @@
 
 
 
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODEUtil::AnimationManager::addAnimationOperator(AnimationOperator* op)
+{
+    if( ! m_animation_operator.valid() ) {
+        m_animation_operator = op ;
+    } else {
+        m_animation_operator->addNested(op) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
 #endif /* _OSGODEUTIL_ANIMATIONMANAGER_INL */

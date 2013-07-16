@@ -30,6 +30,7 @@
 
 /* ======================================================================= */
 #include <osgAnimation/BasicAnimationManager>
+#include <osg/observer_ptr>
 /* ======================================================================= */
 
 
@@ -89,8 +90,8 @@ public:
 
 /* ======================================================================= */
 public:
-    void    play(const std::string& name, float weight = 1.0f, float fadein = 0.0f, int priority = 0) ;
-    void    stop(const std::string& name, float fadeout = 0.0f) ;
+    void    play(const std::string& name, float weight = 1.0f, float fadein = 0.0f) ;
+    void    stop(const std::string& name) ;
 
     osgAnimation::Animation*    getAnimation(const std::string& name) ;
 /* ======================================================================= */
@@ -111,6 +112,56 @@ public:
 
 /* ======================================================================= */
 public:
+    class OSG_EXPORT AnimationOperator: public osg::Referenced
+    {
+    public:
+        AnimationOperator(void) {}
+        AnimationOperator(const AnimationOperator& other):
+            osg::Referenced(other),
+            m_nested( other.m_nested ) {}
+
+        virtual bool    operator()(double sim_time) = 0 ;
+        virtual void    init(void) = 0 ;
+
+        void    setNested(AnimationOperator* op) { m_nested = op ; }
+
+        AnimationOperator*  getNested(void) { return m_nested.get() ; }
+
+        void    addNested(AnimationOperator* op) {
+            if( ! m_nested.valid() ) {
+                setNested( op ) ;
+            } else {
+                m_nested->addNested(op) ;
+            }
+        }
+
+        void    traverse(double sim_time)
+        {
+            if( m_nested.valid() ) {
+                if( (*m_nested)(sim_time) ) {
+                    setNested( m_nested->getNested() ) ;
+                }
+            }
+        }
+
+    private:
+        osg::ref_ptr<AnimationOperator> m_nested ;
+    } ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void     addAnimationOperator(AnimationOperator* op) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     static unsigned int replaceBasicAnimationManagers( osg::Node* graph ) ;
 /* ======================================================================= */
 
@@ -119,7 +170,9 @@ public:
 
 /* ======================================================================= */
 private:
-    osg::ref_ptr<HashTable>     m_animation_table ;
+    osg::ref_ptr<HashTable>             m_animation_table ;
+
+    osg::ref_ptr<AnimationOperator>     m_animation_operator ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

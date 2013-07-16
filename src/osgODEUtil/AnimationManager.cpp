@@ -34,15 +34,70 @@
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
 using namespace osgODEUtil ;
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+namespace {
+    class AnimationFadeinOperator: public AnimationManager::AnimationOperator
+    {
+    public:
+        AnimationFadeinOperator(osgAnimation::Animation* animation, float weight, float fadein):
+            AnimationOperator(),
+            m_animation     ( animation ),
+            m_weight        ( weight ),
+            m_fadein        ( fadein ),
+            m_start_time    ( -1.0 ) {}
+
+        AnimationFadeinOperator(const AnimationFadeinOperator& other):
+            AnimationOperator(other),
+            m_animation     ( other.m_animation ),
+            m_weight        ( other.m_weight ),
+            m_fadein        ( other.m_fadein ),
+            m_start_time    ( other.m_start_time ) {}
+
+
+        virtual bool    operator()(double sim_time)
+        {
+            PS_ASSERT1( m_animation.valid() ) ;
+
+            if( m_start_time < 0.0 ) {
+                m_start_time = sim_time ;
+            }
+
+
+
+            float   k = (sim_time - m_start_time) / m_fadein ;
+
+            bool    can_remove = k >= 1.0 ;
+
+            k = osg::clampTo(k, 1.0e-3f, 1.0f) ;
+
+            m_animation->setWeight( m_weight * k ) ;
+
+
+            traverse(sim_time) ;
+
+            return can_remove ;
+        }
+
+        virtual void    init(void)
+        {
+            m_animation->setWeight(1.0e-3) ;
+            m_start_time = -1.0 ;
+        }
+
+    private:
+        osg::ref_ptr<osgAnimation::Animation>   m_animation ;
+        float   m_weight, m_fadein ;
+        double  m_start_time ;
+    } ;
+} // anon namespace
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
@@ -63,7 +118,8 @@ AnimationManager::AnimationManager(void):
 /* ....................................................................... */
 AnimationManager::AnimationManager(const AnimationManager& other, const osg::CopyOp& copyop):
     osgAnimation::BasicAnimationManager ( other, copyop ),
-    m_animation_table                   ( osg::clone( other.m_animation_table.get(), copyop ) )
+    m_animation_table                   ( osg::clone( other.m_animation_table.get(), copyop ) ),
+    m_animation_operator                ( other.m_animation_operator )
 {
 }
 /* ....................................................................... */
@@ -106,24 +162,12 @@ void
 AnimationManager::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
     this->osgAnimation::BasicAnimationManager::operator()(node, nv) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
 
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-AnimationManager::play(const std::string& name, float weight, float fadein, int priority)
-{
-    osgAnimation::Animation*    animation = dynamic_cast<osgAnimation::Animation*>( m_animation_table->get(name) ) ;
-
-    PS_ASSERT1( animation != NULL ) ;
-
-    if( animation ) {
-        this->osgAnimation::BasicAnimationManager::playAnimation( animation, priority, weight ) ;
+    if( m_animation_operator.valid() ) {
+        if( (*m_animation_operator)( nv->getFrameStamp()->getSimulationTime() ) ) {
+            m_animation_operator = m_animation_operator->getNested() ;
+        }
     }
 }
 /* ....................................................................... */
@@ -135,14 +179,45 @@ AnimationManager::play(const std::string& name, float weight, float fadein, int 
 /* ======================================================================= */
 /* ....................................................................... */
 void
-AnimationManager::stop(const std::string& name, float fadeout)
+AnimationManager::play(const std::string& name, float weight, float fadein)
 {
-    osgAnimation::Animation*    animation = dynamic_cast<osgAnimation::Animation*>( m_animation_table->get(name) ) ;
+    osgAnimation::Animation*    animation = getAnimation(name) ;
+
+    if( animation ) {
+
+        if( fadein < 1.0e-3 ) {
+            this->osgAnimation::BasicAnimationManager::playAnimation( animation, 0, weight ) ;
+
+        } else {
+            PS_DBG2("osgODEUtil::AnimationManager::play(%p): fadein operator for \"%s\"", this, name.c_str()) ;
+            AnimationOperator*  op = new AnimationFadeinOperator(animation, weight, fadein) ;
+            op->init() ;
+            addAnimationOperator(op) ;
+            this->osgAnimation::BasicAnimationManager::playAnimation( animation, 0, animation->getWeight() ) ;
+        }
+    } else {
+        PS_DBG("osgODEUtil::AnimationManager::play(%p): cannot find animation \"%s\"", this, name.c_str()) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+AnimationManager::stop(const std::string& name)
+{
+    osgAnimation::Animation*    animation = getAnimation(name) ;
 
     PS_ASSERT1( animation != NULL ) ;
 
     if( animation ) {
         this->osgAnimation::BasicAnimationManager::stopAnimation( animation ) ;
+    } else {
+        PS_DBG("osgODEUtil::AnimationManager::stop(%p): cannot find animation \%s\"", this, name.c_str()) ;
     }
 }
 /* ....................................................................... */

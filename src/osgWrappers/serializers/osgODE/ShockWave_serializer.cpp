@@ -55,6 +55,7 @@ REGISTER_OBJECT_WRAPPER( ShockWave,
     ADD_DOUBLE_SERIALIZER( LinearAttenuation, 1.0 ) ;
     ADD_DOUBLE_SERIALIZER( QuadraticAttenuation, 1.0 ) ;
     ADD_DOUBLE_SERIALIZER( Threshold, 10.0 ) ;
+    ADD_DOUBLE_SERIALIZER( WaveSize, 5.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

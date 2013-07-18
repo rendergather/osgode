@@ -54,7 +54,7 @@ class   Joint ;
 class   ODEObjectContainer ;
 class   OneWayFixedJoint ;
 class   RigidBody ;
-class   TargetJoint ;
+class   ShockWave ;
 class   Transformable ;
 class   Space ;
 class   World ;
@@ -125,16 +125,16 @@ public:
     virtual RigidBody*              asRigidBody(void) ;
 
     //! Quick dynamic cast
-    virtual TargetJoint*            asTargetJoint(void) ;
+    virtual ShockWave*              asShockWave(void) ;
+
+    //! Quick dynamic cast
+    virtual Space*                  asSpace(void) ;
 
     //! Quick dynamic cast
     virtual Transformable*          asTransformable(void) ;
 
     //! Quick dynamic cast
     virtual World*                  asWorld(void) ;
-
-    //! Quick dynamic cast
-    virtual Space*                  asSpace(void) ;
 
 
     //! Called by the world before the World::step

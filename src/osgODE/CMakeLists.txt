@@ -102,6 +102,10 @@ SET(TARGET_H
     ${HEADER_PATH}/RigidBody.inl
     ${HEADER_PATH}/ScopedTimer
     ${HEADER_PATH}/ScopedTimer.inl
+    ${HEADER_PATH}/ShockWave
+    ${HEADER_PATH}/ShockWave.inl
+    ${HEADER_PATH}/ShockWaveCollisionCallback
+    ${HEADER_PATH}/ShockWaveCollisionCallback.inl
     ${HEADER_PATH}/SliderJoint
     ${HEADER_PATH}/SliderJoint.inl
     ${HEADER_PATH}/Space
@@ -185,6 +189,8 @@ SET(TARGET_SRC
     RagDoll.cpp
     RigidBody.cpp
     ScopedTimer.cpp
+    ShockWave.cpp
+    ShockWaveCollisionCallback.cpp
     SliderJoint.cpp
     Space.cpp
     Space_rayCast.cpp

@@ -1,9 +1,9 @@
 /*!
- * @file ODEObject.cpp
+ * @file ShockWave.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,20 +14,16 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/ODEObject>
-#include <osgODE/World>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_SHOCKWAVE_INL
+#define _OSGODE_SHOCKWAVE_INL
 
 
 
@@ -40,25 +36,12 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-unsigned int    ODEObject::s_last_id = 0 ;
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-ODEObject::ODEObject(void):
-    m_ID(0)
+inline void
+osgODE::ShockWave::setDirection( const osg::Vec3& direction )
 {
+    m_direction = direction ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -68,27 +51,10 @@ ODEObject::ODEObject(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
-    osg::Object(other, copyop),
-    m_update_callback(other.m_update_callback),
-    m_post_update_callback(other.m_post_update_callback),
-    m_ID(0),
-    m_user_object( other.m_user_object.get() ),
-    m_interacting_sphere(other.m_interacting_sphere)
+inline osg::Vec3&
+osgODE::ShockWave::getDirection(void)
 {
-    if( copyop.getCopyFlags() & osg::CopyOp::DEEP_COPY_CALLBACKS ) {
-        if( other.m_update_callback.valid() ) {
-            m_update_callback = osg::clone( other.m_update_callback.get(), copyop ) ;
-        }
-
-        if( other.m_post_update_callback.valid() ) {
-            m_post_update_callback = osg::clone( other.m_post_update_callback.get(), copyop ) ;
-        }
-
-        if( other.m_interaction_callback.valid() ) {
-            m_interaction_callback = osg::clone( other.m_interaction_callback.get(), copyop ) ;
-        }
-    }
+    return m_direction ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -98,8 +64,10 @@ ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ODEObject::~ODEObject(void)
+inline const osg::Vec3&
+osgODE::ShockWave::getDirection(void) const
 {
+    return m_direction ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -109,10 +77,10 @@ ODEObject::~ODEObject(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-osgODE::ODEObject::setWorldInternal(World* world)
+inline void
+osgODE::ShockWave::setAngle( double angle )
 {
-    m_world = world ;
+    m_angle = osg::clampTo(angle, 0.0, osg::PI) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -122,11 +90,10 @@ osgODE::ODEObject::setWorldInternal(World* world)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::setIDInternal(unsigned int id)
+inline double
+osgODE::ShockWave::getAngle(void) const
 {
-    m_ID = id ;
-    s_last_id = osg::maximum(s_last_id, id) ;
+    return m_angle ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -136,12 +103,10 @@ ODEObject::setIDInternal(unsigned int id)
 
 /* ======================================================================= */
 /* ....................................................................... */
-unsigned int
-ODEObject::generateID(void)
+inline void
+osgODE::ShockWave::setSpeed( double speed )
 {
-    m_ID = ++s_last_id ;
-
-    return m_ID ;
+    m_speed = osg::maximum(0.0, speed) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -151,10 +116,10 @@ ODEObject::generateID(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::update(double step_size)
+inline double
+osgODE::ShockWave::getSpeed(void) const
 {
-    (void) step_size ;
+    return m_speed ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -164,10 +129,10 @@ ODEObject::update(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::postUpdate(double step_size)
+inline void
+osgODE::ShockWave::setImpulse( double impulse )
 {
-    (void) step_size ;
+    m_impulse = osg::maximum(0.0, impulse) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -177,12 +142,10 @@ ODEObject::postUpdate(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
-ODEObject::addToWorldInternal(World* world)
+inline double
+osgODE::ShockWave::getImpulse(void) const
 {
-    (void) world ;
-
-    return true ;
+    return m_impulse ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -192,12 +155,10 @@ ODEObject::addToWorldInternal(World* world)
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
-ODEObject::removeFromWorldInternal(World* world)
+inline void
+osgODE::ShockWave::setLinearAttenuation( double linear_attenuation )
 {
-    (void) world ;
-
-    return true ;
+    m_linear_attenuation = osg::maximum(0.0, linear_attenuation) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -207,10 +168,10 @@ ODEObject::removeFromWorldInternal(World* world)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::accept(osg::NodeVisitor& nv)
+inline double
+osgODE::ShockWave::getLinearAttenuation(void) const
 {
-    (void) nv ;
+    return m_linear_attenuation ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -220,10 +181,10 @@ ODEObject::accept(osg::NodeVisitor& nv)
 
 /* ======================================================================= */
 /* ....................................................................... */
-const osg::BoundingSphere&
-ODEObject::getBound(void) const
+inline void
+osgODE::ShockWave::setQuadraticAttenuation( double quadratic_attenuation )
 {
-    return m_bounding_sphere ;
+    m_quadratic_attenuation = osg::maximum(0.0, quadratic_attenuation) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -233,12 +194,10 @@ ODEObject::getBound(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::callUpdateCallbackInternal(void)
+inline double
+osgODE::ShockWave::getQuadraticAttenuation(void) const
 {
-    if( m_update_callback.valid() ) {
-        (*m_update_callback)(this) ;
-    }
+    return m_quadratic_attenuation ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -248,12 +207,10 @@ ODEObject::callUpdateCallbackInternal(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ODEObject::callPostUpdateCallbackInternal(void)
+inline void
+osgODE::ShockWave::setThreshold( double threshold )
 {
-    if( m_post_update_callback.valid() ) {
-        (*m_post_update_callback)(this) ;
-    }
+    m_threshold = osg::maximum( 0.0, threshold ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -263,20 +220,72 @@ ODEObject::callPostUpdateCallbackInternal(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-#define AS_NULL( NAME ) NAME* ODEObject::as##NAME(void) { return NULL ; }
-
-AS_NULL( BypassJoint ) ;
-AS_NULL( CharacterBase) ;
-AS_NULL( Collidable) ;
-AS_NULL( Joint ) ;
-AS_NULL( ODEObjectContainer ) ;
-AS_NULL( OneWayFixedJoint ) ;
-AS_NULL( RigidBody ) ;
-AS_NULL( ShockWave ) ;
-AS_NULL( Space ) ;
-AS_NULL( Transformable ) ;
-AS_NULL( World ) ;
-
-#undef AS_NULL
+inline double
+osgODE::ShockWave::getThreshold(void) const
+{
+    return m_threshold ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::ShockWave::setWaveSize( double wave_size )
+{
+    m_wave_size = osg::maximum( 0.0, wave_size ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::ShockWave::getWaveSize(void) const
+{
+    return m_wave_size ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::ShockWave::getCurrentForce(void) const
+{
+    return m_current_force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::ShockWave::getCurrentRadius(void) const
+{
+    return m_current_radius ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+#endif /* _OSGODE_SHOCKWAVE_INL */

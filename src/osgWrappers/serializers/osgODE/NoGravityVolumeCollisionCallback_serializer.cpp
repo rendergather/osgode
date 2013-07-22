@@ -1,5 +1,5 @@
 /*!
- * @file DynamicParticleGeode
+ * @file NoGravityVolumeCollisionCallback_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,34 +14,20 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DYNAMICPARTICLEGEODE_HPP
-#define _OSGODE_DYNAMICPARTICLEGEODE_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osg/Geode>
-/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODE/NoGravityVolumeCollisionCallback>
 
-
-
-
-namespace osgODE
-{
-
-
-
-
-/* ======================================================================= */
+#include <osgDB/Registry>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,63 +35,20 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! Communicates the world-to-local matrix to the particle systems
-/*!
- *
- */
-class OSG_EXPORT DynamicParticleGeode: public osg::Geode
-{
-/* ======================================================================= */
-public:
-             DynamicParticleGeode(void) ;
-             DynamicParticleGeode(const DynamicParticleGeode& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~DynamicParticleGeode(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Node(osgODE, DynamicParticleGeode) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    traverse(osg::NodeVisitor& nv) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
-
-
-
-
-// #include "DynamicParticleGeode.inl"
-
-
-
-
-#endif /* _OSGODE_DYNAMICPARTICLEGEODE_HPP */
+/* ======================================================================= */
+/* ....................................................................... */
+REGISTER_OBJECT_WRAPPER( NoGravityVolumeCollisionCallback,
+                         new osgODE::NoGravityVolumeCollisionCallback,
+                         osgODE::NoGravityVolumeCollisionCallback,
+                         "osg::Object osgODE::CollisionCallback osgODE::NoGravityVolumeCollisionCallback" )
+{
+    (void) wrapper ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

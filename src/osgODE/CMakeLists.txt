@@ -44,7 +44,6 @@ SET(TARGET_H
     ${HEADER_PATH}/DifferentialJoint
     ${HEADER_PATH}/DifferentialJoint.inl
     ${HEADER_PATH}/DynamicParticleGeode
-    ${HEADER_PATH}/DynamicParticleGeode.inl
     ${HEADER_PATH}/DynamicParticleSystem
     ${HEADER_PATH}/DynamicParticleSystem.inl
     ${HEADER_PATH}/Engine
@@ -81,6 +80,9 @@ SET(TARGET_H
     ${HEADER_PATH}/MotorJoint
     ${HEADER_PATH}/MotorJoint.inl
     ${HEADER_PATH}/NearCallback
+    ${HEADER_PATH}/NoGravityVolume
+    ${HEADER_PATH}/NoGravityVolume.inl
+    ${HEADER_PATH}/NoGravityVolumeCollisionCallback
     ${HEADER_PATH}/Notify
     ${HEADER_PATH}/Notify_android
     ${HEADER_PATH}/Notify_gnu
@@ -105,7 +107,6 @@ SET(TARGET_H
     ${HEADER_PATH}/ShockWave
     ${HEADER_PATH}/ShockWave.inl
     ${HEADER_PATH}/ShockWaveCollisionCallback
-    ${HEADER_PATH}/ShockWaveCollisionCallback.inl
     ${HEADER_PATH}/SliderJoint
     ${HEADER_PATH}/SliderJoint.inl
     ${HEADER_PATH}/Space
@@ -178,6 +179,8 @@ SET(TARGET_SRC
     MotionPath.cpp
     MotorJoint.cpp
     NearCallback.cpp
+    NoGravityVolume.cpp
+    NoGravityVolumeCollisionCallback.cpp
     Notify.c
     Notify_android.cpp
     Notify_windows.c

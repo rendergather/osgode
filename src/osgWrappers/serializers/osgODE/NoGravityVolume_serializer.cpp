@@ -1,5 +1,5 @@
 /*!
- * @file DynamicParticleGeode.inl
+ * @file NoGravityVolume_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -14,22 +14,19 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DYNAMICPARTICLEGEODE_INL
-#define _OSGODE_DYNAMICPARTICLEGEODE_INL
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/NoGravityVolume>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -44,4 +41,14 @@
 
 
 
-#endif /* _OSGODE_DYNAMICPARTICLEGEODE_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+REGISTER_OBJECT_WRAPPER( NoGravityVolume,
+                         new osgODE::NoGravityVolume,
+                         osgODE::NoGravityVolume,
+                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::RigidBody osgODE::Collidable osgODE::Sphere osgODE::NoGravityVolume" )
+{
+    (void) wrapper ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

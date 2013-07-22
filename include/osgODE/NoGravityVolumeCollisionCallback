@@ -1,5 +1,5 @@
 /*!
- * @file DynamicParticleGeode
+ * @file NoGravityVolumeCollisionCallback
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DYNAMICPARTICLEGEODE_HPP
-#define _OSGODE_DYNAMICPARTICLEGEODE_HPP
+#ifndef _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP
+#define _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osg/Geode>
+#include <osgODE/CollisionCallback>
 /* ======================================================================= */
 
 
@@ -49,19 +49,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! Communicates the world-to-local matrix to the particle systems
+//!
 /*!
  *
  */
-class OSG_EXPORT DynamicParticleGeode: public osg::Geode
+class OSG_EXPORT NoGravityVolumeCollisionCallback: public osgODE::CollisionCallback
 {
 /* ======================================================================= */
 public:
-             DynamicParticleGeode(void) ;
-             DynamicParticleGeode(const DynamicParticleGeode& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             NoGravityVolumeCollisionCallback(void) ;
+             NoGravityVolumeCollisionCallback(const NoGravityVolumeCollisionCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~DynamicParticleGeode(void) ;
+    virtual ~NoGravityVolumeCollisionCallback(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Node(osgODE, DynamicParticleGeode) ;
+    META_Object(osgODE, NoGravityVolumeCollisionCallback) ;
 /* ======================================================================= */
 
 
@@ -82,7 +82,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    traverse(osg::NodeVisitor& nv) ;
+    virtual void    operator()(Collidable* owner, Collidable* other, NearCallback* near_callback) ;
 /* ======================================================================= */
 
 
@@ -103,9 +103,9 @@ private:
 
 
 
-// #include "DynamicParticleGeode.inl"
+// #include "NoGravityVolumeCollisionCallback.inl"
 
 
 
 
-#endif /* _OSGODE_DYNAMICPARTICLEGEODE_HPP */
+#endif /* _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP */

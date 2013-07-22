@@ -51,6 +51,7 @@ class   BypassJoint ;
 class   CharacterBase ;
 class   Collidable ;
 class   Joint ;
+class   NoGravityVolume ;
 class   ODEObjectContainer ;
 class   OneWayFixedJoint ;
 class   RigidBody ;
@@ -114,6 +115,9 @@ public:
 
     //! Quick dynamic cast
     virtual Joint*                  asJoint(void) ;
+
+    //! Quick dynamic cast
+    virtual NoGravityVolume*        asNoGravityVolume(void) ;
 
     //! Quick dynamic cast
     virtual ODEObjectContainer*     asODEObjectContainer(void) ;

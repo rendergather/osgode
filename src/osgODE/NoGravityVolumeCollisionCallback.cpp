@@ -1,5 +1,5 @@
 /*!
- * @file ShockWaveCollisionCallback.inl
+ * @file NoGravityVolumeCollisionCallback.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,26 +22,79 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_SHOCKWAVECOLLISIONCALLBACK_INL
-#define _OSGODE_SHOCKWAVECOLLISIONCALLBACK_INL
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/NoGravityVolumeCollisionCallback>
+#include <osgODE/NoGravityVolume>
+#include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
+using namespace osgODE ;
+
+
+
+
 /* ======================================================================= */
 /* ....................................................................... */
+NoGravityVolumeCollisionCallback::NoGravityVolumeCollisionCallback(void)
+{
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-#endif /* _OSGODE_SHOCKWAVECOLLISIONCALLBACK_INL */
+/* ======================================================================= */
+/* ....................................................................... */
+NoGravityVolumeCollisionCallback::NoGravityVolumeCollisionCallback(const NoGravityVolumeCollisionCallback& other, const osg::CopyOp& copyop):
+    CollisionCallback       ( other, copyop )
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+NoGravityVolumeCollisionCallback::~NoGravityVolumeCollisionCallback(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+NoGravityVolumeCollisionCallback::operator()(Collidable* owner, Collidable* other, NearCallback* near_callback)
+{
+
+    if( other->asNoGravityVolume() ) {
+
+        this->CollisionCallback::traverse(owner, other, near_callback) ;
+        return ;
+    }
+
+
+    NoGravityVolume*    no_gravity_volume = owner->asNoGravityVolume() ;
+    PS_ASSERT1( no_gravity_volume != NULL ) ;
+
+
+    if( ! other->getKinematic() ) {
+        no_gravity_volume->addCollidable( other ) ;
+    }
+
+
+    this->CollisionCallback::traverse(owner, other, near_callback) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

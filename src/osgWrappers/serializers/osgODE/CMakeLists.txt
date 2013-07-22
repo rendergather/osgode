@@ -45,6 +45,8 @@ SET(TARGET_SRC
     MotionPath_serializer.cpp
     MotorJoint_serializer.cpp
     NearCallback_serializer.cpp
+    NoGravityVolumeCollisionCallback_serializer.cpp
+    NoGravityVolume_serializer.cpp
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
     OneWayFixedJoint_serializer.cpp

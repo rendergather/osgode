@@ -269,6 +269,7 @@ AS_NULL( BypassJoint ) ;
 AS_NULL( CharacterBase) ;
 AS_NULL( Collidable) ;
 AS_NULL( Joint ) ;
+AS_NULL( NoGravityVolume ) ;
 AS_NULL( ODEObjectContainer ) ;
 AS_NULL( OneWayFixedJoint ) ;
 AS_NULL( RigidBody ) ;

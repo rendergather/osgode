@@ -1,5 +1,5 @@
 /*!
- * @file DynamicParticleGeode
+ * @file NoGravityVolume.inl
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -22,26 +22,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_DYNAMICPARTICLEGEODE_HPP
-#define _OSGODE_DYNAMICPARTICLEGEODE_HPP
+#ifndef _OSGODE_NOGRAVITYVOLUME_INL
+#define _OSGODE_NOGRAVITYVOLUME_INL
 
 
 
 
 /* ======================================================================= */
-#include <osg/Geode>
-/* ======================================================================= */
-
-
-
-
-namespace osgODE
-{
-
-
-
-
-/* ======================================================================= */
+/* ....................................................................... */
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,63 +38,18 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! Communicates the world-to-local matrix to the particle systems
-/*!
- *
- */
-class OSG_EXPORT DynamicParticleGeode: public osg::Geode
+inline void
+osgODE::NoGravityVolume::addCollidable(Collidable* collidable)
 {
-/* ======================================================================= */
-public:
-             DynamicParticleGeode(void) ;
-             DynamicParticleGeode(const DynamicParticleGeode& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~DynamicParticleGeode(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Node(osgODE, DynamicParticleGeode) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    traverse(osg::NodeVisitor& nv) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
+    if( collidable->getGravityMode() ) {
+        collidable->setGravityMode( false ) ;
+        m_collidables.push_back( collidable ) ;
+    }
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
-
-
-
-
-// #include "DynamicParticleGeode.inl"
-
-
-
-
-#endif /* _OSGODE_DYNAMICPARTICLEGEODE_HPP */
+#endif /* _OSGODE_NOGRAVITYVOLUME_INL */

@@ -47,13 +47,13 @@ static bool writePointList(osgDB::OutputStream& os, const osgODE::ScalarInterpol
     unsigned int            size = points.size() ;
 
     if( size > 0 ) {
-        os << size << osgDB::BEGIN_BRACKET << std::endl ;
+        os << size << os.BEGIN_BRACKET << std::endl ;
 
         for(unsigned int i=0; i<size; i++) {
             os << points[i].first << points[i].second << std::endl ;
         }
 
-        os << osgDB::END_BRACKET << std::endl ;
+        os << os.END_BRACKET << std::endl ;
     }
 
     return true ;
@@ -63,7 +63,7 @@ static bool readPointList(osgDB::InputStream& is, osgODE::ScalarInterpolator& in
 {
     unsigned int    size = 0 ;
 
-    is >> size >> osgDB::BEGIN_BRACKET ;
+    is >> size >> is.BEGIN_BRACKET ;
 
     if( size != 0 ) {
         osgODE::ScalarInterpolator::PointList points ;
@@ -79,7 +79,7 @@ static bool readPointList(osgDB::InputStream& is, osgODE::ScalarInterpolator& in
 
         }
 
-        is >> osgDB::END_BRACKET ;
+        is >> is.END_BRACKET ;
 
         interpolator.setPointList(points) ;
     }

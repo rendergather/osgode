@@ -140,6 +140,10 @@ public:
      *
      * @param   param_mask      See RayParameter
      *
+     * @param   collide_bits    Default: -1
+     *
+     * @param   category_bits   Default: -1
+     *
      * @return  number of contacts
      */
     unsigned int    performRayCast( const osg::Vec3&    from,

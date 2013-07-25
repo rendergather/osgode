@@ -47,13 +47,13 @@ static bool writeVertexArray(osgDB::OutputStream& os, const osgODE::TriMesh& tri
     unsigned int            size = arr->size() ;
 
     if( arr ) {
-        os << size << os.BEGIN_BRACKET << std::endl ;
+        os << size << osgDB::BEGIN_BRACKET << std::endl ;
 
         for(unsigned int i=0; i<size; i++) {
             os << (*arr)[i] << std::endl ;
         }
 
-        os << os.END_BRACKET << std::endl ;
+        os << osgDB::END_BRACKET << std::endl ;
     }
 
     return true ;
@@ -63,7 +63,7 @@ static bool readVertexArray(osgDB::InputStream& is, osgODE::TriMesh& trimesh)
 {
     unsigned int    size = 0 ;
 
-    is >> size >> is.BEGIN_BRACKET ;
+    is >> size >> osgDB::BEGIN_BRACKET ;
 
     if( size != 0 ) {
         osg::Vec3Array* arr = new osg::Vec3Array() ;
@@ -77,7 +77,7 @@ static bool readVertexArray(osgDB::InputStream& is, osgODE::TriMesh& trimesh)
 
         }
 
-        is >> is.END_BRACKET ;
+        is >> osgDB::END_BRACKET ;
 
         trimesh.setVertexArray(arr) ;
     }
@@ -97,13 +97,13 @@ static bool writeIndexArray(osgDB::OutputStream& os, const osgODE::TriMesh& trim
     unsigned int            size = arr->size() ;
 
     if( arr ) {
-        os << size << os.BEGIN_BRACKET << std::endl ;
+        os << size << osgDB::BEGIN_BRACKET << std::endl ;
 
         for(unsigned int i=0; i<size; i+=3) {
             os << (*arr)[i] << (*arr)[i+1] << (*arr)[i+2] << std::endl ;
         }
 
-        os << os.END_BRACKET << std::endl ;
+        os << osgDB::END_BRACKET << std::endl ;
     }
 
     return true ;
@@ -113,7 +113,7 @@ static bool readIndexArray(osgDB::InputStream& is, osgODE::TriMesh& trimesh)
 {
     unsigned int    size = 0 ;
 
-    is >> size >> is.BEGIN_BRACKET ;
+    is >> size >> osgDB::BEGIN_BRACKET ;
 
     if( size != 0 ) {
         osg::IntArray*  arr = new osg::IntArray() ;
@@ -127,7 +127,7 @@ static bool readIndexArray(osgDB::InputStream& is, osgODE::TriMesh& trimesh)
 
         }
 
-        is >> is.END_BRACKET ;
+        is >> osgDB::END_BRACKET ;
 
         trimesh.setIndexArray(arr) ;
     }

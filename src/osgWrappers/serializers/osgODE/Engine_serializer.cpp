@@ -47,13 +47,13 @@ static bool writeGearList(osgDB::OutputStream& os, const osgODE::Engine& engine)
     unsigned int                        size = gears.size() ;
 
     if( size > 0 ) {
-        os << size << os.BEGIN_BRACKET << std::endl ;
+        os << size << osgDB::BEGIN_BRACKET << std::endl ;
 
         for(unsigned int i=0; i<size; i++) {
             os << gears[i] << std::endl ;
         }
 
-        os << os.END_BRACKET << std::endl ;
+        os << osgDB::END_BRACKET << std::endl ;
     }
 
     return true ;
@@ -63,7 +63,7 @@ static bool readGearList(osgDB::InputStream& is, osgODE::Engine& engine)
 {
     unsigned int    size = 0 ;
 
-    is >> size >> is.BEGIN_BRACKET ;
+    is >> size >> osgDB::BEGIN_BRACKET ;
 
     if( size != 0 ) {
         osgODE::Engine::GearList      gears ;
@@ -77,7 +77,7 @@ static bool readGearList(osgDB::InputStream& is, osgODE::Engine& engine)
 
         }
 
-        is >> is.END_BRACKET ;
+        is >> osgDB::END_BRACKET ;
 
         engine.setGearList(gears) ;
     }

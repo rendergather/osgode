@@ -217,7 +217,7 @@ AnimationManager::stop(const std::string& name)
     if( animation ) {
         this->osgAnimation::BasicAnimationManager::stopAnimation( animation ) ;
     } else {
-        PS_DBG("osgODEUtil::AnimationManager::stop(%p): cannot find animation \%s\"", this, name.c_str()) ;
+        PS_DBG("osgODEUtil::AnimationManager::stop(%p): cannot find animation \"%s\"", this, name.c_str()) ;
     }
 }
 /* ....................................................................... */

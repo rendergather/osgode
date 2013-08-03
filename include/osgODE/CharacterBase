@@ -217,13 +217,14 @@ public:
     {
         double  Spring ;
         double  Damper ;
+        double  MaxDepth ;
     } ;
 
 
-    //! Set the foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3 }
+    //! Set the foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3, MaxDepth = -1.0 }
     inline void     setFootContactInfo( const FootContactInfo& info ) ;
 
-    //! Get the const foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3 }
+    //! Get the const foot contact info. Default: { Spring = 1.0e4, Damper = 1.0e3, MaxDepth = -1.0 }
     inline const FootContactInfo&  getFootContactInfo(void) const ;
 /* ======================================================================= */
 

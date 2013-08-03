@@ -56,6 +56,7 @@ static bool writeFootContactInfo( osgDB::OutputStream& os, const osgODE::Charact
 
         os << osgDB::PROPERTY("Spring")     << info.Spring      << std::endl ;
         os << osgDB::PROPERTY("Damper")     << info.Damper      << std::endl ;
+        os << osgDB::PROPERTY("MaxDepth")   << info.MaxDepth    << std::endl ;
 
     os << osgDB::END_BRACKET << std::endl ;
 
@@ -73,6 +74,7 @@ static bool readFootContactInfo( osgDB::InputStream& is, osgODE::CharacterBase& 
 
         is >> osgDB::PROPERTY("Spring")     >> info.Spring ;
         is >> osgDB::PROPERTY("Damper")     >> info.Damper ;
+        is >> osgDB::PROPERTY("MaxDepth")   >> info.MaxDepth ;
 
     is >> osgDB::END_BRACKET ;
 

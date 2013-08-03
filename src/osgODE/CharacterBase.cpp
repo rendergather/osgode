@@ -80,6 +80,7 @@ CharacterBase::CharacterBase(void):
 
     m_foot_contact_info.Spring      = 1.0e4 ;
     m_foot_contact_info.Damper      = 1.0e3 ;
+    m_foot_contact_info.MaxDepth    = -1.0 ;
 
 
     setInteractingSphere( osg::Vec3(), 1.0 ) ;
@@ -447,9 +448,19 @@ CharacterBase:: _collideAgainstGround(double step_size)
         dOPE(contact.geom.pos, =, ray_to) ;
 
 
+
+
         // compenetration
         contact.geom.depth = m_height - m_foot_ray_cast_result->getDistance() ;
+
         PS_ASSERT1(contact.geom.depth >= 0.0) ;
+
+        if( m_foot_contact_info.MaxDepth > 0.0 ) {
+            contact.geom.depth = osg::minimum( contact.geom.depth, m_foot_contact_info.MaxDepth ) ;
+        }
+
+
+
 
         // normal
         dOPE(contact.geom.normal, =, m_up_versor) ;

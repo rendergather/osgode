@@ -57,6 +57,8 @@ SET(TARGET_H
     ${HEADER_PATH}/Hinge2Joint.inl
     ${HEADER_PATH}/HingeJoint
     ${HEADER_PATH}/HingeJoint.inl
+    ${HEADER_PATH}/HingeServoMotor
+    ${HEADER_PATH}/HingeServoMotor.inl
     ${HEADER_PATH}/InterpolableMatrixTransform
     ${HEADER_PATH}/Interpolator
     ${HEADER_PATH}/Joint
@@ -124,6 +126,8 @@ SET(TARGET_H
     ${HEADER_PATH}/TriMesh.inl
     ${HEADER_PATH}/UniversalJoint
     ${HEADER_PATH}/UniversalJoint.inl
+    ${HEADER_PATH}/UniversalServoMotor
+    ${HEADER_PATH}/UniversalServoMotor.inl
     ${HEADER_PATH}/Version
     ${HEADER_PATH}/Wheel
     ${HEADER_PATH}/Wheel.inl
@@ -164,6 +168,7 @@ SET(TARGET_SRC
     GearboxJoint.cpp
     Hinge2Joint.cpp
     HingeJoint.cpp
+    HingeServoMotor.cpp
     InterpolableMatrixTransform.cpp
     Joint.cpp
     JointBreakCallback.cpp
@@ -204,6 +209,7 @@ SET(TARGET_SRC
     Transformable.cpp
     TriMesh.cpp
     UniversalJoint.cpp
+    UniversalServoMotor.cpp
     Version.cpp
     Wheel.cpp
     World.cpp

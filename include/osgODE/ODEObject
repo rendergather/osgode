@@ -50,14 +50,16 @@ namespace osgODE
 class   BypassJoint ;
 class   CharacterBase ;
 class   Collidable ;
+class   HingeJoint ;
 class   Joint ;
 class   NoGravityVolume ;
 class   ODEObjectContainer ;
 class   OneWayFixedJoint ;
 class   RigidBody ;
 class   ShockWave ;
-class   Transformable ;
 class   Space ;
+class   Transformable ;
+class   UniversalJoint ;
 class   World ;
 /* ======================================================================= */
 
@@ -114,6 +116,9 @@ public:
     virtual Collidable*             asCollidable(void) ;
 
     //! Quick dynamic cast
+    virtual HingeJoint*             asHingeJoint(void) ;
+
+    //! Quick dynamic cast
     virtual Joint*                  asJoint(void) ;
 
     //! Quick dynamic cast
@@ -132,10 +137,13 @@ public:
     virtual ShockWave*              asShockWave(void) ;
 
     //! Quick dynamic cast
+    virtual Transformable*          asTransformable(void) ;
+
+    //! Quick dynamic cast
     virtual Space*                  asSpace(void) ;
 
     //! Quick dynamic cast
-    virtual Transformable*          asTransformable(void) ;
+    virtual UniversalJoint*         asUniversalJoint(void) ;
 
     //! Quick dynamic cast
     virtual World*                  asWorld(void) ;

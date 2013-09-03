@@ -1,9 +1,9 @@
 /*!
- * @file HingeJoint.cpp
+ * @file UniversalServoMotor.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,17 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/HingeJoint>
-#include <osgODE/StaticWorld>
-#include <osgODE/World>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
+#ifndef _OSGODE_UNIVERSALSERVOMOTOR_INL
+#define _OSGODE_UNIVERSALSERVOMOTOR_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -42,29 +33,12 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::HingeJoint(void)
+inline void
+osgODE::UniversalServoMotor::setPosition1(double position)
 {
-    m_ODE_joint = dJointCreateHinge(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    dJointSetData( m_ODE_joint, this ) ;
-
-    m_functions.SetAxis1    = dJointSetHingeAxis ;
-    m_functions.GetAxis1    = dJointGetHingeAxis ;
-
-    m_functions.SetAnchor1  = dJointSetHingeAnchor ;
-    m_functions.GetAnchor1  = dJointGetHingeAnchor ;
-
-    m_functions.GetAnchor2  = dJointGetHingeAnchor2 ;
-
-    m_functions.SetParam    = dJointSetHingeParam ;
-    m_functions.GetParam    = dJointGetHingeParam ;
+    m_position[0] = position ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,9 +48,10 @@ HingeJoint::HingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+inline double
+osgODE::UniversalServoMotor::getPosition1(void) const
 {
+    return m_position[0] ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -86,11 +61,10 @@ HingeJoint::HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::~HingeJoint(void)
+inline void
+osgODE::UniversalServoMotor::setPosition2(double position)
 {
-    if(m_ODE_joint) {
-        dJointDestroy(m_ODE_joint) ;
-    }
+    m_position[1] = position ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -100,10 +74,10 @@ HingeJoint::~HingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint*
-HingeJoint::asHingeJoint(void)
+inline double
+osgODE::UniversalServoMotor::getPosition2(void) const
 {
-    return this ;
+    return m_position[1] ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -113,38 +87,106 @@ HingeJoint::asHingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-dJointID
-HingeJoint::cloneODEJoint(dWorldID world) const
+inline void
+osgODE::UniversalServoMotor::setForce1(double force)
 {
-    PS_DBG2("osgODE::HingeJoint::cloneODEJoint(%p, world=%p)", this, world) ;
-
-    dJointID    j = dJointCreateHinge(world, NULL) ;
-
-    if(dJointIsEnabled(m_ODE_joint)) {
-        dJointEnable(j) ;
-    } else {
-        dJointDisable(j) ;
-    }
-
-    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
-
-
-    {
-        dVector3    v ;
-        dJointGetHingeAnchor(m_ODE_joint, v) ;
-        dJointSetHingeAnchor(j, v[0], v[1], v[2]) ;
-    }
-
-    {
-        dVector3    v ;
-        dJointGetHingeAxis(m_ODE_joint, v) ;
-        dJointSetHingeAxis(j, v[0], v[1], v[2]) ;
-    }
-
-
-
-    return j ;
+    m_force[0] = force ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::UniversalServoMotor::getForce1(void) const
+{
+    return m_force[0] ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::UniversalServoMotor::setForce2(double force)
+{
+    m_force[1] = force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::UniversalServoMotor::getForce2(void) const
+{
+    return m_force[1] ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::UniversalServoMotor::setGain1(double gain)
+{
+    m_gain[0] = gain ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::UniversalServoMotor::getGain1(void) const
+{
+    return m_gain[0] ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::UniversalServoMotor::setGain2(double gain)
+{
+    m_gain[1] = gain ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::UniversalServoMotor::getGain2(void) const
+{
+    return m_gain[1] ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_UNIVERSALSERVOMOTOR_INL */

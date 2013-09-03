@@ -31,6 +31,7 @@ SET(TARGET_SRC
     GearboxJoint_serializer.cpp
     Hinge2Joint_serializer.cpp
     HingeJoint_serializer.cpp
+    HingeServoMotor_serializer.cpp
     InterpolableMatrixTransform_serializer.cpp
     InterpolatorBase_serializer.cpp
     JointBreakCallback_serializer.cpp
@@ -65,6 +66,7 @@ SET(TARGET_SRC
     Transformable_serializer.cpp
     TriMesh_serializer.cpp
     UniversalJoint_serializer.cpp
+    UniversalServoMotor_serializer.cpp
     Vec3Interpolator_serializer.cpp
     Wheel_serializer.cpp
     World_serializer.cpp

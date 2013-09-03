@@ -268,6 +268,7 @@ ODEObject::callPostUpdateCallbackInternal(void)
 AS_NULL( BypassJoint ) ;
 AS_NULL( CharacterBase) ;
 AS_NULL( Collidable) ;
+AS_NULL( HingeJoint) ;
 AS_NULL( Joint ) ;
 AS_NULL( NoGravityVolume ) ;
 AS_NULL( ODEObjectContainer ) ;
@@ -276,6 +277,7 @@ AS_NULL( RigidBody ) ;
 AS_NULL( ShockWave ) ;
 AS_NULL( Space ) ;
 AS_NULL( Transformable ) ;
+AS_NULL( UniversalJoint ) ;
 AS_NULL( World ) ;
 
 #undef AS_NULL

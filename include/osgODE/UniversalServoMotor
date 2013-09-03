@@ -1,9 +1,9 @@
 /*!
- * @file HingeJoint
+ * @file UniversalServoMotor
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_HINGEJOINT_HPP
-#define _OSGODE_HINGEJOINT_HPP
+#ifndef _OSGODE_UNIVERSALSERVOMOTOR_HPP
+#define _OSGODE_UNIVERSALSERVOMOTOR_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osgODE/ODECallback>
 /* ======================================================================= */
 
 
@@ -49,18 +49,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! A hinge constraint is a door, a window or ...
+//! A servo motor for the UniversalJoint
 /*!
+ *
  */
-class OSG_EXPORT HingeJoint: public Joint
+class OSG_EXPORT UniversalServoMotor: public ODECallback
 {
 /* ======================================================================= */
 public:
-             HingeJoint(void) ;
-             HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             UniversalServoMotor(void) ;
+             UniversalServoMotor(const UniversalServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~HingeJoint(void) ;
+    virtual ~UniversalServoMotor(void) ;
 /* ======================================================================= */
 
 
@@ -68,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, HingeJoint) ;
+    META_Object(osgODE, UniversalServoMotor) ;
 /* ======================================================================= */
 
 
@@ -81,31 +82,58 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Get the angle between the bodies
+    //! Set the desired position for the first axis in radians
+    inline void         setPosition1( double position ) ;
+
+    //! Get the desired position for the first axis in radians
+    inline double       getPosition1( void ) const ;
+
+
+    //! Set the desired position for the second axis in radians
+    inline void         setPosition2( double position ) ;
+
+    //! Get the desired position for the second axis in radians
+    inline double       getPosition2( void ) const ;
+
+
+    //! Set the force for the first axis
+    inline void         setForce1( double force ) ;
+
+    //! Get the force for the first axis
+    inline double       getForce1( void ) const ;
+
+
+    //! Set the force for the second axis
+    inline void         setForce2( double force ) ;
+
+    //! Get the force for the second axis
+    inline double       getForce2( void ) const ;
+
+
+    //! Set the gain for the first axis
+    inline void         setGain1( double gain ) ;
+
+    //! Get the gain for the first axis
+    inline double       getGain1( void ) const ;
+
+
+    //! Set the gain for the second axis
+    inline void         setGain2( double gain ) ;
+
+    //! Get the gain for the second axis
+    inline double       getGain2( void ) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Compute and apply the force
     /*!
-     * When the constraint is created, the positions of the bodies are
-     * examined and that consiguration will be the "zero position"
+     * SIGSEGV (or assert) if obj is not a UniversalJoint
      */
-    inline double   getAngle(void) const ;
-
-    //! Get the angular speed
-    inline double   getAngleRate(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual HingeJoint*     asHingeJoint(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    virtual void        operator()(ODEObject* object) ;
 /* ======================================================================= */
 
 
@@ -113,6 +141,9 @@ protected:
 
 /* ======================================================================= */
 private:
+    double      m_position[2] ;
+    double      m_force[2] ;
+    double      m_gain[2] ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -126,9 +157,9 @@ private:
 
 
 
-#include "HingeJoint.inl"
+#include "UniversalServoMotor.inl"
 
 
 
 
-#endif /* _OSGODE_HINGEJOINT_HPP */
+#endif /* _OSGODE_UNIVERSALSERVOMOTOR_HPP */

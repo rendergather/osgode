@@ -1,9 +1,9 @@
 /*!
- * @file HingeJoint.cpp
+ * @file HingeServoMotor.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,17 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/HingeJoint>
-#include <osgODE/StaticWorld>
-#include <osgODE/World>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
+#ifndef _OSGODE_HINGESERVOMOTOR_INL
+#define _OSGODE_HINGESERVOMOTOR_INL
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -42,29 +33,12 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::HingeJoint(void)
+inline void
+osgODE::HingeServoMotor::setPosition(double position)
 {
-    m_ODE_joint = dJointCreateHinge(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    dJointSetData( m_ODE_joint, this ) ;
-
-    m_functions.SetAxis1    = dJointSetHingeAxis ;
-    m_functions.GetAxis1    = dJointGetHingeAxis ;
-
-    m_functions.SetAnchor1  = dJointSetHingeAnchor ;
-    m_functions.GetAnchor1  = dJointGetHingeAnchor ;
-
-    m_functions.GetAnchor2  = dJointGetHingeAnchor2 ;
-
-    m_functions.SetParam    = dJointSetHingeParam ;
-    m_functions.GetParam    = dJointGetHingeParam ;
+    m_position = position ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -74,9 +48,10 @@ HingeJoint::HingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+inline double
+osgODE::HingeServoMotor::getPosition(void) const
 {
+    return m_position ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -86,11 +61,10 @@ HingeJoint::HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint::~HingeJoint(void)
+inline void
+osgODE::HingeServoMotor::setForce(double force)
 {
-    if(m_ODE_joint) {
-        dJointDestroy(m_ODE_joint) ;
-    }
+    m_force = force ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -100,10 +74,10 @@ HingeJoint::~HingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-HingeJoint*
-HingeJoint::asHingeJoint(void)
+inline double
+osgODE::HingeServoMotor::getForce(void) const
 {
-    return this ;
+    return m_force ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -113,38 +87,28 @@ HingeJoint::asHingeJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-dJointID
-HingeJoint::cloneODEJoint(dWorldID world) const
+inline void
+osgODE::HingeServoMotor::setGain(double gain)
 {
-    PS_DBG2("osgODE::HingeJoint::cloneODEJoint(%p, world=%p)", this, world) ;
-
-    dJointID    j = dJointCreateHinge(world, NULL) ;
-
-    if(dJointIsEnabled(m_ODE_joint)) {
-        dJointEnable(j) ;
-    } else {
-        dJointDisable(j) ;
-    }
-
-    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
-
-
-
-    {
-        dVector3    v ;
-        dJointGetHingeAnchor(m_ODE_joint, v) ;
-        dJointSetHingeAnchor(j, v[0], v[1], v[2]) ;
-    }
-
-    {
-        dVector3    v ;
-        dJointGetHingeAxis(m_ODE_joint, v) ;
-        dJointSetHingeAxis(j, v[0], v[1], v[2]) ;
-    }
-
-
-
-    return j ;
+    m_gain = gain ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::HingeServoMotor::getGain(void) const
+{
+    return m_gain ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_HINGESERVOMOTOR_INL */

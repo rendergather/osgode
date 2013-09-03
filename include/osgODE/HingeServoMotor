@@ -1,9 +1,9 @@
 /*!
- * @file HingeJoint
+ * @file HingeServoMotor
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,14 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_HINGEJOINT_HPP
-#define _OSGODE_HINGEJOINT_HPP
+#ifndef _OSGODE_HINGESERVOMOTOR_HPP
+#define _OSGODE_HINGESERVOMOTOR_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osgODE/ODECallback>
 /* ======================================================================= */
 
 
@@ -49,18 +49,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! A hinge constraint is a door, a window or ...
+//! A servo motor for the HingeJoint
 /*!
+ *
  */
-class OSG_EXPORT HingeJoint: public Joint
+class OSG_EXPORT HingeServoMotor: public ODECallback
 {
 /* ======================================================================= */
 public:
-             HingeJoint(void) ;
-             HingeJoint(const HingeJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             HingeServoMotor(void) ;
+             HingeServoMotor(const HingeServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~HingeJoint(void) ;
+    virtual ~HingeServoMotor(void) ;
 /* ======================================================================= */
 
 
@@ -68,7 +69,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, HingeJoint) ;
+    META_Object(osgODE, HingeServoMotor) ;
 /* ======================================================================= */
 
 
@@ -81,31 +82,37 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Get the angle between the bodies
+    //! Set the desired position in radians
+    inline void         setPosition( double position ) ;
+
+    //! Get the desired position in radians
+    inline double       getPosition( void ) const ;
+
+
+    //! Set the force
+    inline void         setForce( double force ) ;
+
+    //! Get the force
+    inline double       getForce( void ) const ;
+
+
+    //! Set the gain
+    inline void         setGain( double gain ) ;
+
+    //! Get the gain
+    inline double       getGain( void ) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Compute and apply the force
     /*!
-     * When the constraint is created, the positions of the bodies are
-     * examined and that consiguration will be the "zero position"
+     * SIGSEGV (or assert) if obj is not a HingeJoint
      */
-    inline double   getAngle(void) const ;
-
-    //! Get the angular speed
-    inline double   getAngleRate(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual HingeJoint*     asHingeJoint(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    virtual void        operator()(ODEObject* object) ;
 /* ======================================================================= */
 
 
@@ -113,6 +120,9 @@ protected:
 
 /* ======================================================================= */
 private:
+    double      m_position ;
+    double      m_force ;
+    double      m_gain ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -126,9 +136,9 @@ private:
 
 
 
-#include "HingeJoint.inl"
+#include "HingeServoMotor.inl"
 
 
 
 
-#endif /* _OSGODE_HINGEJOINT_HPP */
+#endif /* _OSGODE_HINGESERVOMOTOR_HPP */

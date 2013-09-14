@@ -42,7 +42,9 @@ namespace osgODE
 
 
 /* ======================================================================= */
-class   ODEObject ;
+class ODEObject ;
+class HingeServoMotor ;
+class UniversalServoMotor ;
 /* ======================================================================= */
 
 
@@ -98,6 +100,18 @@ public:
 
     //! where things happen. By default this operator calls traverse(object)
     virtual void    operator()(ODEObject* object) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Quick dynamic cast
+    virtual HingeServoMotor*        asHingeServoMotor(void) ;
+
+    //! Quick dynamic cast
+    virtual UniversalServoMotor*    asUniversalServoMotor(void) ;
 /* ======================================================================= */
 
 

@@ -11,3 +11,11 @@ oo_polygon_offset <height>, Object property
     displace a surface above the others.
     When two surfaces conicide, that one with the higher offset is shown.
     Technically, glPolygonOffset(-value, -value) is applied
+
+
+
+
+oo_max_distance <distance>, Light property, pViewer only
+    deactivate the light when it is too far away.
+    The parameter is the distance between the eye point and the center of the
+    light. This property does not have sense for non-positionable lights

@@ -60,6 +60,7 @@ class Light(Writable.Writable):
     ConstantAttenuation = None
     LinearAttenuation = None
     QuadraticAttenuation = None
+    MaxDistance = None
     SpotExponent = None
     SpotCutoff = None
     Enabled = None
@@ -96,6 +97,7 @@ class Light(Writable.Writable):
         self.ConstantAttenuation = None
         self.LinearAttenuation = None
         self.QuadraticAttenuation = None
+        self.MaxDistance = None
         self.SpotExponent = None
         self.SpotCutoff = None
         self.Enabled = None
@@ -126,6 +128,7 @@ class Light(Writable.Writable):
         self.ConstantAttenuation = None
         self.LinearAttenuation = None
         self.QuadraticAttenuation = None
+        self.MaxDistance = None
         self.SpotExponent = None
         self.SpotCutoff = None
         self.Enabled = None
@@ -138,6 +141,12 @@ class Light(Writable.Writable):
         self.ShadowFrustumSize = None
         self.LightMatrix = None
         self.LightTexture = None
+
+
+        try:
+            self.MaxDistance = self.Object.data["oo_max_distance"]
+        except:
+            self.MaxDistance = -1.0
 
 
         if self.Object.data.type == "HEMI":
@@ -385,6 +394,9 @@ class Light(Writable.Writable):
 
         if self.QuadraticAttenuation != None:
             writer.writeLine("QuadraticAttenuation %f" %(self.QuadraticAttenuation))
+
+        if self.MaxDistance != None:
+            writer.writeLine("MaxDistance %f" %(self.MaxDistance))
 
         if self.SpotExponent != None:
             writer.writeLine("SpotExponent %f" %(self.SpotExponent))

@@ -51,6 +51,7 @@ SET(TARGET_H
     ${HEADER_PATH}/EngineBase
     ${HEADER_PATH}/EngineBase.inl
     ${HEADER_PATH}/FixedJoint
+    ${HEADER_PATH}/FixedJoint.inl
     ${HEADER_PATH}/GearboxJoint
     ${HEADER_PATH}/GearboxJoint.inl
     ${HEADER_PATH}/Hinge2Joint

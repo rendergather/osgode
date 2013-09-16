@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -51,13 +51,7 @@ using namespace osgODE ;
 /* ....................................................................... */
 FixedJoint::FixedJoint(void)
 {
-    m_ODE_joint = dJointCreateFixed(StaticWorld::instance()->getODEWorld(), NULL) ;
-
-    dJointSetData( m_ODE_joint, this ) ;
-
-
-    m_functions.SetParam    = dJointSetFixedParam ;
-    m_functions.GetParam    = dJointGetFixedParam ;
+    this->setInfo(6, 6, 6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -68,7 +62,10 @@ FixedJoint::FixedJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 FixedJoint::FixedJoint(const FixedJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+    BypassJoint     ( other, copyop ),
+    m_matrix        ( other.m_matrix ),
+    m_quat          ( other.m_quat ),
+    m_pos           ( other.m_pos )
 {
 }
 /* ....................................................................... */
@@ -81,9 +78,47 @@ FixedJoint::FixedJoint(const FixedJoint& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 FixedJoint::~FixedJoint(void)
 {
-    if(m_ODE_joint) {
-        dJointDestroy(m_ODE_joint) ;
-    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+FixedJoint::update( double step_size )
+{
+    int row = 0 ;
+
+
+    this->BypassJoint::setRelativeRotation( step_size,
+                                            m_quat,
+                                            row,
+                                            m_erp[0],
+                                            m_cfm[0],
+                                            CONSTRAIN_ALL
+                    ) ;
+
+
+
+    this->BypassJoint::setRelativePosition( step_size,
+                                            m_pos,
+                                            row,
+                                            m_erp[0],
+                                            m_cfm[0],
+                                            CONSTRAIN_ALL
+                       ) ;
+
+
+
+    this->BypassJoint::setInfo( row, row, row ) ;
+
+
+
+
+    this->BypassJoint::update( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -99,57 +134,39 @@ FixedJoint::finalize(void)
     PS_DBG2("osgODE::FixedJoint::finalize(%p)", this) ;
 
 
-    dBodyID b1 =  NULL ;
-    dBodyID b2 =  NULL ;
+    RigidBody*  b1 = NULL ;
+    RigidBody*  b2 = NULL ;
 
 
     if( m_body1.valid() ) {
-        b1 = m_body1->getWorld() ? m_body1->getODEBody() : NULL ;
+        b1 = m_body1->getWorld() ? m_body1 : NULL ;
 
-    } else {
-        b1 = NULL ;
     }
 
 
 
     if( m_body2.valid() ) {
-        b2 = m_body2->getWorld() ? m_body2->getODEBody() : NULL ;
-    } else {
-        b2 = NULL ;
+        b2 = m_body2->getWorld() ? m_body2 : NULL ;
     }
 
 
 
 
-    dJointAttach(m_ODE_joint, b1, b2) ;
-    dJointSetFixed(m_ODE_joint) ;
 
-    _restoreParams() ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-dJointID
-FixedJoint::cloneODEJoint(dWorldID world) const
-{
-    PS_DBG2("osgODE::FixedJoint::cloneODEJoint(%p, world=%p)", this, world) ;
-
-    dJointID    j = dJointCreateFixed(world, NULL) ;
-
-    if(dJointIsEnabled(m_ODE_joint)) {
-        dJointEnable(j) ;
-    } else {
-        dJointDisable(j) ;
+    if( b1 && b2 ) {
+        setMatrix( b2->getMatrix() * osg::Matrix::inverse(b1->getMatrix()) ) ;
     }
 
-    dJointSetFeedback(j, dJointGetFeedback(m_ODE_joint)) ;
+    else if( b1 ) {
+       setMatrix( b1->getMatrix() ) ;
+    }
 
-    return j ;
+    else if( b2 ) {
+       setMatrix( b2->getMatrix() ) ;
+    }
+
+
+    this->BypassJoint::finalize() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

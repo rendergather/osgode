@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,7 +29,7 @@
 
 
 /* ======================================================================= */
-#include <osgODE/Joint>
+#include <osgODE/BypassJoint>
 /* ======================================================================= */
 
 
@@ -52,7 +52,7 @@ namespace osgODE
 //! Constant relative position and rotation
 /*!
  */
-class OSG_EXPORT FixedJoint: public Joint
+class OSG_EXPORT FixedJoint: public BypassJoint
 {
 /* ======================================================================= */
 public:
@@ -80,10 +80,26 @@ public:
 
 
 /* ======================================================================= */
-protected:
-    virtual void        finalize(void) ;
+public:
+    //! Set the matrix that transforms body1 to body2
+    inline void                 setMatrix( const osg::Matrix& matrix ) ;
 
-    virtual dJointID    cloneODEJoint(dWorldID world) const ;
+    //! Get the matrix that transforms body1 to body2
+    inline const osg::Matrix&   getMatrix(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+protected:
+    virtual void        update( double step_size ) ;
+    virtual void        finalize(void) ;
 /* ======================================================================= */
 
 
@@ -91,6 +107,9 @@ protected:
 
 /* ======================================================================= */
 private:
+    osg::Matrix     m_matrix ;
+    osg::Quat       m_quat ;
+    osg::Vec3       m_pos ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -104,7 +123,7 @@ private:
 
 
 
-// #include "FixedJoint.inl"
+#include "FixedJoint.inl"
 
 
 

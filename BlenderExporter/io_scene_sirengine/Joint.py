@@ -60,6 +60,8 @@ class Joint(ODEObject.ODEObject):
     Axis3 = None
     LoStop = None
     HiStop = None
+    CFM = None
+    ERP = None
     LoStop2 = None
     HiStop2 = None
     LoStop3 = None
@@ -95,6 +97,8 @@ class Joint(ODEObject.ODEObject):
         self.Axis3 = None
         self.LoStop = None
         self.HiStop = None
+        self.CFM = None
+        self.ERP = None
         self.LoStop2 = None
         self.HiStop2 = None
         self.LoStop3 = None
@@ -126,6 +130,10 @@ class Joint(ODEObject.ODEObject):
         elif self.Object.pivot_type == "GENERIC_6_DOF":
             self.JointType, \
             axis_order = self.selectJointTypeBy6DOF(self.Object)
+
+            if self.JointType == "osgODE::FixedJoint":
+                self.ERP = 0.2
+                self.CFM = 1.0e-5
 
         else:
             self.Data.Operator.report({'ERROR'}, "Unsupported constraint type (%s)" %self.Object.pivot_type)
@@ -273,6 +281,14 @@ class Joint(ODEObject.ODEObject):
 
         if self.HiStop != None:
             writer.writeLine("dParamHiStop %f" %self.HiStop)
+
+
+
+        if self.CFM != None:
+            writer.writeLine("dParamCFM %f" %self.CFM)
+
+        if self.ERP != None:
+            writer.writeLine("dParamERP %f" %self.ERP)
 
 
 

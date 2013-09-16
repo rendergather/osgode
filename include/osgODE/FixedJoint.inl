@@ -1,9 +1,9 @@
 /*!
- * @file FixedJoint_serializer.cpp
+ * @file FixedJoint.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2013 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,21 +14,16 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this program; if not, write to the                 *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/FixedJoint>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_FIXEDJOINT_INL
+#define _OSGODE_FIXEDJOINT_INL
 
 
 
@@ -43,12 +38,35 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( FixedJoint,
-                         new osgODE::FixedJoint,
-                         osgODE::FixedJoint,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::FixedJoint" )
+inline void
+osgODE::FixedJoint::setMatrix( const osg::Matrix& matrix )
 {
-    (void) wrapper ;
+    m_matrix = matrix ;
+
+
+    osg::Quat   so ;
+    osg::Vec3   s ;
+
+    matrix.decompose(m_pos, m_quat, s, so) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osg::Matrix&
+osgODE::FixedJoint::getMatrix(void) const
+{
+    return m_matrix ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+#endif /* _OSGODE_FIXEDJOINT_INL */

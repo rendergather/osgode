@@ -1,6 +1,6 @@
 Index: m4/libtool.m4
 ===================================================================
---- m4/libtool.m4	(revision 1939)
+--- m4/libtool.m4	(revision 1947)
 +++ m4/libtool.m4	(working copy)
 @@ -1,8 +1,8 @@
  # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
@@ -757,7 +757,7 @@ Index: m4/libtool.m4
  AC_DEFUN([LT_PROG_RC],
 Index: m4/ltversion.m4
 ===================================================================
---- m4/ltversion.m4	(revision 1939)
+--- m4/ltversion.m4	(revision 1947)
 +++ m4/ltversion.m4	(working copy)
 @@ -9,15 +9,15 @@
  
@@ -782,7 +782,7 @@ Index: m4/ltversion.m4
  ])
 Index: m4/ltoptions.m4
 ===================================================================
---- m4/ltoptions.m4	(revision 1939)
+--- m4/ltoptions.m4	(revision 1947)
 +++ m4/ltoptions.m4	(working copy)
 @@ -326,24 +326,9 @@
  # MODE is either `yes' or `no'.  If omitted, it defaults to `both'.
@@ -1108,7 +1108,7 @@ Index: include/ode/lmplus_api.h
 +
 Index: include/ode/odemath.h
 ===================================================================
---- include/ode/odemath.h	(revision 1939)
+--- include/ode/odemath.h	(revision 1947)
 +++ include/ode/odemath.h	(working copy)
 @@ -423,6 +423,17 @@
   */
@@ -1228,7 +1228,7 @@ Index: include/ode/differential_api.h
 +ODE_API dReal dJointGetDifferentialRatio2( dJointID j );
 Index: include/ode/objects.h
 ===================================================================
---- include/ode/objects.h	(revision 1939)
+--- include/ode/objects.h	(revision 1947)
 +++ include/ode/objects.h	(working copy)
 @@ -3008,6 +3008,12 @@
   */
@@ -1584,7 +1584,7 @@ Index: include/ode/swaybar_api.h
 +ODE_API dReal dJointGetSwaybarPosition (dJointID);
 Index: include/ode/Makefile.am
 ===================================================================
---- include/ode/Makefile.am	(revision 1939)
+--- include/ode/Makefile.am	(revision 1947)
 +++ include/ode/Makefile.am	(working copy)
 @@ -15,6 +15,11 @@
  				collision.h \
@@ -1600,7 +1600,7 @@ Index: include/ode/Makefile.am
  				export-dif.h \
 Index: include/ode/common.h
 ===================================================================
---- include/ode/common.h	(revision 1939)
+--- include/ode/common.h	(revision 1947)
 +++ include/ode/common.h	(working copy)
 @@ -108,6 +108,7 @@
  #define dCos(x) (cosf(x))				/* cosine */
@@ -1672,7 +1672,7 @@ Index: include/ode/common.h
  typedef struct dJointFeedback {
 Index: build/premake4.lua
 ===================================================================
---- build/premake4.lua	(revision 1939)
+--- build/premake4.lua	(revision 1947)
 +++ build/premake4.lua	(working copy)
 @@ -32,6 +32,8 @@
      "kinematic",
@@ -2684,7 +2684,7 @@ Index: ode/demo/demo_lmplus.cpp
 +}
 Index: ode/demo/Makefile.am
 ===================================================================
---- ode/demo/Makefile.am	(revision 1939)
+--- ode/demo/Makefile.am	(revision 1947)
 +++ ode/demo/Makefile.am	(working copy)
 @@ -36,6 +36,8 @@
                  demo_kinematic \
@@ -2706,7 +2706,7 @@ Index: ode/demo/Makefile.am
  demo_plane2d_SOURCES = demo_plane2d.cpp
 Index: ode/src/quickstep.cpp
 ===================================================================
---- ode/src/quickstep.cpp	(revision 1939)
+--- ode/src/quickstep.cpp	(revision 1947)
 +++ ode/src/quickstep.cpp	(working copy)
 @@ -944,7 +944,7 @@
          for (dxJoint *const *_jcurr = _joint; _jcurr != _jend; _jcurr++) {	// jicurr=dest, _jcurr=src
@@ -2728,7 +2728,7 @@ Index: ode/src/quickstep.cpp
                  for (unsigned int j=0; j<3; j++) {
 Index: ode/src/export-dif.cpp
 ===================================================================
---- ode/src/export-dif.cpp	(revision 1939)
+--- ode/src/export-dif.cpp	(revision 1947)
 +++ ode/src/export-dif.cpp	(working copy)
 @@ -163,7 +163,9 @@
          c.print ("motor = {");
@@ -2743,7 +2743,7 @@ Index: ode/src/export-dif.cpp
      c.indent++;
 Index: ode/src/odemath.cpp
 ===================================================================
---- ode/src/odemath.cpp	(revision 1939)
+--- ode/src/odemath.cpp	(revision 1947)
 +++ ode/src/odemath.cpp	(working copy)
 @@ -177,7 +177,26 @@
      }
@@ -2772,21 +2772,6 @@ Index: ode/src/odemath.cpp
  /*
  * This takes what is supposed to be a rotation matrix,
  * and make sure it is correct.
-Index: ode/src/joints/fixed.cpp
-===================================================================
---- ode/src/joints/fixed.cpp	(revision 1939)
-+++ ode/src/joints/fixed.cpp	(working copy)
-@@ -74,6 +74,10 @@
-     info->cfm[1] = this->cfm;
-     info->cfm[2] = this->cfm;
- 
-+    info->cfm[3] = this->cfm;
-+    info->cfm[4] = this->cfm;
-+    info->cfm[5] = this->cfm;
-+
-     dxBody *b0 = node[0].body, *b1 = node[1].body;
- 
-     dVector3 ofs;
 Index: ode/src/joints/amplus.cpp
 ===================================================================
 --- ode/src/joints/amplus.cpp	(revision 0)
@@ -3607,7 +3592,7 @@ Index: ode/src/joints/swaybar.cpp
 +}
 Index: ode/src/joints/joints.h
 ===================================================================
---- ode/src/joints/joints.h	(revision 1939)
+--- ode/src/joints/joints.h	(revision 1947)
 +++ ode/src/joints/joints.h	(working copy)
 @@ -30,6 +30,9 @@
  #include "ball.h"
@@ -3629,7 +3614,7 @@ Index: ode/src/joints/joints.h
  #endif
 Index: ode/src/joints/piston.cpp
 ===================================================================
---- ode/src/joints/piston.cpp	(revision 1939)
+--- ode/src/joints/piston.cpp	(revision 1947)
 +++ ode/src/joints/piston.cpp	(working copy)
 @@ -175,7 +175,7 @@
  void 
@@ -3687,7 +3672,7 @@ Index: ode/src/joints/piston.cpp
  void dJointSetPistonAnchor ( dJointID j, dReal x, dReal y, dReal z )
 Index: ode/src/joints/lmotor.cpp
 ===================================================================
---- ode/src/joints/lmotor.cpp	(revision 1939)
+--- ode/src/joints/lmotor.cpp	(revision 1947)
 +++ ode/src/joints/lmotor.cpp	(working copy)
 @@ -69,7 +69,11 @@
  void 
@@ -3726,7 +3711,7 @@ Index: ode/src/joints/lmotor.cpp
  
 Index: ode/src/joints/hinge2.cpp
 ===================================================================
---- ode/src/joints/hinge2.cpp	(revision 1939)
+--- ode/src/joints/hinge2.cpp	(revision 1947)
 +++ ode/src/joints/hinge2.cpp	(working copy)
 @@ -74,7 +74,7 @@
  void 
@@ -3766,53 +3751,6 @@ Index: ode/src/joints/hinge2.cpp
  
      // set parameter for the suspension
      info->cfm[0] = susp_cfm;
-Index: ode/src/joints/pr.cpp
-===================================================================
---- ode/src/joints/pr.cpp	(revision 1939)
-+++ ode/src/joints/pr.cpp	(working copy)
-@@ -180,7 +180,9 @@
- void 
- dxJointPR::getSureMaxInfo( SureMaxInfo* info )
- {
--    info->max_m = 6;
-+  info->max_m = 4 + 
-+    limotR.countSureMaxRows() +
-+    limotP.countSureMaxRows();
- }
- 
- 
-@@ -203,7 +205,8 @@
-     }
- 
-     // powered needs an extra constraint row
--    if ( limotP.limit || limotP.fmax > 0 ) info->m++;
-+    info->m += limotP.countRows();
-+    info->nub += limotP.countUBRows();
- 
- 
-     // see if we're at a joint limit.
-@@ -430,7 +433,7 @@
-     int row = 4;
-     if (  node[1].body || !(flags & dJOINT_REVERSE) )
-     {
--        row += limotP.addLimot ( this, worldFPS, info, 4, axP, 0 );
-+        row += limotP.addLinearLimot ( this, worldFPS, info, axP, 4 );
-     }
-     else
-     {
-@@ -438,10 +441,10 @@
-         rAxP[0] = -axP[0];
-         rAxP[1] = -axP[1];
-         rAxP[2] = -axP[2];
--        row += limotP.addLimot ( this, worldFPS, info, 4, rAxP, 0 );
-+        row += limotP.addLinearLimot ( this, worldFPS, info, rAxP, 4 );
-     }
- 
--    limotR.addLimot ( this, worldFPS, info, row, ax1, 1 );
-+    limotR.addRotationalLimot ( this, worldFPS, info, ax1, row );
- }
- 
- 
 Index: ode/src/joints/lmplus.h
 ===================================================================
 --- ode/src/joints/lmplus.h	(revision 0)
@@ -3902,9 +3840,56 @@ Index: ode/src/joints/lmplus.h
 +
 +#endif
 +
+Index: ode/src/joints/pr.cpp
+===================================================================
+--- ode/src/joints/pr.cpp	(revision 1947)
++++ ode/src/joints/pr.cpp	(working copy)
+@@ -180,7 +180,9 @@
+ void 
+ dxJointPR::getSureMaxInfo( SureMaxInfo* info )
+ {
+-    info->max_m = 6;
++  info->max_m = 4 + 
++    limotR.countSureMaxRows() +
++    limotP.countSureMaxRows();
+ }
+ 
+ 
+@@ -203,7 +205,8 @@
+     }
+ 
+     // powered needs an extra constraint row
+-    if ( limotP.limit || limotP.fmax > 0 ) info->m++;
++    info->m += limotP.countRows();
++    info->nub += limotP.countUBRows();
+ 
+ 
+     // see if we're at a joint limit.
+@@ -430,7 +433,7 @@
+     int row = 4;
+     if (  node[1].body || !(flags & dJOINT_REVERSE) )
+     {
+-        row += limotP.addLimot ( this, worldFPS, info, 4, axP, 0 );
++        row += limotP.addLinearLimot ( this, worldFPS, info, axP, 4 );
+     }
+     else
+     {
+@@ -438,10 +441,10 @@
+         rAxP[0] = -axP[0];
+         rAxP[1] = -axP[1];
+         rAxP[2] = -axP[2];
+-        row += limotP.addLimot ( this, worldFPS, info, 4, rAxP, 0 );
++        row += limotP.addLinearLimot ( this, worldFPS, info, rAxP, 4 );
+     }
+ 
+-    limotR.addLimot ( this, worldFPS, info, row, ax1, 1 );
++    limotR.addRotationalLimot ( this, worldFPS, info, ax1, row );
+ }
+ 
+ 
 Index: ode/src/joints/slider.cpp
 ===================================================================
---- ode/src/joints/slider.cpp	(revision 1939)
+--- ode/src/joints/slider.cpp	(revision 1947)
 +++ ode/src/joints/slider.cpp	(working copy)
 @@ -109,7 +109,7 @@
  void 
@@ -3962,7 +3947,7 @@ Index: ode/src/joints/slider.cpp
  
 Index: ode/src/joints/pu.cpp
 ===================================================================
---- ode/src/joints/pu.cpp	(revision 1939)
+--- ode/src/joints/pu.cpp	(revision 1947)
 +++ ode/src/joints/pu.cpp	(working copy)
 @@ -209,7 +209,10 @@
  void 
@@ -4026,7 +4011,7 @@ Index: ode/src/joints/pu.cpp
  
 Index: ode/src/joints/plane2d.cpp
 ===================================================================
---- ode/src/joints/plane2d.cpp	(revision 1939)
+--- ode/src/joints/plane2d.cpp	(revision 1947)
 +++ ode/src/joints/plane2d.cpp	(working copy)
 @@ -64,7 +64,10 @@
  void 
@@ -4089,7 +4074,7 @@ Index: ode/src/joints/plane2d.cpp
  
 Index: ode/src/joints/joint.h
 ===================================================================
---- ode/src/joints/joint.h	(revision 1939)
+--- ode/src/joints/joint.h	(revision 1947)
 +++ ode/src/joints/joint.h	(working copy)
 @@ -191,7 +191,7 @@
  // common limit and motor information for a single joint axis of movement
@@ -4204,7 +4189,7 @@ Index: ode/src/joints/differential.h
 +#endif
 Index: ode/src/joints/amotor.cpp
 ===================================================================
---- ode/src/joints/amotor.cpp	(revision 1939)
+--- ode/src/joints/amotor.cpp	(revision 1947)
 +++ ode/src/joints/amotor.cpp	(working copy)
 @@ -184,7 +184,10 @@
  void 
@@ -4584,7 +4569,7 @@ Index: ode/src/joints/amplus.h
 +
 Index: ode/src/joints/universal.cpp
 ===================================================================
---- ode/src/joints/universal.cpp	(revision 1939)
+--- ode/src/joints/universal.cpp	(revision 1947)
 +++ ode/src/joints/universal.cpp	(working copy)
 @@ -258,7 +258,9 @@
  void 
@@ -5351,7 +5336,7 @@ Index: ode/src/joints/swaybar.h
 +#endif
 Index: ode/src/joints/joint.cpp
 ===================================================================
---- ode/src/joints/joint.cpp	(revision 1939)
+--- ode/src/joints/joint.cpp	(revision 1947)
 +++ ode/src/joints/joint.cpp	(working copy)
 @@ -501,7 +501,7 @@
  
@@ -5765,7 +5750,7 @@ Index: ode/src/joints/joint.cpp
  // c-basic-offset:4
 Index: ode/src/joints/Makefile.am
 ===================================================================
---- ode/src/joints/Makefile.am	(revision 1939)
+--- ode/src/joints/Makefile.am	(revision 1947)
 +++ ode/src/joints/Makefile.am	(working copy)
 @@ -10,6 +10,9 @@
                          ball.h ball.cpp \
@@ -5788,7 +5773,7 @@ Index: ode/src/joints/Makefile.am
  
 Index: ode/src/joints/plane2d.h
 ===================================================================
---- ode/src/joints/plane2d.h	(revision 1939)
+--- ode/src/joints/plane2d.h	(revision 1947)
 +++ ode/src/joints/plane2d.h	(working copy)
 @@ -30,9 +30,9 @@
  
@@ -5805,7 +5790,7 @@ Index: ode/src/joints/plane2d.h
      dxJointLimitMotor   motor_angle;
 Index: ode/src/joints/hinge.cpp
 ===================================================================
---- ode/src/joints/hinge.cpp	(revision 1939)
+--- ode/src/joints/hinge.cpp	(revision 1947)
 +++ ode/src/joints/hinge.cpp	(working copy)
 @@ -47,7 +47,7 @@
  void 
@@ -6127,7 +6112,7 @@ Index: ode/src/joints/differential.cpp
 +}
 Index: ode/src/ode.cpp
 ===================================================================
---- ode/src/ode.cpp	(revision 1939)
+--- ode/src/ode.cpp	(revision 1947)
 +++ ode/src/ode.cpp	(working copy)
 @@ -1269,7 +1269,36 @@
      return createJoint<dxJointDHinge> (w,group);
@@ -6168,7 +6153,7 @@ Index: ode/src/ode.cpp
      // if any group joints have their world pointer set to 0, their world was
 Index: ode/src/step.cpp
 ===================================================================
---- ode/src/step.cpp	(revision 1939)
+--- ode/src/step.cpp	(revision 1947)
 +++ ode/src/step.cpp	(working copy)
 @@ -533,7 +533,7 @@
                      }

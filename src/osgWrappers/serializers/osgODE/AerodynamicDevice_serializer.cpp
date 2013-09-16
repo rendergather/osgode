@@ -47,13 +47,13 @@ static bool writeDragPointList(osgDB::OutputStream& os, const osgODE::Aerodynami
     const osgODE::AerodynamicDevice::DragPointList& points = ad.getDragPointList() ;
     unsigned int            size = points.size() ;
 
-    os << size << osgDB::BEGIN_BRACKET << std::endl ;
+    os << size << os.BEGIN_BRACKET << std::endl ;
 
     for(unsigned int i=0; i<size; i++) {
         os << points[i] << std::endl ;
     }
 
-    os << osgDB::END_BRACKET << std::endl ;
+    os << os.END_BRACKET << std::endl ;
 
     return true ;
 }
@@ -62,7 +62,7 @@ static bool readDragPointList(osgDB::InputStream& is, osgODE::AerodynamicDevice&
 {
     unsigned int    size = 0 ;
 
-    is >> size >> osgDB::BEGIN_BRACKET ;
+    is >> size >> is.BEGIN_BRACKET ;
 
     osgODE::AerodynamicDevice::DragPointList    points ;
 
@@ -75,7 +75,7 @@ static bool readDragPointList(osgDB::InputStream& is, osgODE::AerodynamicDevice&
 
     }
 
-    is >> osgDB::END_BRACKET ;
+    is >> is.END_BRACKET ;
 
 
     ad.setDragPointList(points) ;

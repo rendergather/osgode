@@ -52,13 +52,13 @@ static bool writeFootContactInfo( osgDB::OutputStream& os, const osgODE::Charact
 {
     const osgODE::CharacterBase::FootContactInfo&   info = obj.getFootContactInfo() ;
 
-    os << osgDB::BEGIN_BRACKET << std::endl ;
+    os << os.BEGIN_BRACKET << std::endl ;
 
-        os << osgDB::PROPERTY("Spring")     << info.Spring      << std::endl ;
-        os << osgDB::PROPERTY("Damper")     << info.Damper      << std::endl ;
-        os << osgDB::PROPERTY("MaxDepth")   << info.MaxDepth    << std::endl ;
+        os << os.PROPERTY("Spring")     << info.Spring      << std::endl ;
+        os << os.PROPERTY("Damper")     << info.Damper      << std::endl ;
+        os << os.PROPERTY("MaxDepth")   << info.MaxDepth    << std::endl ;
 
-    os << osgDB::END_BRACKET << std::endl ;
+    os << os.END_BRACKET << std::endl ;
 
 
     return true;
@@ -70,13 +70,13 @@ static bool readFootContactInfo( osgDB::InputStream& is, osgODE::CharacterBase& 
 {
     osgODE::CharacterBase::FootContactInfo info ;
 
-    is >> osgDB::BEGIN_BRACKET ;
+    is >> is.BEGIN_BRACKET ;
 
-        is >> osgDB::PROPERTY("Spring")     >> info.Spring ;
-        is >> osgDB::PROPERTY("Damper")     >> info.Damper ;
-        is >> osgDB::PROPERTY("MaxDepth")   >> info.MaxDepth ;
+        is >> is.PROPERTY("Spring")     >> info.Spring ;
+        is >> is.PROPERTY("Damper")     >> info.Damper ;
+        is >> is.PROPERTY("MaxDepth")   >> info.MaxDepth ;
 
-    is >> osgDB::END_BRACKET ;
+    is >> is.END_BRACKET ;
 
 
     obj.setFootContactInfo( info ) ;
@@ -105,14 +105,14 @@ static bool writeFootstepInfo( osgDB::OutputStream& os, const osgODE::CharacterB
 {
     const osgODE::CharacterBase::FootstepInfo&  info = obj.getFootstepInfo() ;
 
-    os << osgDB::BEGIN_BRACKET << std::endl ;
+    os << os.BEGIN_BRACKET << std::endl ;
 
-        os << osgDB::PROPERTY("Magnitude")      << info.Magnitude       << std::endl ;
-        os << osgDB::PROPERTY("PowerFactor")    << info.PowerFactor     << std::endl ;
-        os << osgDB::PROPERTY("TimeMultiplier") << info.TimeMultiplier  << std::endl ;
-        os << osgDB::PROPERTY("SpeedThreshold") << info.SpeedThreshold  << std::endl ;
+        os << os.PROPERTY("Magnitude")      << info.Magnitude       << std::endl ;
+        os << os.PROPERTY("PowerFactor")    << info.PowerFactor     << std::endl ;
+        os << os.PROPERTY("TimeMultiplier") << info.TimeMultiplier  << std::endl ;
+        os << os.PROPERTY("SpeedThreshold") << info.SpeedThreshold  << std::endl ;
 
-    os << osgDB::END_BRACKET << std::endl ;
+    os << os.END_BRACKET << std::endl ;
 
 
     return true;
@@ -124,14 +124,14 @@ static bool readFootstepInfo( osgDB::InputStream& is, osgODE::CharacterBase& obj
 {
     osgODE::CharacterBase::FootstepInfo info ;
 
-    is >> osgDB::BEGIN_BRACKET ;
+    is >> is.BEGIN_BRACKET ;
 
-        is >> osgDB::PROPERTY("Magnitude")      >> info.Magnitude ;
-        is >> osgDB::PROPERTY("PowerFactor")    >> info.PowerFactor ;
-        is >> osgDB::PROPERTY("TimeMultiplier") >> info.TimeMultiplier ;
-        is >> osgDB::PROPERTY("SpeedThreshold") >> info.SpeedThreshold ;
+        is >> is.PROPERTY("Magnitude")      >> info.Magnitude ;
+        is >> is.PROPERTY("PowerFactor")    >> info.PowerFactor ;
+        is >> is.PROPERTY("TimeMultiplier") >> info.TimeMultiplier ;
+        is >> is.PROPERTY("SpeedThreshold") >> info.SpeedThreshold ;
 
-    is >> osgDB::END_BRACKET ;
+    is >> is.END_BRACKET ;
 
 
     obj.setFootstepInfo( info ) ;

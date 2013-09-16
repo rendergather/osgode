@@ -47,23 +47,23 @@ static bool writeRows(osgDB::OutputStream& os, const osgODE::BypassJoint& j)
     osg::Vec3   J1a, J1l, J2a, J2l ;
     double      rhs, cfm ;
 
-    os << osgDB::BEGIN_BRACKET << std::endl ;
+    os << os.BEGIN_BRACKET << std::endl ;
 
     for(unsigned int row=0; row<6; row++) {
 
         j.getRow(row, J1a, J1l, J2a, J2l, rhs, cfm) ;
 
-        os << osgDB::PROPERTY("Row") << row << osgDB::BEGIN_BRACKET  << std::endl ;
-        os << osgDB::PROPERTY("J1a") << J1a << std::endl ;
-        os << osgDB::PROPERTY("J1l") << J1l << std::endl ;
-        os << osgDB::PROPERTY("J2a") << J2a << std::endl ;
-        os << osgDB::PROPERTY("J2l") << J2l << std::endl ;
-        os << osgDB::PROPERTY("rhs") << rhs << std::endl ;
-        os << osgDB::PROPERTY("cfm") << cfm << std::endl ;
-        os << osgDB::END_BRACKET << std::endl ;
+        os << os.PROPERTY("Row") << row << os.BEGIN_BRACKET  << std::endl ;
+        os << os.PROPERTY("J1a") << J1a << std::endl ;
+        os << os.PROPERTY("J1l") << J1l << std::endl ;
+        os << os.PROPERTY("J2a") << J2a << std::endl ;
+        os << os.PROPERTY("J2l") << J2l << std::endl ;
+        os << os.PROPERTY("rhs") << rhs << std::endl ;
+        os << os.PROPERTY("cfm") << cfm << std::endl ;
+        os << os.END_BRACKET << std::endl ;
     }
 
-    os << osgDB::END_BRACKET << std::endl ;
+    os << os.END_BRACKET << std::endl ;
 
     return true ;
 }
@@ -73,24 +73,24 @@ static bool readRows(osgDB::InputStream& is, osgODE::BypassJoint& j)
     osg::Vec3   J1a, J1l, J2a, J2l ;
     double      rhs, cfm ;
 
-    is >> osgDB::BEGIN_BRACKET ;
+    is >> is.BEGIN_BRACKET ;
 
     for(unsigned int row=0; row<6; row++) {
 
-        is >> osgDB::PROPERTY("Row") >> row >> osgDB::BEGIN_BRACKET ;
-        is >> osgDB::PROPERTY("J1a") >> J1a ;
-        is >> osgDB::PROPERTY("J1l") >> J1l ;
-        is >> osgDB::PROPERTY("J2a") >> J2a ;
-        is >> osgDB::PROPERTY("J2l") >> J2l ;
-        is >> osgDB::PROPERTY("rhs") >> rhs ;
-        is >> osgDB::PROPERTY("cfm") >> cfm ;
-        is >> osgDB::END_BRACKET ;
+        is >> is.PROPERTY("Row") >> row >> is.BEGIN_BRACKET ;
+        is >> is.PROPERTY("J1a") >> J1a ;
+        is >> is.PROPERTY("J1l") >> J1l ;
+        is >> is.PROPERTY("J2a") >> J2a ;
+        is >> is.PROPERTY("J2l") >> J2l ;
+        is >> is.PROPERTY("rhs") >> rhs ;
+        is >> is.PROPERTY("cfm") >> cfm ;
+        is >> is.END_BRACKET ;
 
 
         j.setRow(row, J1a, J1l, J2a, J2l, rhs, cfm) ;
     }
 
-    is >> osgDB::END_BRACKET ;
+    is >> is.END_BRACKET ;
 
 
     return true ;
@@ -110,15 +110,15 @@ static bool writeInfo(osgDB::OutputStream& os, const osgODE::BypassJoint& j)
 {
     unsigned int    max_m, m, nub ;
 
-    os << osgDB::BEGIN_BRACKET << std::endl ;
+    os << os.BEGIN_BRACKET << std::endl ;
 
     j.getInfo(max_m, m, nub) ;
 
-    os << osgDB::PROPERTY("MaxM") << max_m << std::endl ;
-    os << osgDB::PROPERTY("M") << m << std::endl ;
-    os << osgDB::PROPERTY("Nub") << nub << std::endl ;
+    os << os.PROPERTY("MaxM") << max_m << std::endl ;
+    os << os.PROPERTY("M") << m << std::endl ;
+    os << os.PROPERTY("Nub") << nub << std::endl ;
 
-    os << osgDB::END_BRACKET << std::endl ;
+    os << os.END_BRACKET << std::endl ;
 
     return true ;
 }
@@ -127,13 +127,13 @@ static bool readInfo(osgDB::InputStream& is, osgODE::BypassJoint& j)
 {
     unsigned int    max_m, m, nub ;
 
-    is >> osgDB::BEGIN_BRACKET ;
+    is >> is.BEGIN_BRACKET ;
 
-    is >> osgDB::PROPERTY("MaxM") >> max_m ;
-    is >> osgDB::PROPERTY("M") >> m ;
-    is >> osgDB::PROPERTY("Nub") >> nub ;
+    is >> is.PROPERTY("MaxM") >> max_m ;
+    is >> is.PROPERTY("M") >> m ;
+    is >> is.PROPERTY("Nub") >> nub ;
 
-    is >> osgDB::END_BRACKET ;
+    is >> is.END_BRACKET ;
 
 
 

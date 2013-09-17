@@ -94,6 +94,8 @@ class Image(Writable.Writable):
     def writeToStream(self, writer):
         writer.moveIn("Image TRUE") ;
 
+        writer.writeLine("ClassName osg::Image")
+
         if not super(Image, self).writeToStream(writer) :
             return False
 

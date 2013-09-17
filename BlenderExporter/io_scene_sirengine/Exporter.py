@@ -85,7 +85,7 @@ class Exporter(object):
         writer.open(self.Data.FilePath)
 
         writer.writeLine("#Ascii Scene")
-        writer.writeLine("#Version 80")
+        writer.writeLine("#Version 100")
         writer.writeLine("#Generator pExporter @PEXPORTER_VERSION@")
         writer.writeLine("")
         writer.writeLine("")

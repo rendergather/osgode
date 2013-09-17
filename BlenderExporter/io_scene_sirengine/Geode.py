@@ -227,7 +227,7 @@ class Geode(Writable.Writable):
             writer.writeLine("Name \"Geometry@%s\"" %self.Object.name) ;
 
             writer.moveIn("PrimitiveSetList 1")
-            writer.writeLine("DrawArrays GL_TRIANGLES 0 %d" % len(self.MeshData.VertexArray))
+            writer.writeLine("DrawArrays GL_TRIANGLES 0 0 %d" % len(self.MeshData.VertexArray))
             writer.moveOut("PrimitiveSetList 1")
 
 

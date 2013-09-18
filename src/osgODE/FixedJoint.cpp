@@ -49,7 +49,11 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-FixedJoint::FixedJoint(void)
+FixedJoint::FixedJoint(void):
+    m_oneway_mode       ( false ),
+    m_rotation_mode     ( true ),
+    m_position_mode     ( true ),
+    m_compute_matrix    ( true )
 {
     this->setInfo(6, 6, 6) ;
 }
@@ -62,10 +66,14 @@ FixedJoint::FixedJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 FixedJoint::FixedJoint(const FixedJoint& other, const osg::CopyOp& copyop):
-    BypassJoint     ( other, copyop ),
-    m_matrix        ( other.m_matrix ),
-    m_quat          ( other.m_quat ),
-    m_pos           ( other.m_pos )
+    BypassJoint         ( other, copyop ),
+    m_oneway_mode       ( other.m_oneway_mode ),
+    m_rotation_mode     ( other.m_rotation_mode ),
+    m_position_mode     ( other.m_position_mode ),
+    m_compute_matrix    ( other.m_compute_matrix ),
+    m_matrix            ( other.m_matrix ),
+    m_quat              ( other.m_quat ),
+    m_pos               ( other.m_pos )
 {
 }
 /* ....................................................................... */
@@ -93,23 +101,33 @@ FixedJoint::update( double step_size )
     int row = 0 ;
 
 
-    this->BypassJoint::setRelativeRotation( step_size,
-                                            m_quat,
-                                            row,
-                                            m_erp[0],
-                                            m_cfm[0],
-                                            CONSTRAIN_ALL
-                    ) ;
+    BypassJoint::BodyMask   mode = m_oneway_mode ? CONSTRAIN_BODY2 : CONSTRAIN_ALL ;
+
+
+    if( m_rotation_mode ) {
+
+        this->BypassJoint::setRelativeRotation( step_size,
+                                                m_quat,
+                                                row,
+                                                m_erp[0],
+                                                m_cfm[0],
+                                                mode
+                        ) ;
+    }
 
 
 
-    this->BypassJoint::setRelativePosition( step_size,
-                                            m_pos,
-                                            row,
-                                            m_erp[0],
-                                            m_cfm[0],
-                                            CONSTRAIN_ALL
-                       ) ;
+
+    if( m_position_mode ) {
+
+        this->BypassJoint::setRelativePosition( step_size,
+                                                m_pos,
+                                                row,
+                                                m_erp[0],
+                                                m_cfm[0],
+                                                mode
+                        ) ;
+    }
 
 
 
@@ -152,21 +170,36 @@ FixedJoint::finalize(void)
 
 
 
+    if( m_compute_matrix ) {
 
-    if( b1 && b2 ) {
-        setMatrix( b2->getMatrix() * osg::Matrix::inverse(b1->getMatrix()) ) ;
-    }
+        if( b1 && b2 ) {
+            setMatrix( b2->getMatrix() * osg::Matrix::inverse(b1->getMatrix()) ) ;
+        }
 
-    else if( b1 ) {
-       setMatrix( b1->getMatrix() ) ;
-    }
+        else if( b1 ) {
+            setMatrix( b1->getMatrix() ) ;
+        }
 
-    else if( b2 ) {
-       setMatrix( b2->getMatrix() ) ;
+        else if( b2 ) {
+            setMatrix( b2->getMatrix() ) ;
+        }
     }
 
 
     this->BypassJoint::finalize() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+FixedJoint*
+FixedJoint::asFixedJoint(void)
+{
+    return this ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

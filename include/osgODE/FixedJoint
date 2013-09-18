@@ -81,6 +81,44 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set whether to constrain only the second body. Default: false
+    inline void     setOnewayMode( bool oneway_mode ) ;
+
+    //! Set whether to constrain only the second body. Default: false
+    inline bool     getOnewayMode(void) const ;
+
+
+    //! Set whether to constrain the relative rotation. Default: true
+    inline void     setRotationMode( bool rotation_mode ) ;
+
+    //! Set whether to constrain the relative rotation. Default: true
+    inline bool     getRotationMode(void) const ;
+
+
+    //! Set whether to constrain the relative position. Default: true
+    inline void     setPositionMode( bool position_mode ) ;
+
+    //! Set whether to constrain the relative position. Default: true
+    inline bool     getPositionMode(void) const ;
+
+
+    //! Set whether to compute the relative transformation. Default: true
+    inline void     setComputeMatrix( bool compute_matrix ) ;
+
+    //! Set whether to compute the relative transformation. Default: true
+    inline bool     getComputeMatrix(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
     //! Set the matrix that transforms body1 to body2
     inline void                 setMatrix( const osg::Matrix& matrix ) ;
 
@@ -100,6 +138,9 @@ public:
 protected:
     virtual void        update( double step_size ) ;
     virtual void        finalize(void) ;
+
+    //! Quick dynamic cast
+    virtual FixedJoint*             asFixedJoint(void) ;
 /* ======================================================================= */
 
 
@@ -107,6 +148,11 @@ protected:
 
 /* ======================================================================= */
 private:
+    bool    m_oneway_mode ;
+    bool    m_rotation_mode ;
+    bool    m_position_mode ;
+    bool    m_compute_matrix ;
+
     osg::Matrix     m_matrix ;
     osg::Quat       m_quat ;
     osg::Vec3       m_pos ;

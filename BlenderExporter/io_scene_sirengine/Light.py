@@ -65,6 +65,7 @@ class Light(Writable.Writable):
     SpotCutoff = None
     Enabled = None
     ShadowEnabled = None
+    OnlyShadow = None
     ShadowBufferSize = None
     ShadowBufferClipStart = None
     ShadowBufferClipEnd = None
@@ -102,6 +103,7 @@ class Light(Writable.Writable):
         self.SpotCutoff = None
         self.Enabled = None
         self.ShadowEnabled = None
+        self.OnlyShadow = None
         self.ShadowBufferSize = None
         self.ShadowBufferClipStart = None
         self.ShadowBufferClipEnd = None
@@ -133,6 +135,7 @@ class Light(Writable.Writable):
         self.SpotCutoff = None
         self.Enabled = None
         self.ShadowEnabled = None
+        self.OnlyShadow = None
         self.ShadowBufferSize = None
         self.ShadowBufferClipStart = None
         self.ShadowBufferClipEnd = None
@@ -153,7 +156,8 @@ class Light(Writable.Writable):
             self.Enabled = True
             self.ShadowEnabled = False
         else:
-            self.Enabled = self.Object.data.use_only_shadow != True
+            #self.Enabled = self.Object.data.use_only_shadow != True
+            self.Enabled = True
             self.ShadowEnabled = self.Object.data.shadow_method != "NOSHADOW"
 
 
@@ -206,6 +210,9 @@ class Light(Writable.Writable):
 
 
         if self.Object.data.type == 'SPOT':
+
+            self.OnlyShadow = self.Object.data.use_only_shadow
+
             v = Vector()
             v.x = 0.0
             v.y = 0.0
@@ -413,6 +420,11 @@ class Light(Writable.Writable):
             writer.writeLine("ShadowEnabled FALSE")
         else:
             writer.writeLine("ShadowEnabled TRUE")
+
+        if self.OnlyShadow == True:
+            writer.writeLine("OnlyShadow TRUE")
+        else:
+            writer.writeLine("OnlyShadow FALSE")
 
         if self.ShadowBufferSize != None:
             writer.writeLine("ShadowBufferSize %f" %self.ShadowBufferSize)

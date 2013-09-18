@@ -48,7 +48,10 @@ REGISTER_OBJECT_WRAPPER( FixedJoint,
                          osgODE::FixedJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::FixedJoint" )
 {
-    (void) wrapper ;
+    ADD_BOOL_SERIALIZER ( OnewayMode,       false ) ;
+    ADD_BOOL_SERIALIZER ( RotationMode,     true ) ;
+    ADD_BOOL_SERIALIZER ( PositionMode,     true ) ;
+    ADD_BOOL_SERIALIZER ( ComputeMatrix,    true ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

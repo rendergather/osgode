@@ -50,7 +50,6 @@ SET(TARGET_SRC
     NoGravityVolume_serializer.cpp
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
-    OneWayFixedJoint_serializer.cpp
     PistonJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RagDoll_serializer.cpp

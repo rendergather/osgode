@@ -29,6 +29,9 @@
 #include <osgODE/Manager>
 #include <osgODE/World>
 #include <osgODE/Joint>
+
+#include <osg/Geode>
+#include <osg/Texture2D>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -103,6 +106,84 @@ namespace
         osg::ref_ptr<osg::Node> m_node ;
         std::string             m_name ;
     } ;
+
+
+
+
+    class FindTexture2DVisitor: public osg::NodeVisitor
+    {
+    public:
+        FindTexture2DVisitor(const std::string& name):
+            osg::NodeVisitor(TRAVERSE_ALL_CHILDREN),
+            m_name(name) {}
+
+
+        ~FindTexture2DVisitor(void) {}
+
+
+        virtual void    apply(osg::Node& node)
+        {
+            if( m_texture.valid() ) {
+                return ;
+            }
+
+
+            if( node.getStateSet() ) {
+                apply( *node.getStateSet() ) ;
+            }
+
+            traverse(node) ;
+        }
+
+
+        virtual void    apply(osg::Geode& geode)
+        {
+            if( m_texture.valid() ) {
+                return ;
+            }
+
+            if( geode.getStateSet() ) {
+                apply( *geode.getStateSet() ) ;
+            }
+
+            for( unsigned int i=0; i<geode.getNumDrawables(); i++ ) {
+                osg::Drawable*  drawable = geode.getDrawable(i) ;
+
+                if( drawable ) {
+                    if( drawable->getStateSet() ) {
+                        apply( *drawable->getStateSet() ) ;
+                    }
+                }
+            }
+
+            traverse(geode) ;
+        }
+
+
+        virtual void    apply(osg::StateSet& stateset)
+        {
+            for( unsigned int i=0; i<stateset.getTextureAttributeList().size(); i++ ) {
+                osg::Texture2D* texture = dynamic_cast<osg::Texture2D*>( stateset.getTextureAttribute(i, osg::StateAttribute::TEXTURE) ) ;
+
+                if (texture) {
+                    if( texture->getName() == m_name ) {
+                        m_texture = texture ;
+                        break ;
+                    }
+                }
+            }
+        }
+
+
+        osg::Texture2D* getTexture2D(void)
+        {
+            return m_texture.get() ;
+        }
+
+    private:
+        osg::ref_ptr<osg::Texture2D>    m_texture ;
+        std::string                     m_name ;
+    } ;
 } // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
@@ -120,6 +201,23 @@ osgODEUtil::findNode( osg::Node* graph, const std::string& name )
     graph->accept(v) ;
 
     return v.getNode() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+osg::Texture2D*
+osgODEUtil::findTexture2D( osg::Node* graph, const std::string& name )
+{
+    FindTexture2DVisitor    v(name) ;
+
+    graph->accept(v) ;
+
+    return v.getTexture2D() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

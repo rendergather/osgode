@@ -44,8 +44,7 @@ main(int argc, char** argv)
 
 
 
-    osgODE::Container* pendulum_container = new osgODE::Container() ;
-    manager->getWorld()->addObject(pendulum_container) ;
+    osg::ref_ptr<osgODE::Container>     container = new osgODE::Container() ;
 
 
 
@@ -66,7 +65,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
-        pendulum_container->addObject( body ) ;
+        container->addObject( body ) ;
 
 
         // graphics
@@ -95,7 +94,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
-        pendulum_container->addObject( body ) ;
+        container->addObject( body ) ;
 
 
         // graphics
@@ -120,7 +119,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
-        pendulum_container->addObject( body ) ;
+        container->addObject( body ) ;
 
 
         // graphics
@@ -144,7 +143,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
-        pendulum_container->addObject( body ) ;
+        container->addObject( body ) ;
 
 
         // graphics
@@ -172,7 +171,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::Joint*  joint = new osgODE::HingeJoint() ;
-        pendulum_container->addObject( joint ) ;
+        container->addObject( joint ) ;
 
 
         // the bodies
@@ -194,7 +193,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::Joint*  joint = new osgODE::HingeJoint() ;
-        pendulum_container->addObject( joint ) ;
+        container->addObject( joint ) ;
 
         // the bodies
         joint->setBody1(dynamic_body3) ;
@@ -210,7 +209,7 @@ main(int argc, char** argv)
     {
         // create
         osgODE::Joint*  joint = new osgODE::HingeJoint() ;
-        pendulum_container->addObject( joint ) ;
+        container->addObject( joint ) ;
 
         // the bodies
         joint->setBody1(dynamic_body2) ;
@@ -221,6 +220,12 @@ main(int argc, char** argv)
         joint->setAxis1( osg::Y_AXIS ) ;
     }
 
+
+
+
+
+    // just testing the osgODE::Container copy constructor
+    manager->getWorld()->addObject( osg::clone( container.get() ) ) ;
 
 
 

@@ -25,6 +25,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 #include <osgODE/Container>
+#include <osgODE/Joint>
 #include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
@@ -61,11 +62,72 @@ Container::Container(void)
 Container::Container(const Container& other, const osg::CopyOp& copyop):
     ODEObject(other, copyop)
 {
-    ObjectList::const_iterator  itr = other.m_object_list.begin() ;
-    ObjectList::const_iterator  itr_end = other.m_object_list.end() ;
+
+
+    typedef std::map< RigidBody*, RigidBody* >  MyBodyMap ;
+    typedef std::map< Joint*, Joint* >          MyJointMap ;
+
+
+
+    MyBodyMap   body_map ;
+    MyJointMap  joint_map ;
+
+
+
+
+    const ObjectList&   objects = other.m_object_list ;
+
+    ObjectList::const_iterator  itr = objects.begin() ;
+    ObjectList::const_iterator  itr_end = objects.end() ;
+
+
 
     while( itr != itr_end ) {
-        addObject( (*itr++).get() ) ;
+
+        ODEObject*  orig = *itr++ ;
+
+        ODEObject*  obj = osg::clone( orig ) ;
+
+        addObject( obj ) ;
+
+
+        Joint*      joint = orig->asJoint() ;
+        RigidBody*  body = orig->asRigidBody() ;
+
+        if( joint ) {
+            joint_map[joint] = obj->asJoint() ;
+        }
+        else if( body ) {
+            body_map[body] = obj->asRigidBody() ;
+        }
+    }
+
+
+
+
+
+    //
+    // Need to reconnect each joint to the cloned bodies
+    //
+    {
+        MyJointMap::iterator    itr ;
+
+        for( itr = joint_map.begin(); itr != joint_map.end(); itr++ ) {
+
+            Joint*  orig = itr->first ;
+            Joint*  cloned = itr->second ;
+
+            RigidBody*  body1 = orig->getBody1() ;
+            RigidBody*  body2 = orig->getBody2() ;
+
+            if( body1 ) {
+                cloned->setBody1( body_map[body1] ) ;
+            }
+
+            if( body2 ) {
+                cloned->setBody2( body_map[body2] ) ;
+            }
+        }
     }
 }
 /* ....................................................................... */

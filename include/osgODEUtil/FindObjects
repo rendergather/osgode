@@ -42,6 +42,11 @@ namespace osgODE {
     class Joint ;
     class RigidBody ;
 }
+
+
+namespace osg {
+    class Texture2D ;
+}
 /* ======================================================================= */
 
 
@@ -56,26 +61,31 @@ namespace osgODEUtil
 /* ======================================================================= */
 /* ....................................................................... */
 extern OSG_EXPORT osg::Node*
-findNode(  osg::Node* graph, const std::string& name ) ;
+findNode( osg::Node* graph, const std::string& name ) ;
+
+
+
+extern OSG_EXPORT osg::Texture2D*
+findTexture2D( osg::Node* graph, const std::string& name ) ;
 
 
 
 extern OSG_EXPORT osgODE::Manager*
-findManager(  osg::Node* graph ) ;
+findManager( osg::Node* graph ) ;
 
 
 
 typedef std::vector< osg::ref_ptr<osgODE::Joint> >  Joints ;
 
 extern OSG_EXPORT unsigned int
-findJoints(osgODE::World* world, Joints& joints, const std::string& regex="") ;
+findJoints( osgODE::World* world, Joints& joints, const std::string& regex="" ) ;
 
 
 
 typedef std::vector< osg::ref_ptr<osgODE::RigidBody> >  RigidBodies;
 
 extern OSG_EXPORT unsigned int
-findRigidBodies(osgODE::World* world, RigidBodies& bodies, const std::string& regex="") ;
+findRigidBodies( osgODE::World* world, RigidBodies& bodies, const std::string& regex="" ) ;
 /* ....................................................................... */
 /* ======================================================================= */
 

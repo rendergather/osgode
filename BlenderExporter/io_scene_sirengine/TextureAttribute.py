@@ -53,6 +53,8 @@ class TextureAttribute(Writable.Writable):
     Image = None
     Wrap = "REPEAT"
     MaxAnisotropy = 1
+    Name = None
+    ClampToAlphaBorder = None
 ############################################################################
 
 
@@ -71,6 +73,8 @@ class TextureAttribute(Writable.Writable):
         self.Image = None
         self.Wrap = "REPEAT"
         self.MaxAnisotropy = data.MaxAnisotropy
+        self.Name = None
+        self.ClampToAlphaBorder = None
 ############################################################################
 
 
@@ -92,6 +96,17 @@ class TextureAttribute(Writable.Writable):
 
             self.Data.Cache.set(self.Texture.texture, self.UniqueID)
 
+
+            try:
+                if self.Texture.texture["oo_border_to_alpha"] != 0.0:
+                    self.ClampToAlphaBorder = True
+                    self.Wrap = "CLAMP_TO_BORDER"
+            except:
+                pass
+
+
+
+            self.Name = self.Texture.name
 
             from . import Image
             self.Image = Image.Image(self.Data, self.Texture.texture.image)
@@ -115,6 +130,7 @@ class TextureAttribute(Writable.Writable):
 
 
         if self.Texture:
+            writer.writeLine("Name \"%s\"" %self.Name)
             writer.writeLine("WRAP_S %s" %self.Wrap)
             writer.writeLine("WRAP_T %s" %self.Wrap)
             writer.writeLine("WRAP_R %s" %self.Wrap)
@@ -122,6 +138,9 @@ class TextureAttribute(Writable.Writable):
             writer.writeLine("MAG_FILTER LINEAR")
 
             writer.writeLine("MaxAnisotropy %f" %self.MaxAnisotropy)
+
+            if self.ClampToAlphaBorder:
+                writer.writeLine("BorderColor 0 0 0 0")
 
 
             if self.Image:

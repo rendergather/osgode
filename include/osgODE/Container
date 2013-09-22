@@ -132,6 +132,19 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Translate all bodies by the given amount of units
+    /*!
+     * It's a bad idea to use this function if the container is not inside
+     * a World
+     */
+    void    translate( const osg::Vec3& distance ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     virtual Container*  asContainer(void) ;
 
 

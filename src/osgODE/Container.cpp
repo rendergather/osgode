@@ -149,6 +149,28 @@ Container::~Container(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
+void
+Container::translate( const osg::Vec3& distance )
+{
+    ObjectList::iterator    itr = m_object_list.begin() ;
+    ObjectList::iterator    itr_end = m_object_list.end() ;
+
+    while( itr != itr_end ) {
+        RigidBody*  body = (*itr++)->asRigidBody() ;
+
+        if( body ) {
+            body->setPosition( body->getPosition() + distance ) ;
+        }
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 Container*
 Container::asContainer(void)
 {

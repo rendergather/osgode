@@ -19,3 +19,15 @@ oo_max_distance <distance>, Light property, pViewer only
     deactivate the light when it is too far away.
     The parameter is the distance between the eye point and the center of the
     light. This property does not have sense for non-positionable lights
+
+
+
+
+oo_border_to_alpha <unused>, Texture property
+    use GL_CLAMP_TO_BORDER and border color = [1,1,1,0]
+
+
+
+
+oo_max_anisotropy <max_anisotropy>, Texture property
+    set the max anisotropy

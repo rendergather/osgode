@@ -112,7 +112,12 @@ class TextureAttribute(Writable.Writable):
             self.Image = Image.Image(self.Data, self.Texture.texture.image)
             self.addChild(self.Image)
 
-        self.MaxAnisotropy = self.Data.MaxAnisotropy
+
+
+        try:
+            self.MaxAnisotropy = float( self.Texture.texture["oo_max_anisotropy"] )
+        except:
+            self.MaxAnisotropy = self.Data.MaxAnisotropy
 
 
         return self.traverseBuild()

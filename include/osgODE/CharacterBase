@@ -196,11 +196,11 @@ public:
     inline double   getCurrentPitch(void) const ;
 
 
-    //! Set the elasticity for yaw/pitch update (default: 5)
-    inline void         setElasticity(unsigned int elasticity) ;
+    //! Set the elasticity for yaw/pitch update (default: 1/15)
+    inline void     setElasticity(double elasticity) ;
 
-    //! Get the elasticity for yaw/pitch update (default: 5)
-    inline unsigned int getElasticity(void) const ;
+    //! Get the elasticity for yaw/pitch update (default: 1/15)
+    inline double   getElasticity(void) const ;
 /* ======================================================================= */
 
 
@@ -400,7 +400,7 @@ private:
     double      m_height ;
 
 
-    unsigned int    m_elasticity ;
+    double          m_elasticity ;
 
     osg::Vec3       m_motion_velocity ;
     double          m_motion_fmax ;

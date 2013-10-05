@@ -125,7 +125,10 @@ class Geode(Writable.Writable):
                     self.addChild(self.StateSet)
 
 
-                    self.StateSet.UniformList.addVec4Uniform("uMaterial", self.MeshData.MaterialArray[0])
+                    material = self.MeshData.MaterialArray[0]
+                    material[0] *= self.Data.AmbientMultiplier
+
+                    self.StateSet.UniformList.addVec4Uniform("uMaterial", material)
                     self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.MaterialColor)
                     self.StateSet.UniformList.addFloatUniform("uEmission", self.Object.data.materials[0].emit)
 

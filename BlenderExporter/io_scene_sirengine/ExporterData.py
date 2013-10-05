@@ -60,6 +60,7 @@ class ExporterData(object):
     ExportLights = True
     WorldStep = None
     MaxAnisotropy = None
+    AmbientMultiplier = None
 ############################################################################
 
 
@@ -86,6 +87,7 @@ class ExporterData(object):
         self.ExportLights = True
         self.WorldStep = None
         self.MaxAnisotropy = None
+        self.AmbientMultiplier = None
 ############################################################################
 
 

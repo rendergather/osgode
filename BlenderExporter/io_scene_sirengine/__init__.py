@@ -80,11 +80,17 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_selected = BoolProperty( name="Export only selected", default=False)
 
 
-    export_lights = BoolProperty( name="Export lights", default=True)
+    export_lights = BoolProperty( name="Export lights (pViewer only)", default=True)
     #export_lights = False
 
 
     max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
+
+
+    ambient_multiplier = FloatProperty( name="Ambient light multiplier", default=1.0, min=0.0)
+
+
+
     world_step = EnumProperty(  items = (
                                     ("dWorldStep", "dWorldStep", "Accuracy"),
                                     ("dWorldQuickStep", "dWorldQuickStep", "Performance")
@@ -122,6 +128,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.ExportLights = self.export_lights
         data.WorldStep = self.world_step
         data.MaxAnisotropy = self.max_anisotropy
+        data.AmbientMultiplier = self.ambient_multiplier
 
         return exporter.export()
 ############################################################################

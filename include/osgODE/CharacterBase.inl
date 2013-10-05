@@ -310,7 +310,7 @@ osgODE::CharacterBase::getCurrentPitch(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setElasticity(unsigned int elasticity)
+osgODE::CharacterBase::setElasticity(double elasticity)
 {
     m_elasticity = elasticity ;
 }
@@ -322,7 +322,7 @@ osgODE::CharacterBase::setElasticity(unsigned int elasticity)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline unsigned int
+inline double
 osgODE::CharacterBase::getElasticity(void) const
 {
     return m_elasticity ;

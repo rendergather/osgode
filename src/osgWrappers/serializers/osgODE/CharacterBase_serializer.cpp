@@ -164,7 +164,7 @@ REGISTER_OBJECT_WRAPPER( CharacterBase,
     ADD_VEC3_SERIALIZER( FrontVersor, -osg::Z_AXIS ) ;
     ADD_DOUBLE_SERIALIZER( Yaw, 0.0 ) ;
     ADD_DOUBLE_SERIALIZER( Pitch, osg::PI * 0.5 ) ;
-    ADD_UINT_SERIALIZER( Elasticity, 5 ) ;
+    ADD_DOUBLE_SERIALIZER( Elasticity, 0.067 ) ;
     ADD_DOUBLE_SERIALIZER( Height, 1.75 ) ;
     ADD_USER_SERIALIZER( FootContactInfo ) ;
     ADD_USER_SERIALIZER( FootstepInfo ) ;

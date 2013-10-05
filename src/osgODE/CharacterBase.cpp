@@ -64,7 +64,7 @@ CharacterBase::CharacterBase(void):
     m_avg_side_velocity     ( 0.0 ),
     m_footstep_time         ( 0.0 ),
     m_height                ( 1.75 ),
-    m_elasticity            ( 5 ),
+    m_elasticity            ( 0.067 ),
     m_motion_fmax           ( 0.0),
     m_jump_res_time         ( -1.0 ),
     m_foot_contact_joint    ( NULL ),
@@ -179,14 +179,12 @@ CharacterBase::update(double step_size)
 void
 CharacterBase::_updateOrientation(double step_size)
 {
-    (void) step_size ;
-
-
+    const double    elasticity = m_elasticity / step_size ;
 
     const osg::Vec3 side_versor_world = m_body->getQuaternion() * m_side_versor ;
 
-    m_current_pitch = (m_current_pitch * m_elasticity + m_pitch) / (m_elasticity + 1) ;
-    m_current_yaw = (m_current_yaw * m_elasticity + m_yaw) / (m_elasticity + 1) ;
+    m_current_pitch = (m_current_pitch * elasticity + m_pitch) / (elasticity + 1) ;
+    m_current_yaw = (m_current_yaw * elasticity + m_yaw) / (elasticity + 1) ;
 
 
 

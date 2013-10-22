@@ -50,6 +50,7 @@ namespace osgODE
 class   BypassJoint ;
 class   CharacterBase ;
 class   Collidable ;
+class   Container ;
 class   FixedJoint ;
 class   HingeJoint ;
 class   Joint ;
@@ -114,6 +115,9 @@ public:
 
     //! Quick dynamic cast
     virtual Collidable*             asCollidable(void) ;
+
+    //! Quick dynamic cast
+    virtual Container*              asContainer(void) ;
 
     //! Quick dynamic cast
     virtual FixedJoint*             asFixedJoint(void) ;

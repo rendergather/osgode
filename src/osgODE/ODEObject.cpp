@@ -268,6 +268,7 @@ ODEObject::callPostUpdateCallbackInternal(void)
 AS_NULL( BypassJoint ) ;
 AS_NULL( CharacterBase) ;
 AS_NULL( Collidable) ;
+AS_NULL( Container) ;
 AS_NULL( FixedJoint) ;
 AS_NULL( HingeJoint) ;
 AS_NULL( Joint ) ;

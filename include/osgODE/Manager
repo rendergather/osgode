@@ -128,8 +128,8 @@ public:
 public:
     //! Quick init. Set the ManagerUpdateCallback as update callback
     /*!
-     * @param   accept_visitors     invole setAcceptVisitors(accept_visitors)
-     * @param   step_size           invole setStepSize( step_size )
+     * @param   accept_visitors     invoke setAcceptVisitors(accept_visitors)
+     * @param   step_size           invoke setStepSize( step_size )
      *
      * Must be called once before everything else
      */
@@ -145,7 +145,7 @@ public:
     /*!
      * If step_size <= 0.0 returns immediately
      */
-    void    frame(double step_size) ;
+    bool    frame(double step_size) ;
 /* ======================================================================= */
 
 

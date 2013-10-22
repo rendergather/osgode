@@ -145,7 +145,17 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual Container*  asContainer(void) ;
+    //! Invoke T::member(ODEObject*) on each object
+    template<class T>
+    inline void    traverseObjects(T& t, void (T::*member)(ODEObject*)) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual Container*          asContainer(void) ;
 
 
     //! Transmit the update to the objects in the list

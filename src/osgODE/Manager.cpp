@@ -133,11 +133,13 @@ Manager::setup(bool accept_visitors, double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
+bool
 Manager::frame(double step_size)
 {
+    bool    advanced = false ;
+
     if( step_size <= 0.0 ) {
-        return ;
+        return advanced ;
     }
 
 
@@ -152,11 +154,13 @@ Manager::frame(double step_size)
 
     if(m_world.valid()) {
 
+        advanced =   m_delta >= m_step_size ;
+
+
 
         while( m_delta >= m_step_size ) {
 
             m_delta -= m_step_size ;
-
 
 
             m_world->callUpdateCallbackInternal() ;
@@ -169,6 +173,9 @@ Manager::frame(double step_size)
 
         dirtyBound() ;
     }
+
+
+    return advanced ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

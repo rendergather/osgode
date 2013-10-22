@@ -82,4 +82,26 @@ osgODE::Container::getObjectList(void) const
 
 
 
+/* ======================================================================= */
+/* ....................................................................... */
+template<class T>
+inline void
+osgODE::Container::traverseObjects(T& t, void (T::*member)(ODEObject*))
+{
+    ObjectList::iterator    itr = m_object_list.begin() ;
+    ObjectList::iterator    itr_end = m_object_list.end() ;
+
+
+    while( itr != itr_end ) {
+
+        (t.*member)( *itr++ ) ;
+
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
 #endif /* _OSGODE_CONTAINER_INL */

@@ -309,6 +309,9 @@ public:
     inline void     setMotion(const osg::Vec3& velocity, double fmax) ;
 
 
+    inline void     getMotion(osg::Vec3& velocity, double& fmax) const ;
+
+
     //! Add a force to the body in world frame
     /*!
      * @param   force       The force in world frame

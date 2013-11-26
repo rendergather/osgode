@@ -118,6 +118,7 @@ public:
 /* ======================================================================= */
 public:
     osgODE::Collidable* pick( const osg::Vec2& ndc ) ;
+    osgODE::Collidable* pick( const osg::Vec2& ndc, osg::Vec3& point ) ;
 /* ======================================================================= */
 
 

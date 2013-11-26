@@ -89,6 +89,21 @@ Picker::~Picker(void)
 osgODE::Collidable*
 Picker::pick( const osg::Vec2& ndc )
 {
+    osg::Vec3   tmp ;
+
+    return pick( ndc, tmp ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+osgODE::Collidable*
+Picker::pick( const osg::Vec2& ndc, osg::Vec3& point )
+{
     const osg::Matrix&      view = m_camera->getViewMatrix() ;
     const osg::Matrix&      proj = m_camera->getProjectionMatrix() ;
 
@@ -104,6 +119,8 @@ Picker::pick( const osg::Vec2& ndc )
 
 
     m_space->rayCast( ray_from, ray_to, m_ray_cast_result, 128 ) ;
+
+    point.set( m_ray_cast_result->getPosition() ) ;
 
 
     return m_ray_cast_result->getCollidable() ;

@@ -30,6 +30,7 @@ public:
     m_picker(picker)
     {
         onLeftMouseButton()->connect(this, &MyHandler::lmb) ;
+        onRightMouseButton()->connect(this, &MyHandler::rmb) ;
         onMouseMoved()->connect(this, &MyHandler::moved) ;
     }
 
@@ -45,6 +46,22 @@ public:
 
             if( picked ) {
                 picked->setAngularVelocity( picked->getAngularVelocity() + osg::Z_AXIS * osg::PI ) ;
+            }
+        }
+    }
+
+
+    void    rmb(const bool& pressed, bool& handled)
+    {
+//         handled = true ;
+
+
+        if( ! pressed ) {
+
+            osgODE::Collidable* picked = m_picker->pick( m_mouse_co ) ;
+
+            if( picked ) {
+                picked->setAngularVelocity( osg::Vec3(0,0,0) ) ;
             }
         }
     }
@@ -153,8 +170,6 @@ main(int argc, char** argv)
     /*
      * [5] run
      */
-
-//     viewer.setCameraManipulator( new osgGA::TrackballManipulator() ) ;
 
     return viewer.run() ;
 }

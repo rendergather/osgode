@@ -51,6 +51,7 @@ SET(TARGET_SRC
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
     PistonJoint_serializer.cpp
+    Plane2DJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RagDoll_serializer.cpp
     RigidBody_serializer.cpp

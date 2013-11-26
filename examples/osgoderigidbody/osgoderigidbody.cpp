@@ -45,10 +45,9 @@ main(int argc, char** argv)
     manager->setStepSize( 1.0/60.0 ) ;
 
 
-    // a shortcut for the 4 previous calls is:
+    // a shortcut for the 3 previous calls is:
     //
-    // manager->setup(  false,      // threaded
-    //                  true,       // divert all visitors
+    // manager->setup(  true,       // divert all visitors
     //                  1.0 / 60.0  // the step size
     //              ) ;
 

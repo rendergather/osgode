@@ -85,8 +85,8 @@ Plane2DJoint::update( double step_size )
 
 
     if( m_body1.valid() ) {
-        osg::Vec3   v = m_body1->getPosition() - m_origin ;
-        rhs = (v * m_normal) * m_erp[0] / step_size * -1.0 ;
+        osg::Vec3   v = m_origin - m_body1->getPosition() ;
+        rhs = (v * m_normal) * m_erp[0] / step_size ;
     }
 
     this->setRow( 0, osg::Vec3(), m_normal, osg::Vec3(), osg::Vec3(), rhs, cfm ) ;

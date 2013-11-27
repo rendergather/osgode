@@ -531,7 +531,7 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
 
 
 
-#else
+#else /* defined(ANDROID)  ||  defined(WIN32) */
 
 
     //
@@ -558,7 +558,7 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
 
     regfree(&regex) ;
 
-#endif /* ANDROID */
+#endif /* defined(ANDROID)  ||  defined(WIN32) */
 
     return found ;
 }
@@ -644,7 +644,7 @@ World::addToWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::addToWorldInternal(%p, world=%p)", this, world) ;
 
-	(void) world ;
+    (void) world ;
 
     return true ;
 }
@@ -661,7 +661,7 @@ World::removeFromWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
-	(void) world ;
+    (void) world ;
 
     return true ;
 }

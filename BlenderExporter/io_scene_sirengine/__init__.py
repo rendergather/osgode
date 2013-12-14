@@ -90,6 +90,9 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     ambient_multiplier = FloatProperty( name="Ambient light multiplier", default=1.0, min=0.0)
 
 
+    polygon_offset_multiplier = FloatProperty( name="PolygonOffset multiplier", default=1.0, min=0.0)
+
+
 
     world_step = EnumProperty(  items = (
                                     ("dWorldStep", "dWorldStep", "Accuracy"),
@@ -129,6 +132,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.WorldStep = self.world_step
         data.MaxAnisotropy = self.max_anisotropy
         data.AmbientMultiplier = self.ambient_multiplier
+        data.PolygonOffsetMultiplier = self.polygon_offset_multiplier
 
         return exporter.export()
 ############################################################################

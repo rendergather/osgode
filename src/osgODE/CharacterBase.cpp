@@ -454,7 +454,7 @@ CharacterBase:: _collideAgainstGround(double step_size)
         PS_ASSERT1(contact.geom.depth >= 0.0) ;
 
         if( m_foot_contact_info.MaxDepth > 0.0 ) {
-            contact.geom.depth = osg::minimum( contact.geom.depth, m_foot_contact_info.MaxDepth ) ;
+            contact.geom.depth = osg::minimum( contact.geom.depth, (dReal)m_foot_contact_info.MaxDepth ) ;
         }
 
 

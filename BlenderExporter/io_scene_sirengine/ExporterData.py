@@ -61,6 +61,7 @@ class ExporterData(object):
     WorldStep = None
     MaxAnisotropy = None
     AmbientMultiplier = None
+    PolygonOffsetMultiplier = None
 ############################################################################
 
 
@@ -88,6 +89,7 @@ class ExporterData(object):
         self.WorldStep = None
         self.MaxAnisotropy = None
         self.AmbientMultiplier = None
+        self.PolygonOffsetMultiplier = None
 ############################################################################
 
 

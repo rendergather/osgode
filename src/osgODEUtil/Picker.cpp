@@ -104,15 +104,9 @@ Picker::pick( const osg::Vec2& ndc )
 osgODE::Collidable*
 Picker::pick( const osg::Vec2& ndc, osg::Vec3& point )
 {
-    const osg::Matrix&      view = m_camera->getViewMatrix() ;
-    const osg::Matrix&      proj = m_camera->getProjectionMatrix() ;
+    osg::Vec3   ray_from, ray_to ;
 
-
-    const osg::Matrix   inv_vp = osg::Matrix::inverse( view * proj ) ;
-
-
-    const osg::Vec3 ray_from = osg::Vec3( ndc.x(), ndc.y(), -1.0 ) * inv_vp ;
-    const osg::Vec3 ray_to   = osg::Vec3( ndc.x(), ndc.y(),  1.0 ) * inv_vp ;
+    computeRay( ndc, ray_from, ray_to ) ;
 
 
     m_ray_cast_result->reset() ;
@@ -124,6 +118,27 @@ Picker::pick( const osg::Vec2& ndc, osg::Vec3& point )
 
 
     return m_ray_cast_result->getCollidable() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Picker::computeRay( const osg::Vec2& ndc, osg::Vec3& ray_from, osg::Vec3& ray_to )
+{
+    const osg::Matrix&      view = m_camera->getViewMatrix() ;
+    const osg::Matrix&      proj = m_camera->getProjectionMatrix() ;
+
+
+    const osg::Matrix   inv_vp = osg::Matrix::inverse( view * proj ) ;
+
+
+    ray_from.set( osg::Vec3( ndc.x(), ndc.y(), -1.0 ) * inv_vp ) ;
+    ray_to.set( osg::Vec3( ndc.x(), ndc.y(),  1.0 ) * inv_vp ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

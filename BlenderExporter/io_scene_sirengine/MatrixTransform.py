@@ -129,6 +129,10 @@ class MatrixTransform(Writable.Writable):
             return False
 
 
+
+        writer.writeLine("Name \"MatrixTransform@%s\"" %self.Object.name)
+
+
         num_children = len(self.Children)
 
         if num_children > 0 :

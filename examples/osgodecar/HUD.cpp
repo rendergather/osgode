@@ -257,6 +257,10 @@ HUD::_createStaticObjects(void)
 
         rpm_quad->getOrCreateStateSet()->getOrCreateUniform("uColor", osg::Uniform::FLOAT_VEC4)->set( osg::Vec4(1,1,1,1) ) ;
         rpm_quad->getOrCreateStateSet()->getOrCreateUniform("uIOR", osg::Uniform::FLOAT)->set( 1.0f ) ;
+
+
+        speed_quad->getOrCreateStateSet()->getOrCreateUniform("uColor", osg::Uniform::FLOAT_VEC4)->set( osg::Vec4(1,1,1,1) ) ;
+        speed_quad->getOrCreateStateSet()->getOrCreateUniform("uIOR", osg::Uniform::FLOAT)->set( 1.0f ) ;
     }
 #endif
 

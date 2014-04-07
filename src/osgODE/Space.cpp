@@ -77,6 +77,9 @@ _defaultOverlappingPairsDispatcher(void* void_near_callback, dGeomID o1, dGeomID
 
         // OK, a collision occours
 
+        collidable1->setLastCollisionFrame( collidable1->getWorld()->getCurrentFrame() ) ;
+        collidable2->setLastCollisionFrame( collidable2->getWorld()->getCurrentFrame() ) ;
+
 
 
         // call the collision callbacks
@@ -158,9 +161,9 @@ Space::~Space(void)
 void
 Space::update(double step_size)
 {
+    advance( step_size ) ;
     collide() ;
-
-    this->World::update( step_size ) ;
+    step( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

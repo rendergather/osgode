@@ -418,18 +418,6 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Experimental. Default: false
-    inline void     setUpdateInteractingSphere(bool flag) ;
-
-    //! Experimental. Default: false
-    inline bool     getUpdateInteractingSphere(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
     virtual void    update(double step_size) ;
 
     //! update the transformation
@@ -490,18 +478,6 @@ private:
 
 
 /* ======================================================================= */
-protected:
-    //! Experimental
-    /*!
-     * Update the center of the is
-     */
-    virtual void    _updateInteractingSphere(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
 private:
     static void     _cloneODEBody(dBodyID src, dBodyID dst) ;
 /* ======================================================================= */
@@ -518,8 +494,6 @@ protected:
 
 private:
     JointList       m_joints ;
-
-    bool            m_update_interacting_sphere ;
 
 
 

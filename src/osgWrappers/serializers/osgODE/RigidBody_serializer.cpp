@@ -161,8 +161,6 @@ REGISTER_OBJECT_WRAPPER( RigidBody,
                          osgODE::RigidBody,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::RigidBody" )
 {
-    ADD_BOOL_SERIALIZER(UpdateInteractingSphere, false) ;
-
     ADD_USER_SERIALIZER(Position) ;
     ADD_USER_SERIALIZER(Quaternion) ;
     ADD_USER_SERIALIZER(LinearVelocity) ;

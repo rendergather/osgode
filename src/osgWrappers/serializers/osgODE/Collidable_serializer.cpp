@@ -86,6 +86,7 @@ REGISTER_OBJECT_WRAPPER( Collidable,
     ADD_MATRIX_SERIALIZER( CollidableOffset, osg::Matrix::identity() ) ;
     ADD_OBJECT_SERIALIZER( CollisionParameters, osgODE::CollisionParameters, NULL ) ;
     ADD_OBJECT_SERIALIZER( CollisionCallback, osgODE::CollisionCallback, NULL ) ;
+    ADD_UINT_SERIALIZER( LastCollisionFrame, 0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

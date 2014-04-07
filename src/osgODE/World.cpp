@@ -239,6 +239,7 @@ World::removeObject(ODEObject* obj)
 void
 World::update(double step_size)
 {
+    advance( step_size ) ;
     step( step_size ) ;
 }
 /* ....................................................................... */
@@ -293,12 +294,6 @@ World::step(double step_size)
 
 
     _runOperations() ;
-
-
-
-    ++m_current_frame ;
-
-    m_simulation_time += step_size ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

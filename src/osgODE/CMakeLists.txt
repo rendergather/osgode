@@ -83,9 +83,6 @@ SET(TARGET_H
     ${HEADER_PATH}/MotorJoint
     ${HEADER_PATH}/MotorJoint.inl
     ${HEADER_PATH}/NearCallback
-    ${HEADER_PATH}/NoGravityVolume
-    ${HEADER_PATH}/NoGravityVolume.inl
-    ${HEADER_PATH}/NoGravityVolumeCollisionCallback
     ${HEADER_PATH}/Notify
     ${HEADER_PATH}/Notify_android
     ${HEADER_PATH}/Notify_gnu
@@ -97,6 +94,8 @@ SET(TARGET_H
     ${HEADER_PATH}/ODEObject.inl
     ${HEADER_PATH}/OverlappingPair
     ${HEADER_PATH}/OverlappingPair.inl
+    ${HEADER_PATH}/PIDController
+    ${HEADER_PATH}/PIDController.inl
     ${HEADER_PATH}/PistonJoint
     ${HEADER_PATH}/PistonJoint.inl
     ${HEADER_PATH}/Plane2DJoint
@@ -105,13 +104,16 @@ SET(TARGET_H
     ${HEADER_PATH}/RagDoll.inl
     ${HEADER_PATH}/RigidBody
     ${HEADER_PATH}/RigidBody.inl
+    ${HEADER_PATH}/RigidBodyServoMotor
+    ${HEADER_PATH}/RigidBodyServoMotor.inl
     ${HEADER_PATH}/ScopedTimer
     ${HEADER_PATH}/ScopedTimer.inl
-    ${HEADER_PATH}/ShockWave
-    ${HEADER_PATH}/ShockWave.inl
-    ${HEADER_PATH}/ShockWaveCollisionCallback
+    ${HEADER_PATH}/ServoMotor
+    ${HEADER_PATH}/ServoMotor.inl
     ${HEADER_PATH}/SliderJoint
     ${HEADER_PATH}/SliderJoint.inl
+    ${HEADER_PATH}/SliderServoMotor
+    ${HEADER_PATH}/SliderServoMotor.inl
     ${HEADER_PATH}/Space
     ${HEADER_PATH}/Space.inl
     ${HEADER_PATH}/Sphere
@@ -127,8 +129,6 @@ SET(TARGET_H
     ${HEADER_PATH}/TriMesh.inl
     ${HEADER_PATH}/UniversalJoint
     ${HEADER_PATH}/UniversalJoint.inl
-    ${HEADER_PATH}/UniversalServoMotor
-    ${HEADER_PATH}/UniversalServoMotor.inl
     ${HEADER_PATH}/Version
     ${HEADER_PATH}/Wheel
     ${HEADER_PATH}/Wheel.inl
@@ -185,22 +185,22 @@ SET(TARGET_SRC
     MotionPath.cpp
     MotorJoint.cpp
     NearCallback.cpp
-    NoGravityVolume.cpp
-    NoGravityVolumeCollisionCallback.cpp
     Notify.c
     Notify_android.cpp
     Notify_windows.c
     ODECallback.cpp
     ODEObject.cpp
     OverlappingPair.cpp
+    PIDController.cpp
     PistonJoint.cpp
     Plane2DJoint.cpp
     RagDoll.cpp
     RigidBody.cpp
+    RigidBodyServoMotor.cpp
     ScopedTimer.cpp
-    ShockWave.cpp
-    ShockWaveCollisionCallback.cpp
+    ServoMotor.cpp
     SliderJoint.cpp
+    SliderServoMotor.cpp
     Space.cpp
     Space_rayCast.cpp
     Sphere.cpp
@@ -210,7 +210,6 @@ SET(TARGET_SRC
     Transformable.cpp
     TriMesh.cpp
     UniversalJoint.cpp
-    UniversalServoMotor.cpp
     Version.cpp
     Wheel.cpp
     World.cpp

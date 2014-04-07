@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -272,10 +272,8 @@ AS_NULL( Container) ;
 AS_NULL( FixedJoint) ;
 AS_NULL( HingeJoint) ;
 AS_NULL( Joint ) ;
-AS_NULL( NoGravityVolume ) ;
-AS_NULL( ODEObjectContainer ) ;
 AS_NULL( RigidBody ) ;
-AS_NULL( ShockWave ) ;
+AS_NULL( SliderJoint ) ;
 AS_NULL( Space ) ;
 AS_NULL( Transformable ) ;
 AS_NULL( UniversalJoint ) ;

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -52,7 +52,7 @@ using namespace osgODE ;
 HingeServoMotor::HingeServoMotor(void):
     m_position      ( 0.0 ),
     m_force         ( 0.0 ),
-    m_gain          ( 1.0 )
+    m_max_vel       ( -1.0 )
 {
 }
 /* ....................................................................... */
@@ -64,10 +64,10 @@ HingeServoMotor::HingeServoMotor(void):
 /* ======================================================================= */
 /* ....................................................................... */
 HingeServoMotor::HingeServoMotor(const HingeServoMotor& other, const osg::CopyOp& copyop):
-    ODECallback     ( other,  copyop),
+    ServoMotor      ( other,  copyop),
     m_position      ( other.m_position ),
     m_force         ( other.m_force ),
-    m_gain          ( other.m_gain )
+    m_max_vel       ( other.m_max_vel )
 {
 }
 /* ....................................................................... */
@@ -100,9 +100,24 @@ HingeServoMotor::operator()(ODEObject* object)
     PS_ASSERT1( world != NULL ) ;
 
 
-    const double    err = m_position - hinge->getAngle() ;
-    const double    gain = m_gain / world->getCurrentStepSize() ;
-    const double    vel = gain * err ;
+    PIDController*  pid = getPIDController() ;
+
+    double  vel = 0.0 ;
+
+    if( pid ) {
+        vel = pid->solve( m_position - hinge->getAngle(), world->getCurrentStepSize() ) ;
+    } else {
+        vel = m_position - hinge->getAngle() ;
+    }
+
+    if( m_max_vel >= 0.0 ) {
+
+        vel = osg::clampTo( vel, -m_max_vel, m_max_vel ) ;
+    }
+
+
+
+
 
     hinge->setParam( dParamFMax, m_force ) ;
     hinge->setParam( dParamVel, vel ) ;

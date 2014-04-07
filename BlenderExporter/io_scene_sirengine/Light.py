@@ -330,10 +330,23 @@ class Light(Writable.Writable):
 
 
         if self.Object.data.type == 'POINT':
-            if self.Object.data.use_specular:
+            fast_point = False
+            try:
+                if self.Object.data["oo_fast_point"] != 0.0:
+                    fast_point = True
+            except:
+                fast_point = False
+
+
+            if fast_point:
+                self.Type = 'FAST_POSITIONAL'
+
+            elif self.Object.data.use_specular:
                 self.Type = 'POSITIONAL'
             else:
                 self.Type = 'NO_SPECULAR_POSITIONAL'
+
+
         elif self.Object.data.type == 'SPOT':
             self.Type = 'SPOT'
         elif self.Object.data.type == 'SUN':

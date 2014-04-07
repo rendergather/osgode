@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                  *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,7 +50,7 @@ REGISTER_OBJECT_WRAPPER( HingeServoMotor,
 {
     ADD_DOUBLE_SERIALIZER( Position, 0.0 ) ;
     ADD_DOUBLE_SERIALIZER( Force, 0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Gain, 1.0 ) ;
+    ADD_DOUBLE_SERIALIZER( MaxVel, -1.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

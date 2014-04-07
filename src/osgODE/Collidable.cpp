@@ -48,7 +48,8 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-Collidable::Collidable(void)
+Collidable::Collidable(void):
+    m_last_collision_frame  ( 0 )
 {
     m_ODE_geom = NULL ;
 
@@ -63,9 +64,10 @@ Collidable::Collidable(void)
 /* ======================================================================= */
 /* ....................................................................... */
 Collidable::Collidable(const Collidable& other, const osg::CopyOp& copyop):
-    RigidBody(other, copyop),
-    m_collision_parameters(other.m_collision_parameters.get()),
-    m_collision_callback(other.m_collision_callback.get())
+    RigidBody               ( other, copyop ),
+    m_collision_parameters  ( other.m_collision_parameters ),
+    m_collision_callback    ( other.m_collision_callback ),
+    m_last_collision_frame  ( other.m_last_collision_frame )
 {
 }
 /* ....................................................................... */
@@ -253,19 +255,10 @@ Collidable::getAABB(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-Collidable::_updateInteractingSphere(void)
+Collidable*
+Collidable::asCollidable(void)
 {
-    const dReal*    center = dGeomGetPosition(m_ODE_geom) ;
-
-    const osg::Vec3 size = getSize() ;
-
-    const double    radius = osg::maximum(  size.x(),
-                                            osg::maximum(   size.y(),
-                                                            size.z() ) ) ;
-
-
-    setInteractingSphere(osg::Vec3(center[0], center[1], center[2]), radius) ;
+    return this ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -275,10 +268,16 @@ Collidable::_updateInteractingSphere(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-Collidable*
-Collidable::asCollidable(void)
+bool
+Collidable::isColliding(void) const
 {
-    return this ;
+    const World*    world = getWorld() ;
+
+    if( world ) {
+        return m_last_collision_frame == world->getCurrentFrame() ;
+    }
+
+    return false ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

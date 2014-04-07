@@ -1,9 +1,9 @@
 /*!
- * @file ShockWaveCollisionCallback
+ * @file ServoMotor.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,32 +16,32 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_SHOCKWAVECOLLISIONCALLBACK_HPP
-#define _OSGODE_SHOCKWAVECOLLISIONCALLBACK_HPP
-
-
-
-
 /* ======================================================================= */
-#include <osgODE/CollisionCallback>
+/* ....................................................................... */
+#include <osgODE/ServoMotor>
+/* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-namespace osgODE
+using namespace osgODE ;
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+ServoMotor::ServoMotor(void)
 {
-
-
-
-
-/* ======================================================================= */
+}
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,64 +49,34 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//!
-/*!
- *
- */
-class OSG_EXPORT ShockWaveCollisionCallback: public osgODE::CollisionCallback
+ServoMotor::ServoMotor(const ServoMotor& other, const osg::CopyOp& copyop):
+    ODECallback             ( other, copyop ),
+    m_pid_controller        ( osg::clone( other.m_pid_controller.get(), copyop ) )
 {
-/* ======================================================================= */
-public:
-             ShockWaveCollisionCallback(void) ;
-             ShockWaveCollisionCallback(const ShockWaveCollisionCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~ShockWaveCollisionCallback(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Object(osgODE, ShockWaveCollisionCallback) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    //! Apply the force
-    virtual void    operator()(Collidable* owner, Collidable* other, NearCallback* near_callback) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
+/* ======================================================================= */
+/* ....................................................................... */
+ServoMotor::~ServoMotor(void)
+{
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-// #include "ShockWaveCollisionCallback.inl"
-
-
-
-
-#endif /* _OSGODE_SHOCKWAVECOLLISIONCALLBACK_HPP */
+/* ======================================================================= */
+/* ....................................................................... */
+ServoMotor*
+ServoMotor::asServoMotor(void)
+{
+    return this ;
+}
+/* ....................................................................... */
+/* ======================================================================= */

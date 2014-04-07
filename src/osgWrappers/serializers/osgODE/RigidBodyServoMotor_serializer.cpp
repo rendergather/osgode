@@ -1,9 +1,9 @@
 /*!
- * @file ShockWave_serializer.cpp
+ * @file RigidBodyServoMotor_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ShockWave>
+#include <osgODE/RigidBodyServoMotor>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -43,19 +43,23 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( ShockWave,
-                         new osgODE::ShockWave,
-                         osgODE::ShockWave,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::RigidBody osgODE::Collidable osgODE::Sphere osgODE::ShockWave" )
+REGISTER_OBJECT_WRAPPER( RigidBodyServoMotor,
+                         new osgODE::RigidBodyServoMotor,
+                         osgODE::RigidBodyServoMotor,
+                         "osg::Object osgODE::ODECallback osgODE::ServoMotor osgODE::RigidBodyServoMotor" )
 {
-    ADD_VEC3_SERIALIZER( Direction, osg::Z_AXIS * -1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Angle, osg::PI ) ;
-    ADD_DOUBLE_SERIALIZER( Speed, 100.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Impulse, 100.0 ) ;
-    ADD_DOUBLE_SERIALIZER( LinearAttenuation, 1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( QuadraticAttenuation, 1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Threshold, 10.0 ) ;
-    ADD_DOUBLE_SERIALIZER( WaveSize, 5.0 ) ;
+    BEGIN_ENUM_SERIALIZER( Mode, LINEAR ) ;
+        ADD_ENUM_VALUE( LINEAR ) ;
+        ADD_ENUM_VALUE( ANGULAR ) ;
+    END_ENUM_SERIALIZER() ;
+
+    ADD_VEC3_SERIALIZER( Axis, osg::Vec3() ) ;
+
+    ADD_DOUBLE_SERIALIZER( MaxForce, 0.0 ) ;
+
+    ADD_DOUBLE_SERIALIZER( Speed, 0.0 ) ;
+
+    ADD_BOOL_SERIALIZER( AxisLocal, true ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -300,8 +300,10 @@ osgODE::RigidBody::setPosition(const osg::Vec3& position)
     dBodySetPosition(m_ODE_body, position.x(), position.y(), position.z()) ;
     this->updateTransformInternal() ;
 
-    if( m_update_interacting_sphere ) {
-        _updateInteractingSphere() ;
+    const osg::BoundingSphere&  bs = getInteractingSphere() ;
+
+    if( bs.valid() ) {
+        setInteractingSphere(getPosition(), bs.radius()) ;
     }
 }
 /* ....................................................................... */
@@ -849,32 +851,6 @@ osgODE::RigidBody::getTorque(void) const
     const dReal*    v = dBodyGetTorque(m_ODE_body) ;
 
     return osg::Vec3(v[0], v[1], v[2]) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::RigidBody::setUpdateInteractingSphere(bool flag)
-{
-    m_update_interacting_sphere = flag ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline bool
-osgODE::RigidBody::getUpdateInteractingSphere(void) const
-{
-    return m_update_interacting_sphere ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

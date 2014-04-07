@@ -44,6 +44,8 @@ namespace osgODE
 /* ======================================================================= */
 class ODEObject ;
 class HingeServoMotor ;
+class ServoMotor ;
+class SliderServoMotor ;
 class UniversalServoMotor ;
 /* ======================================================================= */
 
@@ -109,6 +111,12 @@ public:
 public:
     //! Quick dynamic cast
     virtual HingeServoMotor*        asHingeServoMotor(void) ;
+
+    //! Quick dynamic cast
+    virtual ServoMotor*             asServoMotor(void) ;
+
+    //! Quick dynamic cast
+    virtual SliderServoMotor*       asSliderServoMotor(void) ;
 
     //! Quick dynamic cast
     virtual UniversalServoMotor*    asUniversalServoMotor(void) ;

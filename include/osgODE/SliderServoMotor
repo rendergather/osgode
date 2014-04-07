@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolume.cpp
+ * @file SliderServoMotor
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,42 +14,34 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/NoGravityVolume>
-#include <osgODE/NoGravityVolumeCollisionCallback>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-using namespace osgODE ;
+#ifndef _OSGODE_SLIDERSERVOMOTOR_HPP
+#define _OSGODE_SLIDERSERVOMOTOR_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolume::NoGravityVolume(void)
+#include <osgODE/ServoMotor>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
 {
-    CollisionParameters*    cp = new CollisionParameters() ;
-    cp->setCollisionsEnabled( false ) ;
 
-    this->Sphere::setCollisionParameters( cp ) ;
-    this->Sphere::setGravityMode( false ) ;
-    this->Sphere::setKinematic( true ) ;
-}
-/* ....................................................................... */
+
+
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -57,70 +49,108 @@ NoGravityVolume::NoGravityVolume(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-NoGravityVolume::NoGravityVolume(const NoGravityVolume& other, const osg::CopyOp& copyop):
-    Sphere      ( other, copyop )
+//! A servo motor for the SliderJoint
+/*!
+ *
+ */
+class OSG_EXPORT SliderServoMotor: public ServoMotor
 {
-}
-/* ....................................................................... */
+/* ======================================================================= */
+public:
+             SliderServoMotor(void) ;
+             SliderServoMotor(const SliderServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~SliderServoMotor(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolume::~NoGravityVolume(void)
-{
-}
-/* ....................................................................... */
+public:
+    META_Object(osgODE, SliderServoMotor) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the desired position. Default: 0
+    inline void         setPosition( double position ) ;
+
+    //! Get the desired position. Default: 0
+    inline double       getPosition( void ) const ;
+
+
+    //! Set the force. Default: 0
+    inline void         setForce( double force ) ;
+
+    //! Get the force. Default: 0
+    inline double       getForce( void ) const ;
+
+
+    //! Set a speed limit. Default: -1
+    /*!
+     * Set a negative value to disable the limit. 
+     */
+    inline void         setMaxVel( double max_vel ) ;
+
+    //! Get the speed limit. Default: -1
+    inline double       getMaxVel( void ) const ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-void
-NoGravityVolume::postUpdate(double step_size)
-{
-    Collidables::iterator   itr = m_collidables.begin() ;
-    Collidables::iterator   itr_end = m_collidables.end() ;
-
-    while( itr != itr_end ) {
-        (*itr++)->setGravityMode( true ) ;
-    }
-
-
-    m_collidables.clear() ;
-
-
-    this->Sphere::postUpdate(step_size) ;
-}
-/* ....................................................................... */
+public:
+    //! Compute and apply the force
+    /*!
+     * SIGSEGV (or assert) if obj is not a SliderJoint
+     */
+    virtual void        operator()(ODEObject* object) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-void
-NoGravityVolume::setupCallbacks(void)
-{
-    addCollisionCallback( new NoGravityVolumeCollisionCallback() ) ;
-}
-/* ....................................................................... */
+public:
+    //! Quick dynamic cast
+    virtual SliderServoMotor*        asSliderServoMotor(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolume*
-NoGravityVolume::asNoGravityVolume(void)
-{
-    return this ;
-}
+private:
+    double      m_position ;
+    double      m_force ;
+    double      m_max_vel ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "SliderServoMotor.inl"
+
+
+
+
+#endif /* _OSGODE_SLIDERSERVOMOTOR_HPP */

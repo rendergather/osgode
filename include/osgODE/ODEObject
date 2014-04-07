@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -54,10 +54,9 @@ class   Container ;
 class   FixedJoint ;
 class   HingeJoint ;
 class   Joint ;
-class   NoGravityVolume ;
 class   ODEObjectContainer ;
 class   RigidBody ;
-class   ShockWave ;
+class   SliderJoint ;
 class   Space ;
 class   Transformable ;
 class   UniversalJoint ;
@@ -129,16 +128,10 @@ public:
     virtual Joint*                  asJoint(void) ;
 
     //! Quick dynamic cast
-    virtual NoGravityVolume*        asNoGravityVolume(void) ;
-
-    //! Quick dynamic cast
-    virtual ODEObjectContainer*     asODEObjectContainer(void) ;
-
-    //! Quick dynamic cast
     virtual RigidBody*              asRigidBody(void) ;
 
     //! Quick dynamic cast
-    virtual ShockWave*              asShockWave(void) ;
+    virtual SliderJoint*            asSliderJoint(void) ;
 
     //! Quick dynamic cast
     virtual Transformable*          asTransformable(void) ;

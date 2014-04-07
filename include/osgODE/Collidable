@@ -223,20 +223,27 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set the last collision frame number
+    inline void setLastCollisionFrame( unsigned int last_collision_frame ) ;
+
+    //! Get the const last collision frame number
+    inline unsigned int getLastCollisionFrame(void) const ;
+
+
+    //! True while colliding
+    bool    isColliding(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     //! Insert the geometry into the space
     virtual bool    addToWorldInternal(World* world) ;
 
     //! Remove the geometry from the space
     virtual bool    removeFromWorldInternal(World* world) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-protected:
-    //! Update center and radius of the interacting sphere
-    virtual void    _updateInteractingSphere(void) ;
 /* ======================================================================= */
 
 
@@ -265,6 +272,9 @@ protected:
 /* ======================================================================= */
 private:
     osg::ref_ptr<CollisionCallback> m_collision_callback ;
+
+
+    unsigned int    m_last_collision_frame ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

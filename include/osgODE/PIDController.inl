@@ -1,9 +1,9 @@
 /*!
- * @file UniversalServoMotor.inl
+ * @file PIDController.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,8 +22,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_UNIVERSALSERVOMOTOR_INL
-#define _OSGODE_UNIVERSALSERVOMOTOR_INL
+#ifndef _OSGODE_PIDCONTROLLER_INL
+#define _OSGODE_PIDCONTROLLER_INL
+
+
+
 
 /* ======================================================================= */
 /* ....................................................................... */
@@ -36,9 +39,9 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::UniversalServoMotor::setPosition1(double position)
+osgODE::PIDController::setProportional( double proportional )
 {
-    m_position[0] = position ;
+    m_proportional = proportional ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -49,9 +52,9 @@ osgODE::UniversalServoMotor::setPosition1(double position)
 /* ======================================================================= */
 /* ....................................................................... */
 inline double
-osgODE::UniversalServoMotor::getPosition1(void) const
+osgODE::PIDController::getProportional(void) const
 {
-    return m_position[0] ;
+    return m_proportional ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -62,9 +65,9 @@ osgODE::UniversalServoMotor::getPosition1(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::UniversalServoMotor::setPosition2(double position)
+osgODE::PIDController::setIntegral( double integral )
 {
-    m_position[1] = position ;
+    m_integral = integral ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -75,9 +78,9 @@ osgODE::UniversalServoMotor::setPosition2(double position)
 /* ======================================================================= */
 /* ....................................................................... */
 inline double
-osgODE::UniversalServoMotor::getPosition2(void) const
+osgODE::PIDController::getIntegral(void) const
 {
-    return m_position[1] ;
+    return m_integral ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -88,9 +91,9 @@ osgODE::UniversalServoMotor::getPosition2(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::UniversalServoMotor::setForce1(double force)
+osgODE::PIDController::setDerivative( double derivative )
 {
-    m_force[0] = force ;
+    m_derivative = derivative ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -101,9 +104,9 @@ osgODE::UniversalServoMotor::setForce1(double force)
 /* ======================================================================= */
 /* ....................................................................... */
 inline double
-osgODE::UniversalServoMotor::getForce1(void) const
+osgODE::PIDController::getDerivative(void) const
 {
-    return m_force[0] ;
+    return m_derivative ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -114,9 +117,9 @@ osgODE::UniversalServoMotor::getForce1(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::UniversalServoMotor::setForce2(double force)
+osgODE::PIDController::setErrorInternal( double error_internal )
 {
-    m_force[1] = force ;
+    m_error_internal = error_internal ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -127,9 +130,9 @@ osgODE::UniversalServoMotor::setForce2(double force)
 /* ======================================================================= */
 /* ....................................................................... */
 inline double
-osgODE::UniversalServoMotor::getForce2(void) const
+osgODE::PIDController::getErrorInternal(void) const
 {
-    return m_force[1] ;
+    return m_error_internal ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -137,56 +140,7 @@ osgODE::UniversalServoMotor::getForce2(void) const
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::UniversalServoMotor::setGain1(double gain)
-{
-    m_gain[0] = gain ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
 
 
 
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline double
-osgODE::UniversalServoMotor::getGain1(void) const
-{
-    return m_gain[0] ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::UniversalServoMotor::setGain2(double gain)
-{
-    m_gain[1] = gain ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline double
-osgODE::UniversalServoMotor::getGain2(void) const
-{
-    return m_gain[1] ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_UNIVERSALSERVOMOTOR_INL */
+#endif /* _OSGODE_PIDCONTROLLER_INL */

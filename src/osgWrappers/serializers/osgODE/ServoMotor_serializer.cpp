@@ -1,9 +1,9 @@
 /*!
- * @file ShockWaveCollisionCallback_serializer.cpp
+ * @file ServoMotor_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ShockWaveCollisionCallback>
+#include <osgODE/ServoMotor>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -43,12 +43,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( ShockWaveCollisionCallback,
-                         new osgODE::ShockWaveCollisionCallback,
-                         osgODE::ShockWaveCollisionCallback,
-                         "osg::Object osgODE::CollisionCallback osgODE::ShockWaveCollisionCallback" )
+REGISTER_OBJECT_WRAPPER( ServoMotor,
+                         new osgODE::ServoMotor,
+                         osgODE::ServoMotor,
+                         "osg::Object osgODE::ODECallback osgODE::ServoMotor" )
 {
-    (void) wrapper ;
+    ADD_OBJECT_SERIALIZER   ( PIDController, osgODE::PIDController, NULL ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

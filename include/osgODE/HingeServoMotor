@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,7 +29,7 @@
 
 
 /* ======================================================================= */
-#include <osgODE/ODECallback>
+#include <osgODE/ServoMotor>
 /* ======================================================================= */
 
 
@@ -53,7 +53,7 @@ namespace osgODE
 /*!
  *
  */
-class OSG_EXPORT HingeServoMotor: public ODECallback
+class OSG_EXPORT HingeServoMotor: public ServoMotor
 {
 /* ======================================================================= */
 public:
@@ -96,11 +96,14 @@ public:
     inline double       getForce( void ) const ;
 
 
-    //! Set the gain
-    inline void         setGain( double gain ) ;
+    //! Set a speed limit. Default: -1
+    /*!
+     * Set a negative value to disable the limit. 
+     */
+    inline void         setMaxVel( double max_vel ) ;
 
-    //! Get the gain
-    inline double       getGain( void ) const ;
+    //! Get the speed limit. Default: -1
+    inline double       getMaxVel( void ) const ;
 /* ======================================================================= */
 
 
@@ -131,7 +134,7 @@ public:
 private:
     double      m_position ;
     double      m_force ;
-    double      m_gain ;
+    double      m_max_vel ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -108,11 +108,6 @@ Sphere::setSize(const osg::Vec3& size)
 
     // Recalculate the inertia tensors
     setMass( getMass() ) ;
-
-
-    if( getUpdateInteractingSphere() ) {
-        _updateInteractingSphere() ;
-    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

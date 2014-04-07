@@ -1,9 +1,9 @@
 /*!
- * @file ShockWaveCollisionCallback.cpp
+ * @file SliderServoMotor.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,20 +14,28 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ShockWaveCollisionCallback>
-#include <osgODE/ShockWave>
-#include <osgODE/DefaultNearCallback>
+#include <osgODE/SliderServoMotor>
+#include <osgODE/SliderJoint>
+#include <osgODE/World>
 #include <osgODE/Notify>
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -41,7 +49,10 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWaveCollisionCallback::ShockWaveCollisionCallback(void)
+SliderServoMotor::SliderServoMotor(void):
+    m_position      ( 0.0 ),
+    m_force         ( 0.0 ),
+    m_max_vel       ( -1.0 )
 {
 }
 /* ....................................................................... */
@@ -52,8 +63,11 @@ ShockWaveCollisionCallback::ShockWaveCollisionCallback(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWaveCollisionCallback::ShockWaveCollisionCallback(const ShockWaveCollisionCallback& other, const osg::CopyOp& copyop):
-    CollisionCallback(other, copyop)
+SliderServoMotor::SliderServoMotor(const SliderServoMotor& other, const osg::CopyOp& copyop):
+    ServoMotor      ( other,  copyop),
+    m_position      ( other.m_position ),
+    m_force         ( other.m_force ),
+    m_max_vel       ( other.m_max_vel )
 {
 }
 /* ....................................................................... */
@@ -64,7 +78,7 @@ ShockWaveCollisionCallback::ShockWaveCollisionCallback(const ShockWaveCollisionC
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWaveCollisionCallback::~ShockWaveCollisionCallback(void)
+SliderServoMotor::~SliderServoMotor(void)
 {
 }
 /* ....................................................................... */
@@ -76,75 +90,55 @@ ShockWaveCollisionCallback::~ShockWaveCollisionCallback(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ShockWaveCollisionCallback::operator()(Collidable* owner, Collidable* other, NearCallback* near_callback)
+SliderServoMotor::operator()(ODEObject* object)
 {
 
-    if( other->asShockWave() ) {
+    SliderJoint*     slider = object->asSliderJoint() ;
+    PS_ASSERT1( slider != NULL ) ;
 
-        this->CollisionCallback::traverse(owner, other, near_callback) ;
-        return ;
+    World*      world = object->getWorld() ;
+    PS_ASSERT1( world != NULL ) ;
+
+
+    PIDController*  pid = getPIDController() ;
+
+    double  vel = 0.0 ;
+
+    if( pid ) {
+        vel = pid->solve( m_position - slider->getPosition(), world->getCurrentStepSize() ) ;
+    } else {
+        vel = m_position - slider->getPosition() ;
     }
 
 
-    ShockWave*  shock_wave = owner->asShockWave() ;
-    PS_ASSERT1( shock_wave != NULL ) ;
 
+    if( m_max_vel >= 0.0 ) {
 
-    DefaultNearCallback*   default_near_callback = near_callback->asDefaultNearCallback() ;
-    PS_ASSERT1( default_near_callback != NULL ) ;
-
-
-
-    const osg::Vec3 shock_direction = shock_wave->getQuaternion() * shock_wave->getDirection() ;
-    const double    cos_angle = cos( shock_wave->getAngle() ) ;
-
-
-
-    const DefaultNearCallback::CollisionResult& collision_result = default_near_callback->getCollisionResult() ;
-
-
-
-    const double        current_force = shock_wave->getCurrentForce() ;
-    const unsigned int  num_contacts = collision_result.getNumContacts() ;
-
-    PS_ASSERT1( num_contacts > 0 ) ;
-
-    const DefaultNearCallback::CollisionResult::Contacts&   contacts = collision_result.getContacts() ;
-
-    osg::Vec3   position ;
-
-    for(unsigned int i=0; i<num_contacts; i++) {
-        position += contacts[i] ;
-    }
-
-    position /= num_contacts ;
-
-
-
-
-    osg::Vec3       force = (position - shock_wave->getPosition()) ;
-    const double    distance_from_peak = shock_wave->getCurrentRadius() - force.normalize() ;
-
-
-
-    force *= (force * shock_direction) >= cos_angle ;
-
-
-    force *= current_force * ( distance_from_peak >= shock_wave->getWaveSize() ) ;
-
-
-    if( force.length() >= shock_wave->getThreshold() ) {
-        other->addForce( force, position, false, false ) ;
-
-        if( ! other->getBodyEnabled() ) {
-            other->setBodyEnabled(true) ;
-        }
+        vel = osg::clampTo( vel, -m_max_vel, m_max_vel ) ;
     }
 
 
 
 
-    this->CollisionCallback::traverse(owner, other, near_callback) ;
+
+    slider->setParam( dParamFMax, m_force ) ;
+    slider->setParam( dParamVel, vel ) ;
+
+
+    traverse(object) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+SliderServoMotor*
+SliderServoMotor::asSliderServoMotor(void)
+{
+    return this ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolume
+ * @file RigidBodyServoMotor
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,20 +16,20 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_NOGRAVITYVOLUME_HPP
-#define _OSGODE_NOGRAVITYVOLUME_HPP
+#ifndef _OSGODE_RIGIDBODYSERVOMOTOR_HPP
+#define _OSGODE_RIGIDBODYSERVOMOTOR_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/Sphere>
+#include <osgODE/ServoMotor>
 /* ======================================================================= */
 
 
@@ -42,6 +42,7 @@ namespace osgODE
 
 
 /* ======================================================================= */
+class RigidBody ;
 /* ======================================================================= */
 
 
@@ -53,15 +54,15 @@ namespace osgODE
 /*!
  *
  */
-class OSG_EXPORT NoGravityVolume: public Sphere
+class OSG_EXPORT RigidBodyServoMotor: public ServoMotor
 {
 /* ======================================================================= */
 public:
-             NoGravityVolume(void) ;
-             NoGravityVolume(const NoGravityVolume& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             RigidBodyServoMotor(void) ;
+             RigidBodyServoMotor(const RigidBodyServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~NoGravityVolume(void) ;
+    virtual ~RigidBodyServoMotor(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +70,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, NoGravityVolume) ;
+    META_Object(osgODE, RigidBodyServoMotor) ;
 /* ======================================================================= */
 
 
@@ -82,7 +83,57 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     addCollidable(Collidable* collidable) ;
+    typedef enum {
+        LINEAR,
+        ANGULAR
+    } Mode ;
+
+
+    //! Set the mode
+    inline void setMode( Mode mode ) ;
+
+    //! Get the const mode
+    inline Mode getMode(void) const ;
+
+    //! Set the axis
+    /*!
+     * In linear mode, "axis" is the direction
+     * In angular mode, it's the rotation axis
+     */
+    inline void setAxis( const osg::Vec3& axis ) ;
+
+    //! Get the const axis
+    /*!
+     * In linear mode, "axis" is the direction
+     * In angular mode, it's the rotation axis
+     */
+    inline const osg::Vec3& getAxis(void) const ;
+
+    //! Set the axis local
+    /*!
+     * true if the axis is in local reference frame, false otherwise.\n
+     * Default: true
+     */
+    inline void setAxisLocal( bool axis_local ) ;
+
+    //! Get the const axis local
+    /*!
+     * true if the axis is in local reference frame, false otherwise.\n
+     * Default: true
+     */
+    inline bool getAxisLocal(void) const ;
+
+    //! Set the max force
+    inline void setMaxForce( double max_force ) ;
+
+    //! Get the const max force
+    inline double getMaxForce(void) const ;
+
+    //! Set the speed
+    inline void setSpeed( double speed ) ;
+
+    //! Get the const speed
+    inline double getSpeed(void) const ;
 /* ======================================================================= */
 
 
@@ -90,19 +141,8 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Add the NoGravityVolumeCollisionCallbacl
-    void    setupCallbacks(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void                postUpdate(double step_size) ;
-
-    //! Quick dynamic_cast
-    virtual NoGravityVolume*    asNoGravityVolume(void) ;
+    //! assert or sigsegv if object->asRigidBody() == NULL
+    virtual void    operator()( ODEObject* object ) ;
 /* ======================================================================= */
 
 
@@ -110,8 +150,20 @@ public:
 
 /* ======================================================================= */
 private:
-    typedef std::vector< osg::observer_ptr<Collidable> >    Collidables ;
-    Collidables m_collidables ;
+    void    solveLinear( RigidBody* body ) ;
+    void    solveAngular( RigidBody* body ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    Mode        m_mode ;
+    osg::Vec3   m_axis ;
+    double      m_max_force ;
+    double      m_speed ;
+    bool        m_axis_local ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -125,9 +177,9 @@ private:
 
 
 
-#include "NoGravityVolume.inl"
+#include "RigidBodyServoMotor.inl"
 
 
 
 
-#endif /* _OSGODE_NOGRAVITYVOLUME_HPP */
+#endif /* _OSGODE_RIGIDBODYSERVOMOTOR_HPP */

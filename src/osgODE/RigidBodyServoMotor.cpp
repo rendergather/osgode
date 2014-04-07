@@ -1,9 +1,9 @@
 /*!
- * @file UniversalServoMotor.cpp
+ * @file RigidBodyServoMotor.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -24,18 +24,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/UniversalServoMotor>
-#include <osgODE/UniversalJoint>
+#include <osgODE/RigidBodyServoMotor>
+#include <osgODE/RigidBody>
 #include <osgODE/World>
 #include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
 
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
+#include <osg/Math>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -49,16 +43,12 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-UniversalServoMotor::UniversalServoMotor(void)
+RigidBodyServoMotor::RigidBodyServoMotor(void):
+    m_mode          ( LINEAR ),
+    m_max_force     ( 0.0 ),
+    m_speed         ( 0.0 ),
+    m_axis_local    ( true )
 {
-    m_position[0] = 0.0 ;
-    m_position[1] = 0.0 ;
-
-    m_force[0] = 0.0 ;
-    m_force[1] = 0.0 ;
-
-    m_gain[0] = 1.0 ;
-    m_gain[1] = 1.0 ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -68,17 +58,14 @@ UniversalServoMotor::UniversalServoMotor(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-UniversalServoMotor::UniversalServoMotor(const UniversalServoMotor& other, const osg::CopyOp& copyop):
-    ODECallback     ( other,  copyop)
+RigidBodyServoMotor::RigidBodyServoMotor(const RigidBodyServoMotor& other, const osg::CopyOp& copyop):
+    osgODE::ServoMotor      ( other, copyop ),
+    m_mode                  ( other.m_mode ),
+    m_axis                  ( other.m_axis ),
+    m_max_force             ( other.m_max_force ),
+    m_speed                 ( other.m_speed ),
+    m_axis_local            ( other.m_axis_local)
 {
-    m_position[0] = other.m_position[0] ;
-    m_position[1] = other.m_position[1] ;
-
-    m_force[0] = other.m_force[0] ;
-    m_force[1] = other.m_force[1] ;
-
-    m_gain[0] = other.m_gain[0] ;
-    m_gain[1] = other.m_gain[1] ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -88,7 +75,7 @@ UniversalServoMotor::UniversalServoMotor(const UniversalServoMotor& other, const
 
 /* ======================================================================= */
 /* ....................................................................... */
-UniversalServoMotor::~UniversalServoMotor(void)
+RigidBodyServoMotor::~RigidBodyServoMotor(void)
 {
 }
 /* ....................................................................... */
@@ -100,35 +87,23 @@ UniversalServoMotor::~UniversalServoMotor(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-UniversalServoMotor::operator()(ODEObject* object)
+RigidBodyServoMotor::operator()( ODEObject* object )
 {
+    RigidBody*  body = object->asRigidBody() ;
 
-    UniversalJoint*     universal = object->asUniversalJoint() ;
-    PS_ASSERT1( universal != NULL ) ;
-
-    World*      world = object->getWorld() ;
-    PS_ASSERT1( world != NULL ) ;
+    PS_ASSERT1( body != NULL ) ;
 
 
-    const double    step_size = world->getCurrentStepSize() ;
+    switch( m_mode )
+    {
+        case LINEAR:    solveLinear( body ) ;   break ;
+        case ANGULAR:   solveAngular( body ) ;  break ;
 
-    const double    err1 = m_position[0] - universal->getAngle1() ;
-    const double    err2 = m_position[1] - universal->getAngle2() ;
-
-    const double    gain1 = m_gain[0] / step_size ;
-    const double    gain2 = m_gain[1] / step_size ;
-
-    const double    vel1 = gain1 * err1 ;
-    const double    vel2 = gain2 * err2 ;
-
-    universal->setParam( dParamFMax1, m_force[0] ) ;
-    universal->setParam( dParamVel1, vel1 ) ;
-
-    universal->setParam( dParamFMax2, m_force[1] ) ;
-    universal->setParam( dParamVel2, vel2 ) ;
+        default:        PS_BREAKPOINT() ;       break ;
+    }
 
 
-    traverse(object) ;
+    traverse( object ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -138,10 +113,81 @@ UniversalServoMotor::operator()(ODEObject* object)
 
 /* ======================================================================= */
 /* ....................................................................... */
-UniversalServoMotor*
-UniversalServoMotor::asUniversalServoMotor(void)
+void
+RigidBodyServoMotor::solveLinear( RigidBody* body )
 {
-    return this ;
+    osg::Vec3   direction = m_axis_local ? body->getQuaternion() * m_axis : m_axis ;
+
+    World*      world = body->getWorld() ;
+    PS_ASSERT1( world != NULL ) ;
+
+    const double    err = m_speed - body->getLinearVelocity() * direction ;
+
+
+    PIDController*  pid = getPIDController() ;
+
+    double  force = 0.0 ;
+
+    if( pid ) {
+        force = pid->solve( err, world->getCurrentStepSize() ) ;
+    } else {
+        force = err ;
+    }
+
+
+    direction *= osg::sign( force ) ;
+
+
+    force = osg::absolute( force ) ;
+
+
+    if( m_max_force >= 0.0 ) {
+        force = osg::minimum( force, m_max_force ) ;
+    }
+
+    body->addForce( direction * force ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+RigidBodyServoMotor::solveAngular( RigidBody* body )
+{
+    osg::Vec3   axis = m_axis_local ? body->getQuaternion() * m_axis : m_axis ;
+
+    World*      world = body->getWorld() ;
+    PS_ASSERT1( world != NULL ) ;
+
+    const double    err = m_speed - body->getAngularVelocity() * axis ;
+
+
+    PIDController*  pid = getPIDController() ;
+
+    double  force = 0.0 ;
+
+    if( pid ) {
+        force = pid->solve( err, world->getCurrentStepSize() ) ;
+    } else {
+        force = err ;
+    }
+
+
+    axis *= osg::sign( force ) ;
+
+
+    force = osg::absolute( force ) ;
+
+
+    if( m_max_force >= 0.0 ) {
+        force = osg::minimum( force, m_max_force ) ;
+    }
+
+    body->addTorque( axis * force ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

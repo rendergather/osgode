@@ -1,9 +1,9 @@
 /*!
- * @file UniversalServoMotor_serializer.cpp
+ * @file ServoMotor.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                  *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,13 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/UniversalServoMotor>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_SERVOMOTOR_INL
+#define _OSGODE_SERVOMOTOR_INL
 
 
 
@@ -43,17 +38,61 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( UniversalServoMotor,
-                         new osgODE::UniversalServoMotor,
-                         osgODE::UniversalServoMotor,
-                         "osg::Object osgODE::ODECallback osgODE::UniversalServoMotor" )
+inline void
+osgODE::ServoMotor::setPIDController( PIDController* pid_controller )
 {
-    ADD_DOUBLE_SERIALIZER( Position1, 0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Position2, 0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Force1, 0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Force2, 0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Gain1, 1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Gain2, 1.0 ) ;
+    m_pid_controller = pid_controller ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgODE::PIDController*
+osgODE::ServoMotor::getPIDController(void)
+{
+    return m_pid_controller ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline const osgODE::PIDController*
+osgODE::ServoMotor::getPIDController(void) const
+{
+    return m_pid_controller ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osgODE::PIDController*
+osgODE::ServoMotor::getOrCreatePIDController(void)
+{
+    if( ! m_pid_controller.valid() ) {
+        m_pid_controller = new PIDController() ;
+    }
+
+    return m_pid_controller ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+
+#endif /* _OSGODE_SERVOMOTOR_INL */

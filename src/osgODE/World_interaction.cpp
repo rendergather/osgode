@@ -228,6 +228,73 @@ World::findInteractions(    InteractionCallback* cbk )
 
 
 /* ======================================================================= */
+namespace {
+class finder2 {
+public:
+    void    check(ODEObject* object)
+    {
+        if( object->getInteractingSphere().valid() && object->getInteractionCallback() != NULL )
+            mObjectList.push_back(object) ;
+    }
+
+    World::Objects     mObjectList ;
+} ;
+}
+
+
+/* ....................................................................... */
+bool
+World::findInteractions(    const osg::Vec3& from,
+                            const osg::Vec3& to)
+{
+
+    bool    found = false ;
+
+    finder2 fndr2 ;
+    traverseObjects(fndr2, &finder2::check) ;
+
+
+    Objects::iterator   i1 = fndr2.mObjectList.begin() ;
+    Objects::iterator   i2 = fndr2.mObjectList.begin() ;
+    Objects::iterator   end = fndr2.mObjectList.end() ;
+
+
+
+    while( i1 != end ) {
+
+        ODEObject*  obj = *i1++ ;
+
+
+
+        const osg::BoundingSphere&  sphere = obj->getInteractingSphere() ;
+
+
+        PS_ASSERT1( sphere.valid() ) ;
+
+
+
+        if( _intersectRaySphere(sphere, from, to) ) {
+
+            ODECallback*    cbk = obj->getInteractionCallback() ;
+
+            PS_ASSERT1( cbk != NULL ) ;
+
+            found = true ;
+
+            (*cbk)(obj) ;
+        }
+    }
+
+
+    return found ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
 /* ....................................................................... */
 bool
 World::_intersectRaySphere( const osg::BoundingSphere& sphere,

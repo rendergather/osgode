@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -88,9 +88,9 @@ osgODE::HingeServoMotor::getForce(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::HingeServoMotor::setGain(double gain)
+osgODE::HingeServoMotor::setMaxVel(double max_vel)
 {
-    m_gain = gain ;
+    m_max_vel = max_vel ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -101,9 +101,9 @@ osgODE::HingeServoMotor::setGain(double gain)
 /* ======================================================================= */
 /* ....................................................................... */
 inline double
-osgODE::HingeServoMotor::getGain(void) const
+osgODE::HingeServoMotor::getMaxVel(void) const
 {
-    return m_gain ;
+    return m_max_vel ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

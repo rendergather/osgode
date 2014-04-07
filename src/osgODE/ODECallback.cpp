@@ -103,6 +103,8 @@ ODECallback::operator()(ODEObject* object)
 #define AS_NULL( NAME ) NAME* ODECallback::as##NAME(void) { return NULL ; }
 
 AS_NULL( HingeServoMotor ) ;
+AS_NULL( ServoMotor ) ;
+AS_NULL( SliderServoMotor ) ;
 AS_NULL( UniversalServoMotor ) ;
 
 #undef AS_NULL

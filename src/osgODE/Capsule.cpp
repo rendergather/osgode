@@ -112,11 +112,6 @@ Capsule::setSize(const osg::Vec3& size)
 
 
     setMass( getMass() ) ;
-
-
-    if( getUpdateInteractingSphere() ) {
-        _updateInteractingSphere() ;
-    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

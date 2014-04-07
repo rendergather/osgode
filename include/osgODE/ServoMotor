@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolumeCollisionCallback.cpp
+ * @file ServoMotor
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,85 +16,119 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/NoGravityVolumeCollisionCallback>
-#include <osgODE/NoGravityVolume>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-using namespace osgODE ;
+#ifndef _OSGODE_SERVOMOTOR_HPP
+#define _OSGODE_SERVOMOTOR_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolumeCollisionCallback::NoGravityVolumeCollisionCallback(void)
-{
-}
-/* ....................................................................... */
+#include <osgODE/ODECallback>
+#include <osgODE/PIDController>
+
+#include <osg/Vec3>
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolumeCollisionCallback::NoGravityVolumeCollisionCallback(const NoGravityVolumeCollisionCallback& other, const osg::CopyOp& copyop):
-    CollisionCallback       ( other, copyop )
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-NoGravityVolumeCollisionCallback::~NoGravityVolumeCollisionCallback(void)
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-NoGravityVolumeCollisionCallback::operator()(Collidable* owner, Collidable* other, NearCallback* near_callback)
+namespace osgODE
 {
 
-    if( other->asNoGravityVolume() ) {
-
-        this->CollisionCallback::traverse(owner, other, near_callback) ;
-        return ;
-    }
 
 
-    NoGravityVolume*    no_gravity_volume = owner->asNoGravityVolume() ;
-    PS_ASSERT1( no_gravity_volume != NULL ) ;
+
+/* ======================================================================= */
+/* ======================================================================= */
 
 
-    if( ! other->getKinematic() ) {
-        no_gravity_volume->addCollidable( other ) ;
-    }
 
 
-    this->CollisionCallback::traverse(owner, other, near_callback) ;
-}
+/* ======================================================================= */
+/* ....................................................................... */
+//! Servo motor base class with a PID controller
+/*!
+ *
+ */
+class OSG_EXPORT ServoMotor: public ODECallback
+{
+/* ======================================================================= */
+public:
+             ServoMotor(void) ;
+             ServoMotor(const ServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~ServoMotor(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, ServoMotor) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the pid controller
+    inline void setPIDController( PIDController* pid_controller ) ;
+
+    //! Get the pid controller
+    inline PIDController* getPIDController(void) ;
+
+    //! Get the const pid controller
+    inline const PIDController* getPIDController(void) const ;
+
+    //! Get or create the pid controller
+    inline PIDController* getOrCreatePIDController(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Quick dynamic cast
+    virtual ServoMotor*     asServoMotor(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::ref_ptr<PIDController> m_pid_controller ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "ServoMotor.inl"
+
+
+
+
+#endif /* _OSGODE_SERVOMOTOR_HPP */

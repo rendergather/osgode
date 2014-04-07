@@ -1,9 +1,9 @@
 /*!
- * @file UniversalServoMotor
+ * @file PIDController
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,14 +22,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_UNIVERSALSERVOMOTOR_HPP
-#define _OSGODE_UNIVERSALSERVOMOTOR_HPP
+#ifndef _OSGODE_PIDCONTROLLER_HPP
+#define _OSGODE_PIDCONTROLLER_HPP
 
 
 
 
 /* ======================================================================= */
-#include <osgODE/ODECallback>
+#include <osg/Object>
+
+#include <osg/Vec3>
 /* ======================================================================= */
 
 
@@ -49,19 +51,19 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! A servo motor for the UniversalJoint
+//! A PID controller
 /*!
  *
  */
-class OSG_EXPORT UniversalServoMotor: public ODECallback
+class OSG_EXPORT PIDController: public osg::Object
 {
 /* ======================================================================= */
 public:
-             UniversalServoMotor(void) ;
-             UniversalServoMotor(const UniversalServoMotor& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+             PIDController(void) ;
+             PIDController(const PIDController& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
-    virtual ~UniversalServoMotor(void) ;
+    virtual ~PIDController(void) ;
 /* ======================================================================= */
 
 
@@ -69,7 +71,7 @@ protected:
 
 /* ======================================================================= */
 public:
-    META_Object(osgODE, UniversalServoMotor) ;
+    META_Object(osgODE, PIDController) ;
 /* ======================================================================= */
 
 
@@ -82,46 +84,33 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the desired position for the first axis in radians
-    inline void         setPosition1( double position ) ;
+    //! Set the proportional
+    inline void     setProportional( double proportional ) ;
 
-    //! Get the desired position for the first axis in radians
-    inline double       getPosition1( void ) const ;
+    //! Get the const proportional
+    inline double   getProportional(void) const ;
 
+    //! Set the integral
+    inline void     setIntegral( double integral ) ;
 
-    //! Set the desired position for the second axis in radians
-    inline void         setPosition2( double position ) ;
+    //! Get the const integral
+    inline double   getIntegral(void) const ;
 
-    //! Get the desired position for the second axis in radians
-    inline double       getPosition2( void ) const ;
+    //! Set the derivative
+    inline void     setDerivative( double derivative ) ;
 
+    //! Get the const derivative
+    inline double   getDerivative(void) const ;
 
-    //! Set the force for the first axis
-    inline void         setForce1( double force ) ;
+    //! Set the error internal
+    inline void     setErrorInternal( double error_internal ) ;
 
-    //! Get the force for the first axis
-    inline double       getForce1( void ) const ;
-
-
-    //! Set the force for the second axis
-    inline void         setForce2( double force ) ;
-
-    //! Get the force for the second axis
-    inline double       getForce2( void ) const ;
+    //! Get the const error internal
+    inline double   getErrorInternal(void) const ;
 
 
-    //! Set the gain for the first axis
-    inline void         setGain1( double gain ) ;
-
-    //! Get the gain for the first axis
-    inline double       getGain1( void ) const ;
-
-
-    //! Set the gain for the second axis
-    inline void         setGain2( double gain ) ;
-
-    //! Get the gain for the second axis
-    inline double       getGain2( void ) const ;
+    inline void resetIntegral(void)
+        { m_accum = 0.0 ; }
 /* ======================================================================= */
 
 
@@ -129,20 +118,7 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Compute and apply the force
-    /*!
-     * SIGSEGV (or assert) if obj is not a UniversalJoint
-     */
-    virtual void        operator()(ODEObject* object) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    //! Quick dynamic cast
-    virtual UniversalServoMotor*    asUniversalServoMotor(void) ;
+    double  solve( double error, double dt ) ;
 /* ======================================================================= */
 
 
@@ -150,9 +126,12 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_position[2] ;
-    double      m_force[2] ;
-    double      m_gain[2] ;
+    double      m_proportional ;
+    double      m_integral ;
+    double      m_derivative ;
+    double      m_error_internal ;
+
+    double      m_accum ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -166,9 +145,9 @@ private:
 
 
 
-#include "UniversalServoMotor.inl"
+#include "PIDController.inl"
 
 
 
 
-#endif /* _OSGODE_UNIVERSALSERVOMOTOR_HPP */
+#endif /* _OSGODE_PIDCONTROLLER_HPP */

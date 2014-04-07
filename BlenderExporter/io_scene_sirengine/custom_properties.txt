@@ -10,7 +10,7 @@ oo_camera_path <unused>, Object property
 oo_polygon_offset <height>, Object property
     displace a surface above the others.
     When two surfaces conicide, that one with the higher offset is shown.
-    Technically, glPolygonOffset(-value, -value) is applied
+    glPolygonOffset( factor = value * -0.1, units = value * -1.0 ) is applied
 
 
 
@@ -31,3 +31,9 @@ oo_border_to_alpha <unused>, Texture property
 
 oo_max_anisotropy <max_anisotropy>, Texture property
     set the max anisotropy
+
+
+
+
+oo_fast_point <fast positional light>, Light property
+    a fake point light ( normals are not used during computations )

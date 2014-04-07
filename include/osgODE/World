@@ -396,6 +396,19 @@ public:
      * true
      */
     bool    findInteractions(   InteractionCallback* cbk = NULL ) ;
+
+
+    //! part of the interaction system, Don't use it
+    bool    findInteractions(   const osg::Vec3& from,
+                                const osg::Vec3& to ) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+protected:
+    inline void     advance( double step_size ) ;
 /* ======================================================================= */
 
 

@@ -122,11 +122,6 @@ void
 TriMesh::setSize(const osg::Vec3& size)
 {
     m_size = size ;
-
-
-    if( getUpdateInteractingSphere() ) {
-        _updateInteractingSphere() ;
-    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

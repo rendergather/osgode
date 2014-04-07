@@ -46,19 +46,19 @@ SET(TARGET_SRC
     MotionPath_serializer.cpp
     MotorJoint_serializer.cpp
     NearCallback_serializer.cpp
-    NoGravityVolumeCollisionCallback_serializer.cpp
-    NoGravityVolume_serializer.cpp
     ODECallback_serializer.cpp
     ODEObject_serializer.cpp
+    PIDController_serializer.cpp
     PistonJoint_serializer.cpp
     Plane2DJoint_serializer.cpp
     QuatInterpolator_serializer.cpp
     RagDoll_serializer.cpp
+    RigidBodyServoMotor_serializer.cpp
     RigidBody_serializer.cpp
     ScalarInterpolator_serializer.cpp
-    ShockWaveCollisionCallback_serializer.cpp
-    ShockWave_serializer.cpp
+    ServoMotor_serializer.cpp
     SliderJoint_serializer.cpp
+    SliderServoMotor_serializer.cpp
     Space_serializer.cpp
     Sphere_serializer.cpp
     SuspensionJoint_serializer.cpp
@@ -66,7 +66,6 @@ SET(TARGET_SRC
     Transformable_serializer.cpp
     TriMesh_serializer.cpp
     UniversalJoint_serializer.cpp
-    UniversalServoMotor_serializer.cpp
     Vec3Interpolator_serializer.cpp
     Wheel_serializer.cpp
     World_serializer.cpp

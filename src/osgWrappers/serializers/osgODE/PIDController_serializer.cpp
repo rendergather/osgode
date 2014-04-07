@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolume.inl
+ * @file PIDController_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                  *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,22 +14,19 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_NOGRAVITYVOLUME_INL
-#define _OSGODE_NOGRAVITYVOLUME_INL
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
+#include <osgODE/PIDController>
+
+#include <osgDB/Registry>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -38,18 +35,23 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::NoGravityVolume::addCollidable(Collidable* collidable)
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+REGISTER_OBJECT_WRAPPER( PIDController,
+                         new osgODE::PIDController,
+                         osgODE::PIDController,
+                         "osg::Object osgODE::PIDController" )
 {
-    if( collidable->getGravityMode() ) {
-        collidable->setGravityMode( false ) ;
-        m_collidables.push_back( collidable ) ;
-    }
+    ADD_DOUBLE_SERIALIZER   ( Proportional,     1.0 ) ;
+    ADD_DOUBLE_SERIALIZER   ( Integral,         0.0 ) ;
+    ADD_DOUBLE_SERIALIZER   ( Derivative,       0.0 ) ;
+    ADD_DOUBLE_SERIALIZER   ( ErrorInternal,    0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_NOGRAVITYVOLUME_INL */

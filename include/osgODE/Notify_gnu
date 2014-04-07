@@ -217,7 +217,7 @@
  #define        PS_ASSERT(EXPRESSION) \
  { \
     if( ! (EXPRESSION) ) { \
-        fprintf(stdout, "%s ", PS_MSG_PREFIX) ; \
+        fprintf(stdout, "x %s ", PS_MSG_PREFIX) ; \
         fprintf(stdout, "\"%s\" failed", #EXPRESSION) ; \
         fprintf(stdout, " (%s:%u)", __FILE__, __LINE__) ; \
         fprintf(stdout, "%s", "\n") ; \

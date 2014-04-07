@@ -1,9 +1,9 @@
 /*!
- * @file ShockWave.cpp
+ * @file RigidBodyServoMotor.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,52 +16,32 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/ShockWave>
-#include <osgODE/ShockWaveCollisionCallback>
-#include <osgODE/CommonWorldOperations>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-using namespace osgODE ;
+#ifndef _OSGODE_RIGIDBODYSERVOMOTOR_INL
+#define _OSGODE_RIGIDBODYSERVOMOTOR_INL
 
 
 
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWave::ShockWave(void):
-    m_direction             ( osg::Z_AXIS * -1.0 ),
-    m_angle                 ( osg::PI ),
-    m_speed                 ( 100.0 ),
-    m_impulse               ( 100.0 ),
-    m_linear_attenuation    ( 1.0 ),
-    m_quadratic_attenuation ( 0.0 ),
-    m_threshold             ( 10.0 ),
-    m_wave_size             ( 5.0 ),
-    m_current_radius        ( 0.0 ),
-    m_current_force         ( 0.0 )
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::RigidBodyServoMotor::setMode( Mode mode )
 {
-
-    this->RigidBody::setKinematic( true ) ;
-    this->RigidBody::setBodyEnabled( false ) ;
-
-
-    CollisionParameters*    cp = new CollisionParameters() ;
-    cp->setCollisionsEnabled( false ) ;
-
-    this->Sphere::setCollisionParameters( cp ) ;
+    m_mode = mode ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -71,19 +51,10 @@ ShockWave::ShockWave(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWave::ShockWave(const ShockWave& other, const osg::CopyOp& copyop):
-    Sphere                  ( other, copyop ),
-    m_direction             ( other.m_direction ),
-    m_angle                 ( other.m_angle ),
-    m_speed                 ( other.m_speed ),
-    m_impulse               ( other.m_impulse ),
-    m_linear_attenuation    ( other.m_linear_attenuation ),
-    m_quadratic_attenuation ( other.m_quadratic_attenuation ),
-    m_threshold             ( other.m_threshold ),
-    m_wave_size             ( other.m_wave_size ),
-    m_current_radius        ( other.m_current_radius ),
-    m_current_force         ( other.m_current_force )
+inline osgODE::RigidBodyServoMotor::Mode
+osgODE::RigidBodyServoMotor::getMode(void) const
 {
+    return m_mode ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -93,8 +64,10 @@ ShockWave::ShockWave(const ShockWave& other, const osg::CopyOp& copyop):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWave::~ShockWave(void)
+inline void
+osgODE::RigidBodyServoMotor::setAxis( const osg::Vec3& axis )
 {
+    m_axis = axis ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -104,36 +77,10 @@ ShockWave::~ShockWave(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ShockWave::postUpdate(double step_size)
+inline const osg::Vec3&
+osgODE::RigidBodyServoMotor::getAxis(void) const
 {
-    m_current_radius += m_speed * step_size ;
-
-    const double        diameter = 2.0 * m_current_radius ;
-
-
-
-
-     const double   current_impulse =
-                                        m_impulse /
-            ( 1.0 + m_current_radius * ( m_linear_attenuation + m_current_radius * m_quadratic_attenuation ) ) ;
-
-
-    if( current_impulse >= m_threshold ) {
-
-        m_current_force = current_impulse / step_size ;
-
-        this->Sphere::setSize( osg::Vec3( diameter, diameter, diameter ) ) ;
-
-        this->Sphere::postUpdate( step_size ) ;
-
-
-    } else {
-        m_current_force = 0.0 ;
-
-        PS_DBG2("osgODE::ShockWave(%p): removing", this) ;
-        this->ODEObject::getWorld()->addOperation( new RemoveObjectOperation(this) ) ;
-    }
+    return m_axis ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -143,10 +90,10 @@ ShockWave::postUpdate(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ShockWave::setupCallbacks(void)
+inline void
+osgODE::RigidBodyServoMotor::setAxisLocal( bool axis_local )
 {
-    addCollisionCallback( new ShockWaveCollisionCallback() ) ;
+    m_axis_local = axis_local ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -156,10 +103,69 @@ ShockWave::setupCallbacks(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-ShockWave*
-ShockWave::asShockWave(void)
+inline bool
+osgODE::RigidBodyServoMotor::getAxisLocal(void) const
 {
-    return this ;
+    return m_axis_local ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::RigidBodyServoMotor::setMaxForce( double max_force )
+{
+    m_max_force = max_force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::RigidBodyServoMotor::getMaxForce(void) const
+{
+    return m_max_force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::RigidBodyServoMotor::setSpeed( double speed )
+{
+    m_speed = speed ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::RigidBodyServoMotor::getSpeed(void) const
+{
+    return m_speed ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+
+
+#endif /* _OSGODE_RIGIDBODYSERVOMOTOR_INL */

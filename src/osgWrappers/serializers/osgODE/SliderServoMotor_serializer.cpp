@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolume_serializer.cpp
+ * @file SliderServoMotor_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/NoGravityVolume>
+#include <osgODE/SliderServoMotor>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -43,12 +43,14 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( NoGravityVolume,
-                         new osgODE::NoGravityVolume,
-                         osgODE::NoGravityVolume,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::RigidBody osgODE::Collidable osgODE::Sphere osgODE::NoGravityVolume" )
+REGISTER_OBJECT_WRAPPER( SliderServoMotor,
+                         new osgODE::SliderServoMotor,
+                         osgODE::SliderServoMotor,
+                         "osg::Object osgODE::ODECallback osgODE::ServoMotor osgODE::SliderServoMotor" )
 {
-    (void) wrapper ;
+    ADD_DOUBLE_SERIALIZER( Position,    0.0 ) ;
+    ADD_DOUBLE_SERIALIZER( Force,       0.0 ) ;
+    ADD_DOUBLE_SERIALIZER( MaxVel,      -1.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

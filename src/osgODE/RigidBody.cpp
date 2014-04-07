@@ -51,8 +51,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody::RigidBody(void):
-    m_mass_negative(false),
-    m_update_interacting_sphere(false)
+    m_mass_negative(false)
 {
     dWorldID    static_world = StaticWorld::instance()->getODEWorld() ;
 
@@ -86,7 +85,6 @@ RigidBody::RigidBody(void):
 RigidBody::RigidBody(const RigidBody& other, const osg::CopyOp& copyop):
     Transformable(other, copyop),
     m_mass_negative( other.m_mass_negative ),
-    m_update_interacting_sphere(other.m_update_interacting_sphere),
     m_old_linear_velocity( other.m_old_linear_velocity ),
     m_linear_acceleration( other.m_linear_acceleration ),
     m_old_angular_velocity( other.m_old_angular_velocity ),
@@ -568,11 +566,6 @@ RigidBody::update(double step_size)
     PS_ASSERT1( world != NULL ) ;
 
 
-    if( m_update_interacting_sphere ) {
-        _updateInteractingSphere() ;
-    }
-
-
     if( m_mass_negative ) {
         osg::Vec3   F = world->getGravity() * this->getMass() ;
         this->addForce( F ) ;
@@ -593,6 +586,16 @@ void
 RigidBody::postUpdate(double step_size)
 {
     updateTransformInternal() ;
+
+
+
+    const osg::BoundingSphere&  bs = getInteractingSphere() ;
+
+    if( bs.valid() ) {
+        setInteractingSphere(getPosition(), bs.radius()) ;
+    }
+
+
 
     _computeAcceleration(step_size) ;
 
@@ -650,21 +653,6 @@ RigidBody::_notifyJoints(void)
     }
 
     m_joints.resize(size) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-void
-RigidBody::_updateInteractingSphere(void)
-{
-    const osg::BoundingSphere&  bs = getInteractingSphere() ;
-
-    setInteractingSphere(getPosition(), bs.radius()) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

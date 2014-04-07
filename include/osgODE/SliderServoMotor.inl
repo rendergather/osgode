@@ -1,9 +1,9 @@
 /*!
- * @file NoGravityVolumeCollisionCallback
+ * @file SliderServoMotor.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,34 +14,20 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP
-#define _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP
-
-
-
+#ifndef _OSGODE_SLIDERSERVOMOTOR_INL
+#define _OSGODE_SLIDERSERVOMOTOR_INL
 
 /* ======================================================================= */
-#include <osgODE/CollisionCallback>
-/* ======================================================================= */
-
-
-
-
-namespace osgODE
-{
-
-
-
-
-/* ======================================================================= */
+/* ....................................................................... */
+/* ....................................................................... */
 /* ======================================================================= */
 
 
@@ -49,63 +35,80 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//!
-/*!
- *
- */
-class OSG_EXPORT NoGravityVolumeCollisionCallback: public osgODE::CollisionCallback
+inline void
+osgODE::SliderServoMotor::setPosition(double position)
 {
-/* ======================================================================= */
-public:
-             NoGravityVolumeCollisionCallback(void) ;
-             NoGravityVolumeCollisionCallback(const NoGravityVolumeCollisionCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
-
-protected:
-    virtual ~NoGravityVolumeCollisionCallback(void) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    META_Object(osgODE, NoGravityVolumeCollisionCallback) ;
-/* ======================================================================= */
-
-
-
-
-
-
-
-
-
-/* ======================================================================= */
-public:
-    virtual void    operator()(Collidable* owner, Collidable* other, NearCallback* near_callback) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-private:
-/* ======================================================================= */
-} ;
+    m_position = position ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-} // namespace osgODE
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::SliderServoMotor::getPosition(void) const
+{
+    return m_position ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-// #include "NoGravityVolumeCollisionCallback.inl"
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::SliderServoMotor::setForce(double force)
+{
+    m_force = force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
 
-#endif /* _OSGODE_NOGRAVITYVOLUMECOLLISIONCALLBACK_HPP */
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::SliderServoMotor::getForce(void) const
+{
+    return m_force ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::SliderServoMotor::setMaxVel(double max_vel)
+{
+    m_max_vel = max_vel ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline double
+osgODE::SliderServoMotor::getMaxVel(void) const
+{
+    return m_max_vel ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_SLIDERSERVOMOTOR_INL */

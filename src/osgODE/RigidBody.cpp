@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -63,16 +63,16 @@ RigidBody::RigidBody(void):
 
     // Some default parameters...
     setMaxAngularSpeed(FLT_MAX) ;
-    setLinearDamping(0.0) ;
-    setAngularDamping(0.0) ;
-    setLinearDampingThreshold(0.0) ;
-    setAngularDampingThreshold(0.0) ;
-    setAutoDisableLinearThreshold(0.01) ;
-    setAutoDisableAngularThreshold(0.01) ;
+    setLinearDamping(0.01) ;
+    setAngularDamping(0.01) ;
+    setLinearDampingThreshold(0.01) ;
+    setAngularDampingThreshold(0.01) ;
+    setAutoDisableLinearThreshold(0.1) ;
+    setAutoDisableAngularThreshold(0.1) ;
     setAutoDisableFlag(false) ;
-    setAutoDisableSteps(60) ;
-    setAutoDisableTime(1.0) ;
-    setAutoDisableAverageSamplesCount(5) ;
+    setAutoDisableSteps(180) ;
+    setAutoDisableTime(3.0) ;
+    setAutoDisableAverageSamplesCount(6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

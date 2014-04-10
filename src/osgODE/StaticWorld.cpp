@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -59,18 +59,18 @@ StaticWorld::StaticWorld(void)
 
     m_ODE_world = dWorldCreate() ;
 
-
-    dWorldSetERP(m_ODE_world, 1.0) ;
-    dWorldSetCFM(m_ODE_world, 0.0) ;
-
-    dWorldSetMaxAngularSpeed(m_ODE_world, FLT_MAX) ;
-    dWorldSetContactMaxCorrectingVel(m_ODE_world, FLT_MAX) ;
-
-    dWorldSetAutoDisableLinearThreshold(m_ODE_world, 0.01) ;
-    dWorldSetAutoDisableAngularThreshold(m_ODE_world, 0.01) ;
-
-    dWorldSetLinearDamping(m_ODE_world, 0.0) ;
-    dWorldSetAngularDamping(m_ODE_world, 0.0) ;
+    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665 ) ;
+    dWorldSetMaxAngularSpeed                ( m_ODE_world, FLT_MAX ) ;
+    dWorldSetLinearDamping                  ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDamping                 ( m_ODE_world, 0.01 ) ;
+    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01 ) ;
+    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableFlag                ( m_ODE_world, 0 ) ;
+    dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
+    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
+    dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -84,6 +84,19 @@ StaticWorld::StaticWorld(const StaticWorld& other, const osg::CopyOp& copyop):
     osg::Object(other, copyop)
 {
     m_ODE_world = dWorldCreate() ;
+
+    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665 ) ;
+    dWorldSetMaxAngularSpeed                ( m_ODE_world, FLT_MAX ) ;
+    dWorldSetLinearDamping                  ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDamping                 ( m_ODE_world, 0.01 ) ;
+    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01 ) ;
+    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableFlag                ( m_ODE_world, 0 ) ;
+    dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
+    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
+    dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -68,7 +68,19 @@ World::World(void):
 
 
     m_ODE_world = dWorldCreate() ;
-    dWorldSetGravity(m_ODE_world, 0.0, 0.0, -9.80665) ;
+
+    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665 ) ;
+    dWorldSetMaxAngularSpeed                ( m_ODE_world, FLT_MAX ) ;
+    dWorldSetLinearDamping                  ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDamping                 ( m_ODE_world, 0.01 ) ;
+    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01 ) ;
+    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01 ) ;
+    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1 ) ;
+    dWorldSetAutoDisableFlag                ( m_ODE_world, 0 ) ;
+    dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
+    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
+    dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
 
 
 

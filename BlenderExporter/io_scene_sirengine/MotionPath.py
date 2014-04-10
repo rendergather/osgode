@@ -23,7 +23,7 @@
 ############################################################################
 
 ############################################################################
-from . import Writable
+from . import ODECallback
 
 import bpy
 from mathutils import Quaternion, Euler
@@ -42,7 +42,7 @@ from mathutils import Quaternion, Euler
 
 ############################################################################
 # ........................................................................ #
-class MotionPath(Writable.Writable):
+class MotionPath(ODECallback.ODECallback):
     """osgODE::MotionPath"""
 
 
@@ -50,7 +50,6 @@ class MotionPath(Writable.Writable):
 
 
 ############################################################################
-    Object = None
     PositionPath = None
     QuaternionPath = None
     PositionPathID = 0
@@ -67,9 +66,8 @@ class MotionPath(Writable.Writable):
 
 ############################################################################
     def __init__(self, data, obj):
-        super(MotionPath, self).__init__(data)
+        super(MotionPath, self).__init__(data, obj)
 
-        self.Object = obj
         self.PositionPath = [  [], [], [], []  ]
         self.QuaternionPath = [  [], [], [], [], []  ]
         self.PositionPathID = 0
@@ -203,11 +201,9 @@ class MotionPath(Writable.Writable):
 ############################################################################
     def writePrivateData(self, writer):
 
-        if not super(MotionPath, self).writeToStream(writer) :
+        if not super(MotionPath, self).writePrivateData(writer) :
             return False
 
-
-        writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
 
         writer.writeLine("Status PLAY")
 

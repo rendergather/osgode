@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
-# file Root.py
+# file ODECallback.py
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2014 by Rocco Martino                                   #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -24,7 +24,6 @@
 
 ############################################################################
 from . import Writable
-import bpy
 ############################################################################
 
 
@@ -40,16 +39,17 @@ import bpy
 
 ############################################################################
 # ........................................................................ #
-class Root(Writable.Writable):
-    """Root group in the scene"""
+class ODECallback(Writable.Writable):
+    """osgODE::ODECallback"""
 
 
 
 
 
 ############################################################################
-    StateSet = None
-    SceneName = None
+    Object = None
+    NestedCallback = None
+    Name = None
 ############################################################################
 
 
@@ -61,16 +61,12 @@ class Root(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data):
-        super(Root, self).__init__(data)
+    def __init__(self, data, obj):
+        super(ODECallback, self).__init__(data)
 
-
-        from . import StateSet
-        self.StateSet = StateSet.StateSet(self.Data, None)
-
-        self.SceneName = None
-
-        self.Data.MasterStateSet = self.StateSet
+        self.Object = obj
+        self.NestedCallback = None
+        self.Name = None
 ############################################################################
 
 
@@ -78,55 +74,25 @@ class Root(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(Root, self).buildGraph()
+        super(ODECallback, self).buildGraph()
 
 
-        try:
-            self.SceneName = str( bpy.context.scene["oo_scene_name"] )
-        except:
-            self.SceneName = str( "Default" )
-
-
-        from . import Manager
-
-        manager = Manager.Manager(self.Data)
-        self.addChild(manager)
-
-
-        from . import PureGraphics
-
-        group = PureGraphics.PureGraphics(self.Data)
-        self.addChild(group)
-
-
-        from . import OccluderGroup
-
-        group = OccluderGroup.OccluderGroup(self.Data)
-        self.addChild(group)
-
-
-        if self.Data.ExportLights:
-            from . import LightGroup
-
-            group = LightGroup.LightGroup(self.Data)
-            self.addChild(group)
+        self.Name = "%s@%s" %(self.__class__.__name__, self.Object.name)
 
 
 
-        self.StateSet.ModeList.addMode("GL_NORMALIZE ON")
-        self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
-        self.StateSet.ModeList.addMode("GL_BLEND OFF")
-
-        self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
-        self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
-        self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
-        self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
-        self.StateSet.UniformList.addFloatUniform("uParallaxScale", 0.0)
-        self.StateSet.buildGraph()
+        return True
+############################################################################
 
 
 
-        return self.traverseBuild()
+
+############################################################################
+    def addNestedCallback(self, cbk):
+        if self.NestedCallback:
+            self.NestedCallback.addNestedCallback( cbk )
+        else:
+            self.NestedCallback = cbk
 ############################################################################
 
 
@@ -135,38 +101,34 @@ class Root(Writable.Writable):
 ############################################################################
     def writeToStream(self, writer):
 
-        if self.Data.ExportLights:
-            writer.moveIn("pViewer::Root")
-        else:
-            writer.moveIn("osg::Group")
+        writer.moveIn("osgODE::ODECallback") ;
 
-        if not super(Root, self).writeToStream(writer) :
+        self.writePrivateData(writer)
+
+        writer.moveOut("osgODE::ODECallback")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateData(self, writer):
+
+        if not super(ODECallback, self).writeToStream(writer) :
             return False
 
 
-        if self.SceneName:
-            writer.writeLine("Name \"%s\"" % self.SceneName)
+        if self.Name:
+            writer.writeLine("Name \"%s\"" %(self.Name))
 
 
-        if self.StateSet:
-            self.StateSet.writeToStream(writer)
+        if self.NestedCallback:
+            writer.moveIn("NestedCallback TRUE")
+            self.NestedCallback.writeToStream(writer)
+            writer.moveOut("NestedCallback TRUE")
 
-
-        num_children = len(self.Children)
-
-        if num_children > 0 :
-            writer.moveIn("Children %s" % num_children)
-
-            if not self.traverseWrite(writer):
-                return False
-
-            writer.moveOut("Children %s" % num_children)
-
-
-        if self.Data.ExportLights:
-            writer.moveOut("pViewer::Root")
-        else:
-            writer.moveOut("osg::Group")
 
         return True
 ############################################################################

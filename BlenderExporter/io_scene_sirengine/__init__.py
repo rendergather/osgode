@@ -80,8 +80,9 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_selected = BoolProperty( name="Export only selected", default=False)
 
 
-    export_lights = BoolProperty( name="Export lights (pViewer only)", default=True)
-    #export_lights = False
+    export_lights = BoolProperty( name="Export lights (requires pViewer)", default=True)
+    export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=True)
+    export_game   = BoolProperty( name="Export game (requiers ooGame)", default=True)
 
 
     max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
@@ -129,6 +130,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.RigidBodyCache = Cache.Cache()
         data.ExportSelected = self.export_selected
         data.ExportLights = self.export_lights
+        data.ExportSounds = self.export_sounds
+        data.ExportGame = self.export_game
         data.WorldStep = self.world_step
         data.MaxAnisotropy = self.max_anisotropy
         data.AmbientMultiplier = self.ambient_multiplier

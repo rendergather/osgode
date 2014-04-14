@@ -174,9 +174,20 @@ class RigidBody(ODEObject.ODEObject):
 
             mp = MotionPath.MotionPath( self.Data, self.Object )
 
-            self.UpdateCallback = mp
-
             mp.buildGraph()
+
+            self.addUpdateCallback( mp )
+
+
+
+        if self.Data.ExportGame and len( self.Object.game.sensors ) > 0:
+            from . import Game
+
+            game = Game.Game( self.Data, self.Object )
+            game.buildGraph()
+
+            self.addUpdateCallback( game )
+
 
 
 

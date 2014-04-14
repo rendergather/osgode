@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
-# file Root.py
+# file Game.py
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2014 by Rocco Martino                                   #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -23,8 +23,10 @@
 ############################################################################
 
 ############################################################################
-from . import Writable
+from . import ODECallback
+
 import bpy
+from . import Sensor, Actuator, Controller
 ############################################################################
 
 
@@ -40,16 +42,18 @@ import bpy
 
 ############################################################################
 # ........................................................................ #
-class Root(Writable.Writable):
-    """Root group in the scene"""
+class Game(ODECallback.ODECallback):
+    """ooGame::Game"""
 
 
 
 
 
 ############################################################################
-    StateSet = None
-    SceneName = None
+    SensorList = None
+    ControllerList = None
+    ActuatorList = None
+    State = None
 ############################################################################
 
 
@@ -61,16 +65,13 @@ class Root(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data):
-        super(Root, self).__init__(data)
+    def __init__(self, data, obj):
+        super(Game, self).__init__(data, obj)
 
-
-        from . import StateSet
-        self.StateSet = StateSet.StateSet(self.Data, None)
-
-        self.SceneName = None
-
-        self.Data.MasterStateSet = self.StateSet
+        self.SensorList = []
+        self.ControllerList = []
+        self.ActuatorList = []
+        self.State = 0
 ############################################################################
 
 
@@ -78,61 +79,58 @@ class Root(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(Root, self).buildGraph()
-
-
-        try:
-            self.SceneName = str( bpy.context.scene["oo_scene_name"] )
-        except:
-            self.SceneName = str( "Default" )
-
-
-        from . import Manager
-
-        manager = Manager.Manager(self.Data)
-        self.addChild(manager)
-
-
-        from . import PureGraphics
-
-        group = PureGraphics.PureGraphics(self.Data)
-        self.addChild(group)
-
-
-        from . import OccluderGroup
-
-        group = OccluderGroup.OccluderGroup(self.Data)
-        self.addChild(group)
-
-
-        if self.Data.ExportLights:
-            from . import LightGroup
-
-            group = LightGroup.LightGroup(self.Data)
-            self.addChild(group)
+        super(Game, self).buildGraph()
 
 
 
-        from . import SoundGroup
-        self.Data.SoundGroup = SoundGroup.SoundGroup( self.Data )
-        self.addChild( self.Data.SoundGroup )
+        self.State = 0
+
+        for i in range ( len(self.Object.game.states_initial) ):
+            self.State += int(self.Object.game.states_initial[i]) << i
 
 
 
-        self.StateSet.ModeList.addMode("GL_NORMALIZE ON")
-        self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
-        self.StateSet.ModeList.addMode("GL_BLEND OFF")
+        for s in self.Object.game.sensors:
+            sensor = None
 
-        self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
-        self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
-        self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
-        self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
-        self.StateSet.UniformList.addFloatUniform("uParallaxScale", 0.0)
-        self.StateSet.buildGraph()
+            if s.type == "COLLISION":
+                sensor = Sensor.CollisionSensor( self.Data, self.Object, s )
+
+            if sensor:
+                sensor.buildGraph()
+                self.SensorList.append( sensor )
+            else:
+                self.Data.Operator.report({'ERROR'}, "[%s] Unsupported sensor type: %s" %(self.Object.name, s.type))
+                return False
 
 
 
-        return self.traverseBuild()
+        for c in self.Object.game.controllers:
+            controller = Controller.Controller(self.Data, self.Object, c)
+            controller.buildGraph()
+            self.ControllerList.append( controller )
+
+
+
+        for a in self.Object.game.actuators:
+
+            actuator = None
+
+            if a.type == "SOUND":
+
+                actuator = Actuator.SoundActuator(self.Data, self.Object, a)
+
+
+            if actuator:
+                actuator.buildGraph()
+                self.ActuatorList.append( actuator )
+            else:
+                self.Data.Operator.report({'ERROR'}, "[%s] Unsupported actuator type: %s" %(self.Object.name, a.type))
+                return False
+
+
+
+        return True
 ############################################################################
 
 
@@ -141,38 +139,51 @@ class Root(Writable.Writable):
 ############################################################################
     def writeToStream(self, writer):
 
-        if self.Data.ExportLights:
-            writer.moveIn("pViewer::Root")
-        else:
-            writer.moveIn("osg::Group")
+        writer.moveIn("ooGame::Game") ;
 
-        if not super(Root, self).writeToStream(writer) :
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::Game")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateData(self, writer):
+
+        if not super(Game, self).writePrivateData(writer) :
             return False
 
 
-        if self.SceneName:
-            writer.writeLine("Name \"%s\"" % self.SceneName)
+        writer.writeLine( "State %u" % self.State )
 
 
-        if self.StateSet:
-            self.StateSet.writeToStream(writer)
 
 
-        num_children = len(self.Children)
+        writer.writeLine( "SensorList %u" % len(self.SensorList) )
 
-        if num_children > 0 :
-            writer.moveIn("Children %s" % num_children)
-
-            if not self.traverseWrite(writer):
-                return False
-
-            writer.moveOut("Children %s" % num_children)
+        for s in self.SensorList:
+            s.writeToStream(writer)
 
 
-        if self.Data.ExportLights:
-            writer.moveOut("pViewer::Root")
-        else:
-            writer.moveOut("osg::Group")
+
+
+        writer.writeLine( "ControllerList %u" % len(self.ControllerList) )
+
+        for c in self.ControllerList:
+            c.writeToStream(writer)
+
+
+
+
+        writer.writeLine( "ActuatorList %u" % len(self.ActuatorList) )
+
+        for a in self.ActuatorList:
+            a.writeToStream(writer)
+
 
         return True
 ############################################################################

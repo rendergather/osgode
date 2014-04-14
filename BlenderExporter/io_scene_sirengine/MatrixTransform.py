@@ -110,9 +110,10 @@ class MatrixTransform(Writable.Writable):
 
 
             elif child.type == "SPEAKER":
-                from . import Speaker
-                speaker = Speaker.Speaker(self.Data, child)
-                self.addChild(speaker)
+                if self.Data.ExportSounds:
+                    from . import Speaker
+                    speaker = Speaker.Speaker(self.Data, child)
+                    self.addChild(speaker)
 
 
         return self.traverseBuild()

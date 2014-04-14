@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
-# file Root.py
+# file SoundGroup.py
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2014 by Rocco Martino                                   #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -24,7 +24,6 @@
 
 ############################################################################
 from . import Writable
-import bpy
 ############################################################################
 
 
@@ -40,16 +39,14 @@ import bpy
 
 ############################################################################
 # ........................................................................ #
-class Root(Writable.Writable):
-    """Root group in the scene"""
+class SoundGroup(Writable.Writable):
+    """SoundGroup group in the scene"""
 
 
 
 
 
 ############################################################################
-    StateSet = None
-    SceneName = None
 ############################################################################
 
 
@@ -62,15 +59,7 @@ class Root(Writable.Writable):
 
 ############################################################################
     def __init__(self, data):
-        super(Root, self).__init__(data)
-
-
-        from . import StateSet
-        self.StateSet = StateSet.StateSet(self.Data, None)
-
-        self.SceneName = None
-
-        self.Data.MasterStateSet = self.StateSet
+        super(SoundGroup, self).__init__(data)
 ############################################################################
 
 
@@ -78,61 +67,10 @@ class Root(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(Root, self).buildGraph()
+        super(SoundGroup, self).buildGraph()
 
 
-        try:
-            self.SceneName = str( bpy.context.scene["oo_scene_name"] )
-        except:
-            self.SceneName = str( "Default" )
-
-
-        from . import Manager
-
-        manager = Manager.Manager(self.Data)
-        self.addChild(manager)
-
-
-        from . import PureGraphics
-
-        group = PureGraphics.PureGraphics(self.Data)
-        self.addChild(group)
-
-
-        from . import OccluderGroup
-
-        group = OccluderGroup.OccluderGroup(self.Data)
-        self.addChild(group)
-
-
-        if self.Data.ExportLights:
-            from . import LightGroup
-
-            group = LightGroup.LightGroup(self.Data)
-            self.addChild(group)
-
-
-
-        from . import SoundGroup
-        self.Data.SoundGroup = SoundGroup.SoundGroup( self.Data )
-        self.addChild( self.Data.SoundGroup )
-
-
-
-        self.StateSet.ModeList.addMode("GL_NORMALIZE ON")
-        self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
-        self.StateSet.ModeList.addMode("GL_BLEND OFF")
-
-        self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
-        self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
-        self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
-        self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
-        self.StateSet.UniformList.addFloatUniform("uParallaxScale", 0.0)
-        self.StateSet.buildGraph()
-
-
-
-        return self.traverseBuild()
+        return True
 ############################################################################
 
 
@@ -140,22 +78,13 @@ class Root(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
+        writer.moveIn("osg::Group") ;
 
-        if self.Data.ExportLights:
-            writer.moveIn("pViewer::Root")
-        else:
-            writer.moveIn("osg::Group")
-
-        if not super(Root, self).writeToStream(writer) :
+        if not super(SoundGroup, self).writeToStream(writer) :
             return False
 
 
-        if self.SceneName:
-            writer.writeLine("Name \"%s\"" % self.SceneName)
-
-
-        if self.StateSet:
-            self.StateSet.writeToStream(writer)
+        writer.writeLine("Name \"SoundGroup\"")
 
 
         num_children = len(self.Children)
@@ -169,10 +98,7 @@ class Root(Writable.Writable):
             writer.moveOut("Children %s" % num_children)
 
 
-        if self.Data.ExportLights:
-            writer.moveOut("pViewer::Root")
-        else:
-            writer.moveOut("osg::Group")
+        writer.moveOut("osg::Group")
 
         return True
 ############################################################################

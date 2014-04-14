@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
-# file ODEObject.py
+# file Sensor.py
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
+#    Copyright (C) 2014 by Rocco Martino                                   #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -23,7 +23,7 @@
 ############################################################################
 
 ############################################################################
-from . import Writable
+from . import Writable, Controller
 ############################################################################
 
 
@@ -39,8 +39,8 @@ from . import Writable
 
 ############################################################################
 # ........................................................................ #
-class ODEObject(Writable.Writable):
-    """osgODE::ODEObject"""
+class Sensor(Writable.Writable):
+    """ooGame::Sensor"""
 
 
 
@@ -48,11 +48,9 @@ class ODEObject(Writable.Writable):
 
 ############################################################################
     Object = None
-    ID = 0
-
-    UserValues = []
-
-    UpdateCallback = None
+    BlenderSensor = None
+    Cached = None
+    ControllerList = None
 ############################################################################
 
 
@@ -64,13 +62,13 @@ class ODEObject(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data, obj):
-        super(ODEObject, self).__init__(data)
+    def __init__(self, data, obj, sensor):
+        super(Sensor, self).__init__(data)
 
         self.Object = obj
-        self.ID = 0
-        self.UserValues = []
-        self.UpdateCallback = None
+        self.BlenderSensor = sensor
+        self.Cached = False
+        self.ControllerList = []
 ############################################################################
 
 
@@ -78,9 +76,21 @@ class ODEObject(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(ODEObject, self).buildGraph()
+        super(Sensor, self).buildGraph()
 
-        self.ID = self.Data.ODEID.generate()
+        if self.Data.Cache.has( self.BlenderSensor ):
+            self.UniqueID = self.Data.Cache.get( self.BlenderSensor )
+            self.Cached = True
+        else:
+            self.Data.Cache.set( self.BlenderSensor, self.UniqueID )
+            self.Cached = False
+
+            for c in self.BlenderSensor.controllers:
+                controller = Controller.Controller(self.Data, self.Object, c)
+                controller.buildGraph()
+                self.ControllerList.append( controller )
+
+
 
         return True
 ############################################################################
@@ -91,21 +101,13 @@ class ODEObject(Writable.Writable):
 ############################################################################
     def writeToStream(self, writer):
 
-        writer.moveIn("osgODE::ODEObject") ;
+        writer.moveIn("ooGame::Sensor") ;
 
         self.writePrivateData(writer)
 
-        writer.moveOut("osgODE::ODEObject")
+        writer.moveOut("ooGame::Sensor")
 
         return True
-#########################################################################
-
-
-
-
-############################################################################
-    def addUserValue(self, pName, pValue):
-        self.UserValues.append( ( str(pName), str(pValue) ) )
 ############################################################################
 
 
@@ -114,55 +116,21 @@ class ODEObject(Writable.Writable):
 ############################################################################
     def writePrivateData(self, writer):
 
-        if not super(ODEObject, self).writeToStream(writer) :
+        if not super(Sensor, self).writeToStream(writer) :
             return False
 
 
 
+        if not self.Cached:
 
+            writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
 
-        writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
+            writer.writeLine( "ControllerList %u" % len( self.ControllerList ) )
 
+            for c in self.ControllerList:
+                c.writeToStream( writer )
 
-
-
-        if self.UserValues != [] :
-            writer.moveIn( "UserDataContainer TRUE" )
-            writer.moveIn( "osg::DefaultUserDataContainer" )
-
-
-
-            writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() )
-
-            writer.moveIn( "UDC_UserObjects %d" %len(self.UserValues) )
-
-
-            for i in self.UserValues:
-                writer.moveIn( "osg::StringValueObject" ) ;
-
-                writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() ) ;
-
-                writer.writeLine( "Name \"%s\"" % str(i[0]) ) ;
-                writer.writeLine( "Value \"%s\"" % str(i[1]) ) ;
-
-                writer.moveOut( "osg::StringValueObject" ) ;
-
-
-            writer.moveOut( "UDC_UserObjects %d" %len(self.UserValues) )
-
-
-
-            writer.moveOut( "osg::DefaultUserDataContainer" )
-            writer.moveOut( "UserDataContainer TRUE" )
-
-
-        writer.writeLine("ID %s" %self.ID)
-
-
-        if self.UpdateCallback:
-                writer.moveIn("UpdateCallback TRUE")
-                self.UpdateCallback.writeToStream(writer)
-                writer.moveOut("UpdateCallback TRUE")
+            self.writePrivateSensorData( writer )
 
 
         return True
@@ -172,11 +140,84 @@ class ODEObject(Writable.Writable):
 
 
 ############################################################################
-    def addUpdateCallback(self, cbk):
-        if self.UpdateCallback:
-            self.UpdateCallback.addNestedCallback( cbk )
-        else:
-            self.UpdateCallback = cbk
+    def writePrivateSensorData(self, writer):
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class CollisionSensor(Sensor):
+    """ooGame::CollisionSensor"""
+
+
+
+
+
+############################################################################
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, data, obj, sensor):
+        super(CollisionSensor, self).__init__(data, obj, sensor)
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(CollisionSensor, self).buildGraph()
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::CollisionSensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::CollisionSensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
+
+
+        return True
 ############################################################################
 
 

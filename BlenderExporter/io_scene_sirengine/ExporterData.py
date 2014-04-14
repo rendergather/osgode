@@ -57,7 +57,9 @@ class ExporterData(object):
     MasterStateSet = None
     Selected = None
     ExportSelected = False
-    ExportLights = True
+    ExportLights = False
+    ExportSounds = False
+    ExportGame = False
     WorldStep = None
     MaxAnisotropy = None
     AmbientMultiplier = None
@@ -85,7 +87,9 @@ class ExporterData(object):
         self.MasterStateSet = None
         self.Selected = None
         self.ExportSelected = False
-        self.ExportLights = True
+        self.ExportLights = False
+        self.ExportSounds = False
+        self.ExportGame = False
         self.WorldStep = None
         self.MaxAnisotropy = None
         self.AmbientMultiplier = None

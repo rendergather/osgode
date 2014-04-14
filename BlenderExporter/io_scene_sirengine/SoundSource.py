@@ -68,6 +68,7 @@ class SoundSource(Writable.Writable):
     POSITION = None
     VELOCITY = None
     DIRECTION = None
+    AutoComputePosition = None
     BufferID = None
     FilePath = None
     CopySource = None
@@ -88,6 +89,7 @@ class SoundSource(Writable.Writable):
         self.Sound = sound
         self.CullingActive = False
         self.AutoPlay = False
+        self.AutoComputePosition = 'COMPUTE_BY_MODELVIEW'
         self.AutoComputeVelocity = False
         self.PITCH = 1.0
         self.GAIN = 1.0
@@ -125,6 +127,7 @@ class SoundSource(Writable.Writable):
 
         self.CullingActive = False
         self.AutoPlay = False
+        self.AutoComputePosition = 'COMPUTE_BY_MODELVIEW'
         self.AutoComputeVelocity = False
         self.PITCH = 1.0
         self.GAIN = 1.0
@@ -201,6 +204,12 @@ class SoundSource(Writable.Writable):
             writer.writeLine("AutoPlay TRUE")
         else:
             writer.writeLine("AutoPlay FALSE")
+
+
+
+        writer.writeLine("AutoComputePosition %s" % self.AutoComputePosition)
+
+
 
         if self.AutoComputeVelocity:
             writer.writeLine("AutoComputeVelocity TRUE")

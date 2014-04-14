@@ -158,6 +158,7 @@ class SoundActuator(Actuator):
 
 ############################################################################
     Mode = None
+    Sound3D = None
     SoundSource = None
 ############################################################################
 
@@ -174,6 +175,7 @@ class SoundActuator(Actuator):
         super(SoundActuator, self).__init__(data, obj, actuator)
 
         self.Mode = None
+        self.Sound3D = None
         self.SoundSource = None
 ############################################################################
 
@@ -201,6 +203,13 @@ class SoundActuator(Actuator):
         if self.Data.ExportSounds and self.BlenderActuator.sound and not self.Cached:
             self.SoundSource = SoundSource.SoundSource( self.Data, self.BlenderActuator.sound )
             self.SoundSource.buildGraph()
+
+            self.Sound3D = self.BlenderActuator.use_sound_3d
+
+            if self.BlenderActuator.use_sound_3d:
+                self.SoundSource.AutoComputePosition = 'COMPUTE_BY_VIEW'
+            else:
+                self.SoundSource.AutoComputePosition = 'DO_NOT_AUTOCOMPUTE'
 
             copy_source = SoundSource.SoundSource( self.Data, self.BlenderActuator.sound, self.SoundSource )
             copy_source.buildGraph()
@@ -236,6 +245,11 @@ class SoundActuator(Actuator):
 
 
         writer.writeLine("Mode %s" % self.Mode)
+
+        if self.Sound3D:
+            writer.writeLine("Sound3D TRUE")
+        else:
+            writer.writeLine("Sound3D FALSE")
 
         if self.SoundSource:
             writer.moveIn("Source TRUE")

@@ -57,7 +57,7 @@ unsigned int    ODEObject::s_last_id = 0 ;
 /* ======================================================================= */
 /* ....................................................................... */
 ODEObject::ODEObject(void):
-    m_ID(0)
+    m_ID        ( 0 )
 {
 }
 /* ....................................................................... */
@@ -69,12 +69,12 @@ ODEObject::ODEObject(void):
 /* ======================================================================= */
 /* ....................................................................... */
 ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
-    osg::Object(other, copyop),
-    m_update_callback(other.m_update_callback),
-    m_post_update_callback(other.m_post_update_callback),
-    m_ID(0),
-    m_user_object( other.m_user_object.get() ),
-    m_interacting_sphere(other.m_interacting_sphere)
+    osg::Object             ( other, copyop ),
+    m_update_callback       ( other.m_update_callback ),
+    m_post_update_callback  ( other.m_post_update_callback ),
+    m_ID                    ( 0 ),
+    m_user_object           ( other.m_user_object.get() ),
+    m_actor_bound           ( other.m_actor_bound )
 {
     if( copyop.getCopyFlags() & osg::CopyOp::DEEP_COPY_CALLBACKS ) {
         if( other.m_update_callback.valid() ) {
@@ -83,10 +83,6 @@ ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
 
         if( other.m_post_update_callback.valid() ) {
             m_post_update_callback = osg::clone( other.m_post_update_callback.get(), copyop ) ;
-        }
-
-        if( other.m_interaction_callback.valid() ) {
-            m_interaction_callback = osg::clone( other.m_interaction_callback.get(), copyop ) ;
         }
     }
 }

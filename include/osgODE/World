@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,11 +30,10 @@
 
 /* ======================================================================= */
 #include <osgODE/ODEObject>
+#include <osgODE/Events>
 
 #include <osg/Vec3>
 #include <osg/NodeVisitor>
-
-#include <OpenThreads/ReadWriteMutex>
 
 #include <osgODE/ODE>
 
@@ -211,6 +210,21 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set the events
+    inline void setEvents( Events* events ) ;
+
+    //! Get the events
+    inline Events* getEvents(void) ;
+
+    //! Get the const events
+    inline const Events* getEvents(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     //! Get the dWorldID
     inline dWorldID     getODEWorld(void) ;
 
@@ -358,49 +372,27 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set whether to enable the interaction system. Don't use it
-    inline void         setEnableInteractions( bool enable_interactions ) ;
-
-    //! Set whether to enable the interaction system. Don't use it
-    inline bool         getEnableInteractions(void) const ;
-
-
-
-
-
-    class OSG_EXPORT InteractionCallback: public osg::Referenced
+    class OSG_EXPORT ActorCallback: public osg::Referenced
     {
     public:
-                 InteractionCallback(void) {}
-                 InteractionCallback(const InteractionCallback& other): osg::Referenced(other) {}
+                 ActorCallback(void) {}
+                 ActorCallback(const ActorCallback& other): osg::Referenced(other) {}
 
     protected:
-                ~InteractionCallback(void) {}
+                ~ActorCallback(void) {}
 
     public:
-        virtual void    operator()(ODEObject* i1, ODEObject* i2 /* = NULL */) = 0 ;
+        virtual void    operator()( ODEObject* actor ) = 0 ;
     } ;
 
-    //! part of the interaction system, Don't use it
-    bool    findInteractions(   InteractionCallback* cbk,
+    //! Don't use it
+    unsigned int    findActors( ActorCallback* cbk,
                                 const osg::Vec3& from,
                                 const osg::Vec3& to ) ;
 
-    //! part of the interaction system, Don't use it
-    bool    findInteractions(   InteractionCallback* cbk,
+    //! Don't use it
+    unsigned int    findActors( ActorCallback* cbk,
                                 const osg::BoundingSphere& sphere ) ;
-
-    //! part of the interaction system, Don't use it
-    /*!
-     * This is called internally by World::step if m_enable_interactions is
-     * true
-     */
-    bool    findInteractions(   InteractionCallback* cbk = NULL ) ;
-
-
-    //! part of the interaction system, Don't use it
-    bool    findInteractions(   const osg::Vec3& from,
-                                const osg::Vec3& to ) ;
 /* ======================================================================= */
 
 
@@ -427,16 +419,16 @@ private:
 
 
 /* ======================================================================= */
-private:
-    //! True if the segment hits the sphere (World_interaction.cpp)
-    bool    _intersectRaySphere(    const osg::BoundingSphere& sphere,
+public:
+    //! True if the segment hits the sphere (World_actors.cpp)
+    static bool intersectRaySphere( const osg::BoundingSphere& sphere,
                                     const osg::Vec3& from,
                                     const osg::Vec3& to ) ;
 
 
-    //! True if the spheres are colliding (World_interaction.cpp)
-    bool    _intersectSphereSphere( const osg::BoundingSphere& sphere1,
-                                    const osg::BoundingSphere& sphere2) ;
+    //! True if the spheres are colliding (World_actors.cpp)
+    static bool intersectSphereSphere(  const osg::BoundingSphere& sphere1,
+                                        const osg::BoundingSphere& sphere2) ;
 /* ======================================================================= */
 
 
@@ -483,8 +475,7 @@ private:
 
     double          m_current_step_size ;
 
-
-    bool            m_enable_interactions ;
+    osg::ref_ptr<Events>    m_events ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

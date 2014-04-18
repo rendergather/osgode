@@ -50,10 +50,13 @@ class Game(ODECallback.ODECallback):
 
 
 ############################################################################
+    RigidBody = None
     SensorList = None
     ControllerList = None
     ActuatorList = None
     State = None
+
+    Properties = []
 ############################################################################
 
 
@@ -65,13 +68,24 @@ class Game(ODECallback.ODECallback):
 
 
 ############################################################################
-    def __init__(self, data, obj):
-        super(Game, self).__init__(data, obj)
+    def __init__(self, rigid_body):
+        super(Game, self).__init__(rigid_body.Data, rigid_body.Object)
 
+        self.RigidBody = rigid_body
         self.SensorList = []
         self.ControllerList = []
         self.ActuatorList = []
         self.State = 0
+
+        self.Properties = []
+############################################################################
+
+
+
+
+############################################################################
+    def addProperty(self, pName, pValue, pType):
+        self.Properties.append( ( str(pName), str(pValue), str(pType) ) )
 ############################################################################
 
 
@@ -96,6 +110,12 @@ class Game(ODECallback.ODECallback):
             if s.type == "COLLISION":
                 sensor = Sensor.CollisionSensor( self.Data, self.Object, s )
 
+            elif s.type == "MOUSE":
+                sensor = Sensor.MouseSensor( self.Data, self.Object, s )
+
+            elif s.type == "ALWAYS":
+                sensor = Sensor.AlwaysSensor( self.Data, self.Object, s )
+
             if sensor:
                 sensor.buildGraph()
                 self.SensorList.append( sensor )
@@ -117,8 +137,16 @@ class Game(ODECallback.ODECallback):
             actuator = None
 
             if a.type == "SOUND":
-
                 actuator = Actuator.SoundActuator(self.Data, self.Object, a)
+
+            elif a.type == "STATE":
+                actuator = Actuator.StateActuator(self.Data, self.Object, a)
+
+            elif a.type == "VISIBILITY":
+                actuator = Actuator.NodeMaskActuator(self.Data, self.Object, a)
+
+            elif a.type == "MOTION":
+                actuator = Actuator.MotionActuator(self.Data, self.Object, a)
 
 
             if actuator:
@@ -127,6 +155,7 @@ class Game(ODECallback.ODECallback):
             else:
                 self.Data.Operator.report({'ERROR'}, "[%s] Unsupported actuator type: %s" %(self.Object.name, a.type))
                 return False
+
 
 
 
@@ -156,6 +185,45 @@ class Game(ODECallback.ODECallback):
 
         if not super(Game, self).writePrivateData(writer) :
             return False
+
+
+
+
+        if self.Properties != [] :
+            writer.moveIn( "UserDataContainer TRUE" )
+            writer.moveIn( "osg::DefaultUserDataContainer" )
+
+
+
+            writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() )
+
+            writer.moveIn( "UDC_UserObjects %d" %len(self.Properties) )
+
+
+            for i in self.Properties:
+                writer.moveIn( "osg::%sValueObject" %i[2] ) ;
+
+                writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() ) ;
+
+                writer.writeLine( "Name \"%s\"" % str(i[0]) ) ;
+
+
+                if i[2] == "String":
+                    writer.writeLine( "Value \"%s\"" % str(i[1]) ) ;
+                else:
+                    writer.writeLine( "Value %s" % str(i[1]) ) ;
+
+                writer.moveOut( "osg::%sValueObject" %i[2] ) ;
+
+
+            writer.moveOut( "UDC_UserObjects %d" %len(self.Properties) )
+
+
+
+            writer.moveOut( "osg::DefaultUserDataContainer" )
+            writer.moveOut( "UserDataContainer TRUE" )
+
+
 
 
         writer.writeLine( "State %u" % self.State )

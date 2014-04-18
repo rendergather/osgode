@@ -51,6 +51,7 @@ class ODETransform(Writable.Writable):
 ############################################################################
     Object = None
     Matrix = None
+    Invisible = False
 ############################################################################
 
 
@@ -79,26 +80,27 @@ class ODETransform(Writable.Writable):
         self.Matrix = Matrix(self.Object.matrix_world)
         self.Matrix.transpose()
 
+        self.Invisible = self.Object.hide_render
 
-        if not self.Object.hide_render:
-            from . import Geode
-            from . import Billboard
-            from . import ScaleTransform
 
-            try:
-                if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
-                    billboard = Billboard.Billboard(self.Data, self.Object)
-                    self.addChild(billboard)
-                else:
-                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                    self.addChild( scale_transform )
-                    #geode = Geode.Geode(self.Data, self.Object)
-                    #self.addChild(geode)
-            except:
-                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                    self.addChild( scale_transform )
-                    #geode = Geode.Geode(self.Data, self.Object)
-                    #self.addChild(geode)
+        from . import Geode
+        from . import Billboard
+        from . import ScaleTransform
+
+        try:
+            if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
+                billboard = Billboard.Billboard(self.Data, self.Object)
+                self.addChild(billboard)
+            else:
+                scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
+                self.addChild( scale_transform )
+                #geode = Geode.Geode(self.Data, self.Object)
+                #self.addChild(geode)
+        except:
+                scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
+                self.addChild( scale_transform )
+                #geode = Geode.Geode(self.Data, self.Object)
+                #self.addChild(geode)
 
 
 
@@ -135,6 +137,10 @@ class ODETransform(Writable.Writable):
 
         if not super(ODETransform, self).writeToStream(writer) :
             return False
+
+
+        if self.Invisible:
+            writer.writeLine("NodeMask 0x0")
 
 
         num_children = len(self.Children)

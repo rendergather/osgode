@@ -50,6 +50,7 @@ class Controller(Writable.Writable):
     Object = None
     BlenderController = None
     Cached = None
+    StateIndex = None
     ActuatorList = None
     Operator = None
 ############################################################################
@@ -69,6 +70,7 @@ class Controller(Writable.Writable):
         self.Object = obj
         self.BlenderController = sensor
         self.Cached = False
+        self.StateIndex = 0
         self.ActuatorList = []
         self.Operator = 'USER_DEFINED'
 ############################################################################
@@ -94,13 +96,25 @@ class Controller(Writable.Writable):
 
 
 
+            self.StateIndex = self.BlenderController.states - 1
+
+
+
             for a in self.BlenderController.actuators:
 
                 actuator = None
 
                 if a.type == "SOUND":
-
                     actuator = Actuator.SoundActuator(self.Data, self.Object, a)
+
+                elif a.type == "STATE":
+                    actuator = Actuator.StateActuator(self.Data, self.Object, a)
+
+                elif a.type == "VISIBILITY":
+                    actuator = Actuator.NodeMaskActuator(self.Data, self.Object, a)
+
+                elif a.type == "MOTION":
+                    actuator = Actuator.MotionActuator(self.Data, self.Object, a)
 
 
                 if actuator:
@@ -143,9 +157,11 @@ class Controller(Writable.Writable):
 
         if not self.Cached:
 
-            writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
+            writer.writeLine("Name \"%s@%s\"" %(self.BlenderController.name, self.Object.name))
 
             writer.writeLine("Operator %s" %self.Operator)
+
+            writer.writeLine("StateIndex %s" %self.StateIndex)
 
             writer.writeLine( "ActuatorList %u" % len( self.ActuatorList ) )
 

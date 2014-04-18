@@ -106,6 +106,14 @@ class Manager(Writable.Writable):
         writer.moveOut("UpdateCallback TRUE")
 
 
+        if self.Data.ExportGame:
+            writer.moveIn("EventCallback TRUE")
+            writer.moveIn("osgODE::ManagerEventHandler")
+            writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+            writer.moveOut("osgODE::ManagerEventHandler")
+            writer.moveOut("EventCallback TRUE")
+
+
         writer.writeLine("StepSize %f" %(self.StepSize))
 
         writer.writeLine("AcceptVisitors TRUE")

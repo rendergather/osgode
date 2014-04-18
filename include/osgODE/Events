@@ -1,0 +1,175 @@
+/*!
+ * @file Events
+ * @author Rocco Martino
+ */
+/***************************************************************************
+ *   Copyright (C) 2014 by Rocco Martino                                   *
+ *   martinorocco@gmail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef _OSGODE_EVENTS_HPP
+#define _OSGODE_EVENTS_HPP
+
+
+
+
+/* ======================================================================= */
+#include <osg/Object>
+#include <osg/Vec2>
+#include <osg/Matrix>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
+{
+
+
+
+
+/* ======================================================================= */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+//!
+/*!
+ *
+ */
+class OSG_EXPORT Events: public osg::Object
+{
+/* ======================================================================= */
+public:
+             Events(void) ;
+             Events(const Events& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Events(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    META_Object(osgODE, Events) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the cursor position
+    inline void setCursorPosition( const osg::Vec2& cursor_position ) ;
+
+    //! Get the cursor position
+    inline osg::Vec2& getCursorPosition(void) ;
+
+    //! Get the const cursor position
+    inline const osg::Vec2& getCursorPosition(void) const ;
+
+    //! Set the normalized cursor position
+    inline void setNormalizedCursorPosition( const osg::Vec2& normalized_cursor_position ) ;
+
+    //! Get the normalized cursor position
+    inline osg::Vec2& getNormalizedCursorPosition(void) ;
+
+    //! Get the const normalized cursor position
+    inline const osg::Vec2& getNormalizedCursorPosition(void) const ;
+
+    //! Set the button mask
+    inline void setButtonMask( unsigned int button_mask ) ;
+
+    //! Get the const button mask
+    inline unsigned int getButtonMask(void) const ;
+
+    //! Set the view matrix
+    inline void setViewMatrix( const osg::Matrix& view_matrix ) ;
+
+    //! Get the view matrix
+    inline osg::Matrix& getViewMatrix(void) ;
+
+    //! Get the const view matrix
+    inline const osg::Matrix& getViewMatrix(void) const ;
+
+    //! Set the projection matrix
+    inline void setProjectionMatrix( const osg::Matrix& projection_matrix ) ;
+
+    //! Get the projection matrix
+    inline osg::Matrix& getProjectionMatrix(void) ;
+
+    //! Get the const projection matrix
+    inline const osg::Matrix& getProjectionMatrix(void) const ;
+
+    //! Get the const inverse projection matrix
+    inline const osg::Matrix& getInverseViewProjectionMatrix(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    inline unsigned int getFrameCounterInternal(void) const ;
+    inline void         incFrameCounterInternal(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+private:
+    osg::Vec2       m_cursor_position ;
+    osg::Vec2       m_normalized_cursor_position ;
+    unsigned int    m_button_mask ;
+    osg::Matrix     m_view_matrix ;
+    osg::Matrix     m_projection_matrix ;
+
+    bool            m_dirty_view_projection ;
+    osg::Matrix     m_inverse_view_projection ;
+
+    unsigned int    m_frame_counter ;
+/* ======================================================================= */
+} ;
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+} // namespace osgODE
+
+
+
+
+#include "Events.inl"
+
+
+
+
+#endif /* _OSGODE_EVENTS_HPP */

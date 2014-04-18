@@ -300,10 +300,10 @@ osgODE::RigidBody::setPosition(const osg::Vec3& position)
     dBodySetPosition(m_ODE_body, position.x(), position.y(), position.z()) ;
     this->updateTransformInternal() ;
 
-    const osg::BoundingSphere&  bs = getInteractingSphere() ;
+    const osg::BoundingSphere&  bs = getActorBound() ;
 
     if( bs.valid() ) {
-        setInteractingSphere(getPosition(), bs.radius()) ;
+        setActorBound( osg::BoundingSphere( getPosition(), bs.radius() ) ) ;
     }
 }
 /* ....................................................................... */

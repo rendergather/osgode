@@ -104,8 +104,8 @@ class ODEObject(Writable.Writable):
 
 
 ############################################################################
-    def addUserValue(self, pName, pValue):
-        self.UserValues.append( ( str(pName), str(pValue) ) )
+    def addUserValue(self, pName, pValue, pType="String"):
+        self.UserValues.append( ( str(pName), str(pValue), str(pType) ) )
 ############################################################################
 
 
@@ -138,14 +138,19 @@ class ODEObject(Writable.Writable):
 
 
             for i in self.UserValues:
-                writer.moveIn( "osg::StringValueObject" ) ;
+                writer.moveIn( "osg::%sValueObject" %i[2] ) ;
 
                 writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() ) ;
 
                 writer.writeLine( "Name \"%s\"" % str(i[0]) ) ;
-                writer.writeLine( "Value \"%s\"" % str(i[1]) ) ;
 
-                writer.moveOut( "osg::StringValueObject" ) ;
+
+                if i[2] == "String":
+                    writer.writeLine( "Value \"%s\"" % str(i[1]) ) ;
+                else:
+                    writer.writeLine( "Value %s" % str(i[1]) ) ;
+
+                writer.moveOut( "osg::%sValueObject" %i[2] ) ;
 
 
             writer.moveOut( "UDC_UserObjects %d" %len(self.UserValues) )

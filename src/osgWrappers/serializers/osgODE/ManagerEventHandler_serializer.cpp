@@ -1,9 +1,9 @@
 /*!
- * @file ODEObject_serializer.cpp
+ * @file ManagerEventHandler_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ODEObject>
+#include <osgODE/ManagerEventHandler>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -35,82 +35,6 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-
-static bool
-checkID(const osgODE::ODEObject& obj)
-{
-    (void) obj ;
-    return true ;
-}
-
-
-static bool
-readID(osgDB::InputStream& is, osgODE::ODEObject& obj)
-{
-    unsigned int    id ;
-    is >> id ;
-
-    obj.setIDInternal(id) ;
-
-    return true ;
-}
-
-
-static bool
-writeID(osgDB::OutputStream& os, const osgODE::ODEObject& obj)
-{
-    unsigned int    id = obj.getID() ;
-    os << id << std::endl ;
-
-    return true ;
-}
-
-
-
-
-static bool
-checkActorBound(const osgODE::ODEObject& obj)
-{
-    return obj.getActorBound().valid() ;
-}
-
-
-static bool
-readActorBound(osgDB::InputStream& is, osgODE::ODEObject& obj)
-{
-    osg::Vec4   center_and_radius ;
-
-    is >> center_and_radius ;
-
-    obj.setActorBound(
-                            osg::BoundingSphere(
-
-                                osg::Vec3(
-                                    center_and_radius.x(),
-                                    center_and_radius.y(),
-                                    center_and_radius.z()
-                                ),
-
-                                center_and_radius.w()
-                            )
-                        ) ;
-
-    return true ;
-}
-
-
-static bool
-writeActorBound(osgDB::OutputStream& os, const osgODE::ODEObject& obj)
-{
-    const osg::BoundingSphere&  bs = obj.getActorBound() ;
-    osg::Vec4   center_and_radius(bs.center(), bs.radius()) ;
-    os << center_and_radius << std::endl ;
-
-    return true ;
-}
-
-} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -119,16 +43,12 @@ writeActorBound(osgDB::OutputStream& os, const osgODE::ODEObject& obj)
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( ODEObject,
-                         new osgODE::ODEObject,
-                         osgODE::ODEObject,
-                         "osg::Object osgODE::ODEObject" )
+REGISTER_OBJECT_WRAPPER( ManagerEventHandler,
+                         new osgODE::ManagerEventHandler,
+                         osgODE::ManagerEventHandler,
+                         "osg::Object osg::NodeCallback osgODE::ManagerEventHandler" )
 {
-    ADD_USER_SERIALIZER( ID ) ;
-    ADD_OBJECT_SERIALIZER( UpdateCallback, osgODE::ODECallback, NULL ) ;
-    ADD_OBJECT_SERIALIZER( PostUpdateCallback, osgODE::ODECallback, NULL ) ;
-    ADD_OBJECT_SERIALIZER( UserObject, osg::Object, NULL ) ;
-    ADD_USER_SERIALIZER( ActorBound ) ;
+    (void) wrapper ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

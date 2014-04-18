@@ -50,6 +50,8 @@ SET(TARGET_H
     ${HEADER_PATH}/Engine.inl
     ${HEADER_PATH}/EngineBase
     ${HEADER_PATH}/EngineBase.inl
+    ${HEADER_PATH}/Events
+    ${HEADER_PATH}/Events.inl
     ${HEADER_PATH}/FixedJoint
     ${HEADER_PATH}/FixedJoint.inl
     ${HEADER_PATH}/GearboxJoint
@@ -76,6 +78,8 @@ SET(TARGET_H
     ${HEADER_PATH}/LinearVec3Interpolator
     ${HEADER_PATH}/Manager
     ${HEADER_PATH}/Manager.inl
+    ${HEADER_PATH}/ManagerEventHandler
+    ${HEADER_PATH}/ManagerEventHandler.inl
     ${HEADER_PATH}/ManagerUpdateCallback
     ${HEADER_PATH}/ManagerUpdateCallback.inl
     ${HEADER_PATH}/MotionPath
@@ -165,6 +169,7 @@ SET(TARGET_SRC
     DynamicParticleSystem.cpp
     Engine.cpp
     EngineBase.cpp
+    Events.cpp
     FixedJoint.cpp
     GearboxJoint.cpp
     Hinge2Joint.cpp
@@ -181,6 +186,7 @@ SET(TARGET_SRC
     LinearQuatInterpolator.cpp
     LinearVec3Interpolator.cpp
     Manager.cpp
+    ManagerEventHandler.cpp
     ManagerUpdateCallback.cpp
     MotionPath.cpp
     MotorJoint.cpp
@@ -213,13 +219,13 @@ SET(TARGET_SRC
     Version.cpp
     Wheel.cpp
     World.cpp
-    World_interaction.cpp
+    World_actors.cpp
 )
 
 
 
 
-SET( MODULE_LINK_LIBRARIES_GNU "osgAnimation osgParticle ode" )
-SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osgAnimation osgParticle osg OpenThreads ODE_WIN" )
+SET( MODULE_LINK_LIBRARIES_GNU "osgAnimation osgGA osgParticle ode" )
+SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osgGA osgAnimation osgParticle osg OpenThreads ODE_WIN" )
 
 OSGODE_SETUP_LIBRARY()

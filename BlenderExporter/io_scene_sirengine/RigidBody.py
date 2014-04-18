@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 - 2013 by Rocco Martino                            #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -51,8 +51,8 @@ class RigidBody(ODEObject.ODEObject):
 
 
 ############################################################################
-    UpdateInteractingSphere = False
-    InteractingSphereRadius = None
+    UpdateActorBound = False
+    ActorBoundRadius = None
     Position = Vector()
     Rotation = Quaternion()
     GravityMode = True
@@ -84,8 +84,8 @@ class RigidBody(ODEObject.ODEObject):
     def __init__(self, data, obj):
         super(RigidBody, self).__init__(data, obj)
 
-        self.UpdateInteractingSphere = False
-        self.InteractingSphereRadius = None
+        self.UpdateActorBound = False
+        self.ActorBoundRadius = None
         self.Position = Vector()
         self.Quaternion = Quaternion()
         self.GravityMode = True
@@ -113,9 +113,9 @@ class RigidBody(ODEObject.ODEObject):
         if not super(RigidBody, self).buildGraph():
             return False
 
-        self.UpdateInteractingSphere = self.Object.game.use_actor
+        self.UpdateActorBound = self.Object.game.use_actor
 
-        self.InteractingSphereRadius = self.Object.game.radius
+        self.ActorBoundRadius = self.Object.game.radius
 
         self.Position, self.Quaternion, scale = self.Object.matrix_local.decompose()
 
@@ -154,6 +154,34 @@ class RigidBody(ODEObject.ODEObject):
 
 
 
+        for prop in self.Object.game.properties:
+
+            prop_type = ""
+            prop_name = prop.name
+            prop_value = prop.value
+
+            if prop.type == "STRING":
+                prop_type = "String"
+
+            elif prop.type == "FLOAT":
+                prop_type = "Float"
+
+            elif prop.type == "INT":
+                prop_type = "Int"
+
+            elif prop.type == "BOOL":
+                prop_type = "Bool"
+
+                if prop.value:
+                    prop_value = "TRUE"
+                else:
+                    prop_value = "FALSE"
+
+
+            self.addUserValue( prop_name, prop_value, prop_type )
+
+
+
         try:
             if self.Object["oo_camera_path"]:
                 self.addUserValue( "oo_camera_path", 1 )
@@ -177,16 +205,6 @@ class RigidBody(ODEObject.ODEObject):
             mp.buildGraph()
 
             self.addUpdateCallback( mp )
-
-
-
-        if self.Data.ExportGame and len( self.Object.game.sensors ) > 0:
-            from . import Game
-
-            game = Game.Game( self.Data, self.Object )
-            game.buildGraph()
-
-            self.addUpdateCallback( game )
 
 
 
@@ -221,8 +239,8 @@ class RigidBody(ODEObject.ODEObject):
 
 
 
-        if self.UpdateInteractingSphere :
-            writer.writeLine("InteractingSphere %f %f %f %f" %(self.Position.x, self.Position.y, self.Position.z, self.InteractingSphereRadius))
+        if self.UpdateActorBound :
+            writer.writeLine("ActorBound %f %f %f %f" %(self.Position.x, self.Position.y, self.Position.z, self.ActorBoundRadius))
 
 
 

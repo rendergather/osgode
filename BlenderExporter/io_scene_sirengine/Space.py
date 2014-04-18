@@ -23,7 +23,7 @@
 ############################################################################
 
 ############################################################################
-from . import Writable
+from . import Writable, Game, NearCallback, Joint
 ############################################################################
 
 
@@ -53,6 +53,7 @@ class Space(Writable.Writable):
     ID = 0
     ERP = 0.2
     CFM = 1.0e-5
+    RigidBodies = []
 ############################################################################
 
 
@@ -73,6 +74,7 @@ class Space(Writable.Writable):
         self.ID = 0
         self.ERP = 0.2
         self.CFM = 1.0e-5
+        self.RigidBodies = []
 ############################################################################
 
 
@@ -89,7 +91,6 @@ class Space(Writable.Writable):
         self.ERP = 0.2
         self.CFM = 1.0e-5
 
-        from . import NearCallback
         self.NearCallback = NearCallback.NearCallback(self.Data)
         self.addChild(self.NearCallback)
 
@@ -107,7 +108,6 @@ class Space(Writable.Writable):
 
 
 
-        from . import Joint
 
         for rigid_body in rigid_bodies:
             constraints = rigid_body.constraints
@@ -118,7 +118,24 @@ class Space(Writable.Writable):
                 self.ODEObjects.append(joint)
 
 
-        return self.traverseBuild()
+
+        if not self.traverseBuild():
+            return False
+
+
+        if self.Data.ExportGame:
+
+            for rigid_body in self.RigidBodies:
+
+                if ( len(rigid_body.Object.game.sensors) + len(rigid_body.Object.game.properties) ) > 0:
+
+                    game = Game.Game( rigid_body )
+                    game.buildGraph()
+
+                    rigid_body.addUpdateCallback( game )
+
+
+        return True
 ############################################################################
 
 
@@ -154,6 +171,7 @@ class Space(Writable.Writable):
                 if physics:
                     self.addChild(physics)
                     self.ODEObjects.append(physics)
+                    self.RigidBodies.append(physics)
 
 
                 if self.Data.Context.selected_objects and self.Data.Context.selected_objects[0] == obj:
@@ -258,6 +276,14 @@ class Space(Writable.Writable):
         for obj in self.ODEObjects:
             if not obj.writeToStream(writer):
                 return False
+
+
+        if self.Data.ExportGame:
+            writer.moveIn("Events TRUE")
+            writer.moveIn("osgODE::Events")
+            writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+            writer.moveOut("osgODE::Events")
+            writer.moveOut("Evensk TRUE")
 
 
         writer.moveIn("NearCallback TRUE")

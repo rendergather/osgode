@@ -186,23 +186,6 @@ public:
 
     //! Get the const callback list
     inline const ODECallback*   getPostUpdateCallback(void) const ;
-
-
-
-    //! Set the callback list
-    inline void     setInteractionCallback(ODECallback* cbk) ;
-
-    //! Add the callback
-    inline void     addInteractionCallback(ODECallback* cbk) ;
-
-    //! Remove the callback
-    inline void     removeInteractionCallback(ODECallback* cbk) ;
-
-    //! Get the callback list
-    inline ODECallback* getInteractionCallback(void) ;
-
-    //! Get the const callback list
-    inline const ODECallback*   getInteractionCallback(void) const ;
 /* ======================================================================= */
 
 
@@ -274,14 +257,14 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Part of the interaction system (experimental)
-    inline const osg::BoundingSphere&   getInteractingSphere(void) const ;
+    //! Get the actor bounding sphere
+    inline const osg::BoundingSphere&   getActorBound(void) const ;
 
-    //! Part of the interaction system (experimental)
-    inline void     setInteractingSphere(const osg::BoundingSphere& bs) ;
+    //! Set the actor bounding sphere
+    inline void     setActorBound(const osg::BoundingSphere& bs) ;
 
-    //! Part of the interaction system (experimental)
-    inline void     setInteractingSphere(const osg::Vec3& center, double radius) ;
+    //! True if thee actor bounding sphere is valid
+    inline bool     isActor(void) const ;
 /* ======================================================================= */
 
 
@@ -311,7 +294,6 @@ public:
 private:
     osg::ref_ptr<ODECallback>   m_update_callback ;
     osg::ref_ptr<ODECallback>   m_post_update_callback ;
-    osg::ref_ptr<ODECallback>   m_interaction_callback ;
 
     osg::observer_ptr<World>    m_world ;
 
@@ -319,7 +301,7 @@ private:
 
     osg::ref_ptr<osg::Object>   m_user_object ;
 
-    osg::BoundingSphere         m_interacting_sphere ;
+    osg::BoundingSphere         m_actor_bound ;
     
     osg::BoundingSphere         m_bounding_sphere ;
 /* ======================================================================= */

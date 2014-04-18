@@ -62,8 +62,7 @@ World::World(void):
     m_objects_sorted        ( true ),
     m_wind_frequency        ( 0.0 ),
     m_air_density           ( 1.2929 ),
-    m_current_step_size     ( 0.0 ),
-    m_enable_interactions   ( false )
+    m_current_step_size     ( 0.0 )
 {
 
 
@@ -108,7 +107,7 @@ World::World(const World& other, const osg::CopyOp& copyop):
     m_air_density           ( other.m_air_density ),
     m_current_wind          ( other.m_current_wind ),
     m_current_step_size     ( other.m_current_step_size ),
-    m_enable_interactions   ( other.m_enable_interactions )
+    m_events                ( osg::clone( other.m_events.get(), copyop ) )
 {
 
 
@@ -296,12 +295,6 @@ World::step(double step_size)
 
 
     _callObjectsPostCallbacks(step_size) ;
-
-
-
-    if( m_enable_interactions ) {
-        findInteractions() ;
-    }
 
 
 

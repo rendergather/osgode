@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2011 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2011 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -47,24 +47,24 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
-World::findInteractions(    InteractionCallback* cbk,
-                            const osg::Vec3& from,
-                            const osg::Vec3& to)
+unsigned int
+World::findActors(  ActorCallback* cbk,
+                    const osg::Vec3& from,
+                    const osg::Vec3& to)
 {
     Objects::iterator   itr = m_objects.begin() ;
     Objects::iterator   itr_end = m_objects.end() ;
 
-    bool    found = false ;
+    unsigned int    found = 0 ;
 
 
     while( itr != itr_end ) {
 
         ODEObject*  current = *itr++ ;
 
-        if( _intersectRaySphere( current->getInteractingSphere(), from, to ) ) {
-            (*cbk)(current, NULL) ;
-            found = true ;
+        if( World::intersectRaySphere( current->getActorBound(), from, to ) ) {
+            (*cbk)(current) ;
+            ++found ;
         }
 
     }
@@ -73,7 +73,7 @@ World::findInteractions(    InteractionCallback* cbk,
 
     {
         // free()
-        osg::ref_ptr<InteractionCallback>   tmp(cbk) ;
+        osg::ref_ptr<ActorCallback>   tmp(cbk) ;
     }
 
 
@@ -87,23 +87,23 @@ World::findInteractions(    InteractionCallback* cbk,
 
 /* ======================================================================= */
 /* ....................................................................... */
-bool
-World::findInteractions(    InteractionCallback* cbk,
-                            const osg::BoundingSphere& sphere)
+unsigned int
+World::findActors(  ActorCallback* cbk,
+                    const osg::BoundingSphere& sphere)
 {
     Objects::iterator   itr = m_objects.begin() ;
     Objects::iterator   itr_end = m_objects.end() ;
 
-    bool    found = false ;
+    unsigned int    found = 0 ;
 
 
     while( itr != itr_end ) {
 
         ODEObject*  current = *itr++ ;
 
-        if( _intersectSphereSphere( current->getInteractingSphere(), sphere ) ) {
-            (*cbk)(current, NULL) ;
-            found = true ;
+        if( World::intersectSphereSphere( current->getActorBound(), sphere ) ) {
+            (*cbk)(current) ;
+            ++found ;
         }
 
     }
@@ -112,177 +112,7 @@ World::findInteractions(    InteractionCallback* cbk,
 
     {
         // free()
-        osg::ref_ptr<InteractionCallback>   tmp(cbk) ;
-    }
-
-
-    return found ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-namespace {
-class finder {
-public:
-    void    check(ODEObject* object)
-    {
-        if( object->getInteractingSphere().valid() )
-            mObjectList.push_back(object) ;
-    }
-
-    World::Objects     mObjectList ;
-} ;
-}
-
-
-/* ....................................................................... */
-bool
-World::findInteractions(    InteractionCallback* cbk )
-{
-
-    bool    found = false ;
-
-    finder  fndr ;
-    traverseObjects(fndr, &finder::check) ;
-
-
-    Objects::iterator   i1 = fndr.mObjectList.begin() ;
-    Objects::iterator   i2 = fndr.mObjectList.begin() ;
-    Objects::iterator   end = fndr.mObjectList.end() ;
-
-
-
-    while( i1 != end ) {
-
-        ODEObject*  o1 = *i1 ++ ;
-
-
-
-        const osg::BoundingSphere&  b1 = o1->getInteractingSphere() ;
-
-
-        PS_ASSERT1( b1.valid() ) ;
-
-
-
-
-
-        Objects::iterator   i2 = i1 ;
-
-        while( i2 != end ) {
-
-            ODEObject*  o2 = *i2 ++ ;
-
-
-
-            const osg::BoundingSphere&  b2 = o2->getInteractingSphere() ;
-
-
-            PS_ASSERT1( b2.valid() ) ;
-
-
-
-            if( _intersectSphereSphere(b1, b2) ) {
-
-                found = true ;
-
-                if( cbk ) {
-                    (*cbk)(o1, o2) ;
-
-
-                } else {
-                    ODECallback*    cbk1 = o1->getInteractionCallback() ;
-                    ODECallback*    cbk2 = o2->getInteractionCallback() ;
-
-                    if( cbk1 ) {
-                        (*cbk1)( o2 ) ;
-                    }
-
-                    if( cbk2 ) {
-                        (*cbk2)( o1 ) ;
-                    }
-                }
-            }
-        }
-
-    }
-
-
-
-    {
-        // free()
-        osg::ref_ptr<InteractionCallback>   tmp(cbk) ;
-    }
-
-
-    return found ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-namespace {
-class finder2 {
-public:
-    void    check(ODEObject* object)
-    {
-        if( object->getInteractingSphere().valid() && object->getInteractionCallback() != NULL )
-            mObjectList.push_back(object) ;
-    }
-
-    World::Objects     mObjectList ;
-} ;
-}
-
-
-/* ....................................................................... */
-bool
-World::findInteractions(    const osg::Vec3& from,
-                            const osg::Vec3& to)
-{
-
-    bool    found = false ;
-
-    finder2 fndr2 ;
-    traverseObjects(fndr2, &finder2::check) ;
-
-
-    Objects::iterator   i1 = fndr2.mObjectList.begin() ;
-    Objects::iterator   i2 = fndr2.mObjectList.begin() ;
-    Objects::iterator   end = fndr2.mObjectList.end() ;
-
-
-
-    while( i1 != end ) {
-
-        ODEObject*  obj = *i1++ ;
-
-
-
-        const osg::BoundingSphere&  sphere = obj->getInteractingSphere() ;
-
-
-        PS_ASSERT1( sphere.valid() ) ;
-
-
-
-        if( _intersectRaySphere(sphere, from, to) ) {
-
-            ODECallback*    cbk = obj->getInteractionCallback() ;
-
-            PS_ASSERT1( cbk != NULL ) ;
-
-            found = true ;
-
-            (*cbk)(obj) ;
-        }
+        osg::ref_ptr<ActorCallback>   tmp(cbk) ;
     }
 
 
@@ -297,7 +127,7 @@ World::findInteractions(    const osg::Vec3& from,
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-World::_intersectRaySphere( const osg::BoundingSphere& sphere,
+World::intersectRaySphere(  const osg::BoundingSphere& sphere,
                             const osg::Vec3& from,
                             const osg::Vec3& to)
 {
@@ -392,7 +222,7 @@ World::_intersectRaySphere( const osg::BoundingSphere& sphere,
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-World::_intersectSphereSphere(  const osg::BoundingSphere& sphere1,
+World::intersectSphereSphere(   const osg::BoundingSphere& sphere1,
                                 const osg::BoundingSphere& sphere2)
 {
     if( ! (sphere1.valid() && sphere2.valid()) ) {

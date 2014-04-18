@@ -155,11 +155,11 @@ REGISTER_OBJECT_WRAPPER( World,
     ADD_DOUBLE_SERIALIZER(ContactMaxCorrectingVel, FLT_MAX) ;
     ADD_DOUBLE_SERIALIZER(ContactSurfaceLayer, 0.0) ;
 
-    ADD_BOOL_SERIALIZER( EnableInteractions, false ) ;
-
     ADD_USER_SERIALIZER(WorldStepFunction) ;
 
     ADD_USER_SERIALIZER(ODEObjects) ;
+
+    ADD_OBJECT_SERIALIZER( Events, osgODE::Events, NULL ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

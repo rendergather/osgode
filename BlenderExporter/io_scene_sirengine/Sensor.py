@@ -50,6 +50,9 @@ class Sensor(Writable.Writable):
     Object = None
     BlenderSensor = None
     Cached = None
+    Invert = None
+    Level = None
+    Tap = None
     ControllerList = None
 ############################################################################
 
@@ -68,6 +71,9 @@ class Sensor(Writable.Writable):
         self.Object = obj
         self.BlenderSensor = sensor
         self.Cached = False
+        self.Invert = False
+        self.Level = False
+        self.Tap = False
         self.ControllerList = []
 ############################################################################
 
@@ -84,6 +90,11 @@ class Sensor(Writable.Writable):
         else:
             self.Data.Cache.set( self.BlenderSensor, self.UniqueID )
             self.Cached = False
+
+            self.Invert = self.BlenderSensor.invert
+            self.Level = self.BlenderSensor.use_level
+            self.Tap = self.BlenderSensor.use_tap
+
 
             for c in self.BlenderSensor.controllers:
                 controller = Controller.Controller(self.Data, self.Object, c)
@@ -123,7 +134,30 @@ class Sensor(Writable.Writable):
 
         if not self.Cached:
 
-            writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
+            writer.writeLine("Name \"%s@%s\"" %(self.BlenderSensor.name, self.Object.name))
+
+
+
+            if self.Invert:
+                writer.writeLine("Invert TRUE")
+            else:
+                writer.writeLine("Invert FALSE")
+
+
+
+            if self.Level:
+                writer.writeLine("Level TRUE")
+            else:
+                writer.writeLine("Level FALSE")
+
+
+
+            if self.Tap:
+                writer.writeLine("Tap TRUE")
+            else:
+                writer.writeLine("Tap FALSE")
+
+
 
             writer.writeLine( "ControllerList %u" % len( self.ControllerList ) )
 
@@ -216,6 +250,169 @@ class CollisionSensor(Sensor):
 ############################################################################
     def writePrivateSensorData(self, writer):
 
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class MouseSensor(Sensor):
+    """ooGame::MouseSensor"""
+
+
+
+
+
+############################################################################
+    MouseEvent = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, data, obj, sensor):
+        super(MouseSensor, self).__init__(data, obj, sensor)
+
+        self.MouseEvent = "LEFT_BUTTON"
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(MouseSensor, self).buildGraph()
+
+        if self.BlenderSensor.mouse_event == "LEFTCLICK":
+            self.MouseEvent = "LEFT_BUTTON"
+
+        elif self.BlenderSensor.mouse_event == "MIDDLECLICK":
+            self.MouseEvent = "MIDDLE_BUTTON"
+
+        elif self.BlenderSensor.mouse_event == "RIGHTCLICK":
+            self.MouseEvent = "RIGHT_BUTTON"
+
+        elif self.BlenderSensor.mouse_event == "MOUSEOVER":
+            self.MouseEvent = "MOUSE_OVER"
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::MouseSensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::MouseSensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
+
+
+        writer.writeLine("Event %s" % self.MouseEvent)
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class AlwaysSensor(Sensor):
+    """ooGame::AlwaysSensor"""
+
+
+
+
+
+############################################################################
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, data, obj, sensor):
+        super(AlwaysSensor, self).__init__(data, obj, sensor)
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(AlwaysSensor, self).buildGraph()
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::AlwaysSensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::AlwaysSensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
 
         return True
 ############################################################################

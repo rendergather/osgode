@@ -79,20 +79,19 @@ class ScaleTransform(Writable.Writable):
         self.Matrix = Matrix(self.Object.matrix_world)
 
 
-        if not self.Object.hide_render:
-            from . import Geode
-            from . import Billboard
+        from . import Geode
+        from . import Billboard
 
-            try:
-                if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
-                    billboard = Billboard.Billboard(self.Data, self.Object)
-                    self.addChild(billboard)
-                else:
-                    geode = Geode.Geode(self.Data, self.Object)
-                    self.addChild(geode)
-            except:
-                    geode = Geode.Geode(self.Data, self.Object)
-                    self.addChild(geode)
+        try:
+            if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
+                billboard = Billboard.Billboard(self.Data, self.Object)
+                self.addChild(billboard)
+            else:
+                geode = Geode.Geode(self.Data, self.Object)
+                self.addChild(geode)
+        except:
+                geode = Geode.Geode(self.Data, self.Object)
+                self.addChild(geode)
 
 
 

@@ -27,6 +27,7 @@ SET(TARGET_SRC
     DynamicParticleSystem_serializer.cpp
     EngineBase_serializer.cpp
     Engine_serializer.cpp
+    Events_serializer.cpp
     FixedJoint_serializer.cpp
     GearboxJoint_serializer.cpp
     Hinge2Joint_serializer.cpp
@@ -41,6 +42,7 @@ SET(TARGET_SRC
     LinearInterpolator_serializer.cpp
     LinearQuatInterpolator_serializer.cpp
     LinearVec3Interpolator_serializer.cpp
+    ManagerEventHandler_serializer.cpp
     ManagerUpdateCallback_serializer.cpp
     Manager_serializer.cpp
     MotionPath_serializer.cpp
@@ -74,6 +76,6 @@ SET(TARGET_SRC
 
 
 
-SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgAnimation osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
+SET(MODULE_LINK_LIBRARIES_WIN "osgODE osgGA osgAnimation osgParticle osgDB osg OpenThreads opengl32 ODE_WIN")
 
 OSGODE_SETUP_PLUGIN()

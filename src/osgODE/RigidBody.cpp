@@ -589,10 +589,10 @@ RigidBody::postUpdate(double step_size)
 
 
 
-    const osg::BoundingSphere&  bs = getInteractingSphere() ;
+    const osg::BoundingSphere&  bs = getActorBound() ;
 
     if( bs.valid() ) {
-        setInteractingSphere(getPosition(), bs.radius()) ;
+        setActorBound( osg::BoundingSphere(getPosition(), bs.radius()) ) ;
     }
 
 

@@ -83,7 +83,7 @@ CharacterBase::CharacterBase(void):
     m_foot_contact_info.MaxDepth    = -1.0 ;
 
 
-    setInteractingSphere( osg::Vec3(), 1.0 ) ;
+    setActorBound( osg::BoundingSphere(osg::Vec3(), 1.0) ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -161,7 +161,7 @@ CharacterBase::update(double step_size)
 
 
     if( m_body.valid() ) {
-        setInteractingSphere( m_body->getInteractingSphere() ) ;
+        setActorBound( m_body->getActorBound() ) ;
     }
 
 

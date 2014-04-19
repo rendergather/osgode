@@ -53,6 +53,8 @@ class ODEObject(Writable.Writable):
     UserValues = []
 
     UpdateCallback = None
+
+    Name = ""
 ############################################################################
 
 
@@ -71,6 +73,7 @@ class ODEObject(Writable.Writable):
         self.ID = 0
         self.UserValues = []
         self.UpdateCallback = None
+        self.Name = ""
 ############################################################################
 
 
@@ -81,6 +84,8 @@ class ODEObject(Writable.Writable):
         super(ODEObject, self).buildGraph()
 
         self.ID = self.Data.ODEID.generate()
+
+        self.Name = "%s@%s" %(self.__class__.__name__, self.Object.name)
 
         return True
 ############################################################################
@@ -112,6 +117,17 @@ class ODEObject(Writable.Writable):
 
 
 ############################################################################
+    def getUserValue(self, pName):
+        for uv in self.UserValues:
+            if pName == uv[0]:
+                return (uv[0], uv[1], uv[2])
+        return None
+############################################################################
+
+
+
+
+############################################################################
     def writePrivateData(self, writer):
 
         if not super(ODEObject, self).writeToStream(writer) :
@@ -121,7 +137,7 @@ class ODEObject(Writable.Writable):
 
 
 
-        writer.writeLine("Name \"%s@%s\"" %(self.__class__.__name__, self.Object.name))
+        writer.writeLine("Name \"%s\"" %(self.Name))
 
 
 

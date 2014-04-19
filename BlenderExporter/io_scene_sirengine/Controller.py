@@ -64,10 +64,11 @@ class Controller(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data, obj, sensor):
-        super(Controller, self).__init__(data)
+    def __init__(self, rigid_body, sensor):
+        super(Controller, self).__init__(rigid_body.Data)
 
-        self.Object = obj
+        self.RigidBody = rigid_body
+        self.Object = rigid_body.Object
         self.BlenderController = sensor
         self.Cached = False
         self.StateIndex = 0
@@ -105,16 +106,19 @@ class Controller(Writable.Writable):
                 actuator = None
 
                 if a.type == "SOUND":
-                    actuator = Actuator.SoundActuator(self.Data, self.Object, a)
+                    actuator = Actuator.SoundActuator(self.RigidBody, a)
 
                 elif a.type == "STATE":
-                    actuator = Actuator.StateActuator(self.Data, self.Object, a)
+                    actuator = Actuator.StateActuator(self.RigidBody, a)
 
                 elif a.type == "VISIBILITY":
-                    actuator = Actuator.NodeMaskActuator(self.Data, self.Object, a)
+                    actuator = Actuator.NodeMaskActuator(self.RigidBody, a)
 
                 elif a.type == "MOTION":
-                    actuator = Actuator.MotionActuator(self.Data, self.Object, a)
+                    actuator = Actuator.MotionActuator(self.RigidBody, a)
+
+                elif a.type == "PROPERTY":
+                    actuator = Actuator.PropertyActuator(self.RigidBody, a)
 
 
                 if actuator:

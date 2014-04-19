@@ -54,6 +54,7 @@ class ExporterData(object):
     ODEID = None
     Cache = None
     RigidBodyCache = None
+    RigidBodyMap = None
     MasterStateSet = None
     Selected = None
     ExportSelected = False
@@ -84,6 +85,7 @@ class ExporterData(object):
         self.ODEID = None
         self.Cache = None
         self.RigidBodyCache = None
+        self.RigidBodyMap = None
         self.MasterStateSet = None
         self.Selected = None
         self.ExportSelected = False

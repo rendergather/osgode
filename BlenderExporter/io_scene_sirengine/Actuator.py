@@ -47,6 +47,7 @@ class Actuator(Writable.Writable):
 
 
 ############################################################################
+    RigidBody = None
     Object = None
     BlenderActuator = None
     Cached = None
@@ -61,10 +62,11 @@ class Actuator(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data, obj, actuator):
-        super(Actuator, self).__init__(data)
+    def __init__(self, rigid_body, actuator):
+        super(Actuator, self).__init__(rigid_body.Data)
 
-        self.Object = obj
+        self.RigidBody = rigid_body
+        self.Object = rigid_body.Object
         self.BlenderActuator = actuator
         self.Cached = False
 ############################################################################
@@ -171,8 +173,8 @@ class SoundActuator(Actuator):
 
 
 ############################################################################
-    def __init__(self, data, obj, actuator):
-        super(SoundActuator, self).__init__(data, obj, actuator)
+    def __init__(self, rigid_body, actuator):
+        super(SoundActuator, self).__init__(rigid_body, actuator)
 
         self.Mode = None
         self.Sound3D = None
@@ -297,8 +299,8 @@ class StateActuator(Actuator):
 
 
 ############################################################################
-    def __init__(self, data, obj, actuator):
-        super(StateActuator, self).__init__(data, obj, actuator)
+    def __init__(self, rigid_body, actuator):
+        super(StateActuator, self).__init__(rigid_body, actuator)
 
         self.Operation = "SET"
         self.Mask = 0
@@ -390,8 +392,8 @@ class NodeMaskActuator(Actuator):
 
 
 ############################################################################
-    def __init__(self, data, obj, actuator):
-        super(NodeMaskActuator, self).__init__(data, obj, actuator)
+    def __init__(self, rigid_body, actuator):
+        super(NodeMaskActuator, self).__init__(rigid_body, actuator)
 
         self.NodeMask = 0xFFFFFFFF
 ############################################################################
@@ -500,8 +502,8 @@ class MotionActuator(Actuator):
 
 
 ############################################################################
-    def __init__(self, data, obj, actuator):
-        super(MotionActuator, self).__init__(data, obj, actuator)
+    def __init__(self, rigid_body, actuator):
+        super(MotionActuator, self).__init__(rigid_body, actuator)
 
 
         self.MotionType = None
@@ -648,6 +650,131 @@ class MotionActuator(Actuator):
             writer.moveOut("osgODE::PIDController")
 
             writer.moveOut("PIDController TRUE")
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class PropertyActuator(Actuator):
+    """ooGame::PropertyActuator"""
+
+
+
+
+
+############################################################################
+    ValueType = None
+    Mode = None
+    Property = None
+    Value = None
+    Body = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(PropertyActuator, self).__init__(rigid_body, sensor)
+
+        self.ValueType = None
+        self.Mode = None
+        self.Property = None
+        self.Value = None
+        self.ReferenceObject = None
+        self.ReferenceProperty = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(PropertyActuator, self).buildGraph()
+
+        self.Property = self.BlenderActuator.property
+
+        p = self.RigidBody.getUserValue( self.BlenderActuator.property )
+
+        if not p:
+            return False
+
+
+
+        self.ValueType = p[2]
+        self.Mode = self.BlenderActuator.mode
+        self.Property = self.BlenderActuator.property
+        self.Value = self.BlenderActuator.value
+        self.ReferenceProperty = self.BlenderActuator.object_property
+
+        if self.BlenderActuator.object:
+            self.ReferenceObject = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::%sPropertyActuator" % self.ValueType) ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::%sPropertyActuator" % self.ValueType)
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+
+        writer.writeLine("Mode %s" % self.Mode)
+        writer.writeLine("Property \"%s\"" % self.Property)
+
+        if self.ReferenceObject:
+            writer.writeLine("ReferenceObject \"%s\"" % self.ReferenceObject)
+
+        if self.ReferenceProperty:
+            writer.writeLine("ReferenceProperty \"%s\"" % self.ReferenceProperty)
+
+
+
+        if self.Value:
+            if self.ValueType == "String":
+                writer.writeLine("Value \"%s\"" % self.Value)
+            else:
+                writer.writeLine("Value %s" % self.Value)
+
 
 
         return True

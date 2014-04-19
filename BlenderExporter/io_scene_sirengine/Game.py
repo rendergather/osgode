@@ -108,13 +108,16 @@ class Game(ODECallback.ODECallback):
             sensor = None
 
             if s.type == "COLLISION":
-                sensor = Sensor.CollisionSensor( self.Data, self.Object, s )
+                sensor = Sensor.CollisionSensor( self.RigidBody, s )
 
             elif s.type == "MOUSE":
-                sensor = Sensor.MouseSensor( self.Data, self.Object, s )
+                sensor = Sensor.MouseSensor( self.RigidBody, s )
 
             elif s.type == "ALWAYS":
-                sensor = Sensor.AlwaysSensor( self.Data, self.Object, s )
+                sensor = Sensor.AlwaysSensor( self.RigidBody, s )
+
+            elif s.type == "PROPERTY":
+                sensor = Sensor.PropertySensor( self.RigidBody, s )
 
             if sensor:
                 sensor.buildGraph()
@@ -126,7 +129,7 @@ class Game(ODECallback.ODECallback):
 
 
         for c in self.Object.game.controllers:
-            controller = Controller.Controller(self.Data, self.Object, c)
+            controller = Controller.Controller(self.RigidBody, c)
             controller.buildGraph()
             self.ControllerList.append( controller )
 
@@ -137,16 +140,19 @@ class Game(ODECallback.ODECallback):
             actuator = None
 
             if a.type == "SOUND":
-                actuator = Actuator.SoundActuator(self.Data, self.Object, a)
+                actuator = Actuator.SoundActuator(self.RigidBody, a)
 
             elif a.type == "STATE":
-                actuator = Actuator.StateActuator(self.Data, self.Object, a)
+                actuator = Actuator.StateActuator(self.RigidBody, a)
 
             elif a.type == "VISIBILITY":
-                actuator = Actuator.NodeMaskActuator(self.Data, self.Object, a)
+                actuator = Actuator.NodeMaskActuator(self.RigidBody, a)
 
             elif a.type == "MOTION":
-                actuator = Actuator.MotionActuator(self.Data, self.Object, a)
+                actuator = Actuator.MotionActuator(self.RigidBody, a)
+
+            elif a.type == "PROPERTY":
+                actuator = Actuator.PropertyActuator(self.RigidBody, a)
 
 
             if actuator:

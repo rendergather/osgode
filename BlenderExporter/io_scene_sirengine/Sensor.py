@@ -47,6 +47,7 @@ class Sensor(Writable.Writable):
 
 
 ############################################################################
+    RigidBody = None
     Object = None
     BlenderSensor = None
     Cached = None
@@ -65,10 +66,11 @@ class Sensor(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data, obj, sensor):
-        super(Sensor, self).__init__(data)
+    def __init__(self, rigid_body, sensor):
+        super(Sensor, self).__init__(rigid_body.Data)
 
-        self.Object = obj
+        self.RigidBody = rigid_body
+        self.Object = rigid_body.Object
         self.BlenderSensor = sensor
         self.Cached = False
         self.Invert = False
@@ -97,7 +99,7 @@ class Sensor(Writable.Writable):
 
 
             for c in self.BlenderSensor.controllers:
-                controller = Controller.Controller(self.Data, self.Object, c)
+                controller = Controller.Controller(self.RigidBody, c)
                 controller.buildGraph()
                 self.ControllerList.append( controller )
 
@@ -204,6 +206,7 @@ class CollisionSensor(Sensor):
 
 
 ############################################################################
+    RigidBody = None
 ############################################################################
 
 
@@ -215,8 +218,8 @@ class CollisionSensor(Sensor):
 
 
 ############################################################################
-    def __init__(self, data, obj, sensor):
-        super(CollisionSensor, self).__init__(data, obj, sensor)
+    def __init__(self, rigid_body, sensor):
+        super(CollisionSensor, self).__init__(rigid_body, sensor)
 ############################################################################
 
 
@@ -289,8 +292,8 @@ class MouseSensor(Sensor):
 
 
 ############################################################################
-    def __init__(self, data, obj, sensor):
-        super(MouseSensor, self).__init__(data, obj, sensor)
+    def __init__(self, rigid_body, sensor):
+        super(MouseSensor, self).__init__(rigid_body, sensor)
 
         self.MouseEvent = "LEFT_BUTTON"
 ############################################################################
@@ -379,8 +382,8 @@ class AlwaysSensor(Sensor):
 
 
 ############################################################################
-    def __init__(self, data, obj, sensor):
-        super(AlwaysSensor, self).__init__(data, obj, sensor)
+    def __init__(self, rigid_body, sensor):
+        super(AlwaysSensor, self).__init__(rigid_body, sensor)
 ############################################################################
 
 
@@ -413,6 +416,158 @@ class AlwaysSensor(Sensor):
 
 ############################################################################
     def writePrivateSensorData(self, writer):
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class PropertySensor(Sensor):
+    """ooGame::PropertySensor"""
+
+
+
+
+
+############################################################################
+    ValueType = None
+    EvaluationType = None
+    Property = None
+    Value = None
+    ValueMin = None
+    ValueMax = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(PropertySensor, self).__init__(rigid_body, sensor)
+
+        self.ValueType = None
+        self.EvaluationType = None
+        self.Property = None
+        self.Value = None
+        self.ValueMin = None
+        self.ValueMax = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(PropertySensor, self).buildGraph()
+
+        self.Property = self.BlenderSensor.property
+
+        p = self.RigidBody.getUserValue( self.BlenderSensor.property )
+
+        if not p:
+            return False
+
+
+
+        self.ValueType = p[2]
+        self.EvaluationType = self.BlenderSensor.evaluation_type.replace("PROP", "")
+        self.Property = self.BlenderSensor.property
+        self.Value = self.BlenderSensor.value
+        self.ValueMin = self.BlenderSensor.value_min
+        self.ValueMax = self.BlenderSensor.value_max
+
+
+        if not self.Value:
+            self.Value = '0'
+
+        if not self.ValueMin:
+            self.ValueMin = '0'
+
+        if not self.ValueMax:
+            self.ValueMax = '0'
+
+
+        if self.ValueType == "Bool":
+            if self.Value.lower() in ["1", "true", "on"]:
+                self.Value = "TRUE"
+            else:
+                self.Value = "FALSE"
+
+            if self.ValueMin.lower() in ["1", "true", "on"]:
+                self.ValueMin = "TRUE"
+            else:
+                self.ValueMin = "FALSE"
+
+            if self.ValueMax.lower() in ["1", "true", "on"]:
+                self.ValueMax = "TRUE"
+            else:
+                self.ValueMax = "FALSE"
+
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::%sPropertySensor" % self.ValueType) ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::%sPropertySensor" % self.ValueType)
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
+
+
+        writer.writeLine("EvaluationType %s" % self.EvaluationType)
+        writer.writeLine("Property \"%s\"" % self.Property)
+
+
+
+        writer.writeLine("Values")
+
+        indentation = " " * writer.IndentationSize
+
+        if self.ValueType == "String":
+            writer.writeLine(indentation + "Value \"%s\"" % self.Value)
+            writer.writeLine(indentation + "Min \"%s\"" % self.ValueMin)
+            writer.writeLine(indentation + "Max \"%s\"" % self.ValueMax)
+        else:
+            writer.writeLine(indentation + "Value %s" % self.Value)
+            writer.writeLine(indentation + "Min %s" % self.ValueMin)
+            writer.writeLine(indentation + "Max %s" % self.ValueMax)
+
+
 
         return True
 ############################################################################

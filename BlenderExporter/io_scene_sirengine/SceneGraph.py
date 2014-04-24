@@ -23,7 +23,8 @@
 ############################################################################
 
 ############################################################################
-from . import Root
+from . import Root, ExporterData
+import bpy
 ############################################################################
 
 
@@ -48,7 +49,8 @@ class SceneGraph(object):
 
 ############################################################################
     Data = None
-    Root = None
+    Roots = None
+    RootID = None
 ############################################################################
 
 
@@ -62,6 +64,8 @@ class SceneGraph(object):
 ############################################################################
     def __init__(self, data):
         self.Data = data
+        self.Roots = []
+        self.RootID = None
 ############################################################################
 
 
@@ -78,8 +82,19 @@ class SceneGraph(object):
 ############################################################################
     def buildGraph(self):
 
-        self.Root = Root.Root(self.Data)
-        return self.Root.buildGraph()
+        self.RootID = self.Data.UniqueID.generate()
+
+        for scene in bpy.data.scenes:
+            data = ExporterData.ExporterData( self.Data )
+            data.Scene = scene
+
+            self.Roots.append ( Root.Root(data) )
+
+        for root in self.Roots:
+            if not root.buildGraph():
+                return False
+
+        return True
 ############################################################################
 
 
@@ -89,7 +104,28 @@ class SceneGraph(object):
     def writeToStream(self, writer):
 
         if not self.Data.ExportSelected:
-            return self.Root.writeToStream(writer)
+
+            if len(self.Roots) == 1:
+                return self.Roots[0].writeToStream(writer)
+
+
+            else:
+                writer.moveIn("osg::Group")
+
+                writer.writeLine("UniqueID %u" % self.RootID)
+                writer.writeLine("Name \"%s\"" % "SceneGraph")
+
+                writer.moveIn("Children %u" % len(self.Roots))
+
+                for root in self.Roots:
+                    if not root.writeToStream(writer):
+                        return False
+
+                writer.moveOut("Children %u" % len(self.Roots))
+
+
+                writer.moveOut("osg::Group")
+
         else:
             if self.Data.Selected:
                 return self.Data.Selected.writeToStream(writer)

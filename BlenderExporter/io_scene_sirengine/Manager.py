@@ -25,6 +25,8 @@
 ############################################################################
 from . import Writable
 from . import Space
+
+import bpy
 ############################################################################
 
 
@@ -81,7 +83,7 @@ class Manager(Writable.Writable):
         self.Space = Space.Space(self.Data)
 
 
-        self.StepSize = 1.0 / self.Data.Context.scene.game_settings.fps
+        self.StepSize = 1.0 / self.Data.Scene.game_settings.fps
 
 
         return self.Space.buildGraph()

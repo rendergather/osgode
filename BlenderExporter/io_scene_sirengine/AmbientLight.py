@@ -114,7 +114,7 @@ class AmbientLight(Writable.Writable):
 
 
 
-        ac = bpy.data.worlds[0].ambient_color
+        ac = self.Data.Scene.world.ambient_color
 
         if ac[0] == ac[1] == ac[2] == 0.0:
             self.Ambient = [0.0, 0.0, 0.0, 0.0]
@@ -129,7 +129,7 @@ class AmbientLight(Writable.Writable):
         self.Type = 'AMBIENT'
 
 
-        self.ShadowEnabled = bpy.data.worlds[0].light_settings.use_ambient_occlusion
+        self.ShadowEnabled = self.Data.Scene.world.light_settings.use_ambient_occlusion
 
 
 

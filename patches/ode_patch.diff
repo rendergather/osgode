@@ -417,7 +417,89 @@ Index: include/ode/objects.h
 ===================================================================
 --- include/ode/objects.h	(revision 1970)
 +++ include/ode/objects.h	(working copy)
-@@ -3015,6 +3015,12 @@
+@@ -1966,6 +1966,44 @@
+ ODE_API void dJointAddSliderForce(dJointID joint, dReal force);
+ 
+ /**
++ * @brief Set whether to use computeOffset and computeInitialRelativeRotation
++ * Default is true
++ * @ingroup joints
++ */
++ODE_API void dJointSetSliderAutoComputeRelativeValues(dJointID joint, int do_auto_compute);
++
++/**
++ * @brief Get whether to use computeOffset and computeInitialRelativeRotation
++ * Default is true
++ * @ingroup joints
++ */
++ODE_API int dJointGetSliderAutoComputeRelativeValues(dJointID joint);
++
++/**
++ * @brief Set the relative rotation
++ * @ingroup joints
++ */
++ODE_API void dJointSetSliderRelativeRotation(dJointID joint, dQuaternion qrel);
++
++/**
++ * @brief Get the relative rotation
++ * @ingroup joints
++ */
++ODE_API void dJointGetSliderRelativeRotation(dJointID joint, dQuaternion qrel);
++
++/**
++ * @brief Set the relative offset
++ * @ingroup joints
++ */
++ODE_API void dJointSetSliderRelativePosition(dJointID joint, dVector3 offset);
++
++/**
++ * @brief Get the relative offset
++ * @ingroup joints
++ */
++ODE_API void dJointGetSliderRelativePosition(dJointID joint, dVector3 offset);
++
++/**
+  * @brief set anchor
+  * @ingroup joints
+  */
+@@ -1995,9 +2033,36 @@
+  * @remarks  This function is just a wrapper for dBodyAddTorque().
+  * @ingroup joints
+  */
++
+ ODE_API void dJointAddHinge2Torques(dJointID joint, dReal torque1, dReal torque2);
+ 
+ /**
++ * @brief Set whether to use computeOffset and computeInitialRelativeRotation
++ * Default is true
++ * @ingroup joints
++ */
++ODE_API void dJointSetHingeAutoComputeRelativeValues(dJointID joint, int do_auto_compute);
++
++/**
++ * @brief Get whether to use computeOffset and computeInitialRelativeRotation
++ * Default is true
++ * @ingroup joints
++ */
++ODE_API int dJointGetHingeAutoComputeRelativeValues(dJointID joint);
++
++/**
++ * @brief Set the relative rotation
++ * @ingroup joints
++ */
++ODE_API void dJointSetHingeRelativeRotation(dJointID joint, dQuaternion qrel);
++
++/**
++ * @brief Get the relative rotation
++ * @ingroup joints
++ */
++ODE_API void dJointGetHingeRelativeRotation(dJointID joint, dQuaternion qrel);
++
++/**
+  * @brief set anchor
+  * @ingroup joints
+  */
+@@ -3015,6 +3080,12 @@
   */
  ODE_API dReal dJointGetFixedParam (dJointID, int parameter);
  
@@ -430,7 +512,7 @@ Index: include/ode/objects.h
  
  /**
   * @brief get the contact point of the first wheel of the Transmission joint.
-@@ -3330,7 +3336,6 @@
+@@ -3330,7 +3401,6 @@
  
  
  
@@ -3034,7 +3116,16 @@ Index: ode/src/joints/slider.cpp
 ===================================================================
 --- ode/src/joints/slider.cpp	(revision 1970)
 +++ ode/src/joints/slider.cpp	(working copy)
-@@ -109,7 +109,7 @@
+@@ -39,6 +39,8 @@
+     dSetZero ( qrel, 4 );
+     dSetZero ( offset, 4 );
+     limot.init ( world );
++
++    auto_compute_relative_values = 1 ;
+ }
+ 
+ 
+@@ -109,7 +111,7 @@
  void 
  dxJointSlider::getSureMaxInfo( SureMaxInfo* info )
  {
@@ -3043,7 +3134,7 @@ Index: ode/src/joints/slider.cpp
  }
  
  
-@@ -117,12 +117,8 @@
+@@ -117,12 +119,8 @@
  dxJointSlider::getInfo1 ( dxJoint::Info1 *info )
  {
      info->nub = 5;
@@ -3057,7 +3148,7 @@ Index: ode/src/joints/slider.cpp
      // see if we're at a joint limit.
      limot.limit = 0;
      if ( ( limot.lostop > -dInfinity || limot.histop < dInfinity ) &&
-@@ -130,18 +126,9 @@
+@@ -130,18 +128,9 @@
      {
          // measure joint position
          dReal pos = dJointGetSliderPosition ( this );
@@ -3079,7 +3170,7 @@ Index: ode/src/joints/slider.cpp
      }
  }
  
-@@ -224,7 +211,7 @@
+@@ -224,7 +213,7 @@
      }
  
      // if the slider is powered, or has joint limits, add in the extra row
@@ -3088,6 +3179,107 @@ Index: ode/src/joints/slider.cpp
  }
  
  
+@@ -332,6 +321,76 @@
+ }
+ 
+ 
++void dJointSetSliderAutoComputeRelativeValues ( dJointID j, int do_auto_compute )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    joint->auto_compute_relative_values = do_auto_compute ;
++}
++
++
++int dJointGetSliderAutoComputeRelativeValues ( dJointID j )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    return joint->auto_compute_relative_values ;
++}
++
++
++void dJointSetSliderRelativeRotation ( dJointID j, dQuaternion qrel )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    joint->qrel[0] = qrel[0] ;
++    joint->qrel[1] = qrel[1] ;
++    joint->qrel[2] = qrel[2] ;
++    joint->qrel[3] = qrel[3] ;
++}
++
++
++void dJointGetSliderRelativeRotation ( dJointID j, dQuaternion qrel )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    qrel[0] = joint->qrel[0] ;
++    qrel[1] = joint->qrel[1] ;
++    qrel[2] = joint->qrel[2] ;
++    qrel[3] = joint->qrel[3] ;
++}
++
++
++void dJointSetSliderRelativePosition ( dJointID j, dVector3 offset )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    joint->offset[0] = offset[0] ;
++    joint->offset[1] = offset[1] ;
++    joint->offset[2] = offset[2] ;
++}
++
++
++void dJointGetSliderRelativePosition ( dJointID j, dVector3 offset )
++{
++    dxJointSlider* joint = ( dxJointSlider* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Slider );
++
++    offset[0] = joint->offset[0] ;
++    offset[1] = joint->offset[1] ;
++    offset[2] = joint->offset[2] ;
++}
++
++
+ dJointType
+ dxJointSlider::type() const
+ {
+@@ -359,6 +418,11 @@
+ void
+ dxJointSlider::computeInitialRelativeRotation()
+ {
++    if( ! auto_compute_relative_values ) {
++        return ;
++    }
++
++
+     if ( node[0].body )
+     {
+         // compute initial relative rotation body1 -> body2, or env -> body1
+@@ -383,6 +447,11 @@
+ void
+ dxJointSlider::computeOffset()
+ {
++    if( ! auto_compute_relative_values ) {
++        return ;
++    }
++
++
+     if ( node[1].body )
+     {
+         dVector3 c;
 Index: ode/src/joints/pu.cpp
 ===================================================================
 --- ode/src/joints/pu.cpp	(revision 1970)
@@ -3265,6 +3457,19 @@ Index: ode/src/joints/joint.h
  };
  
  
+Index: ode/src/joints/hinge.h
+===================================================================
+--- ode/src/joints/hinge.h	(revision 1970)
++++ ode/src/joints/hinge.h	(working copy)
+@@ -37,6 +37,8 @@
+     dQuaternion qrel;   // initial relative rotation body1 -> body2
+     dxJointLimitMotor limot; // limit and motor information
+ 
++    int auto_compute_relative_values ;
++
+     dxJointHinge( dxWorld *w );
+     virtual void getSureMaxInfo( SureMaxInfo* info );
+     virtual void getInfo1( Info1* info );
 Index: ode/src/joints/differential.h
 ===================================================================
 --- ode/src/joints/differential.h	(revision 0)
@@ -4864,6 +5069,19 @@ Index: ode/src/joints/joint.cpp
  // Local Variables:
  // mode:c++
  // c-basic-offset:4
+Index: ode/src/joints/slider.h
+===================================================================
+--- ode/src/joints/slider.h	(revision 1970)
++++ ode/src/joints/slider.h	(working copy)
+@@ -37,6 +37,8 @@
+     // aligned with body1 center along axis1
+     dxJointLimitMotor limot; // limit and motor information
+ 
++    int auto_compute_relative_values ;
++
+     dxJointSlider ( dxWorld *w );
+     virtual void getSureMaxInfo( SureMaxInfo* info );
+     virtual void getInfo1 ( Info1* info );
 Index: ode/src/joints/Makefile.am
 ===================================================================
 --- ode/src/joints/Makefile.am	(revision 1970)
@@ -4955,6 +5173,71 @@ Index: ode/src/joints/hinge.cpp
  }
  
  
+@@ -345,6 +343,52 @@
+ }
+ 
+ 
++void dJointSetHingeAutoComputeRelativeValues ( dJointID j, int do_auto_compute )
++{
++    dxJointHinge* joint = ( dxJointHinge* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Hinge );
++
++    joint->auto_compute_relative_values = do_auto_compute ;
++}
++
++
++int dJointGetHingeAutoComputeRelativeValues ( dJointID j )
++{
++    dxJointHinge* joint = ( dxJointHinge* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Hinge );
++
++    return joint->auto_compute_relative_values ;
++}
++
++
++void dJointSetHingeRelativeRotation ( dJointID j, dQuaternion qrel )
++{
++    dxJointHinge* joint = ( dxJointHinge* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Hinge );
++
++    joint->qrel[0] = qrel[0] ;
++    joint->qrel[1] = qrel[1] ;
++    joint->qrel[2] = qrel[2] ;
++    joint->qrel[3] = qrel[3] ;
++}
++
++
++void dJointGetHingeRelativeRotation ( dJointID j, dQuaternion qrel )
++{
++    dxJointHinge* joint = ( dxJointHinge* ) j;
++    dUASSERT ( joint, "bad joint argument" );
++    checktype ( joint, Hinge );
++
++    qrel[0] = joint->qrel[0] ;
++    qrel[1] = joint->qrel[1] ;
++    qrel[2] = joint->qrel[2] ;
++    qrel[3] = joint->qrel[3] ;
++}
++
++
+ dJointType
+ dxJointHinge::type() const
+ {
+@@ -377,6 +421,11 @@
+ void
+ dxJointHinge::computeInitialRelativeRotation()
+ {
++    if( ! auto_compute_relative_values ) {
++        return ;
++    }
++
++
+     if ( node[0].body )
+     {
+         if ( node[1].body )
 Index: ode/src/joints/differential.cpp
 ===================================================================
 --- ode/src/joints/differential.cpp	(revision 0)

@@ -125,8 +125,8 @@ class RigidBody(ODEObject.ODEObject):
         self.GravityMode = not (self.Object.game.use_ghost or self.Object.game.physics_type == 'NO_COLLISION')
 
 
-        self.LinearDamping = self.Object.game.damping / bpy.data.scenes[0].render.fps
-        self.AngularDamping = self.Object.game.rotation_damping / bpy.data.scenes[0].render.fps
+        self.LinearDamping = self.Object.game.damping / self.Data.Scene.game_settings.fps
+        self.AngularDamping = self.Object.game.rotation_damping / self.Data.Scene.game_settings.fps
         self.LinearDampingThreshold = self.Object.game.velocity_min
         self.AngularDampingThreshold = self.Object.game.velocity_min
 

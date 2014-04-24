@@ -382,7 +382,8 @@ public:
                 ~ActorCallback(void) {}
 
     public:
-        virtual void    operator()( ODEObject* actor ) = 0 ;
+        //! a true value stopa the iteration
+        virtual bool    operator()( ODEObject* actor ) { return true ; }
     } ;
 
     //! Don't use it
@@ -392,7 +393,9 @@ public:
 
     //! Don't use it
     unsigned int    findActors( ActorCallback* cbk,
-                                const osg::BoundingSphere& sphere ) ;
+                                const osg::BoundingSphere& sphere,
+                                unsigned int max_actors = 0xFFFFFFFF
+                              ) ;
 /* ======================================================================= */
 
 

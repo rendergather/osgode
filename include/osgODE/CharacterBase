@@ -195,6 +195,12 @@ public:
     //! Get the current rotation around the side versor. Default: 1/2 pi
     inline double   getCurrentPitch(void) const ;
 
+    //! Set the current rotation around the up versor
+    inline void     setCurrentYaw(double yaw) ;
+
+    //! Set the current rotation around the side versor. Default: 1/2 pi
+    inline void     setCurrentPitch(double pitch) ;
+
 
     //! Set the elasticity for yaw/pitch update (default: 1/15)
     inline void     setElasticity(double elasticity) ;

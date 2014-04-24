@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -140,6 +140,17 @@ HingeJoint::cloneODEJoint(dWorldID world) const
         dVector3    v ;
         dJointGetHingeAxis(m_ODE_joint, v) ;
         dJointSetHingeAxis(j, v[0], v[1], v[2]) ;
+    }
+
+
+    {
+        dQuaternion     qrel ;
+
+        dJointSetHingeAutoComputeRelativeValues( j,      dJointGetHingeAutoComputeRelativeValues(m_ODE_joint) ) ;
+
+        dJointGetHingeRelativeRotation( m_ODE_joint, qrel ) ;
+
+        dJointSetHingeRelativeRotation( j, qrel ) ;
     }
 
 

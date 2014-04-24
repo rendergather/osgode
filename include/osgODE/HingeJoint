@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -90,6 +90,18 @@ public:
 
     //! Get the angular speed
     inline double   getAngleRate(void) const ;
+
+    //! Set the auto compute relative values
+    inline void setAutoComputeRelativeValues( bool auto_compute_relative_values ) ;
+
+    //! Get the const auto compute relative values
+    inline bool getAutoComputeRelativeValues(void) const ;
+
+    //! Set the relative rotation
+    inline void setRelativeRotation( const osg::Quat& relative_rotation ) ;
+
+    //! Get the relative rotation
+    inline osg::Quat getRelativeRotation(void) const ;
 /* ======================================================================= */
 
 

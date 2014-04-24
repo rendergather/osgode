@@ -728,6 +728,12 @@ class PropertyActuator(Actuator):
         self.Value = self.BlenderActuator.value
         self.ReferenceProperty = self.BlenderActuator.object_property
 
+        if self.ValueType == "Bool":
+            if self.Value.lower() in [1, "true", "on"]:
+                self.Value = "TRUE"
+            else:
+                self.Value = "FALSE"
+
         if self.BlenderActuator.object:
             self.ReferenceObject = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
 
@@ -774,6 +780,95 @@ class PropertyActuator(Actuator):
                 writer.writeLine("Value \"%s\"" % self.Value)
             else:
                 writer.writeLine("Value %s" % self.Value)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class SceneActuator(Actuator):
+    """ooGame::SceneActuator"""
+
+
+
+
+
+############################################################################
+    Mode = None
+    Scene = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(SceneActuator, self).__init__(rigid_body, sensor)
+
+        self.Mode = None
+        self.Scene = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(SceneActuator, self).buildGraph()
+
+        self.Mode = self.BlenderActuator.scene
+        self.Scene = self.BlenderActuator.scene.name
+
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::SceneActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::SceneActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+
+        #writer.writeLine("Mode %s" % self.Mode)
+        writer.writeLine("SceneName \"%s\"" % self.Scene)
 
 
 

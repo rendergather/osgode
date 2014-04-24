@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -86,6 +86,24 @@ public:
 
     //! Get the joint extension speed
     inline double   getPositionRate(void) const ;
+
+    //! Set the auto compute relative values
+    inline void setAutoComputeRelativeValues( bool auto_compute_relative_values ) ;
+
+    //! Get the const auto compute relative values
+    inline bool getAutoComputeRelativeValues(void) const ;
+
+    //! Set the relative rotation
+    inline void setRelativeRotation( const osg::Quat& relative_rotation ) ;
+
+    //! Get the relative rotation
+    inline osg::Quat getRelativeRotation(void) const ;
+
+    //! Set the relative position
+    inline void setRelativePosition( const osg::Vec3& relative_position ) ;
+
+    //! Get the relative position
+    inline osg::Vec3 getRelativePosition(void) const ;
 /* ======================================================================= */
 
 

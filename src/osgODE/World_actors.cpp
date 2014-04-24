@@ -63,8 +63,12 @@ World::findActors(  ActorCallback* cbk,
         ODEObject*  current = *itr++ ;
 
         if( World::intersectRaySphere( current->getActorBound(), from, to ) ) {
-            (*cbk)(current) ;
+
             ++found ;
+
+            if( (*cbk)(current) ) {
+                return found ;
+            }
         }
 
     }
@@ -89,30 +93,52 @@ World::findActors(  ActorCallback* cbk,
 /* ....................................................................... */
 unsigned int
 World::findActors(  ActorCallback* cbk,
-                    const osg::BoundingSphere& sphere)
+                    const osg::BoundingSphere& sphere,
+                    unsigned int max_actors
+                 )
 {
+    // free()
+    osg::ref_ptr<ActorCallback>   tmp = cbk ;
+
+
     Objects::iterator   itr = m_objects.begin() ;
     Objects::iterator   itr_end = m_objects.end() ;
 
     unsigned int    found = 0 ;
 
 
-    while( itr != itr_end ) {
+    if( cbk ) {
+        while( itr != itr_end ) {
 
-        ODEObject*  current = *itr++ ;
+            ODEObject*  current = *itr++ ;
 
-        if( World::intersectSphereSphere( current->getActorBound(), sphere ) ) {
-            (*cbk)(current) ;
-            ++found ;
+            if( World::intersectSphereSphere( current->getActorBound(), sphere ) ) {
+
+                ++found ;
+
+                if( (*cbk)(current) ) {
+                    return found ;
+                }
+
+                if( found == max_actors ) {
+                    return found ;
+                }
+            }
         }
 
-    }
+    } else { // cbk
+        while( itr != itr_end ) {
 
+            ODEObject*  current = *itr++ ;
 
+            if( World::intersectSphereSphere( current->getActorBound(), sphere ) ) {
+                ++found ;
 
-    {
-        // free()
-        osg::ref_ptr<ActorCallback>   tmp(cbk) ;
+                if( found == max_actors ) {
+                    return found ;
+                }
+            }
+        }
     }
 
 

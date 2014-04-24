@@ -166,10 +166,10 @@ class MotionPath(ODECallback.ODECallback):
 
 
         for i in range( 0, len(self.PositionPath[0]), 1):
-            self.PositionPath[0][i] = self.PositionPath[0][i] / bpy.data.scenes[0].render.fps
+            self.PositionPath[0][i] = self.PositionPath[0][i] / self.Data.Scene.render.fps
 
         for i in range( 0, len(self.QuaternionPath[0]), 1):
-            self.QuaternionPath[0][i] = self.QuaternionPath[0][i] / bpy.data.scenes[0].render.fps
+            self.QuaternionPath[0][i] = self.QuaternionPath[0][i] / self.Data.Scene.render.fps
             #self.QuaternionPath[1][i] = self.QuaternionPath[1][i]
             #self.QuaternionPath[2][i] = self.QuaternionPath[2][i]
             #self.QuaternionPath[3][i] = self.QuaternionPath[3][i]

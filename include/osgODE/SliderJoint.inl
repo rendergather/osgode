@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -52,6 +52,105 @@ inline double
 osgODE::SliderJoint::getPositionRate(void) const
 {
     return dJointGetSliderPositionRate(m_ODE_joint) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::SliderJoint::setAutoComputeRelativeValues( bool auto_compute_relative_values )
+{
+    dJointSetSliderAutoComputeRelativeValues( m_ODE_joint, auto_compute_relative_values ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline bool
+osgODE::SliderJoint::getAutoComputeRelativeValues(void) const
+{
+    return dJointGetSliderAutoComputeRelativeValues(m_ODE_joint) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::SliderJoint::setRelativeRotation( const osg::Quat& relative_rotation )
+{
+    dQuaternion q ;
+
+    q[0] = relative_rotation.w() ;
+    q[1] = relative_rotation.x() ;
+    q[2] = relative_rotation.y() ;
+    q[3] = relative_rotation.z() ;
+
+    dJointSetSliderRelativeRotation( m_ODE_joint, q ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osg::Quat
+osgODE::SliderJoint::getRelativeRotation(void) const
+{
+    dQuaternion q ;
+
+    dJointGetSliderRelativeRotation( m_ODE_joint, q ) ;
+
+    return osg::Quat( q[1], q[2], q[3], q[0] ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::SliderJoint::setRelativePosition( const osg::Vec3& relative_position )
+{
+    dVector3    v ;
+
+    v[0] = relative_position.x() ;
+    v[1] = relative_position.y() ;
+    v[2] = relative_position.z() ;
+
+    dJointSetSliderRelativePosition( m_ODE_joint, v ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osg::Vec3
+osgODE::SliderJoint::getRelativePosition(void) const
+{
+    dVector3    v ;
+
+    dJointGetSliderRelativePosition( m_ODE_joint, v ) ;
+
+    return osg::Vec3( v[0], v[1], v[2] ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

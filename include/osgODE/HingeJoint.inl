@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -52,6 +52,69 @@ inline double
 osgODE::HingeJoint::getAngleRate(void) const
 {
     return dJointGetHingeAngleRate(m_ODE_joint) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::HingeJoint::setAutoComputeRelativeValues( bool auto_compute_relative_values )
+{
+    dJointSetHingeAutoComputeRelativeValues( m_ODE_joint, auto_compute_relative_values ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline bool
+osgODE::HingeJoint::getAutoComputeRelativeValues(void) const
+{
+    return dJointGetHingeAutoComputeRelativeValues(m_ODE_joint) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::HingeJoint::setRelativeRotation( const osg::Quat& relative_rotation )
+{
+    dQuaternion q ;
+
+    q[0] = relative_rotation.w() ;
+    q[1] = relative_rotation.x() ;
+    q[2] = relative_rotation.y() ;
+    q[3] = relative_rotation.z() ;
+
+    dJointSetHingeRelativeRotation( m_ODE_joint, q ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline osg::Quat
+osgODE::HingeJoint::getRelativeRotation(void) const
+{
+    dQuaternion q ;
+
+    dJointGetHingeRelativeRotation( m_ODE_joint, q ) ;
+
+    return osg::Quat( q[1], q[2], q[3], q[0] ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

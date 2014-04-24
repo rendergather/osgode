@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,6 +35,26 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+static bool checkRelativeRotation(const osgODE::HingeJoint& joint)
+{
+    (void) joint ;
+    return true ;
+}
+
+static bool readRelativeRotation(osgDB::InputStream& is, osgODE::HingeJoint& joint)
+{
+    osg::Quat   q ;
+    is >> q ;
+    joint.setRelativeRotation(q) ;
+    return true ;
+}
+
+static bool writeRelativeRotation(osgDB::OutputStream& os, const osgODE::HingeJoint& joint)
+{
+    osg::Quat   q = joint.getRelativeRotation() ;
+    os << q << std::endl ;
+    return true ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,7 +68,9 @@ REGISTER_OBJECT_WRAPPER( HingeJoint,
                          osgODE::HingeJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::HingeJoint" )
 {
-    (void) wrapper ;
+    ADD_BOOL_SERIALIZER( AutoComputeRelativeValues, true ) ;
+
+    ADD_USER_SERIALIZER( RelativeRotation ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

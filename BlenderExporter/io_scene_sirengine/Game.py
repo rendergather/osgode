@@ -119,6 +119,12 @@ class Game(ODECallback.ODECallback):
             elif s.type == "PROPERTY":
                 sensor = Sensor.PropertySensor( self.RigidBody, s )
 
+            elif s.type == "NEAR":
+                sensor = Sensor.NearSensor( self.RigidBody, s )
+
+            elif s.type == "DELAY":
+                sensor = Sensor.DelaySensor( self.RigidBody, s )
+
             if sensor:
                 sensor.buildGraph()
                 self.SensorList.append( sensor )
@@ -153,6 +159,9 @@ class Game(ODECallback.ODECallback):
 
             elif a.type == "PROPERTY":
                 actuator = Actuator.PropertyActuator(self.RigidBody, a)
+
+            elif a.type == "SCENE":
+                actuator = Actuator.SceneActuator(self.RigidBody, a)
 
 
             if actuator:

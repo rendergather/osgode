@@ -24,6 +24,8 @@
 
 ############################################################################
 from . import Writable, Game, NearCallback, Joint
+
+import bpy
 ############################################################################
 
 
@@ -100,7 +102,7 @@ class Space(Writable.Writable):
         rigid_bodies = []
 
 
-        for obj in self.Data.Context.scene.objects:
+        for obj in self.Data.Scene.objects:
             if not self.addObject(obj):
                 return False
             else:

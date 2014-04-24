@@ -48,6 +48,7 @@ class ExporterData(object):
 ############################################################################
     FilePath = "untitled.osgt"
     Context = None
+    Scene = None
     Operator = None
     UniqueID = None
     VertexID = None
@@ -65,6 +66,8 @@ class ExporterData(object):
     MaxAnisotropy = None
     AmbientMultiplier = None
     PolygonOffsetMultiplier = None
+    StopERP = None
+    StopCFM = None
 ############################################################################
 
 
@@ -76,26 +79,55 @@ class ExporterData(object):
 
 
 ############################################################################
-    def __init__(self):
-        self.FilePath = "untitled.osgt"
-        self.Context = None
-        self.Operator = None
-        self.UniqueID = None
-        self.VertexID = None
-        self.ODEID = None
-        self.Cache = None
-        self.RigidBodyCache = None
-        self.RigidBodyMap = None
-        self.MasterStateSet = None
-        self.Selected = None
-        self.ExportSelected = False
-        self.ExportLights = False
-        self.ExportSounds = False
-        self.ExportGame = False
-        self.WorldStep = None
-        self.MaxAnisotropy = None
-        self.AmbientMultiplier = None
-        self.PolygonOffsetMultiplier = None
+    def __init__(self, data=None):
+
+        if data:
+            self.FilePath = data.FilePath
+            self.Context = data.Context
+            self.Scene = data.Scene
+            self.Operator = data.Operator
+            self.UniqueID = data.UniqueID
+            self.VertexID = data.VertexID
+            self.ODEID = data.ODEID
+            self.Cache = data.Cache
+            self.RigidBodyCache = data.RigidBodyCache
+            self.RigidBodyMap = data.RigidBodyMap
+            self.MasterStateSet = data.MasterStateSet
+            self.Selected = data.Selected
+            self.ExportSelected = data.ExportSelected
+            self.ExportLights = data.ExportLights
+            self.ExportSounds = data.ExportSounds
+            self.ExportGame = data.ExportGame
+            self.WorldStep = data.WorldStep
+            self.MaxAnisotropy = data.MaxAnisotropy
+            self.AmbientMultiplier = data.AmbientMultiplier
+            self.PolygonOffsetMultiplier = data.PolygonOffsetMultiplier
+            self.StopERP = data.StopERP
+            self.StopCFM = data.StopCFM
+
+        else:
+            self.FilePath = "untitled.osgt"
+            self.Context = None
+            self.Scene = None
+            self.Operator = None
+            self.UniqueID = None
+            self.VertexID = None
+            self.ODEID = None
+            self.Cache = None
+            self.RigidBodyCache = None
+            self.RigidBodyMap = None
+            self.MasterStateSet = None
+            self.Selected = None
+            self.ExportSelected = False
+            self.ExportLights = False
+            self.ExportSounds = False
+            self.ExportGame = False
+            self.WorldStep = None
+            self.MaxAnisotropy = None
+            self.AmbientMultiplier = None
+            self.PolygonOffsetMultiplier = None
+            self.StopERP = None
+            self.StopCFM = None
 ############################################################################
 
 

@@ -81,10 +81,7 @@ class Root(Writable.Writable):
         super(Root, self).buildGraph()
 
 
-        try:
-            self.SceneName = str( bpy.context.scene["oo_scene_name"] )
-        except:
-            self.SceneName = str( "Default" )
+        self.SceneName = self.Data.Scene.name
 
 
         from . import Manager

@@ -166,9 +166,9 @@ World::addObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("ODEObjects: %lu", m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): ODEObjects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("ODEObjects: %u", m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): ODEObjects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;
@@ -232,9 +232,9 @@ World::removeObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("ODEObjects: %lu", m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): ODEObjects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("ODEObjects: %u", m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): ODEObjects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;

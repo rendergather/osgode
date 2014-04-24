@@ -74,7 +74,7 @@ class LightGroup(Writable.Writable):
         self.addChild( AmbientLight.AmbientLight(self.Data) )
 
 
-        for obj in self.Data.Context.scene.objects:
+        for obj in self.Data.Scene.objects:
             if not self.addObject(obj):
                 return False
 

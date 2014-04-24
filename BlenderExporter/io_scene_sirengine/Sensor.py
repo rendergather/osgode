@@ -577,3 +577,193 @@ class PropertySensor(Sensor):
 
 # ........................................................................ #
 ############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class NearSensor(Sensor):
+    """ooGame::NearSensor"""
+
+
+
+
+
+############################################################################
+    Distance = None
+    ResetDistance = None
+    Property = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(NearSensor, self).__init__(rigid_body, sensor)
+
+        self.Distance = None
+        self.ResetDistance = None
+        self.Property = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(NearSensor, self).buildGraph()
+
+        self.Distance = self.BlenderSensor.distance
+        self.ResetDistance = self.BlenderSensor.reset_distance
+        self.Property = self.BlenderSensor.property
+
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::NearSensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::NearSensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
+
+
+        writer.writeLine("Distance %f" % self.Distance)
+        writer.writeLine("ResetDistance %f" % self.ResetDistance)
+        writer.writeLine("Property \"%s\"" % self.Property)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class DelaySensor(Sensor):
+    """ooGame::DelaySensor"""
+
+
+
+
+
+############################################################################
+    Delay = None
+    Duration = None
+    Repeat = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(DelaySensor, self).__init__(rigid_body, sensor)
+
+        self.Delay = 0
+        self.Duration = 0
+        self.Repeat = False
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(DelaySensor, self).buildGraph()
+
+        self.Delay = self.BlenderSensor.delay
+        self.Duration = self.BlenderSensor.duration
+        self.Repeat = self.BlenderSensor.use_repeat
+
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::DelaySensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::DelaySensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
+
+
+        writer.writeLine("Delay %f" % self.Delay)
+        writer.writeLine("Duration %f" % self.Duration)
+
+        if self.Repeat:
+            writer.writeLine("Repeat TRUE")
+        else:
+            writer.writeLine("Repeat FALSE")
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################

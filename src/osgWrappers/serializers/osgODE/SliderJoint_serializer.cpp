@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,6 +35,49 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+static bool checkRelativeRotation(const osgODE::SliderJoint& joint)
+{
+    (void) joint ;
+    return true ;
+}
+
+static bool readRelativeRotation(osgDB::InputStream& is, osgODE::SliderJoint& joint)
+{
+    osg::Quat   q ;
+    is >> q ;
+    joint.setRelativeRotation(q) ;
+    return true ;
+}
+
+static bool writeRelativeRotation(osgDB::OutputStream& os, const osgODE::SliderJoint& joint)
+{
+    osg::Quat   q = joint.getRelativeRotation() ;
+    os << q << std::endl ;
+    return true ;
+}
+
+
+
+static bool checkRelativePosition(const osgODE::SliderJoint& joint)
+{
+    (void) joint ;
+    return true ;
+}
+
+static bool readRelativePosition(osgDB::InputStream& is, osgODE::SliderJoint& joint)
+{
+    osg::Vec3   v ;
+    is >> v ;
+    joint.setRelativePosition(v) ;
+    return true ;
+}
+
+static bool writeRelativePosition(osgDB::OutputStream& os, const osgODE::SliderJoint& joint)
+{
+    osg::Vec3   v = joint.getRelativePosition() ;
+    os << v << std::endl ;
+    return true ;
+}
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,7 +91,10 @@ REGISTER_OBJECT_WRAPPER( SliderJoint,
                          osgODE::SliderJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::SliderJoint" )
 {
-    (void) wrapper ;
+    ADD_BOOL_SERIALIZER( AutoComputeRelativeValues, true ) ;
+
+    ADD_USER_SERIALIZER( RelativeRotation ) ;
+    ADD_USER_SERIALIZER( RelativePosition ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -120,6 +120,9 @@ class Controller(Writable.Writable):
                 elif a.type == "PROPERTY":
                     actuator = Actuator.PropertyActuator(self.RigidBody, a)
 
+                elif a.type == "SCENE":
+                    actuator = Actuator.SceneActuator(self.RigidBody, a)
+
 
                 if actuator:
                     actuator.buildGraph()

@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -24,6 +24,8 @@
 
 ############################################################################
 from . import ODEObject
+
+import bpy
 
 from mathutils import Vector, Matrix, Euler
 ############################################################################
@@ -61,6 +63,8 @@ class Joint(ODEObject.ODEObject):
     LoStop = None
     HiStop = None
     CFM = None
+    StopERP = None
+    StopCFM = None
     ERP = None
     LoStop2 = None
     HiStop2 = None
@@ -72,6 +76,9 @@ class Joint(ODEObject.ODEObject):
     MotorMode = None
     NumAxes = None
     TransformUniqueID = None
+    AutoComputeRelativeValues = None
+    RelativeRotation = None
+    RelativePosition = None
 ############################################################################
 
 
@@ -98,6 +105,8 @@ class Joint(ODEObject.ODEObject):
         self.LoStop = None
         self.HiStop = None
         self.CFM = None
+        self.StopERP = None
+        self.StopCFM = None
         self.ERP = None
         self.LoStop2 = None
         self.HiStop2 = None
@@ -109,6 +118,9 @@ class Joint(ODEObject.ODEObject):
         self.MotorMode = None
         self.NumAxes = None
         self.TransformUniqueID = None
+        self.AutoComputeRelativeValues = None
+        self.RelativeRotation = None
+        self.RelativePosition = None
 ############################################################################
 
 
@@ -207,8 +219,67 @@ class Joint(ODEObject.ODEObject):
 
 
 
+
+
+        self.AutoComputeRelativeValues = True
+
+
+
+
+        if self.JointType == "osgODE::SliderJoint":
+
+            o1 = self.Constraint
+            o2 = self.Object.target
+
+            mat1 = Matrix(self.Constraint.matrix_world)
+
+            if o2:
+                mat1.invert()
+                mrel = mat1 * Matrix(o2.matrix_world)
+                self.RelativePosition, self.RelativeRotation, srel = mrel.decompose()
+            else:
+                self.RelativePosition, self.RelativeRotation, srel = mat1.decompose()
+                mat1.invert()
+                tmp, self.RelativeRotation, srel = mat1.decompose()
+
+
+            self.AutoComputeRelativeValues = False
+
+
+
+        elif self.JointType == "osgODE::HingeJoint":
+
+            o1 = self.Constraint
+            o2 = self.Object.target
+
+            mat1 = Matrix(self.Constraint.matrix_world)
+
+            if o2:
+                mat1.invert()
+                mrel = mat1 * Matrix(o2.matrix_world)
+                self.RelativePosition, self.RelativeRotation, srel = mrel.decompose()
+            else:
+                self.RelativePosition, self.RelativeRotation, srel = mat1.decompose()
+                mat1.invert()
+                tmp, self.RelativeRotation, srel = mat1.decompose()
+
+            self.RelativePosition = None
+
+
+            self.AutoComputeRelativeValues = False
+
+
+
+
+
+
+
         self.TransformUniqueID = self.Data.UniqueID.generate()
 
+
+
+        self.StopERP = self.Data.StopERP * 60.0 / self.Data.Scene.game_settings.fps
+        self.StopCFM = self.Data.StopCFM * 60.0 / self.Data.Scene.game_settings.fps
 
         return True
 ############################################################################
@@ -287,6 +358,11 @@ class Joint(ODEObject.ODEObject):
         if self.CFM != None:
             writer.writeLine("dParamCFM %f" %self.CFM)
 
+        writer.writeLine("dParamStopERP %f" %self.StopERP) ;
+        writer.writeLine("dParamStopCFM %f" %self.StopCFM) ;
+
+
+
         if self.ERP != None:
             writer.writeLine("dParamERP %f" %self.ERP)
 
@@ -298,6 +374,9 @@ class Joint(ODEObject.ODEObject):
         if self.HiStop2 != None:
             writer.writeLine("dParamHiStop2 %f" %self.HiStop2)
 
+        writer.writeLine("dParamStopERP2 %f" %self.StopERP) ;
+        writer.writeLine("dParamStopCFM2 %f" %self.StopCFM) ;
+
 
 
         if self.LoStop3 != None:
@@ -305,6 +384,9 @@ class Joint(ODEObject.ODEObject):
 
         if self.HiStop3 != None:
             writer.writeLine("dParamHiStop3 %f" %self.HiStop3)
+
+        writer.writeLine("dParamStopERP3 %f" %self.StopERP) ;
+        writer.writeLine("dParamStopCFM3 %f" %self.StopCFM) ;
 
 
 
@@ -324,6 +406,17 @@ class Joint(ODEObject.ODEObject):
         if self.NumAxes != None:
             writer.writeLine("NumAxes %d" %self.NumAxes)
 
+
+
+
+        if not self.AutoComputeRelativeValues:
+            writer.writeLine("AutoComputeRelativeValues FALSE")
+
+            if self.RelativeRotation:
+                writer.writeLine("RelativeRotation %f %f %f %f" %(self.RelativeRotation[1], self.RelativeRotation[2], self.RelativeRotation[3], self.RelativeRotation[0]))
+
+            if self.RelativePosition:
+                writer.writeLine("RelativePosition %f %f %f" %(self.RelativePosition[0], self.RelativePosition[1], self.RelativePosition[2]))
 
 
         return True

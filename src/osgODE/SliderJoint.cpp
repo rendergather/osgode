@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -130,6 +130,20 @@ SliderJoint::cloneODEJoint(dWorldID world) const
         dVector3    v ;
         dJointGetSliderAxis(m_ODE_joint, v) ;
         dJointSetSliderAxis(j, v[0], v[1], v[2]) ;
+    }
+
+
+    {
+        dVector3        prel ;
+        dQuaternion     qrel ;
+
+        dJointSetSliderAutoComputeRelativeValues( j,      dJointGetSliderAutoComputeRelativeValues(m_ODE_joint) ) ;
+
+        dJointGetSliderRelativeRotation( m_ODE_joint, qrel ) ;
+        dJointGetSliderRelativePosition( m_ODE_joint, prel ) ;
+
+        dJointSetSliderRelativeRotation( j, qrel ) ;
+        dJointSetSliderRelativePosition( j, prel ) ;
     }
 
 

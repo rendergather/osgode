@@ -94,6 +94,10 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     polygon_offset_multiplier = FloatProperty( name="PolygonOffset multiplier", default=1.0, min=0.0)
 
 
+    stop_erp = FloatProperty( name="Stop ERP", default=0.2, min=0.0, max=1.0)
+    stop_cfm = FloatProperty( name="Stop CFM", default=1.0e-5, min=0.0, max=1.0)
+
+
 
     world_step = EnumProperty(  items = (
                                     ("dWorldStep", "dWorldStep", "Accuracy"),
@@ -122,6 +126,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
         data.FilePath = self.filepath
         data.Context = context
+        data.Scene = bpy.data.scenes[0]
         data.Operator = self
         data.UniqueID = IDGenerator.IDGenerator()
         data.VertexID = IDGenerator.IDGenerator()
@@ -137,6 +142,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.MaxAnisotropy = self.max_anisotropy
         data.AmbientMultiplier = self.ambient_multiplier
         data.PolygonOffsetMultiplier = self.polygon_offset_multiplier
+        data.StopERP = self.stop_erp
+        data.StopCFM = self.stop_cfm
 
         return exporter.export()
 ############################################################################

@@ -103,10 +103,11 @@ class Space(Writable.Writable):
 
 
         for obj in self.Data.Scene.objects:
-            if not self.addObject(obj):
-                return False
-            else:
-                rigid_bodies.append(obj)
+            if obj.is_visible( self.Data.Scene ):
+                if not self.addObject(obj):
+                    return False
+                else:
+                    rigid_bodies.append(obj)
 
 
 
@@ -178,6 +179,23 @@ class Space(Writable.Writable):
 
                 if self.Data.Context.selected_objects and self.Data.Context.selected_objects[0] == obj:
                     self.Data.Selected = physics
+
+
+
+
+        elif obj.type == 'EMPTY':
+
+            from . import ODEObject
+            physics = self.selectODEObject(obj)
+
+            if physics:
+                self.addChild(physics)
+                self.ODEObjects.append(physics)
+                self.RigidBodies.append(physics)
+
+
+            if self.Data.Context.selected_objects and self.Data.Context.selected_objects[0] == obj:
+                self.Data.Selected = physics
 
 
 
@@ -285,7 +303,7 @@ class Space(Writable.Writable):
             writer.moveIn("osgODE::Events")
             writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
             writer.moveOut("osgODE::Events")
-            writer.moveOut("Evensk TRUE")
+            writer.moveOut("Events TRUE")
 
 
         writer.moveIn("NearCallback TRUE")

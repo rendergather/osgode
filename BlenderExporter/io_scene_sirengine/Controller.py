@@ -102,34 +102,7 @@ class Controller(Writable.Writable):
 
 
             for a in self.BlenderController.actuators:
-
-                actuator = None
-
-                if a.type == "SOUND":
-                    actuator = Actuator.SoundActuator(self.RigidBody, a)
-
-                elif a.type == "STATE":
-                    actuator = Actuator.StateActuator(self.RigidBody, a)
-
-                elif a.type == "VISIBILITY":
-                    actuator = Actuator.NodeMaskActuator(self.RigidBody, a)
-
-                elif a.type == "MOTION":
-                    actuator = Actuator.MotionActuator(self.RigidBody, a)
-
-                elif a.type == "PROPERTY":
-                    actuator = Actuator.PropertyActuator(self.RigidBody, a)
-
-                elif a.type == "SCENE":
-                    actuator = Actuator.SceneActuator(self.RigidBody, a)
-
-
-                if actuator:
-                    actuator.buildGraph()
-                    self.ActuatorList.append( actuator )
-                else:
-                    self.Data.Operator.report({'ERROR'}, "[%s] Unsupported actuator type: %s" %(self.Object.name, a.type))
-                    return False
+                self.ActuatorList.append( self.Object.game.actuators.find(a.name) )
 
 
 
@@ -173,7 +146,9 @@ class Controller(Writable.Writable):
             writer.writeLine( "ActuatorList %u" % len( self.ActuatorList ) )
 
             for a in self.ActuatorList:
-                a.writeToStream( writer )
+                writer.writeLine( "%u " %a )
+
+            writer.writeLine( " " )
 
 
         return True

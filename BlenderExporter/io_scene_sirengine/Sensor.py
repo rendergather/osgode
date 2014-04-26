@@ -99,9 +99,7 @@ class Sensor(Writable.Writable):
 
 
             for c in self.BlenderSensor.controllers:
-                controller = Controller.Controller(self.RigidBody, c)
-                controller.buildGraph()
-                self.ControllerList.append( controller )
+                self.ControllerList.append( self.Object.game.controllers.find(c.name) )
 
 
 
@@ -164,7 +162,9 @@ class Sensor(Writable.Writable):
             writer.writeLine( "ControllerList %u" % len( self.ControllerList ) )
 
             for c in self.ControllerList:
-                c.writeToStream( writer )
+                writer.writeLine( "%u " %c )
+
+            writer.writeLine( " " )
 
             self.writePrivateSensorData( writer )
 
@@ -507,17 +507,17 @@ class PropertySensor(Sensor):
 
 
         if self.ValueType == "Bool":
-            if self.Value.lower() in ["1", "true", "on"]:
+            if self.Value.lower().split() in [["1"], ["true"], ["on"]]:
                 self.Value = "TRUE"
             else:
                 self.Value = "FALSE"
 
-            if self.ValueMin.lower() in ["1", "true", "on"]:
+            if self.ValueMin.lower().split() in [["1"], ["true"], ["on"]]:
                 self.ValueMin = "TRUE"
             else:
                 self.ValueMin = "FALSE"
 
-            if self.ValueMax.lower() in ["1", "true", "on"]:
+            if self.ValueMax.lower().split() in [["1"], ["true"], ["on"]]:
                 self.ValueMax = "TRUE"
             else:
                 self.ValueMax = "FALSE"

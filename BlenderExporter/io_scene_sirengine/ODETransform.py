@@ -83,24 +83,28 @@ class ODETransform(Writable.Writable):
         self.Invisible = self.Object.hide_render
 
 
-        from . import Geode
-        from . import Billboard
-        from . import ScaleTransform
+        if self.Object.type == 'EMPTY':
+            pass
 
-        try:
-            if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
-                billboard = Billboard.Billboard(self.Data, self.Object)
-                self.addChild(billboard)
-            else:
-                scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                self.addChild( scale_transform )
-                #geode = Geode.Geode(self.Data, self.Object)
-                #self.addChild(geode)
-        except:
-                scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                self.addChild( scale_transform )
-                #geode = Geode.Geode(self.Data, self.Object)
-                #self.addChild(geode)
+        else:
+            from . import Geode
+            from . import Billboard
+            from . import ScaleTransform
+
+            try:
+                if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
+                    billboard = Billboard.Billboard(self.Data, self.Object)
+                    self.addChild(billboard)
+                else:
+                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
+                    self.addChild( scale_transform )
+                    #geode = Geode.Geode(self.Data, self.Object)
+                    #self.addChild(geode)
+            except:
+                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
+                    self.addChild( scale_transform )
+                    #geode = Geode.Geode(self.Data, self.Object)
+                    #self.addChild(geode)
 
 
 

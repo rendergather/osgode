@@ -163,6 +163,9 @@ class Game(ODECallback.ODECallback):
             elif a.type == "SCENE":
                 actuator = Actuator.SceneActuator(self.RigidBody, a)
 
+            elif a.type == "EDIT_OBJECT":
+                actuator = Actuator.EditObjectActuator(self.RigidBody, a)
+
 
             if actuator:
                 actuator.buildGraph()

@@ -729,7 +729,7 @@ class PropertyActuator(Actuator):
         self.ReferenceProperty = self.BlenderActuator.object_property
 
         if self.ValueType == "Bool":
-            if self.Value.lower() in [1, "true", "on"]:
+            if self.Value.lower().split() in [["1"], ["true"], ["on"]]:
                 self.Value = "TRUE"
             else:
                 self.Value = "FALSE"
@@ -869,6 +869,244 @@ class SceneActuator(Actuator):
 
         #writer.writeLine("Mode %s" % self.Mode)
         writer.writeLine("SceneName \"%s\"" % self.Scene)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class EditObjectActuator(Actuator):
+    """ooGame::EditObjectActuator"""
+
+
+
+
+
+############################################################################
+    Mode = None
+    DynamicOperation = None
+    LifeTime = None
+    LinearVelocity = None
+    AngularVelocity = None
+    LinearVelocityLocal = None
+    AngularVelocityLocal = None
+    Mass = None
+    RefObject = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(EditObjectActuator, self).__init__(rigid_body, sensor)
+
+        self.Mode = None
+        self.DynamicOperation = None
+        self.LifeTime = None
+        self.LinearVelocity = None
+        self.AngularVelocity = None
+        self.LinearVelocityLocal = None
+        self.AngularVelocityLocal = None
+        self.Mass = None
+        self.RefObject = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(EditObjectActuator, self).buildGraph()
+
+        if self.BlenderActuator.mode == "ADDOBJECT":
+            self.Mode = "ADD_OBJECT"
+
+        elif self.BlenderActuator.mode == "ENDOBJECT":
+            self.Mode = "END_OBJECT"
+
+        elif self.BlenderActuator.mode == "DYNAMICS":
+            self.Mode = "DYNAMICS"
+
+        else:
+            return False
+
+
+        if self.BlenderActuator.dynamic_operation == "SETMASS":
+            self.DynamicOperation = "SET_MASS"
+
+        elif self.BlenderActuator.dynamic_operation == "ENABLERIGIDBODY":
+            self.DynamicOperation = "ENABLE_RIGID_BODY"
+
+        elif self.BlenderActuator.dynamic_operation == "DISABLERIGIDBODY":
+            self.DynamicOperation = "DISABLE_RIGID_BODY"
+
+        elif self.BlenderActuator.dynamic_operation == "SUSPENDDYN":
+            self.DynamicOperation = "SET_KINEMATIC"
+
+        elif self.BlenderActuator.dynamic_operation == "RESTOREDYN":
+            self.DynamicOperation = "SET_DYNAMIC"
+
+        else:
+            return False
+
+
+
+        self.LifeTime = float(self.BlenderActuator.time)
+
+        self.LinearVelocity = self.BlenderActuator.linear_velocity
+        self.AngularVelocity = self.BlenderActuator.angular_velocity
+
+        if self.BlenderActuator.use_local_linear_velocity:
+            self.LinearVelocityLocal = "TRUE"
+        else:
+            self.LinearVelocityLocal = "FALSE"
+
+        if self.BlenderActuator.use_local_angular_velocity:
+            self.AngularVelocityLocal = "TRUE"
+        else:
+            self.AngularVelocityLocal = "FALSE"
+
+
+
+        self.Mass = self.BlenderActuator.mass
+
+
+
+        if self.BlenderActuator.object:
+
+            obj = self.BlenderActuator.object
+
+
+            if not obj.game.use_collision_bounds:
+
+                from . import RigidBody
+                self.RefObject = RigidBody.RigidBody(self.Data, obj)
+
+
+
+            elif obj.game.physics_type == 'NO_COLLISION' :
+
+                from . import RigidBody
+                self.RefObject = RigidBody.RigidBody(self.Data, obj)
+
+
+
+
+
+            elif obj.game.physics_type in ['STATIC', 'DYNAMIC', 'RIGID_BODY']:
+                if obj.game.collision_bounds_type == 'TRIANGLE_MESH':
+                    from . import TriMesh
+                    self.RefObject = TriMesh.TriMesh(self.Data, obj)
+
+                elif obj.game.collision_bounds_type == 'BOX':
+                    from . import Box
+                    self.RefObject = Box.Box(self.Data, obj)
+
+                elif obj.game.collision_bounds_type == 'SPHERE':
+                    from . import Sphere
+                    self.RefObject = Sphere.Sphere(self.Data, obj)
+
+                elif obj.game.collision_bounds_type == 'CYLINDER':
+                    from . import Cylinder
+                    self.RefObject = Cylinder.Cylinder(self.Data, obj)
+
+                elif obj.game.collision_bounds_type == 'CAPSULE':
+                    from . import Capsule
+                    self.RefObject = Capsule.Capsule(self.Data, obj)
+
+                else:
+                    print("This exporter does not support %s collision bounds" %obj.game.collision_bounds_type)
+                    return False
+
+
+
+
+            else:
+                print("EditObjectActuator does not support %s physics type" %obj.game.physics_type)
+                return False
+
+
+
+        if self.RefObject:
+            self.RefObject.buildGraph()
+
+
+            if ( len(self.RefObject.Object.game.sensors) + len(self.RefObject.Object.game.properties) ) > 0:
+
+                from . import Game
+
+                game = Game.Game( self.RefObject )
+                game.buildGraph()
+
+                self.RefObject.addUpdateCallback( game )
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::EditObjectActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::EditObjectActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+
+        writer.writeLine("Mode %s" % self.Mode)
+        writer.writeLine("DynamicOperation %s" % self.DynamicOperation)
+
+        writer.writeLine("LifeTime %f" % self.LifeTime)
+
+        writer.writeLine("LinearVelocity %f %f %f" %(self.LinearVelocity[0], self.LinearVelocity[1], self.LinearVelocity[2]))
+        writer.writeLine("AngularVelocity %f %f %f" %(self.AngularVelocity[0], self.AngularVelocity[1], self.AngularVelocity[2]))
+
+        writer.writeLine("LinearVelocityLocal %s" %(self.LinearVelocityLocal))
+        writer.writeLine("AngularVelocityLocal %s" %(self.AngularVelocityLocal))
+
+        writer.writeLine("Mass %f" % self.Mass)
+
+
+        if self.RefObject:
+
+            writer.moveIn("Object TRUE")
+            self.RefObject.writeToStream( writer )
+            writer.moveOut("Object TRUE")
 
 
 

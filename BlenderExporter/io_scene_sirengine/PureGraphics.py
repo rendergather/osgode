@@ -70,9 +70,10 @@ class PureGraphics(Writable.Writable):
         super(PureGraphics, self).buildGraph()
 
 
-        for obj in self.Data.Context.scene.objects:
-            if not self.addObject(obj):
-                return False
+        for obj in self.Data.Scene.objects:
+            if obj.is_visible( self.Data.Scene ):
+                if not self.addObject(obj):
+                    return False
 
 
         return self.traverseBuild()

@@ -110,12 +110,6 @@ class Root(Writable.Writable):
 
 
 
-        from . import SoundGroup
-        self.Data.SoundGroup = SoundGroup.SoundGroup( self.Data )
-        self.addChild( self.Data.SoundGroup )
-
-
-
         self.StateSet.ModeList.addMode("GL_NORMALIZE ON")
         self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
         self.StateSet.ModeList.addMode("GL_BLEND OFF")

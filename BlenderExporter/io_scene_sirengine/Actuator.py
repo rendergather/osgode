@@ -213,11 +213,6 @@ class SoundActuator(Actuator):
             else:
                 self.SoundSource.AutoComputePosition = 'DO_NOT_AUTOCOMPUTE'
 
-            copy_source = SoundSource.SoundSource( self.Data, self.BlenderActuator.sound, self.SoundSource )
-            copy_source.buildGraph()
-
-            self.Data.SoundGroup.addChild( copy_source )
-
 
 
 

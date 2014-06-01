@@ -26,6 +26,7 @@
 /* ....................................................................... */
 #include <osgODE/World>
 #include <osgODE/RigidBody>
+#include <osgODE/Container>
 #include <osgODE/Notify>
 #include <osgODE/ScopedTimer>
 
@@ -166,9 +167,9 @@ World::addObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("osgODE::World(%p): ODEObjects: %lu", this, m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): Objects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("osgODE::World(%p): ODEObjects: %u", this, m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): Objects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;
@@ -232,9 +233,9 @@ World::removeObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("osgODE::World(%p): ODEObjects: %lu", this, m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): Objects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("osgODE::World(%p): ODEObjects: %u", this, m_objects.size()) ;
+    PS_DBG2("osgODE::World(%p): Objects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;
@@ -250,7 +251,7 @@ World::removeObject(ODEObject* obj)
 void
 World::update(double step_size)
 {
-    advance( step_size ) ;
+    advanceInternal( step_size ) ;
     step( step_size ) ;
 }
 /* ....................................................................... */
@@ -298,7 +299,7 @@ World::step(double step_size)
 
 
 
-    _runOperations() ;
+    runOperationsInternal() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -355,6 +356,15 @@ World::_callObjectsPostCallbacks(double step_size)
         iter++ ;
 
 
+
+        RigidBody*  body = o->asRigidBody() ;
+
+        if( body ) {
+            body->updateTransformInternal() ;
+        }
+
+
+
         o->postUpdate(step_size) ;
         o->callPostUpdateCallbackInternal() ;
     }
@@ -368,11 +378,11 @@ World::_callObjectsPostCallbacks(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::_runOperations(void)
+World::runOperationsInternal(void)
 {
     if( m_operations.size() ) {
 
-        PS_DBG3("osgODE::World::_runOperations(%p)", this) ;
+        PS_DBG3("osgODE::World::runOperationsInternal(%p)", this) ;
 
         OperationList::iterator itr = m_operations.begin() ;
         OperationList::iterator itr_end = m_operations.end() ;
@@ -385,7 +395,7 @@ World::_runOperations(void)
             PS_ASSERT1( op != NULL ) ;
 
 
-            PS_DBG3("osgODE::World::_runOperations(%p): new operation %p", this, op) ;
+            PS_DBG3("osgODE::World::runOperationsInternal(%p): new operation %p", this, op) ;
 
             (*op)(this) ;
         }
@@ -517,16 +527,19 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
 
 
 #if defined(ANDROID)  ||  defined(WIN32)
-	
-	(void) pattern ;
-	(void) result ;
-	(void) regcomp_cflags ;
+
+    (void) pattern ;
+    (void) result ;
+    (void) regcomp_cflags ;
 
 #ifdef ANDROID
     PS_FATAL("osgODE::World::getObjectsByRegexName(%p): not supported in Android build", this) ;
 #else
     PS_FATAL("osgODE::World::getObjectsByRegexName(%p): not supported in Windows build", this) ;
 #endif
+
+
+
     PS_ASSERT1( false ) ;
 
 
@@ -541,7 +554,7 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
     regex_t     regex ;
     regmatch_t  pmatch ;
 
-    regcomp(&regex, pattern.c_str(), regcomp_cflags) ;
+    regcomp( &regex, pattern.c_str(), regcomp_cflags ) ;
 
     Objects::iterator   itr = m_objects.begin() ;
     Objects::iterator   itr_end = m_objects.end() ;
@@ -549,14 +562,14 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
     while( itr != itr_end ) {
         ODEObject*  obj = *itr++ ;
 
-        if( regexec(&regex, obj->getName().c_str(), 1, &pmatch, 0) == 0 ) {
+        if( regexec( &regex, obj->getName().c_str(), 1, &pmatch, 0 ) == 0 ) {
             result.push_back( obj ) ;
             found = true ;
         }
     }
 
 
-    regfree(&regex) ;
+    regfree( &regex ) ;
 
 #endif /* defined(ANDROID)  ||  defined(WIN32) */
 
@@ -594,8 +607,8 @@ World::_cloneODEWorld(dWorldID src, dWorldID dst)
     // general functions
     {
         dVector3    gravity ;
-        dWorldGetGravity(src, gravity) ;
-        dWorldSetGravity(dst, gravity[0], gravity[1], gravity[2]) ;
+        dWorldGetGravity( src, gravity ) ;
+        dWorldSetGravity( dst, gravity[0], gravity[1], gravity[2] ) ;
 
         dWorldSetERP(                               dst, dWorldGetERP(                              src)) ;
         dWorldSetCFM(                               dst, dWorldGetCFM(                              src)) ;
@@ -707,7 +720,50 @@ World::traverse(osg::NodeVisitor& nv)
 
 
     while( itr != itr_end ) {
-        (*itr++)->accept(nv) ;
+
+        ODEObject*  obj = *itr++ ;
+
+        PS_ASSERT1( obj ) ;
+
+        obj->accept(nv) ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+World::updateRigidBodyTransformsInternal(void)
+{
+    PS_DBG3("osgODE::World::updateRigidBodyTransformsInternal(%p)", this) ;
+
+
+
+    std::vector< osg::ref_ptr<ODEObject> >::iterator    iter = m_objects.begin() ;
+    std::vector< osg::ref_ptr<ODEObject> >::iterator    iter_end = m_objects.end() ;
+
+    while(iter != iter_end) {
+
+
+        ODEObject*  o = iter->get() ;
+
+        iter++ ;
+
+
+
+        RigidBody*  body = o->asRigidBody() ;
+        Container*  container = o->asContainer() ;
+
+        if( body ) {
+            body->updateTransformInternal() ;
+
+        } else if( container ) {
+            container->updateTransformsInternal() ;
+        }
     }
 }
 /* ....................................................................... */

@@ -572,7 +572,7 @@ osgODE::World::getContactSurfaceLayer(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::World::advance(double step_size)
+osgODE::World::advanceInternal(double step_size)
 {
     ++m_current_frame ;
 

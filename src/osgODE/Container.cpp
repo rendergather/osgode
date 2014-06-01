@@ -220,6 +220,28 @@ Container::postUpdate(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
+void
+Container::updateTransformsInternal(void)
+{
+    ObjectList::iterator    itr = m_object_list.begin() ;
+    ObjectList::iterator    itr_end = m_object_list.end() ;
+
+    while( itr != itr_end ) {
+        RigidBody*  body = (*itr++)->asRigidBody() ;
+
+        if( body ) {
+            body->updateTransformInternal() ;
+        }
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 bool
 Container::addToWorldInternal(World* world)
 {

@@ -94,17 +94,32 @@ class Manager(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        writer.moveIn("osgODE::Manager") ;
+
+        class_name = "osgODE::Manager"
+
+        if self.Data.Threaded:
+            class_name = "osgODE::ThreadedManager"
+
+        writer.moveIn(class_name) ;
 
         if not super(Manager, self).writeToStream(writer) :
             return False
 
 
         writer.moveIn("UpdateCallback TRUE")
-        writer.moveIn("osgODE::ManagerUpdateCallback")
-        writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
-        writer.writeLine("MaxStepSize 0.1")
-        writer.moveOut("osgODE::ManagerUpdateCallback")
+
+        if self.Data.Threaded:
+            writer.moveIn("osgODE::ThreadedManagerUpdateCallback")
+            writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+            writer.moveOut("osgODE::ThreadedManagerUpdateCallback")
+
+        else:
+            writer.moveIn("osgODE::ManagerUpdateCallback")
+            writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+            writer.writeLine("MaxStepSize 0.1")
+            writer.moveOut("osgODE::ManagerUpdateCallback")
+
+
         writer.moveOut("UpdateCallback TRUE")
 
 
@@ -130,7 +145,7 @@ class Manager(Writable.Writable):
 
 
 
-        writer.moveOut("osgODE::Manager")
+        writer.moveOut(class_name)
 
         return True
 ############################################################################

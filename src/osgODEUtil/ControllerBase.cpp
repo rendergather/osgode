@@ -94,7 +94,7 @@ ControllerBase::ControllerBase(const ControllerBase& other, const osg::CopyOp& c
     m_key_down          ( other.m_key_down ),
     m_button_mask       ( other.m_button_mask ),
 
-    m_requesting_warp( other.m_requesting_warp )
+    m_requesting_warp   ( other.m_requesting_warp )
 {
 }
 /* ....................................................................... */
@@ -134,7 +134,7 @@ ControllerBase::handle( const osgGA::GUIEventAdapter&   ea,
     switch( ea.getEventType() )
     {
         case osgGA::GUIEventAdapter::KEYDOWN:
-            if( ! m_key_down[key] ) {
+            if( ! m_key_down[ tolower(key) ] ) {
                 m_on_key_pressed->emit( key, mod_key, handled ) ;
                 m_key_down[key] = true ;
             }
@@ -145,7 +145,7 @@ ControllerBase::handle( const osgGA::GUIEventAdapter&   ea,
 
         case osgGA::GUIEventAdapter::KEYUP:
             m_on_key_released->emit( key, mod_key, handled ) ;
-            m_key_down[key] = false ;
+            m_key_down[ tolower(key) ] = false ;
         break ;
 
 

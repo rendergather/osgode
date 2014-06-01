@@ -191,7 +191,7 @@ DefaultNearCallback::addContact(dBodyID body1, dBodyID body2, dContact* contact)
     switch(  (body1 != NULL) | (body2 != NULL) << 1  )
     {
         case 0:
-            PS_DBG2( "osgODE::DefaultNearCallback::addContact(%p): body1 == body2 == NULL, skipping contact", this) ;
+            PS_DBG3( "osgODE::DefaultNearCallback::addContact(%p): body1 == body2 == NULL, skipping contact", this) ;
             return ;
 
 
@@ -212,8 +212,7 @@ DefaultNearCallback::addContact(dBodyID body1, dBodyID body2, dContact* contact)
 
 
         default:
-            PS_FATAL("Very bad things at %s:%u", __FILE__, __LINE__) ;
-            PS_ASSERT1( false ) ;
+            PS_BREAKPOINT() ;
         break ;
     }
 

@@ -1,9 +1,9 @@
 /*!
- * @file HingeJoint.inl
+ * @file AutoRemoveUpdateCallback
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,25 +22,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_HINGEJOINT_INL
-#define _OSGODE_HINGEJOINT_INL
-
-/* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_AUTOREMOVEUPDATECALLBACK_HPP
+#define _OSGODE_AUTOREMOVEUPDATECALLBACK_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline double
-osgODE::HingeJoint::getAngle(void) const
+#include <osgODE/ODECallback>
+/* ======================================================================= */
+
+
+
+
+namespace osgODE
 {
-    return dJointGetHingeAngle(m_ODE_joint) ;
-}
-/* ....................................................................... */
+
+
+
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -48,78 +49,82 @@ osgODE::HingeJoint::getAngle(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
-osgODE::HingeJoint::getAngleRate(void) const
+//!
+/*!
+ *
+ */
+class OSG_EXPORT AutoRemoveUpdateCallback: public ODECallback
 {
-    return dJointGetHingeAngleRate(m_ODE_joint) ;
-}
-/* ....................................................................... */
+/* ======================================================================= */
+public:
+             AutoRemoveUpdateCallback( unsigned int life_time = 0xFFFFFFFF ) ;
+             AutoRemoveUpdateCallback(const AutoRemoveUpdateCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~AutoRemoveUpdateCallback(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::HingeJoint::setAutoComputeRelativeValues( bool auto_compute_relative_values )
-{
-    dJointSetHingeAutoComputeRelativeValues( m_ODE_joint, auto_compute_relative_values ) ;
-}
-/* ....................................................................... */
+public:
+    META_Object(osgODE, AutoRemoveUpdateCallback) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    inline void setLifeTime( unsigned int life_time ) ;
+
+    //! Get the const life time
+    inline unsigned int getLifeTime(void) const ;
+
+    //! Set the counter
+    inline void setCounter( unsigned int counter ) ;
+
+    //! Get the const counter
+    inline unsigned int getCounter(void) const ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline bool
-osgODE::HingeJoint::getAutoComputeRelativeValues(void) const
-{
-    return dJointGetHingeAutoComputeRelativeValues(m_ODE_joint) != 0 ;
-}
-/* ....................................................................... */
+public:
+    virtual void    operator()(ODEObject* object) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::HingeJoint::setRelativeRotation( const osg::Quat& relative_rotation )
-{
-    dQuaternion q ;
-
-    q[0] = relative_rotation.w() ;
-    q[1] = relative_rotation.x() ;
-    q[2] = relative_rotation.y() ;
-    q[3] = relative_rotation.z() ;
-
-    dJointSetHingeRelativeRotation( m_ODE_joint, q ) ;
-}
+private:
+    unsigned int    m_life_time ;
+    unsigned int    m_counter ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline osg::Quat
-osgODE::HingeJoint::getRelativeRotation(void) const
-{
-    dQuaternion q ;
-
-    dJointGetHingeRelativeRotation( m_ODE_joint, q ) ;
-
-    return osg::Quat( q[1], q[2], q[3], q[0] ) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
+} // namespace osgODE
 
 
 
 
-#endif /* _OSGODE_HINGEJOINT_INL */
+#include "AutoRemoveUpdateCallback.inl"
+
+
+
+
+#endif /* _OSGODE_AUTOREMOVEUPDATECALLBACK_HPP */

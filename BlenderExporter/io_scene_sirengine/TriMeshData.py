@@ -37,7 +37,7 @@ DYNAMIC_CATEGORY_BITS = 2
 STATIC_COLLIDE_BITS = DYNAMIC_CATEGORY_BITS
 DYNAMIC_COLLIDE_BITS = DYNAMIC_CATEGORY_BITS | STATIC_CATEGORY_BITS
 
-NORMAL_MIN_LENGTH = 1.0e-3
+NORMAL_MIN_LENGTH = 1.0e-4
 # ........................................................................ #
 ############################################################################
 

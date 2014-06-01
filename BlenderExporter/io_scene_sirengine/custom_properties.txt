@@ -28,3 +28,8 @@ oo_max_anisotropy <max_anisotropy>, Texture property
 
 oo_fast_point <fast positional light>, Light property
     a fake point light ( normals are not used during computations )
+
+
+
+
+pfps_pickable, Game property

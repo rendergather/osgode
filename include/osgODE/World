@@ -89,8 +89,19 @@ public:
     void    step(double step_size) ;
 
 
-    //! Call the dWorldStep
+    //! Advance by 1 frame
+    /*!
+     * Advance withot executing the operations and updating the transforms
+     */
+    void    threadStep(double step_size) ;
+
+
+    //! advance, step
     virtual void    update(double step_size) ;
+
+
+    //! advance, threadStep
+    virtual void    threadUpdate(double step_size) ;
 
 
 
@@ -383,7 +394,8 @@ public:
 
     public:
         //! a true value stopa the iteration
-        virtual bool    operator()( ODEObject* actor ) { return true ; }
+        virtual bool    operator()( ODEObject* actor )
+            { (void) actor ; return true ; }
     } ;
 
     //! Don't use it
@@ -402,8 +414,12 @@ public:
 
 
 /* ======================================================================= */
-protected:
-    inline void     advance( double step_size ) ;
+public:
+    inline void     advanceInternal( double step_size ) ;
+
+
+    void            runOperationsInternal(void) ;
+    void            updateRigidBodyTransformsInternal(void) ;
 /* ======================================================================= */
 
 
@@ -414,8 +430,6 @@ private:
     void    _callObjectsCallbacks(double step_size) ;
     void    _callObjectsPostCallbacks(double step_size) ;
     void    _sortObjectsByID(void) ;
-
-    void    _runOperations(void) ;
 /* ======================================================================= */
 
 

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,15 +50,15 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 Transformable::Transformable(void):
-    m_matrix_transform( new osg::MatrixTransform() ),
-    m_camera_manipulator_center( osg::Vec3(0,0,0) ),
-    m_camera_manipulator_direction( -osg::Z_AXIS ),
-    m_camera_manipulator_up( osg::Y_AXIS ),
-    m_camera_manipulator_up_object(false),
-    m_camera_manipulator_center_ws( osg::Vec3(0,0,0) ),
-    m_camera_manipulator_direction_ws( -osg::Z_AXIS ),
-    m_camera_manipulator_up_ws( osg::Y_AXIS ),
-    m_camera_manipulator_elasticity(5)
+    m_matrix_transform                  ( new osg::MatrixTransform() ),
+    m_camera_manipulator_center         ( osg::Vec3(0,0,0) ),
+    m_camera_manipulator_direction      ( -osg::Z_AXIS ),
+    m_camera_manipulator_up             ( osg::Y_AXIS ),
+    m_camera_manipulator_up_object      ( false ),
+    m_camera_manipulator_center_ws      ( osg::Vec3(0,0,0) ),
+    m_camera_manipulator_direction_ws   ( -osg::Z_AXIS ),
+    m_camera_manipulator_up_ws          ( osg::Y_AXIS ),
+    m_camera_manipulator_elasticity     ( 5 )
 {
 }
 /* ....................................................................... */
@@ -73,15 +73,15 @@ Transformable::Transformable(const Transformable& other, const osg::CopyOp& copy
     ODEObject(other, copyop),
     m_matrix_transform( static_cast<osg::MatrixTransform*>( other.m_matrix_transform->clone(copyop) ) ),
 
-    m_camera_manipulator( other.m_camera_manipulator ),
-    m_camera_manipulator_center( other.m_camera_manipulator_center ),
-    m_camera_manipulator_direction( other.m_camera_manipulator_direction ),
-    m_camera_manipulator_up( other.m_camera_manipulator_up ),
-    m_camera_manipulator_up_object( other.m_camera_manipulator_up_object ),
-    m_camera_manipulator_center_ws( other.m_camera_manipulator_center_ws ),
-    m_camera_manipulator_direction_ws( other.m_camera_manipulator_direction_ws ),
-    m_camera_manipulator_up_ws( other.m_camera_manipulator_up_ws ),
-    m_camera_manipulator_elasticity( other.m_camera_manipulator_elasticity )
+    m_camera_manipulator                ( other.m_camera_manipulator ),
+    m_camera_manipulator_center         ( other.m_camera_manipulator_center ),
+    m_camera_manipulator_direction      ( other.m_camera_manipulator_direction ),
+    m_camera_manipulator_up             ( other.m_camera_manipulator_up ),
+    m_camera_manipulator_up_object      ( other.m_camera_manipulator_up_object ),
+    m_camera_manipulator_center_ws      ( other.m_camera_manipulator_center_ws ),
+    m_camera_manipulator_direction_ws   ( other.m_camera_manipulator_direction_ws ),
+    m_camera_manipulator_up_ws          ( other.m_camera_manipulator_up_ws ),
+    m_camera_manipulator_elasticity     ( other.m_camera_manipulator_elasticity )
 {
 }
 /* ....................................................................... */

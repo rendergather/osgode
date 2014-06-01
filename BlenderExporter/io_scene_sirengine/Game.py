@@ -125,6 +125,9 @@ class Game(ODECallback.ODECallback):
             elif s.type == "DELAY":
                 sensor = Sensor.DelaySensor( self.RigidBody, s )
 
+            elif s.type == "RANDOM":
+                sensor = Sensor.RandomSensor( self.RigidBody, s )
+
             if sensor:
                 sensor.buildGraph()
                 self.SensorList.append( sensor )

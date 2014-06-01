@@ -1,9 +1,9 @@
 /*!
- * @file ManagerUpdateCallback.cpp
+ * @file ThreadedManager.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -24,17 +24,11 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ManagerUpdateCallback>
-#include <osgODE/Manager>
+#include <osgODE/ThreadedManager>
+#include <osgODE/ScopedTimer>
 #include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
 
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
+#include <osg/Timer>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,11 +42,12 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_s                ( -1.0 ),
-    m_delta                 ( 0.0 ),
-    m_max_frames_per_update ( 0 ),
-    m_max_step_size         ( -1.0 )
+ThreadedManager::ThreadedManager(void):
+    m_time          ( -1.0 ),
+    m_done          ( false ),
+    m_paused        ( false ),
+    m_pause_request ( false ),
+    m_rdy           ( false )
 {
 }
 /* ....................................................................... */
@@ -63,12 +58,13 @@ ManagerUpdateCallback::ManagerUpdateCallback(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback       ( other, copyop ),
-    m_last_s                ( other.m_last_s ),
-    m_delta                 ( other.m_delta ),
-    m_max_frames_per_update ( other.m_max_frames_per_update ),
-    m_max_step_size         ( other.m_max_step_size )
+ThreadedManager::ThreadedManager(const ThreadedManager& other, const osg::CopyOp& copyop):
+    Manager         ( other, copyop ),
+    m_time          ( -1.0 ),
+    m_done          ( false ),
+    m_paused        ( false ),
+    m_pause_request ( false ),
+    m_rdy           ( false )
 {
 }
 /* ....................................................................... */
@@ -79,8 +75,13 @@ ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other,
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::~ManagerUpdateCallback(void)
+ThreadedManager::~ThreadedManager(void)
 {
+    done( true ) ;
+
+    while( isRunning() ) {
+        OpenThreads::Thread::YieldCurrentThread() ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -91,58 +92,114 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
+ThreadedManager::run(void)
 {
-    PS_ASSERT1( dynamic_cast<Manager*> (n) ) ;
+    dInitODE2(0) ;
+    dAllocateODEDataForThread( (unsigned int) dAllocateMaskAll ) ;
 
 
-    Manager*        manager = static_cast<Manager*>(n) ;
-
-    const double    step_size = manager->getStepSize() ;
+    while( ! m_done )  {
 
 
-    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
-
-
-    if( m_last_s > 0.0  &&  sim_time > m_last_s ) {
-
-        m_delta += (sim_time - m_last_s) * manager->getTimeMultiplier() ;
-
-        m_last_s = sim_time ;
-
-
-        if( m_max_step_size > 0.0 ) {
-            m_delta = osg::minimum( m_delta, m_max_step_size ) ;
+        if( m_pause_request) {
+            m_paused = true ;
         }
 
 
-        if( m_max_frames_per_update == 0 ) {
 
-            manager->frame( m_delta ) ;
-            m_delta = 0.0 ;
+        while( m_paused ) {
 
-        } else {
-            unsigned int    frame_count = 0 ;
-
-            while( m_delta >= step_size && frame_count++ < m_max_frames_per_update ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
+            if( m_done ) {
+                goto DONE ;
             }
 
-
-            while( m_delta >= step_size ) {
-                m_delta -= step_size ;
-            }
+            OpenThreads::Thread::YieldCurrentThread() ;
         }
 
-    } else {
 
-        m_last_s = sim_time ;
+
+        double  t_s = osg::Timer::instance()->time_s() ;
+
+        if( m_time < 0.0 ) {
+            m_time = t_s ;
+        }
+
+        double  dt = t_s - m_time ;
+
+
+        dt = osg::minimum( dt, 1.0e-1 ) ;
+
+
+        if( dt >= getStepSize() ) {
+            frame( dt ) ;
+            m_time = t_s ;
+            m_rdy = true ;
+        }
 
     }
 
 
-    traverse(n, nv) ;
+
+
+DONE:
+    return ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+bool
+ThreadedManager::frame(double dt)
+{
+    bool    advanced = false ;
+
+    if( dt <= 0.0 ) {
+        return advanced ;
+    }
+
+
+
+    PS_DBG3("osgODE::Manager::threadFrame(%p, dt=%lf)", this, dt) ;
+
+    PS_SCOPED_TIMER("Manager::threadFrame") ;
+
+
+    m_delta += dt ;
+
+    World*          world = getWorld() ;
+
+    PS_ASSERT1( world ) ;
+
+    if( world ) {
+
+        const double    step_size= getStepSize() ;
+
+        advanced =   m_delta >= step_size ;
+
+
+
+        while( m_delta >= step_size ) {
+
+            m_delta -= step_size ;
+
+
+            world->callUpdateCallbackInternal() ;
+
+            world->threadUpdate(step_size) ;
+
+            world->callPostUpdateCallbackInternal() ;
+        }
+
+
+        dirtyBound() ;
+    }
+
+
+    return advanced ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

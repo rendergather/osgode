@@ -100,15 +100,25 @@ class Space(Writable.Writable):
 
 
         rigid_bodies = []
+        empties = []
 
 
         for obj in self.Data.Scene.objects:
-            if obj.is_visible( self.Data.Scene ):
-                if not self.addObject(obj):
-                    return False
+            if obj.is_visible( self.Data.Scene ) :
+                if obj.type != "EMPTY" :
+                    if not self.addObject(obj):
+                        return False
+                    else:
+                        rigid_bodies.append(obj)
                 else:
-                    rigid_bodies.append(obj)
+                    empties.append( obj )
 
+
+        for obj in empties:
+            if not self.addObject(obj):
+                return False
+            else:
+                rigid_bodies.append(obj)
 
 
 

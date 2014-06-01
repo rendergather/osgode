@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -60,11 +60,11 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 Manager::Manager(void):
-    m_delta(0.0),
-    m_step_size(MANAGER_DEFAULT_STEP_SIZE),
-    m_time_multiplier(1.0),
-    m_accept_visitors(false),
-    m_force_update_traversal(false)
+    m_delta                     ( 0.0 ),
+    m_step_size                 ( MANAGER_DEFAULT_STEP_SIZE ),
+    m_time_multiplier           ( 1.0 ),
+    m_accept_visitors           ( false ),
+    m_force_update_traversal    ( false )
 {
 
     // Call the static world constructor to inizialize the library
@@ -81,10 +81,10 @@ Manager::Manager(void):
 Manager::Manager(const Manager& other, const osg::CopyOp& copyop):
     osg::Node(other, copyop),
 
-    m_delta(0.0),
-    m_step_size(other.m_step_size),
-    m_time_multiplier(other.m_time_multiplier),
-    m_accept_visitors(other.m_accept_visitors)
+    m_delta             ( 0.0 ),
+    m_step_size         ( other.m_step_size ),
+    m_time_multiplier   ( other.m_time_multiplier ),
+    m_accept_visitors   ( other.m_accept_visitors )
 
 {
     setForceUpdateTraversal( getForceUpdateTraversal() ) ;
@@ -134,22 +134,22 @@ Manager::setup(bool accept_visitors, double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-Manager::frame(double step_size)
+Manager::frame(double dt)
 {
     bool    advanced = false ;
 
-    if( step_size <= 0.0 ) {
+    if( dt <= 0.0 ) {
         return advanced ;
     }
 
 
 
-    PS_DBG3("osgODE::Manager::frame(%p, step_size=%lf)", this, step_size) ;
+    PS_DBG3("osgODE::Manager::frame(%p, dt=%lf)", this, dt) ;
 
     PS_SCOPED_TIMER("Manager::frame") ;
 
 
-    m_delta += step_size ;
+    m_delta += dt ;
 
 
     if(m_world.valid()) {
@@ -165,7 +165,7 @@ Manager::frame(double step_size)
 
             m_world->callUpdateCallbackInternal() ;
 
-            m_world->update(step_size) ;
+            m_world->update(m_step_size) ;
 
             m_world->callPostUpdateCallbackInternal() ;
         }

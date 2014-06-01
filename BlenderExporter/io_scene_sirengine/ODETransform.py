@@ -82,6 +82,12 @@ class ODETransform(Writable.Writable):
 
         self.Invisible = self.Object.hide_render
 
+        physics_only = False
+        try:
+            physics_only = self.Object["oo_physics_only"] != 0.0
+        except:
+            physics_only = False
+
 
         if self.Object.type == 'EMPTY':
             pass
@@ -95,16 +101,17 @@ class ODETransform(Writable.Writable):
                 if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
                     billboard = Billboard.Billboard(self.Data, self.Object)
                     self.addChild(billboard)
-                else:
+                elif not physics_only:
                     scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
                     self.addChild( scale_transform )
                     #geode = Geode.Geode(self.Data, self.Object)
                     #self.addChild(geode)
             except:
-                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                    self.addChild( scale_transform )
-                    #geode = Geode.Geode(self.Data, self.Object)
-                    #self.addChild(geode)
+                    if not physics_only:
+                        scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
+                        self.addChild( scale_transform )
+                        #geode = Geode.Geode(self.Data, self.Object)
+                        #self.addChild(geode)
 
 
 

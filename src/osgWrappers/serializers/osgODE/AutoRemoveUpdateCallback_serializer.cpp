@@ -1,9 +1,9 @@
 /*!
- * @file FixedJoint_serializer.cpp
+ * @file AutoRemoveUpdateCallback_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/FixedJoint>
+#include <osgODE/AutoRemoveUpdateCallback>
 
 #include <osgDB/Registry>
 /* ....................................................................... */
@@ -43,16 +43,13 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( FixedJoint,
-                         new osgODE::FixedJoint,
-                         osgODE::FixedJoint,
-                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::FixedJoint" )
+REGISTER_OBJECT_WRAPPER( AutoRemoveUpdateCallback,
+                         new osgODE::AutoRemoveUpdateCallback,
+                         osgODE::AutoRemoveUpdateCallback,
+                         "osg::Object osgODE::ODECallback osgODE::AutoRemoveUpdateCallback" )
 {
-    ADD_BOOL_SERIALIZER     ( OnewayMode,       false ) ;
-    ADD_BOOL_SERIALIZER     ( RotationMode,     true ) ;
-    ADD_BOOL_SERIALIZER     ( PositionMode,     true ) ;
-    ADD_BOOL_SERIALIZER     ( ComputeMatrix,    true ) ;
-    ADD_MATRIX_SERIALIZER   ( Matrix, osg::Matrix::identity() ) ;
+    ADD_UINT_SERIALIZER( LifeTime, 0xFFFFFFFF ) ;
+    ADD_UINT_SERIALIZER( Counter, 0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

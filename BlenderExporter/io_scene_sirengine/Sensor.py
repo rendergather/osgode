@@ -450,6 +450,7 @@ class PropertySensor(Sensor):
     Value = None
     ValueMin = None
     ValueMax = None
+    PrevRhs = None
 ############################################################################
 
 
@@ -470,6 +471,7 @@ class PropertySensor(Sensor):
         self.Value = None
         self.ValueMin = None
         self.ValueMax = None
+        self.PrevRhs = None
 ############################################################################
 
 
@@ -494,6 +496,7 @@ class PropertySensor(Sensor):
         self.Value = self.BlenderSensor.value
         self.ValueMin = self.BlenderSensor.value_min
         self.ValueMax = self.BlenderSensor.value_max
+        self.PrevRhs = self.BlenderSensor.value
 
 
         if not self.Value:
@@ -504,6 +507,9 @@ class PropertySensor(Sensor):
 
         if not self.ValueMax:
             self.ValueMax = '0'
+
+        if not self.PrevRhs:
+            self.PrevRhs = '0'
 
 
         if self.ValueType == "Bool":
@@ -521,6 +527,9 @@ class PropertySensor(Sensor):
                 self.ValueMax = "TRUE"
             else:
                 self.ValueMax = "FALSE"
+
+
+            self.PrevRhs = self.Value
 
 
 
@@ -562,10 +571,12 @@ class PropertySensor(Sensor):
             writer.writeLine(indentation + "Value \"%s\"" % self.Value)
             writer.writeLine(indentation + "Min \"%s\"" % self.ValueMin)
             writer.writeLine(indentation + "Max \"%s\"" % self.ValueMax)
+            writer.writeLine(indentation + "PrevRhs \"%s\"" % self.PrevRhs)
         else:
             writer.writeLine(indentation + "Value %s" % self.Value)
             writer.writeLine(indentation + "Min %s" % self.ValueMin)
             writer.writeLine(indentation + "Max %s" % self.ValueMax)
+            writer.writeLine(indentation + "PrevRhs %s" % self.PrevRhs)
 
 
 
@@ -758,6 +769,80 @@ class DelaySensor(Sensor):
             writer.writeLine("Repeat FALSE")
 
 
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class RandomSensor(Sensor):
+    """ooGame::RandomSensor"""
+
+
+
+
+
+############################################################################
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(RandomSensor, self).__init__(rigid_body, sensor)
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(RandomSensor, self).buildGraph()
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::RandomSensor") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::RandomSensor")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateSensorData(self, writer):
 
         return True
 ############################################################################

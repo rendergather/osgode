@@ -6,6 +6,7 @@ SET(MODULE_NAME osgdb_serializers_osgode)
 SET(TARGET_SRC
     AMotorJoint_serializer.cpp
     AerodynamicDevice_serializer.cpp
+    AutoRemoveUpdateCallback_serializer.cpp
     BallJoint_serializer.cpp
     Box_serializer.cpp
     BypassJoint_serializer.cpp
@@ -65,6 +66,8 @@ SET(TARGET_SRC
     Sphere_serializer.cpp
     SuspensionJoint_serializer.cpp
     SwaybarJoint_serializer.cpp
+    ThreadedManagerUpdateCallback_serializer.cpp
+    ThreadedManager_serializer.cpp
     Transformable_serializer.cpp
     TriMesh_serializer.cpp
     UniversalJoint_serializer.cpp

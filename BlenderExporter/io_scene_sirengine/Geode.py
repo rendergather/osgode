@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -61,6 +61,7 @@ class Geode(Writable.Writable):
     StateSet = None
     NodeMask = None
     ReadOK = None
+    LOD = None
 ############################################################################
 
 
@@ -79,6 +80,8 @@ class Geode(Writable.Writable):
         self.MeshData = None
         self.StateSet = None
         self.NodeMask = None
+        self.LOD = None
+        self.LODuid = None
 ############################################################################
 
 
@@ -92,6 +95,22 @@ class Geode(Writable.Writable):
 
 
         self.NodeMask = ALBEDO | MATERIAL | NORMAL
+
+
+        self.LOD = [0.0, 0.0]
+
+
+        try:
+            self.LOD[0] = self.Object["oo_lod_min"]
+        except:
+            self.LOD[0] = 0.0
+
+        try:
+            self.LOD[1] = self.Object["oo_lod_max"]
+            self.LODuid = self.Data.UniqueID.generate() ;
+        except:
+            self.LOD = None
+            self.LODuid = None
 
 
 
@@ -183,14 +202,38 @@ class Geode(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        writer.moveIn("osg::Geode")
+
+        if self.LOD:
+            writer.moveIn("osg::LOD")
+
+            writer.writeLine("UniqueID %u" % self.LODuid)
+
+            writer.moveIn("Children 1")
+            writer.moveIn("osg::Geode")
+
+            self.writeGeodeData(writer)
+
+            writer.moveOut("osg::Geode")
+            writer.moveOut("Children 1")
 
 
-        self.writeGeodeData(writer)
+            writer.writeLine( "CenterMode USER_DEFINED_CENTER" )
+            writer.writeLine( "UserCenter 0 0 0 -1" )
+
+            writer.moveIn("RangeList 1")
+            writer.writeLine("%f %f" % (self.LOD[0], self.LOD[1]))
+            writer.moveOut("RangeList 1")
+
+            writer.moveOut("osg::LOD")
 
 
 
-        writer.moveOut("osg::Geode")
+        else:
+            writer.moveIn("osg::Geode")
+
+            self.writeGeodeData(writer)
+
+            writer.moveOut("osg::Geode")
 
 
         return True

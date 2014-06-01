@@ -420,7 +420,7 @@ class MeshData(object):
                     else:
                         print("Unhandled polygon type in %s, face: %d, num vertices: %d" % (mesh.name, cur_face, len(f.vertices)))
                 else:
-                    print("FUCK!!!")
+                    pass
 
 
                 cur_face += 1

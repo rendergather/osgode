@@ -192,6 +192,8 @@ public:
 public:
     virtual void    callUpdateCallbackInternal(void) ;
     virtual void    callPostUpdateCallbackInternal(void) ;
+
+    void    updateTransformsInternal(void) ;
 /* ======================================================================= */
 
 

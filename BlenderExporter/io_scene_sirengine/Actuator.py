@@ -162,6 +162,11 @@ class SoundActuator(Actuator):
     Mode = None
     Sound3D = None
     SoundSource = None
+    Gain = None
+    Pitch = None
+
+    UseGainLevels = None
+    GainLevels = None
 ############################################################################
 
 
@@ -179,6 +184,12 @@ class SoundActuator(Actuator):
         self.Mode = None
         self.Sound3D = None
         self.SoundSource = None
+
+        self.Gain = 1.0
+        self.Pitch = 1.0
+
+        self.UseGainLevels = False
+        self.GainLevels = [0.5, 3.0, 10.0]
 ############################################################################
 
 
@@ -201,6 +212,10 @@ class SoundActuator(Actuator):
             self.Mode = "LOOP_END"
 
 
+        self.Gain = self.BlenderActuator.volume
+        self.Pitch = self.BlenderActuator.pitch / 12.0 + 1.0
+
+
 
         if self.Data.ExportSounds and self.BlenderActuator.sound and not self.Cached:
             self.SoundSource = SoundSource.SoundSource( self.Data, self.BlenderActuator.sound )
@@ -214,6 +229,29 @@ class SoundActuator(Actuator):
                 self.SoundSource.AutoComputePosition = 'DO_NOT_AUTOCOMPUTE'
 
 
+            self.SoundSource.MAX_DISTANCE = self.BlenderActuator.distance_3d_max
+            self.SoundSource.ROLLOFF_FACTOR = self.BlenderActuator.rolloff_factor_3d
+            self.SoundSource.REFERENCE_DISTANCE = self.BlenderActuator.distance_3d_reference
+            self.SoundSource.MIN_GAIN = self.BlenderActuator.gain_3d_min
+            self.SoundSource.MAX_GAIN = self.BlenderActuator.gain_3d_max
+            self.SoundSource.CONE_OUTER_GAIN = self.BlenderActuator.cone_outer_gain_3d
+            self.SoundSource.CONE_INNER_ANGLE = self.BlenderActuator.cone_inner_angle_3d
+            self.SoundSource.CONE_OUTER_ANGLE = self.BlenderActuator.cone_outer_angle_3d
+
+
+
+        try:
+            gain_levels = []
+            gain_levels.append( self.Object["oog_%s_gain_min" % self.BlenderActuator.sound.name] )
+            gain_levels.append( self.Object["oog_%s_gain_mid" % self.BlenderActuator.sound.name] )
+            gain_levels.append( self.Object["oog_%s_gain_max" % self.BlenderActuator.sound.name] )
+
+            self.UseGainLevels = True
+            self.GainLevels = gain_levels
+        except:
+            self.UseGainLevels = False
+
+
 
 
         return True
@@ -225,11 +263,17 @@ class SoundActuator(Actuator):
 ############################################################################
     def writeToStream(self, writer):
 
-        writer.moveIn("ooGame::SoundActuator") ;
+        if self.UseGainLevels:
+            writer.moveIn("ooGame::CollisionSoundActuator")
+        else:
+            writer.moveIn("ooGame::SoundActuator")
 
         self.writePrivateData(writer)
 
-        writer.moveOut("ooGame::SoundActuator")
+        if self.UseGainLevels:
+            writer.moveOut("ooGame::CollisionSoundActuator")
+        else:
+            writer.moveOut("ooGame::SoundActuator")
 
         return True
 ############################################################################
@@ -247,6 +291,18 @@ class SoundActuator(Actuator):
             writer.writeLine("Sound3D TRUE")
         else:
             writer.writeLine("Sound3D FALSE")
+
+
+        writer.writeLine("Gain %f" % self.Gain)
+        writer.writeLine("Pitch %f" % self.Pitch)
+
+
+
+        if self.UseGainLevels:
+            writer.writeLine("UseGainLevels TRUE")
+            writer.writeLine("GainLevels %f %f %f" % ( float(self.GainLevels[0]), float(self.GainLevels[1]), float(self.GainLevels[2]) ))
+
+
 
         if self.SoundSource:
             writer.moveIn("Source TRUE")
@@ -968,7 +1024,7 @@ class EditObjectActuator(Actuator):
 
 
 
-        self.LifeTime = float(self.BlenderActuator.time)
+        self.LifeTime = self.BlenderActuator.time
 
         self.LinearVelocity = self.BlenderActuator.linear_velocity
         self.AngularVelocity = self.BlenderActuator.angular_velocity
@@ -988,59 +1044,62 @@ class EditObjectActuator(Actuator):
         self.Mass = self.BlenderActuator.mass
 
 
+        obj = None
 
-        if self.BlenderActuator.object:
+
+        if self.Mode == "ADD_OBJECT":
 
             obj = self.BlenderActuator.object
 
+            if obj:
 
-            if not obj.game.use_collision_bounds:
+                if not obj.game.use_collision_bounds:
 
-                from . import RigidBody
-                self.RefObject = RigidBody.RigidBody(self.Data, obj)
-
-
-
-            elif obj.game.physics_type == 'NO_COLLISION' :
-
-                from . import RigidBody
-                self.RefObject = RigidBody.RigidBody(self.Data, obj)
+                    from . import RigidBody
+                    self.RefObject = RigidBody.RigidBody(self.Data, obj)
 
 
 
+                elif obj.game.physics_type == 'NO_COLLISION' :
+
+                    from . import RigidBody
+                    self.RefObject = RigidBody.RigidBody(self.Data, obj)
 
 
-            elif obj.game.physics_type in ['STATIC', 'DYNAMIC', 'RIGID_BODY']:
-                if obj.game.collision_bounds_type == 'TRIANGLE_MESH':
-                    from . import TriMesh
-                    self.RefObject = TriMesh.TriMesh(self.Data, obj)
 
-                elif obj.game.collision_bounds_type == 'BOX':
-                    from . import Box
-                    self.RefObject = Box.Box(self.Data, obj)
 
-                elif obj.game.collision_bounds_type == 'SPHERE':
-                    from . import Sphere
-                    self.RefObject = Sphere.Sphere(self.Data, obj)
 
-                elif obj.game.collision_bounds_type == 'CYLINDER':
-                    from . import Cylinder
-                    self.RefObject = Cylinder.Cylinder(self.Data, obj)
+                elif obj.game.physics_type in ['STATIC', 'DYNAMIC', 'RIGID_BODY']:
+                    if obj.game.collision_bounds_type == 'TRIANGLE_MESH':
+                        from . import TriMesh
+                        self.RefObject = TriMesh.TriMesh(self.Data, obj)
 
-                elif obj.game.collision_bounds_type == 'CAPSULE':
-                    from . import Capsule
-                    self.RefObject = Capsule.Capsule(self.Data, obj)
+                    elif obj.game.collision_bounds_type == 'BOX':
+                        from . import Box
+                        self.RefObject = Box.Box(self.Data, obj)
+
+                    elif obj.game.collision_bounds_type == 'SPHERE':
+                        from . import Sphere
+                        self.RefObject = Sphere.Sphere(self.Data, obj)
+
+                    elif obj.game.collision_bounds_type == 'CYLINDER':
+                        from . import Cylinder
+                        self.RefObject = Cylinder.Cylinder(self.Data, obj)
+
+                    elif obj.game.collision_bounds_type == 'CAPSULE':
+                        from . import Capsule
+                        self.RefObject = Capsule.Capsule(self.Data, obj)
+
+                    else:
+                        print("This exporter does not support %s collision bounds" %obj.game.collision_bounds_type)
+                        return False
+
+
+
 
                 else:
-                    print("This exporter does not support %s collision bounds" %obj.game.collision_bounds_type)
+                    print("EditObjectActuator does not support %s physics type" %obj.game.physics_type)
                     return False
-
-
-
-
-            else:
-                print("EditObjectActuator does not support %s physics type" %obj.game.physics_type)
-                return False
 
 
 
@@ -1086,7 +1145,7 @@ class EditObjectActuator(Actuator):
         writer.writeLine("Mode %s" % self.Mode)
         writer.writeLine("DynamicOperation %s" % self.DynamicOperation)
 
-        writer.writeLine("LifeTime %f" % self.LifeTime)
+        writer.writeLine("LifeTime %u" % self.LifeTime)
 
         writer.writeLine("LinearVelocity %f %f %f" %(self.LinearVelocity[0], self.LinearVelocity[1], self.LinearVelocity[2]))
         writer.writeLine("AngularVelocity %f %f %f" %(self.AngularVelocity[0], self.AngularVelocity[1], self.AngularVelocity[2]))

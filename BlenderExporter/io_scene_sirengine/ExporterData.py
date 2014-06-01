@@ -50,6 +50,7 @@ class ExporterData(object):
     Context = None
     Scene = None
     Operator = None
+    Threaded = None
     UniqueID = None
     VertexID = None
     ODEID = None
@@ -85,6 +86,7 @@ class ExporterData(object):
             self.FilePath = data.FilePath
             self.Context = data.Context
             self.Scene = data.Scene
+            self.Threaded = data.Threaded
             self.Operator = data.Operator
             self.UniqueID = data.UniqueID
             self.VertexID = data.VertexID
@@ -110,6 +112,7 @@ class ExporterData(object):
             self.Context = None
             self.Scene = None
             self.Operator = None
+            self.Threaded = None
             self.UniqueID = None
             self.VertexID = None
             self.ODEID = None

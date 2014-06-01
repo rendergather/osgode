@@ -77,6 +77,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
 
 
+    threading_mode = BoolProperty( name="Compute dynamics in a separate thread", default=True)
+
     export_selected = BoolProperty( name="Export only selected", default=False)
 
 
@@ -128,6 +130,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.Context = context
         data.Scene = bpy.data.scenes[0]
         data.Operator = self
+        data.Threaded = self.threading_mode
         data.UniqueID = IDGenerator.IDGenerator()
         data.VertexID = IDGenerator.IDGenerator()
         data.ODEID = IDGenerator.IDGenerator()

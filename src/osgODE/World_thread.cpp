@@ -1,9 +1,9 @@
 /*!
- * @file ManagerUpdateCallback.cpp
+ * @file World_thread.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,9 +24,10 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ManagerUpdateCallback>
-#include <osgODE/Manager>
+#include <osgODE/World>
+#include <osgODE/RigidBody>
 #include <osgODE/Notify>
+#include <osgODE/ScopedTimer>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,39 +49,11 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_s                ( -1.0 ),
-    m_delta                 ( 0.0 ),
-    m_max_frames_per_update ( 0 ),
-    m_max_step_size         ( -1.0 )
+void
+World::threadUpdate(double step_size)
 {
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback       ( other, copyop ),
-    m_last_s                ( other.m_last_s ),
-    m_delta                 ( other.m_delta ),
-    m_max_frames_per_update ( other.m_max_frames_per_update ),
-    m_max_step_size         ( other.m_max_step_size )
-{
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-ManagerUpdateCallback::~ManagerUpdateCallback(void)
-{
+    advanceInternal( step_size ) ;
+    threadStep( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -91,58 +64,76 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
+World::threadStep(double step_size)
 {
-    PS_ASSERT1( dynamic_cast<Manager*> (n) ) ;
-
-
-    Manager*        manager = static_cast<Manager*>(n) ;
-
-    const double    step_size = manager->getStepSize() ;
-
-
-    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
-
-
-    if( m_last_s > 0.0  &&  sim_time > m_last_s ) {
-
-        m_delta += (sim_time - m_last_s) * manager->getTimeMultiplier() ;
-
-        m_last_s = sim_time ;
-
-
-        if( m_max_step_size > 0.0 ) {
-            m_delta = osg::minimum( m_delta, m_max_step_size ) ;
-        }
-
-
-        if( m_max_frames_per_update == 0 ) {
-
-            manager->frame( m_delta ) ;
-            m_delta = 0.0 ;
-
-        } else {
-            unsigned int    frame_count = 0 ;
-
-            while( m_delta >= step_size && frame_count++ < m_max_frames_per_update ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
-            }
-
-
-            while( m_delta >= step_size ) {
-                m_delta -= step_size ;
-            }
-        }
-
-    } else {
-
-        m_last_s = sim_time ;
-
+    if( step_size <= 0.0 ) {
+        return ;
     }
 
 
-    traverse(n, nv) ;
+    PS_DBG3("osgODE::World::threadStep(%p, step_size=%lf)", this, step_size) ;
+
+
+
+    m_current_step_size = step_size ;
+
+
+
+    m_current_wind = m_wind * 0.5 * ( 1.0 + cos(2.0 * osg::PI * m_wind_frequency * m_simulation_time) ) ;
+
+
+
+    _callObjectsCallbacks(step_size) ;
+
+
+
+    PS_DBG3("osgODE::World::threadStep(%p, step_size=%lf): calling WorldStep", this, step_size) ;
+    {
+        PS_SCOPED_TIMER("WorldStep") ;
+
+        m_world_step(m_ODE_world, step_size) ;
+    }
+
+
+
+
+
+    // !!!!!!!!!!!!
+    // !!!!!!!!!!!!
+    // !!!!!!!!!!!!
+    // !!!!!!!!!!!!
+
+#if 0
+    // away because writes to the matrix transforms
+    _callObjectsPostCallbacks(step_size) ;
+
+    // away vbecause could add/remove nodes
+    runOperationsInternal() ;
+#else
+
+
+
+    PS_DBG3("osgODE::World::threadStep(%p): calling post callbacks", this) ;
+
+
+
+    std::vector< osg::ref_ptr<ODEObject> >::iterator    iter = m_objects.begin() ;
+    std::vector< osg::ref_ptr<ODEObject> >::iterator    iter_end = m_objects.end() ;
+
+    while(iter != iter_end) {
+
+
+        ODEObject*  o = iter->get() ;
+
+        iter++ ;
+
+
+
+        o->postUpdate(step_size) ;
+        o->callPostUpdateCallbackInternal() ;
+    }
+
+#endif
 }
 /* ....................................................................... */
 /* ======================================================================= */

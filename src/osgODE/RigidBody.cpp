@@ -51,7 +51,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody::RigidBody(void):
-    m_mass_negative(false)
+    m_mass_negative     ( false )
 {
     dWorldID    static_world = StaticWorld::instance()->getODEWorld() ;
 
@@ -62,17 +62,17 @@ RigidBody::RigidBody(void):
 
 
     // Some default parameters...
-    setMaxAngularSpeed(FLT_MAX) ;
-    setLinearDamping(0.01) ;
-    setAngularDamping(0.01) ;
-    setLinearDampingThreshold(0.01) ;
-    setAngularDampingThreshold(0.01) ;
-    setAutoDisableLinearThreshold(0.1) ;
-    setAutoDisableAngularThreshold(0.1) ;
-    setAutoDisableFlag(false) ;
-    setAutoDisableSteps(180) ;
-    setAutoDisableTime(3.0) ;
-    setAutoDisableAverageSamplesCount(6) ;
+    setMaxAngularSpeed                  ( FLT_MAX ) ;
+    setLinearDamping                    ( 0.01 ) ;
+    setAngularDamping                   ( 0.01 ) ;
+    setLinearDampingThreshold           ( 0.01 ) ;
+    setAngularDampingThreshold          ( 0.01 ) ;
+    setAutoDisableLinearThreshold       ( 0.1 ) ;
+    setAutoDisableAngularThreshold      ( 0.1 ) ;
+    setAutoDisableFlag                  ( false ) ;
+    setAutoDisableSteps                 ( 180 ) ;
+    setAutoDisableTime                  ( 3.0 ) ;
+    setAutoDisableAverageSamplesCount   ( 6 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -83,12 +83,12 @@ RigidBody::RigidBody(void):
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody::RigidBody(const RigidBody& other, const osg::CopyOp& copyop):
-    Transformable(other, copyop),
-    m_mass_negative( other.m_mass_negative ),
-    m_old_linear_velocity( other.m_old_linear_velocity ),
-    m_linear_acceleration( other.m_linear_acceleration ),
-    m_old_angular_velocity( other.m_old_angular_velocity ),
-    m_angular_acceleration( other.m_angular_acceleration )
+    Transformable           ( other, copyop ),
+    m_mass_negative         ( other.m_mass_negative ),
+    m_old_linear_velocity   ( other.m_old_linear_velocity ),
+    m_linear_acceleration   ( other.m_linear_acceleration ),
+    m_old_angular_velocity  ( other.m_old_angular_velocity ),
+    m_angular_acceleration  ( other.m_angular_acceleration )
 {
     dWorldID    static_world = StaticWorld::instance()->getODEWorld() ;
     m_ODE_body = dBodyCreate(static_world) ;
@@ -109,9 +109,9 @@ RigidBody::RigidBody(const RigidBody& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 RigidBody::~RigidBody(void)
 {
-    if(m_ODE_body) {
-        dBodyDestroy(m_ODE_body) ;
-    }
+    PS_ASSERT1( m_ODE_body != NULL ) ;
+
+    dBodyDestroy( m_ODE_body ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -164,7 +164,7 @@ RigidBody::setMass(double mass, const osg::Vec3& size, int type_class)
 
 
 
-    // The kinematic bodies have mass->invMass = 0, the dBodySetMass restore
+    // Kinematic bodies have mass->invMass = 0, the dBodySetMass restore
     // this value. To preserve the body state I store the kinematic flag here
     // and restore it at the end of this function
     bool    kinematic_flag = this->getKinematic() ;
@@ -468,7 +468,7 @@ RigidBody::addToWorldInternal(World* world)
 
         /* In the Joint;;checkBodies method (invoked by _notifyJoints) a body
          * is valid if it has non-NULL world, but the world of this body,
-         * although valid, has not been setted yet. I provide: */
+         * although valid, is still NULL. I provide: */
         setWorldInternal(world) ;
 
 
@@ -585,10 +585,6 @@ RigidBody::update(double step_size)
 void
 RigidBody::postUpdate(double step_size)
 {
-    updateTransformInternal() ;
-
-
-
     const osg::BoundingSphere&  bs = getActorBound() ;
 
     if( bs.valid() ) {
@@ -612,8 +608,8 @@ RigidBody::postUpdate(double step_size)
 void
 RigidBody::updateTransformInternal(void)
 {
-    const dReal*    p = dBodyGetPosition(m_ODE_body) ;
-    const dReal*    r = dBodyGetRotation(m_ODE_body) ;
+    const dReal*    p = dBodyGetPosition( m_ODE_body ) ;
+    const dReal*    r = dBodyGetRotation( m_ODE_body ) ;
 
 
     osg::Matrix     m(  r[0] , r[4] , r[8] , 0.0,
@@ -623,7 +619,8 @@ RigidBody::updateTransformInternal(void)
 
 
 
-    this->getMatrixTransform()->setMatrix(m) ;
+    this->getMatrixTransform()->setMatrix( m ) ;
+
     this->getMatrixTransform()->dirtyBound() ;
 }
 /* ....................................................................... */

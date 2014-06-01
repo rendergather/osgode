@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -70,7 +70,8 @@ CharacterBase::CharacterBase(void):
     m_foot_contact_joint    ( NULL ),
     m_is_on_ground          ( false ),
     m_ground_contact_normal ( osg::Z_AXIS ),
-    m_footstep_derivative   ( 0.0 )
+    m_footstep_derivative   ( 0.0 ),
+    m_motion_fmax_mult      ( 1.0 )
 {
 
     m_footstep_info.Magnitude       = 250.0 ;
@@ -119,7 +120,8 @@ CharacterBase::CharacterBase(const CharacterBase& other, const osg::CopyOp& copy
     m_ground_contact_normal ( osg::Z_AXIS ),
     m_foot_contact_info     ( other.m_foot_contact_info ),
     m_footstep_info         ( other.m_footstep_info ),
-    m_footstep_derivative   ( other.m_footstep_derivative )
+    m_footstep_derivative   ( other.m_footstep_derivative ),
+    m_motion_fmax_mult      ( 1.0 )
 {
 }
 /* ....................................................................... */
@@ -233,6 +235,26 @@ CharacterBase::_move(double step_size)
         m_lmotor->setParam(dParamFMax2, 0.0) ;
         m_lmotor->setParam(dParamVel3, 0.0) ;
         m_lmotor->setParam(dParamFMax3, 0.0) ;
+
+
+
+        osg::Vec3   direction = m_body->getQuaternion() * m_motion_velocity ;
+
+        const double    speed = direction.normalize() ;
+        const osg::Vec3 velocity = direction * speed ;
+
+        const osg::Vec3 force = direction * m_body->getMass() * 9.80665 ;
+
+
+        m_lmotor->setParam(dParamVel,   velocity.x()        ) ;
+        m_lmotor->setParam(dParamVel2,  velocity.y()        ) ;
+        m_lmotor->setParam(dParamVel3,  velocity.z()        ) ;
+
+        m_lmotor->setParam(dParamFMax,  fabs( force.x() )   ) ;
+        m_lmotor->setParam(dParamFMax2, fabs( force.y() )   ) ;
+        m_lmotor->setParam(dParamFMax3, fabs( force.z() )   ) ;
+
+
         return ;
     }
 
@@ -248,7 +270,7 @@ CharacterBase::_move(double step_size)
     direction = m_ground_contact_normal ^ direction ;
     direction.normalize() ;
 
-    const osg::Vec3 force = direction * m_motion_fmax ;
+    const osg::Vec3 force = direction * m_motion_fmax * m_motion_fmax_mult ;
     const osg::Vec3 velocity = direction * speed ;
 
 
@@ -263,7 +285,7 @@ CharacterBase::_move(double step_size)
 
 
 
-    if( m_jump_res_time <= 0.0 ) {
+    if( m_jump_res_time <= 0.0  &&  force.length2() > 1.0e-1 ) {
         const double    body_speed      = m_body->getLinearVelocity().length() ;
 
         const osg::Vec3 down_versor     = m_up_versor * -1.0 ;
@@ -275,7 +297,7 @@ CharacterBase::_move(double step_size)
         const double    magnitude       = body_speed * m_footstep_info.Magnitude ;
 
 
-        m_footstep_time += step_size * time_multiplier ;
+        m_footstep_time += step_size * time_multiplier * 2.0 * (double)rand() / (double)RAND_MAX ;
 
 
         const double    sin_arg = m_footstep_time * 2.0 * osg::PI ;
@@ -398,6 +420,27 @@ CharacterBase:: _collideAgainstGround(double step_size)
         // ??
         contact.surface.mu = 0.0 ;
         contact.surface.mu2 = m_body->getMass() * 2.0e-2 ;
+
+
+
+
+#if 1
+        const osgODE::CollisionParameters*  cp = collidable->getCollisionParameters() ;
+
+        if( cp ) {
+            contact.surface.mu2 = cp->getMu() ;
+
+            m_motion_fmax_mult = osg::clampTo( cp->getMu(), 0.0, 1.0 ) ;
+
+            m_motion_fmax_mult = pow( m_motion_fmax_mult, 0.125 ) ;
+
+        } else {
+
+            m_motion_fmax_mult = 1.0 ;
+
+        }
+#endif
+
 
 
         if( m_motion_velocity.length2() < 1.0e-6 ) {

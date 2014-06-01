@@ -13,6 +13,8 @@ SET(TARGET_H
     ${HEADER_PATH}/AMotorJoint.inl
     ${HEADER_PATH}/AerodynamicDevice
     ${HEADER_PATH}/AerodynamicDevice.inl
+    ${HEADER_PATH}/AutoRemoveUpdateCallback
+    ${HEADER_PATH}/AutoRemoveUpdateCallback.inl
     ${HEADER_PATH}/BallJoint
     ${HEADER_PATH}/Box
     ${HEADER_PATH}/BypassJoint
@@ -127,6 +129,10 @@ SET(TARGET_H
     ${HEADER_PATH}/SuspensionJoint.inl
     ${HEADER_PATH}/SwaybarJoint
     ${HEADER_PATH}/SwaybarJoint.inl
+    ${HEADER_PATH}/ThreadedManager
+    ${HEADER_PATH}/ThreadedManager.inl
+    ${HEADER_PATH}/ThreadedManagerUpdateCallback
+    ${HEADER_PATH}/ThreadedManagerUpdateCallback.inl
     ${HEADER_PATH}/Transformable
     ${HEADER_PATH}/Transformable.inl
     ${HEADER_PATH}/TriMesh
@@ -146,6 +152,7 @@ SET(TARGET_H
 SET(TARGET_SRC
     AMotorJoint.cpp
     AerodynamicDevice.cpp
+    AutoRemoveUpdateCallback.cpp
     BallJoint.cpp
     Box.cpp
     BypassJoint.cpp
@@ -213,6 +220,8 @@ SET(TARGET_SRC
     StaticWorld.cpp
     SuspensionJoint.cpp
     SwaybarJoint.cpp
+    ThreadedManager.cpp
+    ThreadedManagerUpdateCallback.cpp
     Transformable.cpp
     TriMesh.cpp
     UniversalJoint.cpp
@@ -220,6 +229,7 @@ SET(TARGET_SRC
     Wheel.cpp
     World.cpp
     World_actors.cpp
+    World_thread.cpp
 )
 
 

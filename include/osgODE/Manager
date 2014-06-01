@@ -145,7 +145,7 @@ public:
     /*!
      * If step_size <= 0.0 returns immediately
      */
-    bool    frame(double step_size) ;
+    virtual bool    frame(double step_size) ;
 /* ======================================================================= */
 
 
@@ -163,9 +163,10 @@ public:
 
 
 /* ======================================================================= */
-private:
+protected:
     double              m_delta ;
 
+private:
     double              m_step_size ;
     double              m_time_multiplier ;
 

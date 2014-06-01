@@ -189,6 +189,9 @@ class SoundSource(Writable.Writable):
             return False
 
 
+        writer.writeLine("Name \"%s\"" % self.Sound.name)
+
+
 
         if self.CopySource:
             return True

@@ -125,7 +125,7 @@ class Speaker(Writable.Writable):
         self.PITCH = speaker.volume
         self.GAIN = speaker.pitch
         self.MAX_DISTANCE = speaker.distance_max
-        self.ROLLOFF_FACTOR = 1.0
+        self.ROLLOFF_FACTOR = speaker.attenuation
         self.REFERENCE_DISTANCE = speaker.distance_reference
         self.MIN_GAIN = speaker.volume_min
         self.MAX_GAIN = speaker.volume_max
@@ -190,6 +190,9 @@ class Speaker(Writable.Writable):
 
         if not super(Speaker, self).writeToStream(writer) :
             return False
+
+
+        writer.writeLine("Name \"%s\"" % self.Object.name)
 
 
 

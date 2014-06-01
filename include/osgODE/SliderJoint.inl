@@ -77,7 +77,7 @@ osgODE::SliderJoint::setAutoComputeRelativeValues( bool auto_compute_relative_va
 inline bool
 osgODE::SliderJoint::getAutoComputeRelativeValues(void) const
 {
-    return dJointGetSliderAutoComputeRelativeValues(m_ODE_joint) ;
+    return dJointGetSliderAutoComputeRelativeValues(m_ODE_joint) != 0 ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

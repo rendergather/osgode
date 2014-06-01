@@ -1,9 +1,9 @@
 /*!
- * @file ManagerUpdateCallback.cpp
+ * @file AutoRemoveUpdateCallback.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,13 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/ManagerUpdateCallback>
-#include <osgODE/Manager>
-#include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_AUTOREMOVEUPDATECALLBACK_INL
+#define _OSGODE_AUTOREMOVEUPDATECALLBACK_INL
 
 
 
@@ -41,19 +36,12 @@
 
 
 
-using namespace osgODE ;
-
-
-
-
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_s                ( -1.0 ),
-    m_delta                 ( 0.0 ),
-    m_max_frames_per_update ( 0 ),
-    m_max_step_size         ( -1.0 )
+inline void
+osgODE::AutoRemoveUpdateCallback::setLifeTime( unsigned int life_time )
 {
+    m_life_time = life_time ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -63,13 +51,10 @@ ManagerUpdateCallback::ManagerUpdateCallback(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback       ( other, copyop ),
-    m_last_s                ( other.m_last_s ),
-    m_delta                 ( other.m_delta ),
-    m_max_frames_per_update ( other.m_max_frames_per_update ),
-    m_max_step_size         ( other.m_max_step_size )
+inline unsigned int
+osgODE::AutoRemoveUpdateCallback::getLifeTime(void) const
 {
+    return m_life_time ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -79,8 +64,10 @@ ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other,
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::~ManagerUpdateCallback(void)
+inline void
+osgODE::AutoRemoveUpdateCallback::setCounter( unsigned int counter )
 {
+    m_counter = counter ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -90,59 +77,15 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-void
-ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
+inline unsigned int
+osgODE::AutoRemoveUpdateCallback::getCounter(void) const
 {
-    PS_ASSERT1( dynamic_cast<Manager*> (n) ) ;
-
-
-    Manager*        manager = static_cast<Manager*>(n) ;
-
-    const double    step_size = manager->getStepSize() ;
-
-
-    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
-
-
-    if( m_last_s > 0.0  &&  sim_time > m_last_s ) {
-
-        m_delta += (sim_time - m_last_s) * manager->getTimeMultiplier() ;
-
-        m_last_s = sim_time ;
-
-
-        if( m_max_step_size > 0.0 ) {
-            m_delta = osg::minimum( m_delta, m_max_step_size ) ;
-        }
-
-
-        if( m_max_frames_per_update == 0 ) {
-
-            manager->frame( m_delta ) ;
-            m_delta = 0.0 ;
-
-        } else {
-            unsigned int    frame_count = 0 ;
-
-            while( m_delta >= step_size && frame_count++ < m_max_frames_per_update ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
-            }
-
-
-            while( m_delta >= step_size ) {
-                m_delta -= step_size ;
-            }
-        }
-
-    } else {
-
-        m_last_s = sim_time ;
-
-    }
-
-
-    traverse(n, nv) ;
+    return m_counter ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_AUTOREMOVEUPDATECALLBACK_INL */

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -196,8 +196,12 @@ public:
 
 /* ======================================================================= */
 public:
-    //! collide, then World::update
-    virtual void    update(double step_size=1.0/60.0) ;
+    //! advance, collide, step
+    virtual void    update(double step_size) ;
+
+
+    //! advance, collide, threadStep
+    virtual void    threadUpdate(double step_size) ;
 
     //! Invokes dCollide and the collision callbacks
     void    collide(void) ;

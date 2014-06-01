@@ -1,9 +1,9 @@
 /*!
- * @file ManagerUpdateCallback.cpp
+ * @file ThreadedManagerUpdateCallback.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
+ *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -24,17 +24,9 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-#include <osgODE/ManagerUpdateCallback>
-#include <osgODE/Manager>
+#include <osgODE/ThreadedManagerUpdateCallback>
+#include <osgODE/ThreadedManager>
 #include <osgODE/Notify>
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,11 +40,7 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(void):
-    m_last_s                ( -1.0 ),
-    m_delta                 ( 0.0 ),
-    m_max_frames_per_update ( 0 ),
-    m_max_step_size         ( -1.0 )
+ThreadedManagerUpdateCallback::ThreadedManagerUpdateCallback(void)
 {
 }
 /* ....................................................................... */
@@ -63,12 +51,8 @@ ManagerUpdateCallback::ManagerUpdateCallback(void):
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other, const osg::CopyOp& copyop):
-    osg::NodeCallback       ( other, copyop ),
-    m_last_s                ( other.m_last_s ),
-    m_delta                 ( other.m_delta ),
-    m_max_frames_per_update ( other.m_max_frames_per_update ),
-    m_max_step_size         ( other.m_max_step_size )
+ThreadedManagerUpdateCallback::ThreadedManagerUpdateCallback(const ThreadedManagerUpdateCallback& other, const osg::CopyOp& copyop):
+    osg::NodeCallback       ( other, copyop )
 {
 }
 /* ....................................................................... */
@@ -79,7 +63,7 @@ ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other,
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerUpdateCallback::~ManagerUpdateCallback(void)
+ThreadedManagerUpdateCallback::~ThreadedManagerUpdateCallback(void)
 {
 }
 /* ....................................................................... */
@@ -91,58 +75,37 @@ ManagerUpdateCallback::~ManagerUpdateCallback(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
+ThreadedManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 {
-    PS_ASSERT1( dynamic_cast<Manager*> (n) ) ;
+    PS_ASSERT1( dynamic_cast<ThreadedManager*> (n) ) ;
+
+    ThreadedManager*    manager = static_cast<ThreadedManager*>(n) ;
+
+    World*  world = manager->getWorld() ;
+
+    PS_ASSERT1( world ) ;
+
+    if( ! manager->isRunning() ) {
+        manager->startThread() ;
+    }
 
 
-    Manager*        manager = static_cast<Manager*>(n) ;
 
-    const double    step_size = manager->getStepSize() ;
+    if( manager->rdy() ) {
 
+        manager->pause() ;
 
-    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
+        world->updateRigidBodyTransformsInternal() ;
+        world->runOperationsInternal() ;
 
-
-    if( m_last_s > 0.0  &&  sim_time > m_last_s ) {
-
-        m_delta += (sim_time - m_last_s) * manager->getTimeMultiplier() ;
-
-        m_last_s = sim_time ;
-
-
-        if( m_max_step_size > 0.0 ) {
-            m_delta = osg::minimum( m_delta, m_max_step_size ) ;
-        }
-
-
-        if( m_max_frames_per_update == 0 ) {
-
-            manager->frame( m_delta ) ;
-            m_delta = 0.0 ;
-
-        } else {
-            unsigned int    frame_count = 0 ;
-
-            while( m_delta >= step_size && frame_count++ < m_max_frames_per_update ) {
-                manager->frame(step_size) ;
-                m_delta -= step_size ;
-            }
-
-
-            while( m_delta >= step_size ) {
-                m_delta -= step_size ;
-            }
-        }
-
-    } else {
-
-        m_last_s = sim_time ;
+        manager->rdy(false) ;
+        manager->unpause() ;
 
     }
 
 
-    traverse(n, nv) ;
+
+    traverse( n, nv ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

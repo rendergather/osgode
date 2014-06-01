@@ -90,6 +90,9 @@ class LightGroup(Writable.Writable):
 
         if obj.type == 'LAMP' and obj.parent == None:
 
+            if not obj.is_visible(self.Data.Scene):
+                return True
+
 
             from . import Light
             light = Light.Light(self.Data, obj)

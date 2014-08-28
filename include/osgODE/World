@@ -272,7 +272,7 @@ public:
     ODEObject*      getObjectByID(unsigned int ID) ;
 
     //! Liner search
-    ODEObject*      getObjectByName(const std::string& name) ;
+    ODEObject*      getObjectByName(const std::string& name, bool traverse_containers=false) ;
 
 
 
@@ -419,7 +419,7 @@ public:
 
 
     void            runOperationsInternal(void) ;
-    void            updateRigidBodyTransformsInternal(void) ;
+    void            updateTransformsInternal(void) ;
 /* ======================================================================= */
 
 

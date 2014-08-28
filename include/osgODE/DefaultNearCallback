@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 by Rocco Martino                                   *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -92,13 +92,17 @@ public:
     {
         public:
                      CollisionResult(void):
-                        m_num_contacts(0) {}
+                        m_num_contacts  ( 0 ),
+                        m_frame_number  ( 0xFFFFFFFF ) {}
 
-                     CollisionResult(const CollisionResult& other):
-                        m_normals(other.m_normals),
-                        m_contacts(other.m_contacts),
-                        m_depths(other.m_depths),
-                        m_num_contacts(other.m_num_contacts) {}
+                     CollisionResult(const CollisionResult& other ):
+                        m_normals       ( other.m_normals ),
+                        m_contacts      ( other.m_contacts ),
+                        m_depths        ( other.m_depths ),
+                        m_num_contacts  ( other.m_num_contacts ),
+                        m_frame_number  ( other.m_frame_number ),
+                        m_collidable1   ( other.m_collidable1 ),
+                        m_collidable2   ( other.m_collidable2 ) {}
 
             virtual ~CollisionResult(void) {}
 
@@ -121,6 +125,9 @@ public:
             inline void    setCollidable2(Collidable* coll)
                 { m_collidable2 = coll ; }
 
+            inline void     setFrameNumber(unsigned int n)
+                { m_frame_number = n ; }
+
 
             inline void    resetInternal(void)
             {
@@ -130,6 +137,7 @@ public:
                 m_num_contacts = 0 ;
                 m_collidable1 = NULL ;
                 m_collidable2 = NULL ;
+                m_frame_number = 0xFFFFFFFF ;
             }
 
 
@@ -156,12 +164,16 @@ public:
             inline const Collidable*    getCollidable2(void) const
                 { return m_collidable2.get() ; }
 
+            inline unsigned int getFrameNumber(void) const
+                { return m_frame_number ; }
+
 
         private:
             Normals         m_normals ;
             Contacts        m_contacts ;
             Depths          m_depths ;
             unsigned int    m_num_contacts ;
+            unsigned int    m_frame_number ;
             osg::ref_ptr<Collidable>    m_collidable1 ;
             osg::ref_ptr<Collidable>    m_collidable2 ;
     } ;

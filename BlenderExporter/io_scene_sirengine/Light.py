@@ -251,6 +251,14 @@ class Light(Writable.Writable):
         # Manca il termine (QL/D^3) r^3
 
 
+
+        if self.Object.data.type == 'SUN':
+
+            self.OnlyShadow = self.Object.data.use_only_shadow
+
+
+
+
         if self.Object.data.type in ['POINT', 'SPOT']:
 
             if self.Object.data.use_sphere:
@@ -322,6 +330,12 @@ class Light(Writable.Writable):
             else:
                 self.ShadowBufferClipStart = self.Object.data.shadow_buffer_clip_start
                 self.ShadowBufferClipEnd = self.Object.data.shadow_buffer_clip_end
+
+
+
+        if self.Object.data.type == 'SUN':
+            self.ShadowBufferClipStart = self.Object.data.shadow_buffer_clip_start
+            self.ShadowBufferClipEnd = self.Object.data.shadow_buffer_clip_end
 
 
 

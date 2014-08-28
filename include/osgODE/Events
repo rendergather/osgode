@@ -29,9 +29,10 @@
 
 
 /* ======================================================================= */
-#include <osg/Object>
+#include <osg/View>
 #include <osg/Vec2>
 #include <osg/Matrix>
+#include <osg/observer_ptr>
 /* ======================================================================= */
 
 
@@ -108,26 +109,76 @@ public:
     //! Get the const button mask
     inline unsigned int getButtonMask(void) const ;
 
-    //! Set the view matrix
-    inline void setViewMatrix( const osg::Matrix& view_matrix ) ;
+    //! Set the view
+    inline void setView( osg::View* view ) ;
 
-    //! Get the view matrix
-    inline osg::Matrix& getViewMatrix(void) ;
+    //! Get the view
+    inline osg::View* getView(void) ;
 
-    //! Get the const view matrix
-    inline const osg::Matrix& getViewMatrix(void) const ;
-
-    //! Set the projection matrix
-    inline void setProjectionMatrix( const osg::Matrix& projection_matrix ) ;
-
-    //! Get the projection matrix
-    inline osg::Matrix& getProjectionMatrix(void) ;
-
-    //! Get the const projection matrix
-    inline const osg::Matrix& getProjectionMatrix(void) const ;
+    //! Get the const view
+    inline const osg::View* getView(void) const ;
 
     //! Get the const inverse projection matrix
     inline const osg::Matrix& getInverseViewProjectionMatrix(void) ;
+
+    //! returns true if the key is pressed
+    inline bool isKeyPressed(unsigned int keysym) const ;
+
+    //! set the key state
+    inline void setKeyPressed(unsigned int keysym, bool pressed) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    class OSG_EXPORT ViewMatrix
+    {
+    public:
+        ViewMatrix(const osg::Matrix& m = osg::Matrix::identity(), unsigned int p=0):
+            m_view      ( m ),
+            m_priority  ( p ) {}
+
+        ViewMatrix(const ViewMatrix& other):
+            m_view      ( other.m_view ),
+            m_priority  ( other.m_priority ) {}
+
+        inline void set(const ViewMatrix& vm)
+        {
+            m_view = vm.m_view ;
+            m_priority = vm.m_priority ;
+        }
+
+        inline void setPriority(unsigned int p)
+        {
+            m_priority = p ;
+        }
+
+        inline unsigned int getPriority(void) const
+        {
+            return m_priority ;
+        }
+
+        inline const osg::Matrix& getMatrix(void) const
+        {
+            return m_view ;
+        }
+
+        inline void setMatrix( const osg::Matrix& m)
+        {
+            m_view = m ;
+        }
+
+    private:
+        osg::Matrix     m_view ;
+        unsigned int    m_priority ;
+    } ;
+
+    inline void requestViewMatrix( const ViewMatrix& vm ) ;
+
+    inline ViewMatrix&          getViewMatrix(void) ;
+    inline const ViewMatrix&    getViewMatrix(void) const ;
 /* ======================================================================= */
 
 
@@ -147,13 +198,17 @@ private:
     osg::Vec2       m_cursor_position ;
     osg::Vec2       m_normalized_cursor_position ;
     unsigned int    m_button_mask ;
-    osg::Matrix     m_view_matrix ;
-    osg::Matrix     m_projection_matrix ;
 
     bool            m_dirty_view_projection ;
     osg::Matrix     m_inverse_view_projection ;
 
     unsigned int    m_frame_counter ;
+
+    bool            m_key_pressed[256] ;
+
+    osg::observer_ptr<osg::View>    m_view ;
+
+    ViewMatrix  m_view_matrix ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

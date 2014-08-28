@@ -368,6 +368,21 @@ World::_callObjectsPostCallbacks(double step_size)
         o->postUpdate(step_size) ;
         o->callPostUpdateCallbackInternal() ;
     }
+
+
+
+
+
+    if( m_events.valid() ) {
+
+        Events::ViewMatrix& vm = m_events->getViewMatrix() ;
+
+        if( vm.getPriority() > 0 ) {
+            m_events->getView()->getCamera()->setViewMatrix( vm.getMatrix() ) ;
+            vm.setPriority( 0 ) ;
+        }
+
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -489,7 +504,7 @@ World::getObjectByID(unsigned int ID)
 /* ======================================================================= */
 /* ....................................................................... */
 ODEObject*
-World::getObjectByName(const std::string& name)
+World::getObjectByName(const std::string& name, bool traverse_containers)
 {
     //
     // linear search
@@ -501,12 +516,39 @@ World::getObjectByName(const std::string& name)
     Objects::iterator   itr = m_objects.begin() ;
     Objects::iterator   itr_end = m_objects.end() ;
 
-    while( itr != itr_end ) {
-        ODEObject*  obj = *itr++ ;
 
-        if( obj->getName() == name ) {
-            found = obj ;
-            break ;
+    if( ! traverse_containers ) {
+
+        while( itr != itr_end ) {
+            ODEObject*  obj = *itr++ ;
+
+            if( obj->getName() == name ) {
+                found = obj ;
+                break ;
+            }
+        }
+
+    } else {
+
+        while( itr != itr_end ) {
+            ODEObject*  obj = *itr++ ;
+
+            if( obj->getName() == name ) {
+                found = obj ;
+                break ;
+            }
+
+
+            osgODE::Container*  container = obj->asContainer() ;
+
+
+            if( container ) {
+                found = container->getObjectByName( name ) ;
+
+                if( found ) {
+                    break ;
+                }
+            }
         }
     }
 
@@ -737,7 +779,7 @@ World::traverse(osg::NodeVisitor& nv)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::updateRigidBodyTransformsInternal(void)
+World::updateTransformsInternal(void)
 {
     PS_DBG3("osgODE::World::updateRigidBodyTransformsInternal(%p)", this) ;
 
@@ -748,22 +790,22 @@ World::updateRigidBodyTransformsInternal(void)
 
     while(iter != iter_end) {
 
-
-        ODEObject*  o = iter->get() ;
-
-        iter++ ;
+        (*iter++)->updateTransformInternal() ;
+    }
 
 
 
-        RigidBody*  body = o->asRigidBody() ;
-        Container*  container = o->asContainer() ;
 
-        if( body ) {
-            body->updateTransformInternal() ;
 
-        } else if( container ) {
-            container->updateTransformsInternal() ;
+    if( m_events.valid() ) {
+
+        Events::ViewMatrix& vm = m_events->getViewMatrix() ;
+
+        if( vm.getPriority() > 0 ) {
+            m_events->getView()->getCamera()->setViewMatrix( vm.getMatrix() ) ;
+            vm.setPriority( 0 ) ;
         }
+
     }
 }
 /* ....................................................................... */

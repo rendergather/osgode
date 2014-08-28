@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -351,6 +351,12 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
         m_collision_result.setCollidable1(collidable1) ;
         m_collision_result.setCollidable2(collidable2) ;
 
+
+        PS_ASSERT1( collidable1->getWorld() == collidable2->getWorld() ) ;
+
+        m_collision_result.setFrameNumber( collidable1->getWorld()->getCurrentFrame() ) ;
+
+
         dContact*           contact = m_contacts ;
         dContact*           contact_end = &m_contacts[num_contacts] ;
 
@@ -463,7 +469,7 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
                 contact++ ;
             }
 
-        } else { // collision_parameters->getCollisionsEnabled()
+        } else { // collision_parameters->getCollisionsEnabled() returns false
 
             //
             // store collisions in CollisionResult

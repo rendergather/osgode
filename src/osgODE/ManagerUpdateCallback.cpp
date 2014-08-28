@@ -51,8 +51,8 @@ using namespace osgODE ;
 ManagerUpdateCallback::ManagerUpdateCallback(void):
     m_last_s                ( -1.0 ),
     m_delta                 ( 0.0 ),
-    m_max_frames_per_update ( 0 ),
-    m_max_step_size         ( -1.0 )
+    m_max_step_size         ( -1.0 ),
+    m_max_frames_per_update ( 0 )
 {
 }
 /* ....................................................................... */
@@ -67,8 +67,8 @@ ManagerUpdateCallback::ManagerUpdateCallback(const ManagerUpdateCallback& other,
     osg::NodeCallback       ( other, copyop ),
     m_last_s                ( other.m_last_s ),
     m_delta                 ( other.m_delta ),
-    m_max_frames_per_update ( other.m_max_frames_per_update ),
-    m_max_step_size         ( other.m_max_step_size )
+    m_max_step_size         ( other.m_max_step_size ),
+    m_max_frames_per_update ( other.m_max_frames_per_update )
 {
 }
 /* ....................................................................... */
@@ -118,8 +118,10 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 
         if( m_max_frames_per_update == 0 ) {
 
-            manager->frame( m_delta ) ;
-            m_delta = 0.0 ;
+            while( m_delta >= step_size ) {
+                manager->frame( step_size ) ;
+                m_delta -= step_size ;
+            }
 
         } else {
             unsigned int    frame_count = 0 ;

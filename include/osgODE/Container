@@ -119,6 +119,9 @@ public:
     //! Returns true if the object is in the list
     inline bool     hasObject(ODEObject* obj) const ;
 
+    //! Liner search
+    ODEObject*      getObjectByName(const std::string& name) ;
+
 
 
 
@@ -192,8 +195,7 @@ public:
 public:
     virtual void    callUpdateCallbackInternal(void) ;
     virtual void    callPostUpdateCallbackInternal(void) ;
-
-    void    updateTransformsInternal(void) ;
+    virtual void    updateTransformInternal(void) ;
 /* ======================================================================= */
 
 

@@ -25,6 +25,9 @@
 /* ======================================================================= */
 /* ....................................................................... */
 #include <osgODE/Events>
+
+#include <osg/io_utils>
+#include <iostream>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -43,6 +46,9 @@ Events::Events(void):
     m_dirty_view_projection     ( false ),
     m_frame_counter             ( 0 )
 {
+    for(unsigned int i=0; i<256; i++) {
+        m_key_pressed[i] = false ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -57,12 +63,15 @@ Events::Events(const Events& other, const osg::CopyOp& copyop):
     m_cursor_position               ( other.m_cursor_position ),
     m_normalized_cursor_position    ( other.m_normalized_cursor_position ),
     m_button_mask                   ( other.m_button_mask ),
-    m_view_matrix                   ( other.m_view_matrix ),
-    m_projection_matrix             ( other.m_projection_matrix ),
     m_dirty_view_projection         ( other.m_dirty_view_projection ),
     m_inverse_view_projection       ( other.m_inverse_view_projection ),
-    m_frame_counter                 ( 0 )
+    m_frame_counter                 ( 0 ),
+    m_view                          ( other.m_view ),
+    m_view_matrix                   ( other.m_view_matrix )
 {
+    for(unsigned int i=0; i<256; i++) {
+        m_key_pressed[i] = other.m_key_pressed[i] ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

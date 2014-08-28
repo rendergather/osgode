@@ -959,6 +959,13 @@ class EditObjectActuator(Actuator):
     AngularVelocityLocal = None
     Mass = None
     RefObject = None
+    TrackToByName = None
+    AngularPID = [1,0,0]
+    LinearPID = [1,0,0]
+    DistanceMin = None
+    DistanceMax = None
+    UpLocal = None
+    FrontLocal = None
 ############################################################################
 
 
@@ -982,6 +989,13 @@ class EditObjectActuator(Actuator):
         self.AngularVelocityLocal = None
         self.Mass = None
         self.RefObject = None
+        self.TrackToByName = None
+        self.AngularPID = [1,0,0]
+        self.LinearPID = [1,0,0]
+        self.DistanceMin = None
+        self.DistanceMax = None
+        self.UpLocal = None
+        self.FrontLocal = None
 ############################################################################
 
 
@@ -997,6 +1011,9 @@ class EditObjectActuator(Actuator):
         elif self.BlenderActuator.mode == "ENDOBJECT":
             self.Mode = "END_OBJECT"
 
+        elif self.BlenderActuator.mode == "TRACKTO":
+            self.Mode = "TRACK_TO"
+
         elif self.BlenderActuator.mode == "DYNAMICS":
             self.Mode = "DYNAMICS"
 
@@ -1004,23 +1021,24 @@ class EditObjectActuator(Actuator):
             return False
 
 
-        if self.BlenderActuator.dynamic_operation == "SETMASS":
-            self.DynamicOperation = "SET_MASS"
+        if self.Mode == "DYNAMICS":
+            if self.BlenderActuator.dynamic_operation == "SETMASS":
+                self.DynamicOperation = "SET_MASS"
 
-        elif self.BlenderActuator.dynamic_operation == "ENABLERIGIDBODY":
-            self.DynamicOperation = "ENABLE_RIGID_BODY"
+            elif self.BlenderActuator.dynamic_operation == "ENABLERIGIDBODY":
+                self.DynamicOperation = "ENABLE_RIGID_BODY"
 
-        elif self.BlenderActuator.dynamic_operation == "DISABLERIGIDBODY":
-            self.DynamicOperation = "DISABLE_RIGID_BODY"
+            elif self.BlenderActuator.dynamic_operation == "DISABLERIGIDBODY":
+                self.DynamicOperation = "DISABLE_RIGID_BODY"
 
-        elif self.BlenderActuator.dynamic_operation == "SUSPENDDYN":
-            self.DynamicOperation = "SET_KINEMATIC"
+            elif self.BlenderActuator.dynamic_operation == "SUSPENDDYN":
+                self.DynamicOperation = "SET_KINEMATIC"
 
-        elif self.BlenderActuator.dynamic_operation == "RESTOREDYN":
-            self.DynamicOperation = "SET_DYNAMIC"
+            elif self.BlenderActuator.dynamic_operation == "RESTOREDYN":
+                self.DynamicOperation = "SET_DYNAMIC"
 
-        else:
-            return False
+            else:
+                return False
 
 
 
@@ -1047,7 +1065,11 @@ class EditObjectActuator(Actuator):
         obj = None
 
 
-        if self.Mode == "ADD_OBJECT":
+        if self.Mode == "TRACK_TO":
+            self.TrackToByName = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+
+
+        elif self.Mode == "ADD_OBJECT":
 
             obj = self.BlenderActuator.object
 
@@ -1117,6 +1139,52 @@ class EditObjectActuator(Actuator):
                 self.RefObject.addUpdateCallback( game )
 
 
+
+        try:
+            self.AngularPID[0] = self.Object["oog_%s_AP" % self.BlenderActuator.name]
+        except:
+            self.AngularPID[0] = 1.0
+
+        try:
+            self.AngularPID[1] = self.Object["oog_%s_AI" % self.BlenderActuator.name]
+        except:
+            self.AngularPID[1] = 0.0
+
+        try:
+            self.AngularPID[2] = self.Object["oog_%s_AD" % self.BlenderActuator.name]
+        except:
+            self.AngularPID[2] = 0.0
+
+
+
+        try:
+            self.LinearPID[0] = self.Object["oog_%s_LP" % self.BlenderActuator.name]
+        except:
+            self.LinearPID[0] = 1.0
+
+        try:
+            self.LinearPID[1] = self.Object["oog_%s_LI" % self.BlenderActuator.name]
+        except:
+            self.LinearPID[1] = 0.0
+
+        try:
+            self.LinearPID[2] = self.Object["oog_%s_LD" % self.BlenderActuator.name]
+        except:
+            self.LinearPID[2] = 0.0
+
+
+
+        try:
+            self.DistanceMin = self.Object["oog_%s_distance_min" % self.BlenderActuator.name]
+        except:
+            self.DistanceMin = None
+
+        try:
+            self.DistanceMax = self.Object["oog_%s_distance_max" % self.BlenderActuator.name]
+        except:
+            self.DistanceMax = None
+
+
         return True
 ############################################################################
 
@@ -1143,17 +1211,29 @@ class EditObjectActuator(Actuator):
 
 
         writer.writeLine("Mode %s" % self.Mode)
-        writer.writeLine("DynamicOperation %s" % self.DynamicOperation)
 
-        writer.writeLine("LifeTime %u" % self.LifeTime)
+        if self.DynamicOperation:
+            writer.writeLine("DynamicOperation %s" % self.DynamicOperation)
 
-        writer.writeLine("LinearVelocity %f %f %f" %(self.LinearVelocity[0], self.LinearVelocity[1], self.LinearVelocity[2]))
-        writer.writeLine("AngularVelocity %f %f %f" %(self.AngularVelocity[0], self.AngularVelocity[1], self.AngularVelocity[2]))
+        if self.LifeTime:
+            writer.writeLine("LifeTime %u" % self.LifeTime)
 
-        writer.writeLine("LinearVelocityLocal %s" %(self.LinearVelocityLocal))
-        writer.writeLine("AngularVelocityLocal %s" %(self.AngularVelocityLocal))
+        if self.LinearVelocity:
+            writer.writeLine("LinearVelocity %f %f %f" %(self.LinearVelocity[0], self.LinearVelocity[1], self.LinearVelocity[2]))
 
-        writer.writeLine("Mass %f" % self.Mass)
+        if self.AngularVelocity:
+            writer.writeLine("AngularVelocity %f %f %f" %(self.AngularVelocity[0], self.AngularVelocity[1], self.AngularVelocity[2]))
+
+        if self.LinearVelocity:
+            writer.writeLine("LinearVelocityLocal %s" %(self.LinearVelocityLocal))
+
+
+        if self.AngularVelocity:
+            writer.writeLine("AngularVelocityLocal %s" %(self.AngularVelocityLocal))
+
+
+        if self.Mass:
+            writer.writeLine("Mass %f" % self.Mass)
 
 
         if self.RefObject:
@@ -1161,6 +1241,226 @@ class EditObjectActuator(Actuator):
             writer.moveIn("Object TRUE")
             self.RefObject.writeToStream( writer )
             writer.moveOut("Object TRUE")
+
+
+
+        if self.UpLocal:
+            writer.writeLine( "UpLocal %f %f %f" % (self.UpLocal[0], self.UpLocal[1], self.UpLocal[2]) )
+
+        if self.FrontLocal:
+            writer.writeLine( "FrontLocal %f %f %f" % (self.FrontLocal[0], self.FrontLocal[1], self.FrontLocal[2]) )
+
+
+
+
+        if self.DistanceMin:
+            writer.writeLine( "DistanceMin %f" % self.DistanceMin )
+
+        if self.DistanceMax:
+            writer.writeLine( "DistanceMax %f" % self.DistanceMax )
+
+
+
+        if self.TrackToByName:
+            writer.writeLine("TrackToByNameInternal \"%s\"" % self.TrackToByName)
+
+
+
+        if self.TrackToByName:
+
+
+            writer.moveIn("LinearPID TRUE")
+            writer.moveIn("osgODE::PIDController")
+
+            writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
+            writer.writeLine("Name \"LinearPIDController@%s\"" % (self.Object.name) )
+            writer.writeLine("Proportional %f" % self.LinearPID[0])
+            writer.writeLine("Integral %f" % self.LinearPID[1])
+            writer.writeLine("Derivative %f" % self.LinearPID[2])
+
+            writer.moveOut("osgODE::PIDController")
+            writer.moveOut("LinearPID TRUE")
+
+
+
+            writer.moveIn("AngularPID TRUE")
+            writer.moveIn("osgODE::PIDController")
+
+            writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
+            writer.writeLine("Name \"AngularPIDController@%s\"" % (self.Object.name) )
+            writer.writeLine("Proportional %f" % self.AngularPID[0])
+            writer.writeLine("Integral %f" % self.AngularPID[1])
+            writer.writeLine("Derivative %f" % self.AngularPID[2])
+
+            writer.moveOut("osgODE::PIDController")
+            writer.moveOut("AngularPID TRUE")
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class CameraActuator(Actuator):
+    """ooGame::CameraActuator"""
+
+
+
+
+
+############################################################################
+    TrackToByName = None
+    Damping = None
+    Height = None
+    DistanceMin = None
+    DistanceMax = None
+    UpWorld = None
+    Axis = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(CameraActuator, self).__init__(rigid_body, sensor)
+
+        self.TrackToByName = None
+        self.Damping = 1.0
+        self.Height = 0.0
+        self.DistanceMin = 0.0
+        self.DistanceMax = 0.0
+        self.UpWorld = [0,0,1]
+        self.Axis = [1,0,0]
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(CameraActuator, self).buildGraph()
+
+
+        self.TrackToByName = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+        self.Height = self.BlenderActuator.height
+        self.DistanceMin = self.BlenderActuator.min
+        self.DistanceMax = self.BlenderActuator.max
+        self.Height = self.BlenderActuator.height
+
+
+
+        if self.BlenderActuator.axis == "POS_X" :
+            self.Axis = [1, 0, 0]
+
+        if self.BlenderActuator.axis == "NEG_X" :
+            self.Axis = [-1, 0, 0]
+
+        if self.BlenderActuator.axis == "POS_Y" :
+            self.Axis = [0, 1, 0]
+
+        if self.BlenderActuator.axis == "NEG_Y" :
+            self.Axis = [0, -1, 0]
+
+
+        self.Damping = self.BlenderActuator.damping
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::CameraActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::CameraActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+
+        if self.Axis:
+            writer.writeLine( "Axis %f %f %f" % (self.Axis[0], self.Axis[1], self.Axis[2]) )
+
+
+        if self.UpWorld:
+            writer.writeLine( "UpWorld %f %f %f" % (self.UpWorld[0], self.UpWorld[1], self.UpWorld[2]) )
+
+
+        if self.DistanceMin:
+            writer.writeLine( "DistanceMin %f" % self.DistanceMin )
+
+
+        if self.DistanceMax:
+            writer.writeLine( "DistanceMax %f" % self.DistanceMax )
+
+
+        if self.Height != None:
+            writer.writeLine( "Height %f" % self.Height )
+
+
+
+        if self.TrackToByName:
+            writer.writeLine("TrackToByNameInternal \"%s\"" % self.TrackToByName)
+
+
+
+        if self.TrackToByName:
+
+
+            writer.moveIn("LinearPID TRUE")
+            writer.moveIn("osgODE::PIDController")
+
+            writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
+            writer.writeLine("Name \"LinearPIDController@%s\"" % (self.Object.name) )
+            writer.writeLine("Proportional %f" % self.Damping)
+
+            writer.moveOut("osgODE::PIDController")
+            writer.moveOut("LinearPID TRUE")
+
+
+
+            writer.moveIn("AngularPID TRUE")
+            writer.moveIn("osgODE::PIDController")
+
+            writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
+            writer.writeLine("Name \"AngularPIDController@%s\"" % (self.Object.name) )
+            writer.writeLine("Proportional %f" % self.Damping)
+
+            writer.moveOut("osgODE::PIDController")
+            writer.moveOut("AngularPID TRUE")
 
 
 

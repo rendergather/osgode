@@ -133,6 +133,8 @@ public:
     virtual void    accept( osg::NodeVisitor& nv ) ;
 
     virtual const osg::BoundingSphere&  getBound(void) const ;
+
+    virtual void    updateTransformInternal(void) ;
 /* ======================================================================= */
 
 

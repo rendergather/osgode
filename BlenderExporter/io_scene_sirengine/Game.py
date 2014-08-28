@@ -128,6 +128,9 @@ class Game(ODECallback.ODECallback):
             elif s.type == "RANDOM":
                 sensor = Sensor.RandomSensor( self.RigidBody, s )
 
+            elif s.type == "KEYBOARD":
+                sensor = Sensor.KeyboardSensor( self.RigidBody, s )
+
             if sensor:
                 sensor.buildGraph()
                 self.SensorList.append( sensor )
@@ -168,6 +171,9 @@ class Game(ODECallback.ODECallback):
 
             elif a.type == "EDIT_OBJECT":
                 actuator = Actuator.EditObjectActuator(self.RigidBody, a)
+
+            elif a.type == "CAMERA":
+                actuator = Actuator.CameraActuator(self.RigidBody, a)
 
 
             if actuator:

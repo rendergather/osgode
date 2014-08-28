@@ -281,7 +281,32 @@ class Joint(ODEObject.ODEObject):
         self.StopERP = self.Data.StopERP * 60.0 / self.Data.Scene.game_settings.fps
         self.StopCFM = self.Data.StopCFM * 60.0 / self.Data.Scene.game_settings.fps
 
+
+
+
+        self.StopCFM = self.readProperty( self.Body1, self.Object.name, "StopCFM", self.StopCFM )
+        self.StopERP = self.readProperty( self.Body1, self.Object.name, "StopERP", self.StopERP )
+
+
+
         return True
+############################################################################
+
+
+
+
+############################################################################
+    def readProperty(self, body, constraint_name, param_name, member_var):
+
+        try:
+            n = constraint_name + "_dParam" + param_name
+
+            t = body[n]
+
+            return t
+
+        except:
+            return member_var
 ############################################################################
 
 

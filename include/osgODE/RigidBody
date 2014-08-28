@@ -430,7 +430,7 @@ public:
 /* ======================================================================= */
 public:
     //! Called by World::_callObjectsPostCallbacks
-    void    updateTransformInternal(void) ;
+    virtual void    updateTransformInternal(void) ;
 /* ======================================================================= */
 
 

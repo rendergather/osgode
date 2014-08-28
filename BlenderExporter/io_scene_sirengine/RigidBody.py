@@ -192,12 +192,6 @@ class RigidBody(ODEObject.ODEObject):
         except:
             pass
 
-        try:
-            v = self.Object["oo_sliding_door"]
-            self.addUserValue( "oo_sliding_door", v )
-        except:
-            pass
-
 
 
         if self.Object.animation_data and self.Object.animation_data.action:

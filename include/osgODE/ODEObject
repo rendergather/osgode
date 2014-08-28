@@ -285,6 +285,9 @@ public:
 
     //! Internal use only
     virtual void    callPostUpdateCallbackInternal(void) ;
+
+    //! Internal use only
+    virtual void    updateTransformInternal(void) ;
 /* ======================================================================= */
 
 

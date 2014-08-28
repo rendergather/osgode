@@ -96,24 +96,24 @@ RagDoll::init(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RagDoll::postUpdate( double step_size )
+RagDoll::updateTransformInternal(void)
 {
+    this->Container::updateTransformInternal() ;
+
+
     if( m_dirty ) {
-
-        init() ;
-
-        m_dirty = false ;
+        return ;
     }
+
+
 
     if( m_skeleton.valid() ) {
 
         PS_ASSERT1( m_root_bone.valid() ) ;
 
-        m_skeleton->setMatrix( m_root_body->getMatrix() ) ;
+        m_skeleton->setMatrix( m_root_body->getMatrixTransform()->getMatrix() ) ;
         m_skeleton->dirtyBound() ;
     }
-
-    this->Container::postUpdate( step_size ) ;
 
 
 
@@ -145,6 +145,26 @@ RagDoll::postUpdate( double step_size )
         }
 
     }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+RagDoll::postUpdate( double step_size )
+{
+    if( m_dirty ) {
+
+        init() ;
+
+        m_dirty = false ;
+    }
+
+    this->Container::postUpdate( step_size ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -212,7 +232,7 @@ namespace {
             bone->dirtyBound() ;
 
 
-            osg::Matrix m = m_offset * m_body->getMatrix() ;
+            osg::Matrix m = m_offset * m_body->getMatrixTransform()->getMatrix() ;
 
             bone->setMatrixInSkeletonSpace( m * osg::Matrix::inverse( m_skeleton->getMatrix() ) ) ;
 
@@ -264,9 +284,9 @@ RagDoll::_initRagDoll(void)
 
             RigidBody*  body = object_list[i]->asRigidBody() ;
 
+
             if( body ) {
                 body_list.push_back( body ) ;
-
 
                 const unsigned int  num_children = body->getMatrixTransform()->getNumChildren() ;
 

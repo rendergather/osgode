@@ -106,8 +106,8 @@ public:
 private:
     double          m_last_s ;
     double          m_delta ;
-    unsigned int    m_max_frames_per_update ;
     double          m_max_step_size ;
+    unsigned int    m_max_frames_per_update ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

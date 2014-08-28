@@ -221,17 +221,13 @@ Container::postUpdate(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Container::updateTransformsInternal(void)
+Container::updateTransformInternal(void)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
 
     while( itr != itr_end ) {
-        RigidBody*  body = (*itr++)->asRigidBody() ;
-
-        if( body ) {
-            body->updateTransformInternal() ;
-        }
+        (*itr++)->updateTransformInternal() ;
     }
 }
 /* ....................................................................... */
@@ -575,6 +571,40 @@ Container::callPostUpdateCallbackInternal(void)
     while( itr != itr_end ) {
         (*itr++)->callPostUpdateCallbackInternal() ;
     }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+ODEObject*
+Container::getObjectByName(const std::string& name)
+{
+    //
+    // linear search
+    //
+
+
+    ODEObject*  found = NULL ;
+
+    ObjectList::iterator    itr = m_object_list.begin() ;
+    ObjectList::iterator    itr_end = m_object_list.end() ;
+
+
+
+    while( itr != itr_end ) {
+        ODEObject*  obj = *itr++ ;
+
+        if( obj->getName() == name ) {
+            found = obj ;
+            break ;
+        }
+    }
+
+    return found ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

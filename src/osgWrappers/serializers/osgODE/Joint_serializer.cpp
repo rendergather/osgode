@@ -39,8 +39,7 @@ namespace {
 static bool
 checkAnchor1(const osgODE::Joint& joint)
 {
-    (void) joint ;
-    return true ;
+    return const_cast<osgODE::Joint&>(joint).getAnchor1() != osg::Vec3(0.0, 0.0, 0.0) ;
 }
 
 static bool
@@ -64,8 +63,7 @@ readAnchor1(osgDB::InputStream& is, osgODE::Joint& joint)
 static bool
 checkAnchor2(const osgODE::Joint& joint)
 {
-    (void) joint ;
-    return true ;
+    return const_cast<osgODE::Joint&>(joint).getAnchor2() != osg::Vec3(0.0, 0.0, 0.0) ;
 }
 
 static bool
@@ -85,8 +83,8 @@ readAnchor2(osgDB::InputStream& is, osgODE::Joint& joint)
 }
 
 
-#define ADD_AXIS_FUNC(AXIS_PROP) \
-static bool check##AXIS_PROP(const osgODE::Joint& joint) { (void) joint ; return true ; } \
+#define ADD_AXIS_FUNC(AXIS_PROP, DEF_VAL) \
+static bool check##AXIS_PROP(const osgODE::Joint& joint) { return const_cast<osgODE::Joint&>(joint).get##AXIS_PROP() != (DEF_VAL) ; } \
 static bool write##AXIS_PROP(osgDB::OutputStream& os, const osgODE::Joint& joint) \
 { \
     os << const_cast<osgODE::Joint&>(joint).get##AXIS_PROP() << std::endl ; \
@@ -101,13 +99,13 @@ static bool read##AXIS_PROP(osgDB::InputStream& is, osgODE::Joint& joint) \
 } \
 
 
-ADD_AXIS_FUNC(Axis1) ;
-ADD_AXIS_FUNC(Axis2) ;
-ADD_AXIS_FUNC(Axis3) ;
+ADD_AXIS_FUNC(Axis1, osg::X_AXIS) ;
+ADD_AXIS_FUNC(Axis2, osg::Y_AXIS) ;
+ADD_AXIS_FUNC(Axis3, osg::Z_AXIS) ;
 
 
-#define ADD_PAR_FUNC(PAR_PROP) \
-static bool check##PAR_PROP(const osgODE::Joint& joint) { (void) joint ; return true ; } \
+#define ADD_PAR_FUNC(PAR_PROP, DEF_VAL) \
+static bool check##PAR_PROP(const osgODE::Joint& joint) { return const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) != (DEF_VAL) ; } \
 static bool write##PAR_PROP(osgDB::OutputStream& os, const osgODE::Joint& joint) \
 { \
     double  par = const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) ; \
@@ -124,44 +122,44 @@ static bool read##PAR_PROP(osgDB::InputStream& is, osgODE::Joint& joint) \
     return true ; \
 }
 
-ADD_PAR_FUNC(dParamLoStop) ;
-ADD_PAR_FUNC(dParamHiStop) ;
-ADD_PAR_FUNC(dParamVel) ;
-ADD_PAR_FUNC(dParamFMax) ;
-ADD_PAR_FUNC(dParamFudgeFactor) ;
-ADD_PAR_FUNC(dParamBounce) ;
-ADD_PAR_FUNC(dParamCFM) ;
-ADD_PAR_FUNC(dParamStopERP) ;
-ADD_PAR_FUNC(dParamStopCFM) ;
-ADD_PAR_FUNC(dParamSuspensionERP) ;
-ADD_PAR_FUNC(dParamSuspensionCFM) ;
-ADD_PAR_FUNC(dParamERP) ;
+ADD_PAR_FUNC(dParamLoStop, FLT_MAX) ;
+ADD_PAR_FUNC(dParamHiStop, -FLT_MAX) ;
+ADD_PAR_FUNC(dParamVel, 0.0) ;
+ADD_PAR_FUNC(dParamFMax, 0) ;
+ADD_PAR_FUNC(dParamFudgeFactor, 0.0) ;
+ADD_PAR_FUNC(dParamBounce, 0.0) ;
+ADD_PAR_FUNC(dParamCFM, 0.0) ;
+ADD_PAR_FUNC(dParamStopERP, 1.0) ;
+ADD_PAR_FUNC(dParamStopCFM, 0.0) ;
+ADD_PAR_FUNC(dParamSuspensionERP, 1.0) ;
+ADD_PAR_FUNC(dParamSuspensionCFM, 0.0) ;
+ADD_PAR_FUNC(dParamERP, 1.0) ;
 
-ADD_PAR_FUNC(dParamLoStop2) ;
-ADD_PAR_FUNC(dParamHiStop2) ;
-ADD_PAR_FUNC(dParamVel2) ;
-ADD_PAR_FUNC(dParamFMax2) ;
-ADD_PAR_FUNC(dParamFudgeFactor2) ;
-ADD_PAR_FUNC(dParamBounce2) ;
-ADD_PAR_FUNC(dParamCFM2) ;
-ADD_PAR_FUNC(dParamStopERP2) ;
-ADD_PAR_FUNC(dParamStopCFM2) ;
-ADD_PAR_FUNC(dParamSuspensionERP2) ;
-ADD_PAR_FUNC(dParamSuspensionCFM2) ;
-ADD_PAR_FUNC(dParamERP2) ;
+ADD_PAR_FUNC(dParamLoStop2, FLT_MAX) ;
+ADD_PAR_FUNC(dParamHiStop2, -FLT_MAX) ;
+ADD_PAR_FUNC(dParamVel2, 0.0) ;
+ADD_PAR_FUNC(dParamFMax2, 0) ;
+ADD_PAR_FUNC(dParamFudgeFactor2, 0.0) ;
+ADD_PAR_FUNC(dParamBounce2, 0.0) ;
+ADD_PAR_FUNC(dParamCFM2, 0.0) ;
+ADD_PAR_FUNC(dParamStopERP2, 1.0) ;
+ADD_PAR_FUNC(dParamStopCFM2, 0.0) ;
+ADD_PAR_FUNC(dParamSuspensionERP2, 1.0) ;
+ADD_PAR_FUNC(dParamSuspensionCFM2, 0.0) ;
+ADD_PAR_FUNC(dParamERP2, 1.0) ;
 
-ADD_PAR_FUNC(dParamLoStop3) ;
-ADD_PAR_FUNC(dParamHiStop3) ;
-ADD_PAR_FUNC(dParamVel3) ;
-ADD_PAR_FUNC(dParamFMax3) ;
-ADD_PAR_FUNC(dParamFudgeFactor3) ;
-ADD_PAR_FUNC(dParamBounce3) ;
-ADD_PAR_FUNC(dParamCFM3) ;
-ADD_PAR_FUNC(dParamStopERP3) ;
-ADD_PAR_FUNC(dParamStopCFM3) ;
-ADD_PAR_FUNC(dParamSuspensionERP3) ;
-ADD_PAR_FUNC(dParamSuspensionCFM3) ;
-ADD_PAR_FUNC(dParamERP3) ;
+ADD_PAR_FUNC(dParamLoStop3, FLT_MAX) ;
+ADD_PAR_FUNC(dParamHiStop3, -FLT_MAX) ;
+ADD_PAR_FUNC(dParamVel3, 0.0) ;
+ADD_PAR_FUNC(dParamFMax3, 0) ;
+ADD_PAR_FUNC(dParamFudgeFactor3, 0.0) ;
+ADD_PAR_FUNC(dParamBounce3, 0.0) ;
+ADD_PAR_FUNC(dParamCFM3, 0.0) ;
+ADD_PAR_FUNC(dParamStopERP3, 1.0) ;
+ADD_PAR_FUNC(dParamStopCFM3, 0.0) ;
+ADD_PAR_FUNC(dParamSuspensionERP3, 1.0) ;
+ADD_PAR_FUNC(dParamSuspensionCFM3, 0.0) ;
+ADD_PAR_FUNC(dParamERP3, 1.0) ;
 } // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */

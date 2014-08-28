@@ -90,12 +90,14 @@ ThreadedManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
     }
 
 
+    bool    rdy = manager->rdy() ;
 
-    if( manager->rdy() ) {
+
+    if( rdy ) {
 
         manager->pause() ;
 
-        world->updateRigidBodyTransformsInternal() ;
+        world->updateTransformsInternal() ;
         world->runOperationsInternal() ;
 
         manager->rdy(false) ;

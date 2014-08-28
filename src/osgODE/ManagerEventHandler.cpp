@@ -106,17 +106,9 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
     {
         case osgGA::GUIEventAdapter::FRAME:
         {
-            osg::View*  view = aa.asView() ;
+            events->setView( aa.asView() ) ;
 
             events->incFrameCounterInternal() ;
-
-            if( view ) {
-                osg::Camera*    camera = view->getCamera() ;
-                PS_ASSERT1( camera != NULL ) ;
-
-                events->setViewMatrix( camera->getViewMatrix() ) ;
-                events->setProjectionMatrix( camera->getProjectionMatrix() ) ;
-            }
         }
         break ;
 
@@ -137,6 +129,32 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
         case osgGA::GUIEventAdapter::RELEASE:
         {
             events->setButtonMask( ea.getButtonMask() ) ;
+        }
+        break ;
+
+
+
+
+        case osgGA::GUIEventAdapter::KEYDOWN:
+        {
+            int key = ea.getKey() ;
+
+            if( 0 == (key & 0xFFFFFF00) ) {
+                events->setKeyPressed( key, true ) ;
+            }
+        }
+        break ;
+
+
+
+
+        case osgGA::GUIEventAdapter::KEYUP:
+        {
+            int key = ea.getKey() ;
+
+            if( 0 == (key & 0xFFFFFF00) ) {
+                events->setKeyPressed( key, false ) ;
+            }
         }
         break ;
 

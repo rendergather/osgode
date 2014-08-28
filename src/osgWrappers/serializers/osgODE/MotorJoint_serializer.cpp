@@ -39,8 +39,7 @@ namespace {
 static bool
 checkAxis1Anchor(const osgODE::MotorJoint& joint)
 {
-    (void) joint ;
-    return true ;
+    return joint.getAxis1Anchor() != 0 ;
 }
 
 static bool
@@ -64,8 +63,7 @@ readAxis1Anchor(osgDB::InputStream& is, osgODE::MotorJoint& joint)
 static bool
 checkAxis2Anchor(const osgODE::MotorJoint& joint)
 {
-    (void) joint ;
-    return true ;
+    return joint.getAxis2Anchor() != 0 ;
 }
 
 static bool
@@ -89,8 +87,7 @@ readAxis2Anchor(osgDB::InputStream& is, osgODE::MotorJoint& joint)
 static bool
 checkAxis3Anchor(const osgODE::MotorJoint& joint)
 {
-    (void) joint ;
-    return true ;
+    return joint.getAxis3Anchor() != 0 ;
 }
 
 static bool

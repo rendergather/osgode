@@ -35,6 +35,15 @@
 
 
 
+/* ======================================================================= */
+namespace ooGame {
+    class   Game ;
+}
+/* ======================================================================= */
+
+
+
+
 namespace osgODE
 {
 
@@ -109,6 +118,9 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Quick dynamic cast
+    virtual ooGame::Game*           asGame(void) ;
+
     //! Quick dynamic cast
     virtual HingeServoMotor*        asHingeServoMotor(void) ;
 

@@ -137,6 +137,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.Cache = Cache.Cache()
         data.RigidBodyCache = Cache.Cache()
         data.RigidBodyMap = {}
+        data.RigidBodyNames = {}
         data.ExportSelected = self.export_selected
         data.ExportLights = self.export_lights
         data.ExportSounds = self.export_sounds

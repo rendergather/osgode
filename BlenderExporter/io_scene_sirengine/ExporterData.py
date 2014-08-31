@@ -57,6 +57,7 @@ class ExporterData(object):
     Cache = None
     RigidBodyCache = None
     RigidBodyMap = None
+    RigidBodyNames = None
     MasterStateSet = None
     Selected = None
     ExportSelected = False
@@ -94,6 +95,7 @@ class ExporterData(object):
             self.Cache = data.Cache
             self.RigidBodyCache = data.RigidBodyCache
             self.RigidBodyMap = data.RigidBodyMap
+            self.RigidBodyNames = data.RigidBodyNames
             self.MasterStateSet = data.MasterStateSet
             self.Selected = data.Selected
             self.ExportSelected = data.ExportSelected
@@ -119,6 +121,7 @@ class ExporterData(object):
             self.Cache = None
             self.RigidBodyCache = None
             self.RigidBodyMap = None
+            self.RigidBodyNames = None
             self.MasterStateSet = None
             self.Selected = None
             self.ExportSelected = False

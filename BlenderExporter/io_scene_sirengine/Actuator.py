@@ -1472,3 +1472,100 @@ class CameraActuator(Actuator):
 
 # ........................................................................ #
 ############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class MessageActuator(Actuator):
+    """ooGame::MessageActuator"""
+
+
+
+
+
+############################################################################
+    TargetByName = None
+    Type = None
+    Subject = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(MessageActuator, self).__init__(rigid_body, sensor)
+
+        self.TargetByName = None
+        self.Type = "TEXT"
+        self.Subject = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(MessageActuator, self).buildGraph()
+
+        self.TargetByName = self.Data.RigidBodyNames[self.BlenderActuator.to_property]
+        self.Type = "TEXT"
+        self.Subject = self.BlenderActuator.subject
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::MessageActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::MessageActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+        if self.Type:
+            writer.writeLine("Type %s" % self.Type)
+
+        if self.Subject:
+            writer.writeLine("Subject \"%s\"" % self.Subject)
+
+
+        if self.TargetByName:
+            writer.writeLine("TargetByNameInternal \"%s\"" % self.TargetByName)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################

@@ -155,6 +155,7 @@ class RigidBody(ODEObject.ODEObject):
 
         self.Data.RigidBodyCache.set(self.Object, self.UniqueID)
         self.Data.RigidBodyMap[self.Object] = self
+        self.Data.RigidBodyNames[self.Object.name] = self.Name
 
 
 

@@ -160,7 +160,9 @@ Joint::addToWorldInternal(World* world)
 
         setJointFeedback(m_feedback.get()) ;
 
-        return true ;
+
+
+        return Transformable::addToWorldInternal( world ) ;
     }
 
     return false ;
@@ -205,7 +207,9 @@ Joint::removeFromWorldInternal(World* world)
 
         setJointFeedback(m_feedback.get()) ;
 
-        return true ;
+
+
+        return Transformable::removeFromWorldInternal( world ) ;
     }
 
     return false ;

@@ -279,10 +279,19 @@ public:
     typedef std::vector< osg::ref_ptr<ODEObject> >  Objects ;
 
     //! Get the objects ordered by id
-    inline Objects&     getObjects(void) ;
+    inline OSGODE_DEPRECATED Objects& getObjects(void) ;
 
     //! Get the objects
-    inline const Objects&   getObjects(void) const ;
+    inline OSGODE_DEPRECATED const Objects& getObjects(void) const ;
+
+    //! Get the unsorted objects
+    inline Objects&   getUnsortedObjects(void) ;
+
+    //! Get the const unsorted objects
+    inline const Objects&   getUnsortedObjects(void) const ;
+
+    //! Sort the objects by ID
+    inline void sortObjectsByID(void) ;
 
 
     //! return false if the pattern doesn't match
@@ -408,6 +417,27 @@ public:
                                 const osg::BoundingSphere& sphere,
                                 unsigned int max_actors = 0xFFFFFFFF
                               ) ;
+
+
+
+
+    //! Get the actors
+    inline Objects& getActors(void) ;
+
+    //! Get the const actors
+    inline const Objects& getActors(void) const ;
+
+    //! Set the dirty actors
+    inline void setDirtyActors( bool dirty_actors ) ;
+
+    //! Get the const dirty actors
+    inline bool getDirtyActors(void) const ;
+
+    //! Collect the actors, then setDirtyActors(false)
+    /*!
+     * @return  number of actors
+     */
+    unsigned int    collectActors(void) ;
 /* ======================================================================= */
 
 
@@ -493,6 +523,9 @@ private:
     double          m_current_step_size ;
 
     osg::ref_ptr<Events>    m_events ;
+
+    bool            m_dirty_actors ;
+    Objects         m_actors ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

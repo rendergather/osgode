@@ -217,7 +217,7 @@ Manager::computeBound(void) const
 
 
 
-        const osgODE::World::Objects&   objects = m_world->getObjects() ;
+        const osgODE::World::Objects&   objects = m_world->getUnsortedObjects() ;
 
         osgODE::World::Objects::const_iterator  itr = objects.begin() ;
         osgODE::World::Objects::const_iterator  itr_end = objects.end() ;

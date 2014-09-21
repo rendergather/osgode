@@ -71,8 +71,8 @@ osgODE::ThreadedManager::pause(void)
 inline void
 osgODE::ThreadedManager::unpause(void)
 {
-    m_paused = false ;
     m_pause_request = false ;
+    m_paused = false ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

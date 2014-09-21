@@ -1253,10 +1253,10 @@ class EditObjectActuator(Actuator):
 
 
 
-        if self.DistanceMin:
+        if self.DistanceMin != None:
             writer.writeLine( "DistanceMin %f" % self.DistanceMin )
 
-        if self.DistanceMax:
+        if self.DistanceMax != None:
             writer.writeLine( "DistanceMax %f" % self.DistanceMax )
 
 
@@ -1325,12 +1325,13 @@ class CameraActuator(Actuator):
 
 ############################################################################
     TrackToByName = None
-    Damping = None
     Height = None
     DistanceMin = None
     DistanceMax = None
     UpWorld = None
     Axis = None
+    LinearPID = None
+    AngularPID = None
 ############################################################################
 
 
@@ -1346,12 +1347,13 @@ class CameraActuator(Actuator):
         super(CameraActuator, self).__init__(rigid_body, sensor)
 
         self.TrackToByName = None
-        self.Damping = 1.0
         self.Height = 0.0
         self.DistanceMin = 0.0
         self.DistanceMax = 0.0
         self.UpWorld = [0,0,1]
         self.Axis = [1,0,0]
+        self.AngularPID = [1,0,0]
+        self.LinearPID = [1,0,0]
 ############################################################################
 
 
@@ -1383,7 +1385,48 @@ class CameraActuator(Actuator):
             self.Axis = [0, -1, 0]
 
 
-        self.Damping = self.BlenderActuator.damping
+        self.LinearPID[0] = self.BlenderActuator.damping
+        self.AngularPID[0] = self.BlenderActuator.damping
+
+
+
+        try:
+            #self.AngularPID[0] = self.Object["oog_%s_AP" % self.BlenderActuator.name]
+            self.AngularPID[0] = self.Object["oog_camera_AP"]
+        except:
+            self.AngularPID[0] = 1.0
+
+        try:
+            #self.AngularPID[1] = self.Object["oog_%s_AI" % self.BlenderActuator.name]
+            self.AngularPID[1] = self.Object["oog_camera_AI"]
+        except:
+            self.AngularPID[1] = 0.0
+
+        try:
+            #self.AngularPID[2] = self.Object["oog_%s_AD" % self.BlenderActuator.name]
+            self.AngularPID[2] = self.Object["oog_camera_AD"]
+        except:
+            self.AngularPID[2] = 0.0
+
+
+
+        try:
+            #self.LinearPID[0] = self.Object["oog_%s_LP" % self.BlenderActuator.name]
+            self.LinearPID[0] = self.Object["oog_camera_LP"]
+        except:
+            self.LinearPID[0] = 1.0
+
+        try:
+            #self.LinearPID[1] = self.Object["oog_%s_LI" % self.BlenderActuator.name]
+            self.LinearPID[1] = self.Object["oog_camera_LI"]
+        except:
+            self.LinearPID[1] = 0.0
+
+        try:
+            #self.LinearPID[2] = self.Object["oog_%s_LD" % self.BlenderActuator.name]
+            self.LinearPID[2] = self.Object["oog_camera_LD"]
+        except:
+            self.LinearPID[2] = 0.0
 
 
         return True
@@ -1445,7 +1488,9 @@ class CameraActuator(Actuator):
 
             writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
             writer.writeLine("Name \"LinearPIDController@%s\"" % (self.Object.name) )
-            writer.writeLine("Proportional %f" % self.Damping)
+            writer.writeLine("Proportional %f" % self.LinearPID[0])
+            writer.writeLine("Integral %f" % self.LinearPID[1])
+            writer.writeLine("Derivative %f" % self.LinearPID[2])
 
             writer.moveOut("osgODE::PIDController")
             writer.moveOut("LinearPID TRUE")
@@ -1457,7 +1502,9 @@ class CameraActuator(Actuator):
 
             writer.writeLine("UniqueID %u" % self.Data.UniqueID.generate())
             writer.writeLine("Name \"AngularPIDController@%s\"" % (self.Object.name) )
-            writer.writeLine("Proportional %f" % self.Damping)
+            writer.writeLine("Proportional %f" % self.AngularPID[0])
+            writer.writeLine("Integral %f" % self.AngularPID[1])
+            writer.writeLine("Derivative %f" % self.AngularPID[2])
 
             writer.moveOut("osgODE::PIDController")
             writer.moveOut("AngularPID TRUE")

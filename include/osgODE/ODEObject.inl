@@ -294,9 +294,9 @@ osgODE::ODEObject::setActorBound(const osg::BoundingSphere& bs)
 /* ======================================================================= */
 /* ....................................................................... */
 inline bool
-osgODE::ODEObject::isActor(void) const
+osgODE::ODEObject::getActor(void) const
 {
-    return m_actor_bound.valid() ;
+    return m_actor ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

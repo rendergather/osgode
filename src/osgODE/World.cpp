@@ -63,7 +63,8 @@ World::World(void):
     m_objects_sorted        ( true ),
     m_wind_frequency        ( 0.0 ),
     m_air_density           ( 1.2929 ),
-    m_current_step_size     ( 0.0 )
+    m_current_step_size     ( 0.0 ),
+    m_dirty_actors          ( false )
 {
 
 
@@ -108,7 +109,9 @@ World::World(const World& other, const osg::CopyOp& copyop):
     m_air_density           ( other.m_air_density ),
     m_current_wind          ( other.m_current_wind ),
     m_current_step_size     ( other.m_current_step_size ),
-    m_events                ( osg::clone( other.m_events.get(), copyop ) )
+    m_events                ( osg::clone( other.m_events.get(), copyop ) ),
+    m_dirty_actors          ( other.m_dirty_actors ),
+    m_actors                ( other.m_actors )
 {
 
 
@@ -397,10 +400,13 @@ World::runOperationsInternal(void)
 {
     if( m_operations.size() ) {
 
+        OperationList   operations = m_operations ;
+        m_operations.clear() ;
+
         PS_DBG3("osgODE::World::runOperationsInternal(%p)", this) ;
 
-        OperationList::iterator itr = m_operations.begin() ;
-        OperationList::iterator itr_end = m_operations.end() ;
+        OperationList::iterator itr = operations.begin() ;
+        OperationList::iterator itr_end = operations.end() ;
 
 
         while( itr != itr_end ) {
@@ -414,9 +420,6 @@ World::runOperationsInternal(void)
 
             (*op)(this) ;
         }
-
-
-        m_operations.clear() ;
     }
 }
 /* ....................................................................... */
@@ -699,9 +702,7 @@ World::addToWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::addToWorldInternal(%p, world=%p)", this, world) ;
 
-    (void) world ;
-
-    return true ;
+    return ODEObject::addToWorldInternal( world ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -716,9 +717,7 @@ World::removeFromWorldInternal(World* world)
 {
     PS_DBG2("osgODE::World::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
-    (void) world ;
-
-    return true ;
+    return ODEObject::removeFromWorldInternal( world ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

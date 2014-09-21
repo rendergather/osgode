@@ -45,7 +45,7 @@ static bool checkODEObjects(const osgODE::World& world)
 
 static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::World& world)
 {
-    const osgODE::World::Objects&   objs = world.getObjects() ;
+    const osgODE::World::Objects&   objs = world.getUnsortedObjects() ;
     os << (unsigned long int)objs.size() << std::endl ;
     for(unsigned int i=0; i<objs.size(); i++) {
         os << objs[i].get() ;

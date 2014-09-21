@@ -116,6 +116,7 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
 
 
         case osgGA::GUIEventAdapter::MOVE:
+        case osgGA::GUIEventAdapter::DRAG:
         {
             events->setCursorPosition( osg::Vec2( ea.getX(), ea.getY() ) ) ;
             events->setNormalizedCursorPosition( osg::Vec2( ea.getXnormalized(), ea.getYnormalized() ) ) ;

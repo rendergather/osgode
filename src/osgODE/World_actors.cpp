@@ -52,8 +52,14 @@ World::findActors(  ActorCallback* cbk,
                     const osg::Vec3& from,
                     const osg::Vec3& to)
 {
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+
+    if( m_dirty_actors ) {
+        collectActors() ;
+    }
+
+
+    Objects::iterator   itr = m_actors.begin() ;
+    Objects::iterator   itr_end = m_actors.end() ;
 
     unsigned int    found = 0 ;
 
@@ -61,6 +67,7 @@ World::findActors(  ActorCallback* cbk,
     while( itr != itr_end ) {
 
         ODEObject*  current = *itr++ ;
+
 
         if( World::intersectRaySphere( current->getActorBound(), from, to ) ) {
 
@@ -100,9 +107,13 @@ World::findActors(  ActorCallback* cbk,
     // free()
     osg::ref_ptr<ActorCallback>   tmp = cbk ;
 
+    if( m_dirty_actors ) {
+        collectActors() ;
+    }
 
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+
+    Objects::iterator   itr = m_actors.begin() ;
+    Objects::iterator   itr_end = m_actors.end() ;
 
     unsigned int    found = 0 ;
 
@@ -256,6 +267,39 @@ World::intersectSphereSphere(   const osg::BoundingSphere& sphere1,
     }
 
     return (sphere1.center() - sphere2.center()).length() <= sphere1.radius() + sphere2.radius() ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+unsigned int
+World::collectActors(void)
+{
+    m_actors.clear() ;
+
+    Objects::iterator   itr = m_objects.begin() ;
+    Objects::iterator   itr_end = m_objects.end() ;
+
+
+    while( itr != itr_end ) {
+
+        ODEObject*  obj = *itr++ ;
+
+        PS_ASSERT1( obj ) ;
+
+        if( obj->getActor() ) {
+            m_actors.push_back( obj ) ;
+        }
+    }
+
+    m_dirty_actors = false ;
+
+
+    return m_actors.size() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

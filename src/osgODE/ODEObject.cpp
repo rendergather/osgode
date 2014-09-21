@@ -26,6 +26,7 @@
 /* ....................................................................... */
 #include <osgODE/ODEObject>
 #include <osgODE/World>
+#include <osgODE/Notify>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -57,7 +58,8 @@ unsigned int    ODEObject::s_last_id = 0 ;
 /* ======================================================================= */
 /* ....................................................................... */
 ODEObject::ODEObject(void):
-    m_ID        ( 0 )
+    m_ID        ( 0 ),
+    m_actor     ( false )
 {
 }
 /* ....................................................................... */
@@ -74,7 +76,8 @@ ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
     m_post_update_callback  ( other.m_post_update_callback ),
     m_ID                    ( 0 ),
     m_user_object           ( other.m_user_object.get() ),
-    m_actor_bound           ( other.m_actor_bound )
+    m_actor_bound           ( other.m_actor_bound ),
+    m_actor                 ( other.m_actor )
 {
     if( copyop.getCopyFlags() & osg::CopyOp::DEEP_COPY_CALLBACKS ) {
         if( other.m_update_callback.valid() ) {
@@ -96,6 +99,25 @@ ODEObject::ODEObject(const ODEObject& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 ODEObject::~ODEObject(void)
 {
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+ODEObject::setActor( bool actor )
+{
+    if( m_actor != actor ) {
+        m_actor = actor ;
+
+        if( m_world.valid() ) {
+            m_world->setDirtyActors(true) ;
+        }
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -176,7 +198,12 @@ ODEObject::postUpdate(double step_size)
 bool
 ODEObject::addToWorldInternal(World* world)
 {
-    (void) world ;
+    PS_ASSERT1( world != NULL ) ;
+
+    if( m_actor ) {
+        world->setDirtyActors( true ) ;
+    }
+
 
     return true ;
 }
@@ -191,7 +218,11 @@ ODEObject::addToWorldInternal(World* world)
 bool
 ODEObject::removeFromWorldInternal(World* world)
 {
-    (void) world ;
+    PS_ASSERT1( world != NULL ) ;
+
+    if( m_actor ) {
+        world->setDirtyActors( true ) ;
+    }
 
     return true ;
 }

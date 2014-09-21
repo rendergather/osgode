@@ -51,8 +51,8 @@ class RigidBody(ODEObject.ODEObject):
 
 
 ############################################################################
-    UpdateActorBound = False
     ActorBoundRadius = None
+    Actor = False
     Position = Vector()
     Rotation = Quaternion()
     GravityMode = True
@@ -84,8 +84,8 @@ class RigidBody(ODEObject.ODEObject):
     def __init__(self, data, obj):
         super(RigidBody, self).__init__(data, obj)
 
-        self.UpdateActorBound = False
         self.ActorBoundRadius = None
+        self.Actor = False
         self.Position = Vector()
         self.Quaternion = Quaternion()
         self.GravityMode = True
@@ -113,7 +113,7 @@ class RigidBody(ODEObject.ODEObject):
         if not super(RigidBody, self).buildGraph():
             return False
 
-        self.UpdateActorBound = self.Object.game.use_actor
+        self.Actor = self.Object.game.use_actor
 
         self.ActorBoundRadius = self.Object.game.radius
 
@@ -238,8 +238,13 @@ class RigidBody(ODEObject.ODEObject):
 
 
 
-        if self.UpdateActorBound :
+        if self.ActorBoundRadius != None :
             writer.writeLine("ActorBound %f %f %f %f" %(self.Position.x, self.Position.y, self.Position.z, self.ActorBoundRadius))
+
+        if self.Actor :
+            writer.writeLine("Actor TRUE")
+        else:
+            writer.writeLine("Actor FALSE")
 
 
 

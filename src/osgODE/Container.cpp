@@ -268,7 +268,7 @@ Container::addToWorldInternal(World* world)
 
 
 
-    return true ;
+    return ODEObject::addToWorldInternal( world ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -304,7 +304,7 @@ Container::removeFromWorldInternal(World* world)
     }
 
 
-    return true ;
+    return ODEObject::removeFromWorldInternal( world ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -129,6 +129,7 @@ REGISTER_OBJECT_WRAPPER( ODEObject,
     ADD_OBJECT_SERIALIZER( PostUpdateCallback, osgODE::ODECallback, NULL ) ;
     ADD_OBJECT_SERIALIZER( UserObject, osg::Object, NULL ) ;
     ADD_USER_SERIALIZER( ActorBound ) ;
+    ADD_BOOL_SERIALIZER( Actor, false ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

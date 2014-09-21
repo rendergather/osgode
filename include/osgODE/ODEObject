@@ -40,6 +40,29 @@
 
 
 
+/* ======================================================================= */
+#ifndef OSGODE_DEPRECATED
+#   if defined(__GNUC__)
+#       if __GNUC__ - 0 > 3 || (__GNUC__ - 0 == 3 && __GNUC_MINOR__ - 0 >= 2)
+#           define OSGODE_DEPRECATED __attribute__ ((deprecated))
+#       else
+#           define OSGODE_DEPRECATED
+#       endif
+#   elif defined(_MSC_VER)
+#       if _MSC_VER >= 1300
+#           define __declspec(deprecated)
+#       else
+#           define OSGODE_DEPRECATED
+#       endif
+#   else
+#       define OSGODE_DEPRECATED
+#   endif
+#endif
+/* ======================================================================= */
+
+
+
+
 namespace osgODE
 {
 
@@ -263,8 +286,11 @@ public:
     //! Set the actor bounding sphere
     inline void     setActorBound(const osg::BoundingSphere& bs) ;
 
-    //! True if thee actor bounding sphere is valid
-    inline bool     isActor(void) const ;
+    //! Set the actor
+    void setActor( bool actor ) ;
+
+    //! Get the const actor
+    inline bool getActor(void) const ;
 /* ======================================================================= */
 
 
@@ -307,6 +333,8 @@ private:
     osg::BoundingSphere         m_actor_bound ;
     
     osg::BoundingSphere         m_bounding_sphere ;
+
+    bool                        m_actor ;
 /* ======================================================================= */
 
 

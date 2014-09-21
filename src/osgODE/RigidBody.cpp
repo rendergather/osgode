@@ -484,7 +484,7 @@ RigidBody::addToWorldInternal(World* world)
 
 
 
-        return true ;
+        return Transformable::addToWorldInternal( world ) ;
     }
 
 
@@ -540,7 +540,7 @@ RigidBody::removeFromWorldInternal(World* world)
 
 
 
-        return true ;
+        return Transformable::removeFromWorldInternal( world ) ;
     }
 
 

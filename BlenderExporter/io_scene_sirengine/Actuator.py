@@ -1616,3 +1616,103 @@ class MessageActuator(Actuator):
 
 # ........................................................................ #
 ############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class GameActuator(Actuator):
+    """ooGame::GameActuator"""
+
+
+
+
+
+############################################################################
+    FileName = None
+    Mode = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(GameActuator, self).__init__(rigid_body, sensor)
+
+        self.FileName = None
+        self.Mode = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(GameActuator, self).buildGraph()
+
+        self.FileName = self.BlenderActuator.filename
+
+
+        if self.BlenderActuator.mode == "QUIT" :
+            self.Mode = "QUIT"
+
+        elif self.BlenderActuator.mode == "RESTART" :
+            self.Mode = "RESTART"
+
+        elif self.BlenderActuator.mode == "START" :
+            self.Mode = "START_FROM_FILE"
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::GameActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::GameActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+        if self.Mode:
+            writer.writeLine("Mode %s" % self.Mode)
+
+
+        if self.FileName:
+            writer.writeLine("FileName \"%s\"" % self.FileName)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################

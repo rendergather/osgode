@@ -95,7 +95,7 @@ Character::attach(  RigidBody*  body,
 
     if( ! body ) {
         PS_WARN("osgODE::Character::attach(%p): null body", this) ;
-        return false ;
+        return NULL ;
     }
 
 

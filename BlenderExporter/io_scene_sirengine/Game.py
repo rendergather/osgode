@@ -181,6 +181,9 @@ class Game(ODECallback.ODECallback):
             elif a.type == "MESSAGE":
                 actuator = Actuator.MessageActuator(self.RigidBody, a)
 
+            elif a.type == "GAME":
+                actuator = Actuator.GameActuator(self.RigidBody, a)
+
 
             if actuator:
                 actuator.buildGraph()

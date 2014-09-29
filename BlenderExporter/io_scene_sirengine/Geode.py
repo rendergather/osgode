@@ -147,14 +147,15 @@ class Geode(Writable.Writable):
                     material = self.MeshData.MaterialArray[0]
                     material[0] *= self.Data.AmbientMultiplier
 
-                    self.StateSet.UniformList.addVec4Uniform("uMaterial", material)
-                    self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.MaterialColor)
-                    self.StateSet.UniformList.addFloatUniform("uEmission", self.Object.data.materials[0].emit)
+                    if self.Data.ExportLights:
+                        self.StateSet.UniformList.addVec4Uniform("uMaterial", material)
+                        self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.MaterialColor)
+                        self.StateSet.UniformList.addFloatUniform("uEmission", self.Object.data.materials[0].emit)
 
-                    if self.Object.data.materials[0].subsurface_scattering.use:
-                        self.StateSet.UniformList.addFloatUniform("uIOR", self.Object.data.materials[0].subsurface_scattering.ior)
-                    else:
-                        self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
+                        if self.Object.data.materials[0].subsurface_scattering.use:
+                            self.StateSet.UniformList.addFloatUniform("uIOR", self.Object.data.materials[0].subsurface_scattering.ior)
+                        else:
+                            self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
 
 
                     if self.Object.data.materials[0].use_transparency:
@@ -182,7 +183,8 @@ class Geode(Writable.Writable):
                             speed[0] = self.Object.fog_speed_x
                             speed[1] = self.Object.fog_speed_y
 
-                            self.StateSet.UniformList.addVec2Uniform("uFogSpeed", speed)
+                            if self.Data.ExportLights:
+                                self.StateSet.UniformList.addVec2Uniform("uFogSpeed", speed)
                     except:
                         pass
 

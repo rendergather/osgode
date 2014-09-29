@@ -77,7 +77,7 @@ extern OSG_EXPORT void      psInstallAndroidNotifyHandler(void) ;
     } \
 }
 #else
- #define        PS_WARN(FMT, ARGS)
+ #define        PS_WARN(FMT, ARGS...)
 #endif
 /* ....................................................................... */
 /* ======================================================================= */

@@ -179,26 +179,30 @@ class StateSet(Writable.Writable):
         if self.ModeList:
             self.ModeList.writeToStream(writer)
 
-        try:
-            if self.Object["oo_polygon_offset"] != 0.0:
 
-                writer.moveIn("AttributeList 1")
 
-                writer.moveIn("osg::PolygonOffset")
+        if self.Data.PolygonOffsetMultiplier > 0.0:
 
-                writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate())
-                #writer.writeLine("Factor %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                #writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                writer.writeLine("Factor %f" % (0.1 * self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
+            try:
+                if self.Object["oo_polygon_offset"] != 0.0:
 
-                writer.moveOut("osg::PolygonOffset")
+                    writer.moveIn("AttributeList 1")
 
-                writer.writeLine("Value OFF")
+                    writer.moveIn("osg::PolygonOffset")
 
-                writer.moveOut("AttributeList 1")
-        except:
-            pass
+                    writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate())
+                    #writer.writeLine("Factor %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
+                    #writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
+                    writer.writeLine("Factor %f" % (0.1 * self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
+                    writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
+
+                    writer.moveOut("osg::PolygonOffset")
+
+                    writer.writeLine("Value OFF")
+
+                    writer.moveOut("AttributeList 1")
+            except:
+                pass
 
 
 

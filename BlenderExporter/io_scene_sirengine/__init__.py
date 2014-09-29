@@ -82,7 +82,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_selected = BoolProperty( name="Export only selected", default=False)
 
 
-    export_lights = BoolProperty( name="Export lights (requires pViewer)", default=True)
+    export_lights = BoolProperty( name="Export pViewer (requires pViewer)", default=True)
     export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=True)
     export_game   = BoolProperty( name="Export game (requiers ooGame)", default=True)
 

@@ -1429,6 +1429,27 @@ class CameraActuator(Actuator):
             self.LinearPID[2] = 0.0
 
 
+
+        try:
+            upw = self.Object["oog_%s_up_world" % self.BlenderActuator.name]
+
+            if upw == 0:
+                self.UpWorld = [1,0,0]
+            if upw == 1:
+                self.UpWorld = [0,1,0]
+            if upw == 2:
+                self.UpWorld = [0,0,1]
+
+            if upw == 3:
+                self.UpWorld = [-1,0,0]
+            if upw == 4:
+                self.UpWorld = [0,-1,0]
+            if upw == 5:
+                self.UpWorld = [0,0,-1]
+        except:
+            self.UpWorld = None
+
+
         return True
 ############################################################################
 

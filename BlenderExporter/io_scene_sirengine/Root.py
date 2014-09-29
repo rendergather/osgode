@@ -114,11 +114,14 @@ class Root(Writable.Writable):
         self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
         self.StateSet.ModeList.addMode("GL_BLEND OFF")
 
-        self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
-        self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
-        self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
-        self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
-        self.StateSet.UniformList.addFloatUniform("uParallaxScale", 0.0)
+        if self.Data.ExportLights:
+            self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
+            self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
+            self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
+            self.StateSet.UniformList.addFloatUniform("uIOR", 1.0)
+            self.StateSet.UniformList.addFloatUniform("uParallaxScale", 0.0)
+
+
         self.StateSet.buildGraph()
 
 

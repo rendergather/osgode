@@ -40,6 +40,7 @@ SET(TARGET_SRC
     Joint_serializer.cpp
     LMPlusJoint_serializer.cpp
     LMotorJoint_serializer.cpp
+    LibraryWrapper.cpp
     LinearInterpolator_serializer.cpp
     LinearQuatInterpolator_serializer.cpp
     LinearVec3Interpolator_serializer.cpp

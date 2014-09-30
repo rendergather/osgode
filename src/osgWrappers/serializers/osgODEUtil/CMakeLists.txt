@@ -8,6 +8,7 @@ SET(TARGET_SRC
     AnimationManager_serializer.cpp
     HashTable_serializer.cpp
     HashTablePair_serializer.cpp
+    LibraryWrapper.cpp
     Picker_serializer.cpp
 )
 

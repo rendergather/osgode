@@ -81,6 +81,11 @@ main(int argc, char** argv)
         const double    FREQUENCY = 1.0/4.0 ;
 
         body->setAngularVelocity( osg::Vec3(0.0, 0.0, FREQUENCY * 2.0 * osg::PI) ) ;
+
+
+        // disable damping
+        body->setLinearDamping(0.0) ;
+        body->setAngularDamping(0.0) ;
     }
 
 

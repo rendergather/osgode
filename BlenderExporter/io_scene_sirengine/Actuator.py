@@ -964,8 +964,10 @@ class EditObjectActuator(Actuator):
     LinearPID = [1,0,0]
     DistanceMin = None
     DistanceMax = None
+    UpWorld = None
     UpLocal = None
     FrontLocal = None
+    CameraPriority = None
 ############################################################################
 
 
@@ -994,8 +996,10 @@ class EditObjectActuator(Actuator):
         self.LinearPID = [1,0,0]
         self.DistanceMin = None
         self.DistanceMax = None
-        self.UpLocal = None
-        self.FrontLocal = None
+        self.UpWorld = [0,0,1]
+        self.UpLocal = [0,0,1]
+        self.FrontLocal = [0,1,0]
+        self.CameraPriority = 0
 ############################################################################
 
 
@@ -1175,14 +1179,63 @@ class EditObjectActuator(Actuator):
 
 
         try:
-            self.DistanceMin = self.Object["oog_%s_distance_min" % self.BlenderActuator.name]
+            up_world = self.Object["oog_%s_UpWorld" % self.BlenderActuator.name]
+
+            if up_world == 0:
+                self.UpWorld = [1,0,0]
+            elif up_world == 1:
+                self.UpWorld = [0,1,0]
+            elif up_world == 2:
+                self.UpWorld = [0,0,1]
+        except:
+                self.UpWorld = None
+
+
+
+        try:
+            up_local = self.Object["oog_%s_UpLocal" % self.BlenderActuator.name]
+
+            if up_local == 0:
+                self.UpLocal = [1,0,0]
+            elif up_local == 1:
+                self.UpLocal = [0,1,0]
+            elif up_local == 2:
+                self.UpLocal = [0,0,1]
+        except:
+                self.UpLocal = None
+
+
+
+        try:
+            front_local = self.Object["oog_%s_FrontLocal" % self.BlenderActuator.name]
+
+            if front_local == 0:
+                self.FrontLocal = [1,0,0]
+            elif front_local == 1:
+                self.FrontLocal = [0,1,0]
+            elif front_local == 2:
+                self.FrontLocal = [0,0,1]
+        except:
+                self.FrontLocal = None
+
+
+
+        try:
+            self.DistanceMin = self.Object["oog_%s_DistanceMin" % self.BlenderActuator.name]
         except:
             self.DistanceMin = None
 
         try:
-            self.DistanceMax = self.Object["oog_%s_distance_max" % self.BlenderActuator.name]
+            self.DistanceMax = self.Object["oog_%s_DistanceMax" % self.BlenderActuator.name]
         except:
             self.DistanceMax = None
+
+
+
+        try:
+            self.CameraPriority = self.Object["oog_%s_CameraPriority" % self.BlenderActuator.name]
+        except:
+            self.CameraPriority = None
 
 
         return True
@@ -1244,6 +1297,9 @@ class EditObjectActuator(Actuator):
 
 
 
+        if self.UpWorld:
+            writer.writeLine( "UpWorld %f %f %f" % (self.UpWorld[0], self.UpWorld[1], self.UpWorld[2]) )
+
         if self.UpLocal:
             writer.writeLine( "UpLocal %f %f %f" % (self.UpLocal[0], self.UpLocal[1], self.UpLocal[2]) )
 
@@ -1295,6 +1351,11 @@ class EditObjectActuator(Actuator):
             writer.moveOut("osgODE::PIDController")
             writer.moveOut("AngularPID TRUE")
 
+
+
+
+        if self.CameraPriority:
+            writer.writeLine("CameraPriority %u" % self.CameraPriority)
 
 
         return True

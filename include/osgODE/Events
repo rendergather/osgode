@@ -126,6 +126,12 @@ public:
 
     //! set the key state
     inline void setKeyPressed(unsigned int keysym, bool pressed) ;
+
+    //! Set the fps mode. Default: false
+    inline void setFPSMode( bool fps_mode ) ;
+
+    //! Get the const fps mode. Default: false
+    inline bool getFPSMode(void) const ;
 /* ======================================================================= */
 
 
@@ -209,6 +215,8 @@ private:
     osg::observer_ptr<osg::View>    m_view ;
 
     ViewMatrix  m_view_matrix ;
+
+    bool            m_fps_mode ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

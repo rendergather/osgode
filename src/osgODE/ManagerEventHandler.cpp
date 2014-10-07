@@ -109,6 +109,21 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
             events->setView( aa.asView() ) ;
 
             events->incFrameCounterInternal() ;
+
+
+            if( events->getFPSMode() ) {
+                const float xmin = ea.getXmin() ;
+                const float xmax = ea.getXmax() ;
+                const float ymin = ea.getYmin() ;
+                const float ymax = ea.getYmax() ;
+
+                osg::Vec2   warp = osg::Vec2(1.0, 1.0) * 0.5 ;
+
+                warp.x() = xmin + (xmax - xmin) * warp.x() ;
+                warp.y() = ymin + (ymax - ymin) * warp.y() ;
+
+                aa.requestWarpPointer( warp.x(), warp.y() ) ;
+            }
         }
         break ;
 

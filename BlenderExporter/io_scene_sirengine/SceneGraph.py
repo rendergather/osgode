@@ -127,8 +127,9 @@ class SceneGraph(object):
                 writer.moveOut("osg::Group")
 
         else:
-            if self.Data.Selected:
-                return self.Data.Selected.writeToStream(writer)
+            for root in self.Roots:
+                if root.Data.Selected:
+                    return root.Data.Selected.writeToStream(writer)
 
         return False
 ############################################################################

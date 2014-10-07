@@ -44,7 +44,8 @@ using namespace osgODE ;
 Events::Events(void):
     m_button_mask               ( 0 ),
     m_dirty_view_projection     ( false ),
-    m_frame_counter             ( 0 )
+    m_frame_counter             ( 0 ),
+    m_fps_mode                  ( false )
 {
     for(unsigned int i=0; i<256; i++) {
         m_key_pressed[i] = false ;
@@ -67,7 +68,8 @@ Events::Events(const Events& other, const osg::CopyOp& copyop):
     m_inverse_view_projection       ( other.m_inverse_view_projection ),
     m_frame_counter                 ( 0 ),
     m_view                          ( other.m_view ),
-    m_view_matrix                   ( other.m_view_matrix )
+    m_view_matrix                   ( other.m_view_matrix ),
+    m_fps_mode                      ( other.m_fps_mode )
 {
     for(unsigned int i=0; i<256; i++) {
         m_key_pressed[i] = other.m_key_pressed[i] ;

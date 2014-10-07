@@ -98,6 +98,7 @@ REGISTER_OBJECT_WRAPPER( Events,
     ADD_UINT_SERIALIZER( ButtonMask, 0 ) ;
     ADD_USER_SERIALIZER( KeyPressed ) ;
     ADD_OBJECT_SERIALIZER( View, osg::View, NULL ) ;
+    ADD_BOOL_SERIALIZER( FPSMode, false ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

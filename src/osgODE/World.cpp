@@ -358,16 +358,7 @@ World::_callObjectsPostCallbacks(double step_size)
 
         iter++ ;
 
-
-
-        RigidBody*  body = o->asRigidBody() ;
-
-        if( body ) {
-            body->updateTransformInternal() ;
-        }
-
-
-
+        o->updateTransformInternal() ;
         o->postUpdate(step_size) ;
         o->callPostUpdateCallbackInternal() ;
     }
@@ -780,7 +771,7 @@ World::traverse(osg::NodeVisitor& nv)
 void
 World::updateTransformsInternal(void)
 {
-    PS_DBG3("osgODE::World::updateRigidBodyTransformsInternal(%p)", this) ;
+    PS_DBG3("osgODE::World::updateTransformsInternal(%p)", this) ;
 
 
 

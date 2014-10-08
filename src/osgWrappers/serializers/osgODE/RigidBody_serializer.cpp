@@ -96,24 +96,26 @@ static bool readODEMass(osgDB::InputStream& is, osgODE::RigidBody& body)
 {
     dMass   mass ;
 
-    is >> mass.mass ;
+    double  tmp ;
 
-    is >> mass.c[0] ;
-    is >> mass.c[1] ;
-    is >> mass.c[2] ;
+    is >> tmp ; mass.mass = tmp ;
 
-    is >> mass.I[0] ;
-    is >> mass.I[1] ;
-    is >> mass.I[2] ;
-    is >> mass.I[3] ;
-    is >> mass.I[4] ;
-    is >> mass.I[5] ;
-    is >> mass.I[6] ;
-    is >> mass.I[7] ;
-    is >> mass.I[8] ;
-    is >> mass.I[9] ;
-    is >> mass.I[10] ;
-    is >> mass.I[11] ;
+    is >> tmp ; mass.c[0] = tmp ;
+    is >> tmp ; mass.c[1] = tmp ;
+    is >> tmp ; mass.c[2] = tmp ;
+
+    is >> tmp ; mass.I[0] = tmp ;
+    is >> tmp ; mass.I[1] = tmp ;
+    is >> tmp ; mass.I[2] = tmp ;
+    is >> tmp ; mass.I[3] = tmp ;
+    is >> tmp ; mass.I[4] = tmp ;
+    is >> tmp ; mass.I[5] = tmp ;
+    is >> tmp ; mass.I[6] = tmp ;
+    is >> tmp ; mass.I[7] = tmp ;
+    is >> tmp ; mass.I[8] = tmp ;
+    is >> tmp ; mass.I[9] = tmp ;
+    is >> tmp ; mass.I[10] = tmp ;
+    is >> tmp ; mass.I[11] = tmp ;
 
     body.setODEMass(mass) ;
 
@@ -124,24 +126,26 @@ static bool writeODEMass(osgDB::OutputStream& os, const osgODE::RigidBody& body)
 {
     dMass   mass = body.getODEMass() ;
 
-    os << mass.mass ;
+    double  tmp ;
 
-    os << mass.c[0] ;
-    os << mass.c[1] ;
-    os << mass.c[2] ;
+    tmp = mass.mass ; os << tmp ;
 
-    os << mass.I[0] ;
-    os << mass.I[1] ;
-    os << mass.I[2] ;
-    os << mass.I[3] ;
-    os << mass.I[4] ;
-    os << mass.I[5] ;
-    os << mass.I[6] ;
-    os << mass.I[7] ;
-    os << mass.I[8] ;
-    os << mass.I[9] ;
-    os << mass.I[10] ;
-    os << mass.I[11] ;
+    tmp = mass.c[0] ; os << tmp ;
+    tmp = mass.c[1] ; os << tmp ;
+    tmp = mass.c[2] ; os << tmp ;
+
+    tmp = mass.I[0] ; os << tmp ;
+    tmp = mass.I[1] ; os << tmp ;
+    tmp = mass.I[2] ; os << tmp ;
+    tmp = mass.I[3] ; os << tmp ;
+    tmp = mass.I[4] ; os << tmp ;
+    tmp = mass.I[5] ; os << tmp ;
+    tmp = mass.I[6] ; os << tmp ;
+    tmp = mass.I[7] ; os << tmp ;
+    tmp = mass.I[8] ; os << tmp ;
+    tmp = mass.I[9] ; os << tmp ;
+    tmp = mass.I[10] ; os << tmp ;
+    tmp = mass.I[11] ; os << tmp ;
 
     os << std::endl ;
 

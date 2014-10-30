@@ -124,7 +124,7 @@ void
 AllRayCastResult::addContact(   Collidable* other,
                                 const osg::Vec3& position,
                                 const osg::Vec3& surface_normal,
-                                double distance )
+                                ooReal distance )
 {
     Collision   collision ;
 
@@ -218,7 +218,7 @@ void
 NearestRayCastResult::addContact(   Collidable* other,
                                     const osg::Vec3& position,
                                     const osg::Vec3& surface_normal,
-                                    double distance )
+                                    ooReal distance )
 {
     if(  distance < m_distance  ||  m_distance < 0 ) {
         m_collidable = other ;
@@ -303,7 +303,7 @@ void
 NearestNotMeRayCastResult::addContact(  Collidable* other,
                                         const osg::Vec3& position,
                                         const osg::Vec3& surface_normal,
-                                        double distance )
+                                        ooReal distance )
 {
     if( other != m_me ) {
         this->NearestRayCastResult::addContact(other, position, surface_normal, distance) ;

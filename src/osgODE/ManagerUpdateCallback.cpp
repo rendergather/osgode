@@ -98,10 +98,10 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 
     Manager*        manager = static_cast<Manager*>(n) ;
 
-    const double    step_size = manager->getStepSize() ;
+    const ooReal    step_size = manager->getStepSize() ;
 
 
-    const double    sim_time = nv->getFrameStamp()->getSimulationTime() ;
+    const ooReal    sim_time = nv->getFrameStamp()->getSimulationTime() ;
 
 
     if( m_last_s > 0.0  &&  sim_time > m_last_s ) {

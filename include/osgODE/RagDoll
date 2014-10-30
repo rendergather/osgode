@@ -129,7 +129,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    postUpdate( double step_size ) ;
+    virtual void    postUpdate( ooReal step_size ) ;
     virtual void    accept( osg::NodeVisitor& nv ) ;
 
     virtual const osg::BoundingSphere&  getBound(void) const ;

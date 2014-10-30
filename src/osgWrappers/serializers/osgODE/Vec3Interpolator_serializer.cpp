@@ -70,7 +70,7 @@ static bool readPointList(osgDB::InputStream& is, osgODE::Vec3Interpolator& inte
 
         for(unsigned int i=0; i<size; i++) {
 
-            double      t ;
+            ooReal      t ;
             osg::Vec3   v ;
             is >> t ;
             is >> v ;

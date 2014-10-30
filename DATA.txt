@@ -1,0 +1,6 @@
+It's in the osgODE repository:
+
+$ svn checkout https://osgode.googlecode.com/svn/data-2.0.0 path/to/data
+
+
+see README

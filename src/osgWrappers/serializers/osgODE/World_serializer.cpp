@@ -27,6 +27,8 @@
 #include <osgODE/World>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -141,19 +143,19 @@ REGISTER_OBJECT_WRAPPER( World,
                          "osg::Object osgODE::ODEObject osgODE::World" )
 {
     ADD_UINT_SERIALIZER(CurrentFrame, 0) ;
-    ADD_DOUBLE_SERIALIZER(SimulationTime, 0.0) ;
+    ADD_REAL_SERIALIZER(SimulationTime, 0.0) ;
     ADD_USER_SERIALIZER(Gravity) ;
     ADD_VEC3_SERIALIZER(Wind, osg::Vec3()) ;
-    ADD_DOUBLE_SERIALIZER(WindFrequency, 0.0) ;
-    ADD_DOUBLE_SERIALIZER(AirDensity, 1.2929) ;
+    ADD_REAL_SERIALIZER(WindFrequency, 0.0) ;
+    ADD_REAL_SERIALIZER(AirDensity, 1.2929) ;
 
-    ADD_DOUBLE_SERIALIZER(ERP, 0.2) ;
-    ADD_DOUBLE_SERIALIZER(CFM, 1.0e-5) ;
+    ADD_REAL_SERIALIZER(ERP, 0.2) ;
+    ADD_REAL_SERIALIZER(CFM, 1.0e-5) ;
 
     ADD_INT_SERIALIZER(QuickStepNumIterations, 20) ;
-    ADD_DOUBLE_SERIALIZER(QuickStepW, 1.3) ;
-    ADD_DOUBLE_SERIALIZER(ContactMaxCorrectingVel, FLT_MAX) ;
-    ADD_DOUBLE_SERIALIZER(ContactSurfaceLayer, 0.0) ;
+    ADD_REAL_SERIALIZER(QuickStepW, 1.3) ;
+    ADD_REAL_SERIALIZER(ContactMaxCorrectingVel, FLT_MAX) ;
+    ADD_REAL_SERIALIZER(ContactSurfaceLayer, 0.0) ;
 
     ADD_USER_SERIALIZER(WorldStepFunction) ;
 

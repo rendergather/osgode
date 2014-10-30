@@ -82,10 +82,17 @@ findJoints( osgODE::World* world, Joints& joints, const std::string& regex="" ) 
 
 
 
-typedef std::vector< osg::ref_ptr<osgODE::RigidBody> >  RigidBodies;
+typedef std::vector< osg::ref_ptr<osgODE::RigidBody> >  RigidBodies ;
 
 extern OSG_EXPORT unsigned int
 findRigidBodies( osgODE::World* world, RigidBodies& bodies, const std::string& regex="" ) ;
+
+
+
+typedef std::vector< osg::ref_ptr<osgODE::Manager> >    Managers ;
+
+extern OSG_EXPORT unsigned int
+findManagers( osg::Node* graph, Managers& managers) ;
 /* ....................................................................... */
 /* ======================================================================= */
 

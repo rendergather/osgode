@@ -42,8 +42,8 @@ using namespace osgODE ;
 void
 Car::handleKeyDown(const int& key, const int& mod_key_mask, bool& handled)
 {
-    const double    R_BRAKE_FORCE = 250.0 ;
-    const double    F_BRAKE_FORCE = 500.0 ;
+    const ooReal    R_BRAKE_FORCE = 250.0 ;
+    const ooReal    F_BRAKE_FORCE = 500.0 ;
 
 
     switch( key )

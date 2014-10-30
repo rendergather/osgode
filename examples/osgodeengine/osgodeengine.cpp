@@ -102,7 +102,7 @@ Scene::init(int argc, char** argv)
     /*
      * [2] Create a body for representing devices' speed
      */
-    osg::ref_ptr<osg::Node> node = osgDB::readNodeFile("axis3.osgb") ;
+    osg::ref_ptr<osg::Node> node = osgDB::readNodeFile("axis3.osgt") ;
     PS_ASSERT1( node.valid() ) ;
 
     m_body = new osgODE::RigidBody() ;
@@ -136,16 +136,16 @@ Scene::mainloop(void)
 
     viewer.realize() ;
 
-    double  last = 0.0 ;
+    ooReal  last = 0.0 ;
 
     while( ! viewer.done() ) {
 
-        double  cur_time = m_manager->getWorld()->getSimulationTime() ;
-        double  dt = cur_time - last ;
+        ooReal  cur_time = m_manager->getWorld()->getSimulationTime() ;
+        ooReal  dt = cur_time - last ;
         last = cur_time ;
 
         if( dt > 0.0 ) {
-            double  t1, t2 ;
+            ooReal  t1, t2 ;
             t1 = 0 ;
             t2 = 0 ;
             m_engine->propagate( dt, t1, t2 ) ;

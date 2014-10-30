@@ -35,7 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SliderJoint::getPosition(void) const
 {
     return dJointGetSliderPosition(m_ODE_joint) ;
@@ -48,7 +48,7 @@ osgODE::SliderJoint::getPosition(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SliderJoint::getPositionRate(void) const
 {
     return dJointGetSliderPositionRate(m_ODE_joint) ;

@@ -27,6 +27,8 @@
 #include <osgODE/MotionPath>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,7 +50,7 @@ REGISTER_OBJECT_WRAPPER( MotionPath,
                          osgODE::MotionPath,
                          "osg::Object osgODE::ODECallback osgODE::MotionPath" )
 {
-    ADD_DOUBLE_SERIALIZER( Time, -1.0 ) ;
+    ADD_REAL_SERIALIZER( Time, -1.0 ) ;
 
     ADD_BOOL_SERIALIZER( RemoveWhenDone, false ) ;
 

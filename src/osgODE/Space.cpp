@@ -159,7 +159,7 @@ Space::~Space(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Space::update(double step_size)
+Space::update(ooReal step_size)
 {
     advanceInternal( step_size ) ;
     collide() ;
@@ -174,7 +174,7 @@ Space::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Space::threadUpdate(double step_size)
+Space::threadUpdate(ooReal step_size)
 {
     advanceInternal( step_size ) ;
     collide() ;

@@ -82,16 +82,16 @@ public:
 /* ======================================================================= */
 public:
     //! Get the joint extension
-    inline double   getPosition(void) const ;
+    inline ooReal   getPosition(void) const ;
 
     //! Get the extension speed
-    inline double   getPositionRate(void) const ;
+    inline ooReal   getPositionRate(void) const ;
 
     //! Get the angle between the bodies
-    inline double   getAngle(void) const ;
+    inline ooReal   getAngle(void) const ;
 
     //! Get the angular speed of the bodies around the axis
-    inline double   getAngleRate(void) const ;
+    inline ooReal   getAngleRate(void) const ;
 /* ======================================================================= */
 
 

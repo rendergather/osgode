@@ -97,21 +97,23 @@ class ODETransform(Writable.Writable):
             from . import Billboard
             from . import ScaleTransform
 
+
+            billboard = False
+
             try:
                 if self.Object.data.materials[0].game_settings.face_orientation == "BILLBOARD":
-                    billboard = Billboard.Billboard(self.Data, self.Object)
-                    self.addChild(billboard)
-                elif not physics_only:
-                    scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                    self.addChild( scale_transform )
-                    #geode = Geode.Geode(self.Data, self.Object)
-                    #self.addChild(geode)
+                    billboard = True
             except:
-                    if not physics_only:
-                        scale_transform = ScaleTransform.ScaleTransform(self.Data, self.Object)
-                        self.addChild( scale_transform )
-                        #geode = Geode.Geode(self.Data, self.Object)
-                        #self.addChild(geode)
+                billboard = False
+
+
+
+            if billboard:
+                self.addChild( Billboard.Billboard(self.Data, self.Object) )
+
+            else:
+                if not physics_only:
+                    self.addChild( ScaleTransform.ScaleTransform(self.Data, self.Object) )
 
 
 

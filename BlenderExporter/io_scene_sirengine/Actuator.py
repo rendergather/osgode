@@ -888,8 +888,12 @@ class SceneActuator(Actuator):
     def buildGraph(self):
         super(SceneActuator, self).buildGraph()
 
-        self.Mode = self.BlenderActuator.scene
-        self.Scene = self.BlenderActuator.scene.name
+        self.Mode = self.BlenderActuator.mode
+
+        try:
+            self.Scene = self.BlenderActuator.scene.name
+        except:
+            self.Scene = None
 
 
 
@@ -918,8 +922,10 @@ class SceneActuator(Actuator):
     def writePrivateActuatorData(self, writer):
 
 
-        #writer.writeLine("Mode %s" % self.Mode)
-        writer.writeLine("SceneName \"%s\"" % self.Scene)
+        writer.writeLine("Mode %s" % self.Mode)
+
+        if self.Scene:
+            writer.writeLine("SceneName \"%s\"" % self.Scene)
 
 
 
@@ -967,7 +973,6 @@ class EditObjectActuator(Actuator):
     UpWorld = None
     UpLocal = None
     FrontLocal = None
-    CameraPriority = None
 ############################################################################
 
 
@@ -999,7 +1004,6 @@ class EditObjectActuator(Actuator):
         self.UpWorld = [0,0,1]
         self.UpLocal = [0,0,1]
         self.FrontLocal = [0,1,0]
-        self.CameraPriority = 0
 ############################################################################
 
 
@@ -1178,17 +1182,36 @@ class EditObjectActuator(Actuator):
 
 
 
-        try:
-            up_world = self.Object["oog_%s_UpWorld" % self.BlenderActuator.name]
 
-            if up_world == 0:
-                self.UpWorld = [1,0,0]
-            elif up_world == 1:
-                self.UpWorld = [0,1,0]
-            elif up_world == 2:
-                self.UpWorld = [0,0,1]
-        except:
-                self.UpWorld = None
+        if self.BlenderActuator.track_axis == "TRACKAXISX":
+            self.FrontLocal = [1,0,0]
+
+        elif self.BlenderActuator.track_axis == "TRACKAXISY":
+            self.FrontLocal = [0,1,0]
+
+        elif self.BlenderActuator.track_axis == "TRACKAXISZ":
+            self.FrontLocal = [0,0,1]
+
+        elif self.BlenderActuator.track_axis == "TRACKAXISNEGX":
+            self.FrontLocal = [-1,0,0]
+
+        elif self.BlenderActuator.track_axis == "TRACKAXISNEGY":
+            self.FrontLocal = [0,-1,0]
+
+        elif self.BlenderActuator.track_axis == "TRACKAXISNEGZ":
+            self.FrontLocal = [0,0,-1]
+
+
+
+
+        if self.BlenderActuator.up_axis == "UPAXISX":
+            self.UpWorld = [1,0,0]
+
+        elif self.BlenderActuator.up_axis == "UPAXISY":
+            self.UpWorld = [0,1,0]
+
+        elif self.BlenderActuator.up_axis == "UPAXISZ":
+            self.UpWorld = [0,0,1]
 
 
 
@@ -1207,20 +1230,6 @@ class EditObjectActuator(Actuator):
 
 
         try:
-            front_local = self.Object["oog_%s_FrontLocal" % self.BlenderActuator.name]
-
-            if front_local == 0:
-                self.FrontLocal = [1,0,0]
-            elif front_local == 1:
-                self.FrontLocal = [0,1,0]
-            elif front_local == 2:
-                self.FrontLocal = [0,0,1]
-        except:
-                self.FrontLocal = None
-
-
-
-        try:
             self.DistanceMin = self.Object["oog_%s_DistanceMin" % self.BlenderActuator.name]
         except:
             self.DistanceMin = None
@@ -1229,13 +1238,6 @@ class EditObjectActuator(Actuator):
             self.DistanceMax = self.Object["oog_%s_DistanceMax" % self.BlenderActuator.name]
         except:
             self.DistanceMax = None
-
-
-
-        try:
-            self.CameraPriority = self.Object["oog_%s_CameraPriority" % self.BlenderActuator.name]
-        except:
-            self.CameraPriority = None
 
 
         return True
@@ -1350,12 +1352,6 @@ class EditObjectActuator(Actuator):
 
             writer.moveOut("osgODE::PIDController")
             writer.moveOut("AngularPID TRUE")
-
-
-
-
-        if self.CameraPriority:
-            writer.writeLine("CameraPriority %u" % self.CameraPriority)
 
 
         return True
@@ -1787,6 +1783,221 @@ class GameActuator(Actuator):
 
         if self.FileName:
             writer.writeLine("FileName \"%s\"" % self.FileName)
+
+
+
+        return True
+############################################################################
+
+
+
+
+# ........................................................................ #
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+# ........................................................................ #
+class MouseActuator(Actuator):
+    """ooGame::MouseActuator"""
+
+
+
+
+
+############################################################################
+    Mode = None
+
+    UseAxisX = None
+    SensitivityX = None
+    ThresholdX = None
+    MinX = None
+    MaxX = None
+    ObjectAxisX = None
+    LocalX = None
+    ResetX = None
+
+    UseAxisY = None
+    SensitivityY = None
+    ThresholdY = None
+    MinY = None
+    MaxY = None
+    ObjectAxisY = None
+    LocalY = None
+    ResetY = None
+############################################################################
+
+
+
+
+
+
+
+
+
+############################################################################
+    def __init__(self, rigid_body, sensor):
+        super(MouseActuator, self).__init__(rigid_body, sensor)
+
+        self.Mode = None
+
+        self.UseAxisX = None
+        self.SensitivityX = None
+        self.ThresholdX = None
+        self.MinX = None
+        self.MaxX = None
+        self.ObjectAxisX = None
+        self.LocalX = None
+        self.ResetX = None
+
+        self.UseAxisY = None
+        self.SensitivityY = None
+        self.ThresholdY = None
+        self.MinY = None
+        self.MaxY = None
+        self.ObjectAxisY = None
+        self.LocalY = None
+        self.ResetY = None
+############################################################################
+
+
+
+
+############################################################################
+    def buildGraph(self):
+        super(MouseActuator, self).buildGraph()
+
+        self.Mode = self.BlenderActuator.mode
+
+
+
+        try:
+            if self.Object["oog_%s_MOVE" % self.BlenderActuator.name] != 0:
+                self.Mode = "MOVE"
+        except:
+            self.Mode = self.BlenderActuator.mode
+
+
+
+        self.SensitivityX = self.BlenderActuator.sensitivity_x
+        self.ThresholdX = self.BlenderActuator.threshold_x
+        self.MinX = self.BlenderActuator.min_x
+        self.MaxX = self.BlenderActuator.max_x
+
+        if self.BlenderActuator.use_axis_x:
+            self.UseAxisX = "TRUE"
+        else:
+            self.UseAxisX = "FALSE"
+
+        if self.BlenderActuator.local_x:
+            self.LocalX = "TRUE"
+        else:
+            self.LocalX = "FALSE"
+
+        if self.BlenderActuator.reset_x:
+            self.ResetX = "TRUE"
+        else:
+            self.ResetX = "FALSE"
+
+        if self.BlenderActuator.object_axis_x == "OBJECT_AXIS_X":
+            self.ObjectAxisX = "1 0 0"
+        elif self.BlenderActuator.object_axis_x == "OBJECT_AXIS_Y":
+            self.ObjectAxisX = "0 1 0"
+        elif self.BlenderActuator.object_axis_x == "OBJECT_AXIS_Z":
+            self.ObjectAxisX = "0 0 1"
+
+
+
+        self.SensitivityY = self.BlenderActuator.sensitivity_y
+        self.ThresholdY = self.BlenderActuator.threshold_y
+        self.MinY = self.BlenderActuator.min_y
+        self.MaxY = self.BlenderActuator.max_y
+
+        if self.BlenderActuator.use_axis_y:
+            self.UseAxisY = "TRUE"
+        else:
+            self.UseAxisY = "FALSE"
+
+        if self.BlenderActuator.local_y:
+            self.LocalY = "TRUE"
+        else:
+            self.LocalY = "FALSE"
+
+        if self.BlenderActuator.reset_y:
+            self.ResetY = "TRUE"
+        else:
+            self.ResetY = "FALSE"
+
+        if self.BlenderActuator.object_axis_y == "OBJECT_AXIS_X":
+            self.ObjectAxisY = "1 0 0"
+        elif self.BlenderActuator.object_axis_y == "OBJECT_AXIS_Y":
+            self.ObjectAxisY = "0 1 0"
+        elif self.BlenderActuator.object_axis_y == "OBJECT_AXIS_Z":
+            self.ObjectAxisY = "0 0 1"
+
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writeToStream(self, writer):
+
+        writer.moveIn("ooGame::MouseActuator") ;
+
+        self.writePrivateData(writer)
+
+        writer.moveOut("ooGame::MouseActuator")
+
+        return True
+############################################################################
+
+
+
+
+############################################################################
+    def writePrivateActuatorData(self, writer):
+
+        writer.writeLine("Mode %s" % self.Mode)
+
+
+        writer.writeLine("UseAxisX %s" %self.UseAxisX)
+        writer.writeLine("SensitivityX %f" %self.SensitivityX)
+        writer.writeLine("ThresholdX %f" %self.ThresholdX)
+
+        if self.MinX:
+            writer.writeLine("MinX %f" %self.MinX)
+
+        if self.MaxX:
+            writer.writeLine("MaxX %f" %self.MaxX)
+
+        writer.writeLine("ObjectAxisX %s" %self.ObjectAxisX)
+        writer.writeLine("LocalX %s" %self.LocalX)
+        writer.writeLine("ResetX %s" %self.ResetX)
+
+
+        writer.writeLine("UseAxisY %s" %self.UseAxisY)
+        writer.writeLine("SensitivityY %f" %self.SensitivityY)
+        writer.writeLine("ThresholdY %f" %self.ThresholdY)
+
+        if self.MinY:
+            writer.writeLine("MinY %f" %self.MinY)
+
+        if self.MaxY:
+            writer.writeLine("MaxY %f" %self.MaxY)
+
+        writer.writeLine("ObjectAxisY %s" %self.ObjectAxisY)
+        writer.writeLine("LocalY %s" %self.LocalY)
+        writer.writeLine("ResetY %s" %self.ResetY)
 
 
 

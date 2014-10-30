@@ -92,7 +92,7 @@ osgODE::RigidBody::getAutoDisableSteps(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setAutoDisableTime(double secs)
+osgODE::RigidBody::setAutoDisableTime(ooReal secs)
 {
     dBodySetAutoDisableTime(m_ODE_body, secs) ;
 }
@@ -104,7 +104,7 @@ osgODE::RigidBody::setAutoDisableTime(double secs)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getAutoDisableTime(void) const
 {
     return dBodyGetAutoDisableTime(m_ODE_body) ;
@@ -118,7 +118,7 @@ osgODE::RigidBody::getAutoDisableTime(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setAutoDisableLinearThreshold(double speed)
+osgODE::RigidBody::setAutoDisableLinearThreshold(ooReal speed)
 {
     dBodySetAutoDisableLinearThreshold(m_ODE_body, speed) ;
 }
@@ -130,7 +130,7 @@ osgODE::RigidBody::setAutoDisableLinearThreshold(double speed)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getAutoDisableLinearThreshold(void) const
 {
     return dBodyGetAutoDisableLinearThreshold(m_ODE_body) ;
@@ -144,7 +144,7 @@ osgODE::RigidBody::getAutoDisableLinearThreshold(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setAutoDisableAngularThreshold(double speed)
+osgODE::RigidBody::setAutoDisableAngularThreshold(ooReal speed)
 {
     dBodySetAutoDisableAngularThreshold(m_ODE_body, speed) ;
 }
@@ -156,7 +156,7 @@ osgODE::RigidBody::setAutoDisableAngularThreshold(double speed)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getAutoDisableAngularThreshold(void) const
 {
     return dBodyGetAutoDisableAngularThreshold(m_ODE_body) ;
@@ -464,7 +464,7 @@ osgODE::RigidBody::getAngularVelocity(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setMaxAngularSpeed(double s)
+osgODE::RigidBody::setMaxAngularSpeed(ooReal s)
 {
     dBodySetMaxAngularSpeed(m_ODE_body, s) ;
 }
@@ -476,7 +476,7 @@ osgODE::RigidBody::setMaxAngularSpeed(double s)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getMaxAngularSpeed(void) const
 {
     return dBodyGetMaxAngularSpeed(m_ODE_body) ;
@@ -619,7 +619,7 @@ osgODE::RigidBody::getGyroscopicMode(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setDamping(double linear, double angular)
+osgODE::RigidBody::setDamping(ooReal linear, ooReal angular)
 {
     dBodySetDamping(m_ODE_body, linear, angular) ;
 }
@@ -632,7 +632,7 @@ osgODE::RigidBody::setDamping(double linear, double angular)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::getDamping(double& linear, double& angular) const
+osgODE::RigidBody::getDamping(ooReal& linear, ooReal& angular) const
 {
     linear = dBodyGetLinearDamping(m_ODE_body) ;
     angular = dBodyGetAngularDamping(m_ODE_body) ;
@@ -646,7 +646,7 @@ osgODE::RigidBody::getDamping(double& linear, double& angular) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setLinearDamping(double d)
+osgODE::RigidBody::setLinearDamping(ooReal d)
 {
     dBodySetDamping(m_ODE_body, d, dBodyGetAngularDamping(m_ODE_body)) ;
 }
@@ -658,7 +658,7 @@ osgODE::RigidBody::setLinearDamping(double d)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getLinearDamping(void) const
 {
     return dBodyGetLinearDamping(m_ODE_body) ;
@@ -672,7 +672,7 @@ osgODE::RigidBody::getLinearDamping(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setLinearDampingThreshold(double threshold)
+osgODE::RigidBody::setLinearDampingThreshold(ooReal threshold)
 {
     dBodySetLinearDampingThreshold(m_ODE_body, threshold) ;
 }
@@ -684,7 +684,7 @@ osgODE::RigidBody::setLinearDampingThreshold(double threshold)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getLinearDampingThreshold(void) const
 {
     return dBodyGetLinearDampingThreshold(m_ODE_body) ;
@@ -698,7 +698,7 @@ osgODE::RigidBody::getLinearDampingThreshold(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setAngularDamping(double d)
+osgODE::RigidBody::setAngularDamping(ooReal d)
 {
     dBodySetDamping(m_ODE_body, dBodyGetLinearDamping(m_ODE_body), d) ;
 }
@@ -710,7 +710,7 @@ osgODE::RigidBody::setAngularDamping(double d)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getAngularDamping(void) const
 {
     return dBodyGetAngularDamping(m_ODE_body) ;
@@ -724,7 +724,7 @@ osgODE::RigidBody::getAngularDamping(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBody::setAngularDampingThreshold(double threshold)
+osgODE::RigidBody::setAngularDampingThreshold(ooReal threshold)
 {
     dBodySetAngularDampingThreshold(m_ODE_body, threshold) ;
 }
@@ -736,7 +736,7 @@ osgODE::RigidBody::setAngularDampingThreshold(double threshold)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getAngularDampingThreshold(void) const
 {
     return dBodyGetAngularDampingThreshold(m_ODE_body) ;
@@ -863,7 +863,7 @@ osgODE::RigidBody::getTorque(void) const
 inline void
 osgODE::RigidBody::setODEMass(const dMass& mass)
 {
-    // vedi setMass(double mass, const osg::Vec3& size, int type_class)
+    // vedi setMass(ooReal mass, const osg::Vec3& size, int type_class)
     bool    kinematic_flag = this->getKinematic() ;
 
 
@@ -884,7 +884,7 @@ osgODE::RigidBody::setODEMass(const dMass& mass)
 
 
 
-    // vedi setMass(double mass, const osg::Vec3& size, int type_class)
+    // vedi setMass(ooReal mass, const osg::Vec3& size, int type_class)
     this->setKinematic( kinematic_flag ) ;
 }
 /* ....................................................................... */
@@ -915,7 +915,7 @@ osgODE::RigidBody::getODEMass(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBody::getMass(void) const
 {
     dMass   m ;

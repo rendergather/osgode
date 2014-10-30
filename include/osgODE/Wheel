@@ -94,7 +94,7 @@ public:
 /* ======================================================================= */
 public:
     //! Compute the rotation axis in global co
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 /* ======================================================================= */
 
 

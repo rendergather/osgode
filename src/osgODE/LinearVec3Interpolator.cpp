@@ -81,7 +81,7 @@ LinearVec3Interpolator::~LinearVec3Interpolator(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-LinearVec3Interpolator::interpolateImplementation(double x, osg::Vec3& result)
+LinearVec3Interpolator::interpolateImplementation(ooReal x, osg::Vec3& result)
 {
     unsigned int            size = m_points.size() ;
 

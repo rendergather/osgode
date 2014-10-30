@@ -112,7 +112,7 @@ MotionPath::operator()(ODEObject* object)
         case PLAY:
         {
 
-            m_time = osg::maximum(m_time, 0.0) + body->getWorld()->getCurrentStepSize() ;
+            m_time = osg::maximum(m_time, (ooReal)0.0) + body->getWorld()->getCurrentStepSize() ;
 
             osg::Matrix m ;
 
@@ -139,7 +139,7 @@ MotionPath::operator()(ODEObject* object)
 
             if( m_remove_when_done ) {
 
-                double  max_duration = 0.0 ;
+                ooReal  max_duration = 0.0 ;
 
                 if( m_quaternion ) {
                     max_duration = osg::maximum( max_duration, m_quaternion->getDuration() ) ;

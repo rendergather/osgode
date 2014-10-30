@@ -272,12 +272,12 @@ CharacterEx::handleMove(const osg::Vec2& pos, bool& handled)
         return ;
     }
 
-    double  yaw = this->getYaw() - x * osg::PI ;
-    double  pitch = this->getPitch() + y * osg::PI ;
+    ooReal  yaw = this->getYaw() - x * osg::PI ;
+    ooReal  pitch = this->getPitch() + y * osg::PI ;
 
 
 
-    pitch = osg::clampTo(pitch, 0.0, osg::PI) ;
+    pitch = osg::clampTo(pitch, (ooReal)0.0, (ooReal)osg::PI) ;
 
 
     this->setYaw( yaw ) ;
@@ -335,7 +335,7 @@ CharacterEx::_moveCharacter(void)
 
 
 
-    this->setMotion( axis * (m_motion != 0) * 40, 250 ) ;
+    this->setMotion( axis * (m_motion != 0) * 5, 1.0e3 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -42,35 +42,36 @@
 /* ....................................................................... */
 namespace
 {
-    class FindManagerVisitor: public osg::NodeVisitor
+    class FindManagersVisitor: public osg::NodeVisitor
     {
     public:
-        FindManagerVisitor(void):
-            osg::NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
+        FindManagersVisitor(osgODEUtil::Managers& managers):
+            osg::NodeVisitor    ( TRAVERSE_ALL_CHILDREN ),
+            m_managers          ( managers ) {}
 
 
-        ~FindManagerVisitor(void) {}
+        virtual ~FindManagersVisitor(void) {}
+
+
+        virtual void    reset(void)
+        {
+            m_managers.clear() ;
+        }
 
 
         virtual void    apply(osg::Node& node)
         {
-            if( ! m_manager.valid() ) {
-                m_manager = dynamic_cast<osgODE::Manager*>( &node ) ;
+            osgODE::Manager*    manager = dynamic_cast<osgODE::Manager*>( &node ) ;
+
+            if( manager != NULL ) {
+                m_managers.push_back( manager ) ;
             }
 
-            if( ! m_manager.valid() ) {
-                traverse(node) ;
-            }
-        }
-
-
-        osgODE::Manager*    getManager(void)
-        {
-            return m_manager.get() ;
+            traverse( node ) ;
         }
 
     private:
-        osg::ref_ptr<osgODE::Manager>   m_manager ;
+        osgODEUtil::Managers&   m_managers ;
     } ;
 
 
@@ -230,11 +231,30 @@ osgODEUtil::findTexture2D( osg::Node* graph, const std::string& name )
 osgODE::Manager*
 osgODEUtil::findManager( osg::Node* graph )
 {
-    FindManagerVisitor  v ;
+    Managers    managers ;
 
-    graph->accept(v) ;
+    if( findManagers( graph, managers ) ) {
+        return managers[0] ;
+    }
 
-    return v.getManager() ;
+    return NULL ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+unsigned int
+osgODEUtil::findManagers( osg::Node* graph, osgODEUtil::Managers& managers )
+{
+    FindManagersVisitor nv(managers) ;
+
+    graph->accept(nv) ;
+
+    return managers.size() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

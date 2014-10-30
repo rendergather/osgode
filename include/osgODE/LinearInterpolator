@@ -89,7 +89,7 @@ public:
 
 /* ======================================================================= */
 protected:
-    virtual void    interpolateImplementation(double x, double& result) ;
+    virtual void    interpolateImplementation(ooReal x, ooReal& result) ;
 /* ======================================================================= */
 
 

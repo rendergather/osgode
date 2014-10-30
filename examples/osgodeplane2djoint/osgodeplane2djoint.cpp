@@ -42,7 +42,7 @@ main(int argc, char** argv)
      */
     osgODE::Transformable*  xform = new osgODE::Transformable() ;
     {
-        osg::Node*  plane = osgDB::readNodeFile( "floor.osgb" ) ;
+        osg::Node*  plane = osgDB::readNodeFile( "floor.osgt" ) ;
 
         PS_ASSERT1( plane != NULL ) ;
 
@@ -68,7 +68,7 @@ main(int argc, char** argv)
 
     osgODE::RigidBody*  dynamic_cube = new osgODE::RigidBody() ;
     {
-        osg::Node*      cube = osgDB::readNodeFile("companioncube.osgb") ;
+        osg::Node*      cube = osgDB::readNodeFile("companioncube.osgt") ;
 
         PS_ASSERT1( cube != NULL ) ;
 

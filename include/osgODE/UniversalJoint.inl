@@ -35,7 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::UniversalJoint::getAngle1(void) const
 {
     return dJointGetUniversalAngle1(m_ODE_joint) ;
@@ -48,7 +48,7 @@ osgODE::UniversalJoint::getAngle1(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::UniversalJoint::getAngle2(void) const
 {
     return dJointGetUniversalAngle2(m_ODE_joint) ;
@@ -61,7 +61,7 @@ osgODE::UniversalJoint::getAngle2(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::UniversalJoint::getAngle1Rate(void) const
 {
     return dJointGetUniversalAngle1Rate(m_ODE_joint) ;
@@ -74,7 +74,7 @@ osgODE::UniversalJoint::getAngle1Rate(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::UniversalJoint::getAngle2Rate(void) const
 {
     return dJointGetUniversalAngle2Rate(m_ODE_joint) ;

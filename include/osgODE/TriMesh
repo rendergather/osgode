@@ -113,14 +113,14 @@ public:
     /*!
      * @todo    testing
      */
-    virtual void        setMass(double mass) ;
+    virtual void        setMass(ooReal mass) ;
 
 
     //! Use the dMassSetTrimesh
     /*!
      * @todo    testing
      */
-    virtual void        setDensity(double density) ;
+    virtual void        setDensity(ooReal density) ;
 /* ======================================================================= */
 
 
@@ -136,8 +136,8 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    update(double step_size) ;
-    virtual void    postUpdate(double step_size) ;
+    virtual void    update(ooReal step_size) ;
+    virtual void    postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 

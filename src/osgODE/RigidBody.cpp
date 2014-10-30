@@ -122,7 +122,7 @@ RigidBody::~RigidBody(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::setMass(double mass)
+RigidBody::setMass(ooReal mass)
 {
     setMass(mass, osg::Vec3(1.0, 1.0, 1.0), dSphereClass) ;
 }
@@ -135,7 +135,7 @@ RigidBody::setMass(double mass)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::setMass(double mass, const osg::Vec3& size, int type_class)
+RigidBody::setMass(ooReal mass, const osg::Vec3& size, int type_class)
 {
     PS_DBG2(    "osgODE::RigidBody::setMass(%p, mass=%f, size=[%f, %f, %f], class=%d)",
                 this, mass, size.x(), size.y(), size.z(), type_class ) ;
@@ -235,7 +235,7 @@ RigidBody::setMass(double mass, const osg::Vec3& size, int type_class)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::setDensity(double density)
+RigidBody::setDensity(ooReal density)
 {
     // Assume a unit sphere
     setDensity(density, osg::Vec3(1.0, 1.0, 1.0), dSphereClass) ;
@@ -249,7 +249,7 @@ RigidBody::setDensity(double density)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::setDensity(double density, const osg::Vec3& size, int type_class)
+RigidBody::setDensity(ooReal density, const osg::Vec3& size, int type_class)
 {
     PS_DBG2(    "osgODE::RigidBody::setDensity(%p, density=%f, size=[%f, %f, %f], class=%d)",
                 this, density, size.x(), size.y(), size.z(), type_class ) ;
@@ -559,7 +559,7 @@ RigidBody::removeFromWorldInternal(World* world)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::update(double step_size)
+RigidBody::update(ooReal step_size)
 {
     World*  world = getWorld() ;
 
@@ -583,7 +583,7 @@ RigidBody::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::postUpdate(double step_size)
+RigidBody::postUpdate(ooReal step_size)
 {
     const osg::BoundingSphere&  bs = getActorBound() ;
 
@@ -660,7 +660,7 @@ RigidBody::_notifyJoints(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RigidBody::_computeAcceleration(double step_size)
+RigidBody::_computeAcceleration(ooReal step_size)
 {
     osg::Vec3   current_linear_velocity = getLinearVelocity() ;
     osg::Vec3   current_angular_velocity = getAngularVelocity() ;

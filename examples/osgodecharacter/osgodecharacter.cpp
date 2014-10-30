@@ -6,11 +6,8 @@
 #include <osgODE/AMotorJoint>
 #include <osgODE/LMotorJoint>
 #include <osgODE/Notify>
-#include <osgODE/DynamicParticleSystem>
-#include <osgODE/DynamicParticleGeode>
 #include <osgODE/Sphere>
 #include <osgODE/Box>
-#include <osgODE/CollisionPredictor>
 #include <osgODE/AerodynamicDevice>
 
 #include <osgParticle/Particle>
@@ -91,7 +88,7 @@ main(int argc, char** argv)
      * [2] Create a kinematic floor
      */
     {
-        osgODE::Collidable* ground = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("large_ground.osgb") ) ;
+        osgODE::Collidable* ground = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("large_ground.osgt") ) ;
         PS_ASSERT1( ground != NULL ) ;
 
         manager->getWorld()->addObject(ground) ;
@@ -107,7 +104,7 @@ main(int argc, char** argv)
      * [3] Create some cubes
      */
     {
-        osg::ref_ptr<osgODE::Collidable>    cube_template = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("woodenbox1.osgb") ) ;
+        osg::ref_ptr<osgODE::Collidable>    cube_template = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("woodenbox1.osgt") ) ;
         PS_ASSERT1( cube_template.valid() ) ;
 
         cube_template->setDamping(1.0e-3, 1.0e-3) ;
@@ -176,127 +173,6 @@ main(int argc, char** argv)
 
 
         character->setSensitivity( 0.125 ) ;
-    }
-
-
-
-
-    {
-        // create the particle system
-        osgODE::DynamicParticleSystem   *ps = new  osgODE::DynamicParticleSystem() ;
-
-        const char* texture = argc > 1 ? argv[1] : "" ;
-
-        ps->setDefaultAttributes(texture, true, false) ;
-
-        // set the world to use
-        ps->setWorld( manager->getWorld() ) ;
-
-
-        //
-        // Set the particle body template
-        //
-        osgODE::Collidable* body_template = new osgODE::Sphere() ;
-
-        body_template->setSize( osg::Vec3(0.2, 0.2, 0.2) ) ;
-
-        // tell the particles to not collide each other
-        body_template->setCategoryBits( 1 << 31 ) ;
-        body_template->setCollideBits( ~ (1 << 31) ) ;
-
-        body_template->setMaxAngularSpeed( 0.0 ) ;
-        body_template->setGyroscopicMode( false ) ;
-
-        body_template->setDensity( 1000.0 ) ;
-
-        body_template->addPostUpdateCallback( new osgODE::CollisionPredictor() ) ;
-
-        ps->setBodyTemplate( body_template ) ;
-
-        osgODE::AerodynamicDevice*  ad = new osgODE::AerodynamicDevice() ;
-        ad->addDragPoint( osg::Vec4(0.0, 0.0, 0.0, 3.0) ) ;
-
-        body_template->addUpdateCallback( ad ) ;
-
-
-
-        // cretate the emitter
-        osgParticle::ModularEmitter *emitter = new osgParticle::ModularEmitter() ;
-
-        emitter->setParticleSystem(ps) ;
-
-
-
-        osgParticle::RandomRateCounter *rrc =
-            static_cast<osgParticle::RandomRateCounter *>( emitter->getCounter() ) ;
-
-//         rrc->setRateRange(25, 25) ;
-        rrc->setRateRange(50, 50) ;
-//         rrc->setRateRange(100, 100) ;
-//         rrc->setRateRange(200, 200) ;
-
-
-        osgParticle::RadialShooter* shooter = new osgParticle::RadialShooter() ;
-        emitter->setShooter( shooter ) ;
-
-        shooter->setThetaRange( 0.0, osg::PI * 2.0 ) ;
-        shooter->setPhiRange( 0.0, osg::PI * 2.0 ) ;
-        shooter->setInitialSpeedRange( 10, 100 ) ;
-
-
-        // the updater
-        osgParticle::ParticleSystemUpdater *psu = new osgParticle::ParticleSystemUpdater() ;
-        psu->addParticleSystem( ps ) ;
-
-
-
-        // the particle template
-        osgParticle::Particle   particle_template ;
-        particle_template.setLifeTime(5) ;
-
-        ps->setDefaultParticleTemplate( particle_template ) ;
-
-
-
-        // The DynamicParticleGeode communicates the world-to-local
-        // matrix to the particle systems. This is required because the
-        // DynamicParticleSystem needs to transform bodies properties
-        // from world frame to drawable local frame
-
-        osg::Geode *geode = new osgODE::DynamicParticleGeode() ;
-        geode->addDrawable(ps) ;
-
-        osg::MatrixTransform*   effect = new osg::MatrixTransform() ;
-
-        effect->addChild( geode ) ;
-        effect->addChild( emitter ) ;
-        effect->addChild( psu ) ;
-
-        osg::Node*  companion = osgDB::readNodeFile("companioncube.osgb") ;
-        PS_ASSERT1( companion != NULL ) ;
-
-
-        osgODE::Collidable*     cube = new osgODE::Box() ;
-
-        cube->getMatrixTransform()->addChild( companion ) ;
-
-        // this collidable does not collide with the particles
-        cube->setCategoryBits( 1 << 31 ) ;
-        cube->setCollideBits( ~ (1 << 31) ) ;
-
-        cube->setDamping(1.0e-3, 1.0e-3) ;
-        cube->setCollisionParameters(NULL) ;
-
-        cube->setAutoDisableFlag( false ) ;
-
-        cube->setPosition( osg::Vec3(-45.0, 0.0, 5.0) ) ;
-
-        cube->setSize( osg::Vec3(1,1,1) ) ;
-        cube->setMass( 10.0 ) ;
-
-        cube->getMatrixTransform()->addChild( effect ) ;
-
-        manager->getWorld()->addObject( cube ) ;
     }
 
 

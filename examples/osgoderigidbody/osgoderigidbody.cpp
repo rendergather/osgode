@@ -21,9 +21,8 @@ main(int argc, char** argv)
 {
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
-
     // graphics
-    osg::Node*      r3_axis = osgDB::readNodeFile("axis3.osgb") ;
+    osg::Node*      r3_axis = osgDB::readNodeFile("axis3.osgt") ;
 
     PS_ASSERT1( r3_axis != NULL ) ;
 
@@ -78,7 +77,7 @@ main(int argc, char** argv)
 
 
         // Let the body spin
-        const double    FREQUENCY = 1.0/4.0 ;
+        const ooReal    FREQUENCY = 1.0/4.0 ;
 
         body->setAngularVelocity( osg::Vec3(0.0, 0.0, FREQUENCY * 2.0 * osg::PI) ) ;
 

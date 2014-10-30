@@ -78,10 +78,10 @@ Plane2DJoint::~Plane2DJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Plane2DJoint::update( double step_size )
+Plane2DJoint::update( ooReal step_size )
 {
-    double      rhs = 0.0 ;
-    double      cfm = m_cfm[0] ;
+    ooReal      rhs = 0.0 ;
+    ooReal      cfm = m_cfm[0] ;
 
 
     if( m_body1.valid() ) {

@@ -97,7 +97,7 @@ Joint::~Joint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Joint::postUpdate(double step_size)
+Joint::postUpdate(ooReal step_size)
 {
     // update local data
 

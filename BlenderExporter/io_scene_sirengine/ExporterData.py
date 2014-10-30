@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -61,9 +61,11 @@ class ExporterData(object):
     MasterStateSet = None
     Selected = None
     ExportSelected = False
+    ExportCurrentScene = False
     ExportLights = False
     ExportSounds = False
     ExportGame = False
+    ContactSurfaceLayer = None
     WorldStep = None
     MaxAnisotropy = None
     AmbientMultiplier = None
@@ -99,9 +101,11 @@ class ExporterData(object):
             self.MasterStateSet = data.MasterStateSet
             self.Selected = data.Selected
             self.ExportSelected = data.ExportSelected
+            self.ExportCurrentScene = data.ExportCurrentScene
             self.ExportLights = data.ExportLights
             self.ExportSounds = data.ExportSounds
             self.ExportGame = data.ExportGame
+            self.ContactSurfaceLayer = data.ContactSurfaceLayer
             self.WorldStep = data.WorldStep
             self.MaxAnisotropy = data.MaxAnisotropy
             self.AmbientMultiplier = data.AmbientMultiplier
@@ -125,9 +129,11 @@ class ExporterData(object):
             self.MasterStateSet = None
             self.Selected = None
             self.ExportSelected = False
+            self.ExportCurrentScene = False
             self.ExportLights = False
             self.ExportSounds = False
             self.ExportGame = False
+            self.ContactSurfaceLayer = None
             self.WorldStep = None
             self.MaxAnisotropy = None
             self.AmbientMultiplier = None

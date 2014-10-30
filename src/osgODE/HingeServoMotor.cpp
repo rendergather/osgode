@@ -102,7 +102,7 @@ HingeServoMotor::operator()(ODEObject* object)
 
     PIDController*  pid = getPIDController() ;
 
-    double  vel = 0.0 ;
+    ooReal  vel = 0.0 ;
 
     if( pid ) {
         vel = pid->solve( m_position - hinge->getAngle(), world->getCurrentStepSize() ) ;

@@ -58,7 +58,7 @@ class OSG_EXPORT JointBreakCallback: public ODECallback
 {
 /* ======================================================================= */
 public:
-             JointBreakCallback(double force_limit=FLT_MAX, double torque_limit=FLT_MAX) ;
+             JointBreakCallback(ooReal force_limit=FLT_MAX, ooReal torque_limit=FLT_MAX) ;
              JointBreakCallback(const JointBreakCallback& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
 
 protected:
@@ -104,18 +104,18 @@ public:
 
 
     //! Set the force limit (Default: FLT_MAX)
-    inline void     setForceLimit(double limit) ;
+    inline void     setForceLimit(ooReal limit) ;
 
     //! Get the force limit (Default: FLT_MAX)
-    inline double   getForceLimit(void) const ;
+    inline ooReal   getForceLimit(void) const ;
 
 
 
     //! Set the torque limit (Default: FLT_MAX)
-    inline void     setTorqueLimit(double limit) ;
+    inline void     setTorqueLimit(ooReal limit) ;
 
     //! Get the torque limit (Default: FLT_MAX)
-    inline double   getTorqueLimit(void) const ;
+    inline ooReal   getTorqueLimit(void) const ;
 
 
 
@@ -131,8 +131,8 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_force_limit ;
-    double      m_torque_limit ;
+    ooReal      m_force_limit ;
+    ooReal      m_torque_limit ;
     bool        m_remove_on_break ;
     bool        m_enabled ;
 /* ======================================================================= */

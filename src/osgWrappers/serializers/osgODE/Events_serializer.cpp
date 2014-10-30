@@ -79,6 +79,56 @@ static bool readKeyPressed(osgDB::InputStream& is, osgODE::Events& events)
 
     return true ;
 }
+
+
+
+
+static bool checkWarpPointer(const osgODE::Events& events)
+{
+    bool        normalized ;
+    osg::Vec2   tmp ;
+
+    return events.getWarpPointer( tmp, normalized ) ;
+}
+
+static bool writeWarpPointer(osgDB::OutputStream& os, const osgODE::Events& events)
+{
+    bool        normalized ;
+    osg::Vec2   position ;
+
+    bool    enabled = events.getWarpPointer( position, normalized ) ;
+
+    os << os.BEGIN_BRACKET << std::endl ;
+
+
+    os << os.PROPERTY("Enabled") << enabled << std::endl ;
+    os << os.PROPERTY("Normalized") << normalized << std::endl ;
+    os << os.PROPERTY("Position") << position << std::endl ;
+
+    os << os.END_BRACKET << std::endl ;
+
+    return true ;
+}
+
+static bool readWarpPointer(osgDB::InputStream& is, osgODE::Events& events)
+{
+    bool        enabled ;
+    bool        normalized ;
+    osg::Vec2   position ;
+
+    is >> is.BEGIN_BRACKET ;
+
+    is >> is.PROPERTY("Enabled") >> enabled ;
+    is >> is.PROPERTY("Normalized") >> normalized ;
+    is >> is.PROPERTY("Position") >> position ;
+
+    is >> is.END_BRACKET ;
+
+    events.setWarpPointer( enabled, position, normalized ) ;
+
+
+    return true ;
+}
 } // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
@@ -95,10 +145,12 @@ REGISTER_OBJECT_WRAPPER( Events,
 {
     ADD_VEC2_SERIALIZER( CursorPosition, osg::Vec2() ) ;
     ADD_VEC2_SERIALIZER( NormalizedCursorPosition, osg::Vec2() ) ;
+    ADD_VEC2_SERIALIZER( RelativeCursorPosition, osg::Vec2() ) ;
     ADD_UINT_SERIALIZER( ButtonMask, 0 ) ;
     ADD_USER_SERIALIZER( KeyPressed ) ;
     ADD_OBJECT_SERIALIZER( View, osg::View, NULL ) ;
-    ADD_BOOL_SERIALIZER( FPSMode, false ) ;
+    ADD_USER_SERIALIZER( WarpPointer ) ;
+    ADD_BOOL_SERIALIZER( Motion, false ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

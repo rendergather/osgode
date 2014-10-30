@@ -65,7 +65,7 @@ CharacterBase::CharacterBase(void):
     m_footstep_time         ( 0.0 ),
     m_height                ( 1.75 ),
     m_elasticity            ( 0.067 ),
-    m_motion_fmax           ( 0.0),
+    m_motion_fmax           ( 0.0 ),
     m_jump_res_time         ( -1.0 ),
     m_foot_contact_joint    ( NULL ),
     m_is_on_ground          ( false ),
@@ -151,7 +151,7 @@ CharacterBase::~CharacterBase(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CharacterBase::update(double step_size)
+CharacterBase::update(ooReal step_size)
 {
     _updateOrientation( step_size ) ;
 
@@ -179,9 +179,9 @@ CharacterBase::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CharacterBase::_updateOrientation(double step_size)
+CharacterBase::_updateOrientation(ooReal step_size)
 {
-    const double    elasticity = m_elasticity / step_size ;
+    const ooReal    elasticity = m_elasticity / step_size ;
 
     const osg::Vec3 side_versor_world = m_body->getQuaternion() * m_side_versor ;
 
@@ -200,7 +200,7 @@ CharacterBase::_updateOrientation(double step_size)
     // experimental
     if( true ) {
         const osg::Vec3 front = m_body->getQuaternion() * m_front_versor ;
-        const double    side_vel = side_versor_world * m_body->getLinearVelocity() ;
+        const ooReal    side_vel = side_versor_world * m_body->getLinearVelocity() ;
 
         m_avg_side_velocity = (m_avg_side_velocity * m_elasticity + side_vel) / (m_elasticity + 1) ;
 
@@ -219,7 +219,7 @@ CharacterBase::_updateOrientation(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CharacterBase::_move(double step_size)
+CharacterBase::_move(ooReal step_size)
 {
 
     (void) step_size ;
@@ -240,7 +240,7 @@ CharacterBase::_move(double step_size)
 
         osg::Vec3   direction = m_body->getQuaternion() * m_motion_velocity ;
 
-        const double    speed = direction.normalize() ;
+        const ooReal    speed = direction.normalize() ;
         const osg::Vec3 velocity = direction * speed ;
 
         const osg::Vec3 force = direction * m_body->getMass() * 9.80665 ;
@@ -264,7 +264,7 @@ CharacterBase::_move(double step_size)
 
     direction = m_body->getQuaternion() * direction ;
 
-    const double    speed = direction.normalize() ;
+    const ooReal    speed = direction.normalize() ;
 
     direction = direction ^ m_ground_contact_normal ;
     direction = m_ground_contact_normal ^ direction ;
@@ -286,23 +286,23 @@ CharacterBase::_move(double step_size)
 
 
     if( m_jump_res_time <= 0.0  &&  force.length2() > 1.0e-1 ) {
-        const double    body_speed      = m_body->getLinearVelocity().length() ;
+        const ooReal    body_speed      = m_body->getLinearVelocity().length() ;
 
         const osg::Vec3 down_versor     = m_up_versor * -1.0 ;
 
-        const double    step_speed      = body_speed >= m_footstep_info.SpeedThreshold ;
+        const ooReal    step_speed      = body_speed >= m_footstep_info.SpeedThreshold ;
 
-        const double    time_multiplier = body_speed * m_footstep_info.TimeMultiplier ;
-        const double    power_factor    = body_speed * m_footstep_info.PowerFactor ;
-        const double    magnitude       = body_speed * m_footstep_info.Magnitude ;
-
-
-        m_footstep_time += step_size * time_multiplier * 2.0 * (double)rand() / (double)RAND_MAX ;
+        const ooReal    time_multiplier = body_speed * m_footstep_info.TimeMultiplier ;
+        const ooReal    power_factor    = body_speed * m_footstep_info.PowerFactor ;
+        const ooReal    magnitude       = body_speed * m_footstep_info.Magnitude ;
 
 
-        const double    sin_arg = m_footstep_time * 2.0 * osg::PI ;
+        m_footstep_time += step_size * time_multiplier * 2.0 * (ooReal)rand() / (ooReal)RAND_MAX ;
 
-        double  strength = sin( sin_arg )  * 0.5  +  0.5 ;
+
+        const ooReal    sin_arg = m_footstep_time * 2.0 * osg::PI ;
+
+        ooReal  strength = sin( sin_arg )  * 0.5  +  0.5 ;
 
         m_footstep_derivative = cos( sin_arg ) * osg::PI ;
 
@@ -322,7 +322,7 @@ CharacterBase::_move(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CharacterBase::_jump(double step_size)
+CharacterBase::_jump(ooReal step_size)
 {
 
     if(     ! ( m_body.valid() && m_is_on_ground )    ) {
@@ -348,7 +348,7 @@ CharacterBase::_jump(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CharacterBase:: _collideAgainstGround(double step_size)
+CharacterBase:: _collideAgainstGround(ooReal step_size)
 {
     (void) step_size ;
 
@@ -430,7 +430,7 @@ CharacterBase:: _collideAgainstGround(double step_size)
         if( cp ) {
             contact.surface.mu2 = cp->getMu() ;
 
-            m_motion_fmax_mult = osg::clampTo( cp->getMu(), 0.0, 1.0 ) ;
+            m_motion_fmax_mult = osg::clampTo( cp->getMu(), (ooReal)0.0, (ooReal)1.0 ) ;
 
             m_motion_fmax_mult = pow( m_motion_fmax_mult, 0.125 ) ;
 
@@ -450,11 +450,11 @@ CharacterBase:: _collideAgainstGround(double step_size)
 
         // The contact joint acts as a spring and damper system
         {
-            const float h = step_size ;
-            const float kp = m_foot_contact_info.Spring ;
-            const float kd = m_foot_contact_info.Damper ;
-            const float hkp = h * kp ;
-            const float hkpkd = hkp + kd ;
+            const ooReal h = step_size ;
+            const ooReal kp = m_foot_contact_info.Spring ;
+            const ooReal kd = m_foot_contact_info.Damper ;
+            const ooReal hkp = h * kp ;
+            const ooReal hkpkd = hkp + kd ;
 
             contact.surface.soft_erp = hkp / hkpkd ;
             contact.surface.soft_cfm = 1.0 / hkpkd ;

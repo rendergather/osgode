@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -84,7 +84,20 @@ class SceneGraph(object):
 
         self.RootID = self.Data.UniqueID.generate()
 
-        for scene in bpy.data.scenes:
+
+
+        scenes = None
+
+
+        if self.Data.ExportCurrentScene:
+            scenes = [ self.Data.Context.scene ]
+        else:
+            scenes = bpy.data.scenes
+
+
+
+
+        for scene in scenes:
             data = ExporterData.ExporterData( self.Data )
             data.Scene = scene
 

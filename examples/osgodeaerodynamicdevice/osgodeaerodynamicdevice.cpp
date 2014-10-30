@@ -26,7 +26,7 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgt") ;
 
     PS_ASSERT1( cube != NULL ) ;
 
@@ -53,7 +53,7 @@ main(int argc, char** argv)
      * [3] Create a kinematic plane as floor
      */
     {
-        osg::Node*  plane = osgDB::readNodeFile( "floor.osgb" ) ;
+        osg::Node*  plane = osgDB::readNodeFile( "floor.osgt" ) ;
 
         PS_ASSERT1( plane != NULL ) ;
 

@@ -11,9 +11,16 @@
 #include <osgODE/Notify>
 #include <osgODE/CollisionParameters>
 #include <osgODE/DefaultNearCallback>
-#include <osgODE/Manager>
 #include <osgODE/RigidBody>
 #include <osgODE/Space>
+
+#ifndef USE_THREADED_MANAGER
+#   include <osgODE/Manager>
+#   include <osgODE/ManagerUpdateCallback>
+#else
+#   include <osgODE/ThreadedManager>
+#   include <osgODE/ThreadedManagerUpdateCallback>
+#endif
 
 #include <osgODEUtil/ControllerBase>
 #include <osgODEUtil/MatrixManipulator>
@@ -122,7 +129,7 @@ main(int argc, char** argv)
     osg::GraphicsContext::ScreenSettings    settings ;
     osg::GraphicsContext::getWindowingSystemInterface()->getScreenSettings(si, settings) ;
 
-    const double    screen_aspect = (double)settings.width / (double)settings.height ;
+    const ooReal    screen_aspect = (ooReal)settings.width / (ooReal)settings.height ;
 
 
 
@@ -134,7 +141,19 @@ main(int argc, char** argv)
     //
     // create and configure the manager
     //
+#ifdef USE_THREADED_MANAGER
+
+    osg::ref_ptr<Manager>   manager = new ThreadedManager() ;
+    manager->addUpdateCallback( new ThreadedManagerUpdateCallback() ) ;
+
+#else
+
     osg::ref_ptr<Manager>   manager = new Manager() ;
+    manager->addUpdateCallback( new ManagerUpdateCallback() ) ;
+
+#endif
+
+
     Space*                  space   = new Space() ;
     {
 
@@ -144,11 +163,8 @@ main(int argc, char** argv)
         // The space
         manager->setWorld( space ) ;
 
-
-        // quick setup
-        manager->setup( true,       // accept visitors
-                        1.0/120.0   // step size
-                      ) ;
+        manager->setAcceptVisitors( true ) ;
+        manager->setStepSize( 1.0/120.0 ) ;
     }
 
 
@@ -205,7 +221,7 @@ main(int argc, char** argv)
     // the ground:
     {
 //         osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("carpark.osgb") ) ;
-        osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgb") ) ;
+        osg::ref_ptr<ODEObject> ground = dynamic_cast<ODEObject*>( osgDB::readObjectFile("large_ground.osgt") ) ;
 
         PS_ASSERT1( ground.valid() ) ;
 

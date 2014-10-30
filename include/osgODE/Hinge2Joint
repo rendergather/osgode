@@ -87,13 +87,13 @@ public:
      * examined and that consiguration will be the "zero position" \n
      * It is not possible to retrieve the angle on the second axis
      */
-    inline double   getAngle1(void) const ;
+    inline ooReal   getAngle1(void) const ;
 
     //! Get the angular speed on axis 1
-    inline double   getAngle1Rate(void) const ;
+    inline ooReal   getAngle1Rate(void) const ;
 
     //! Get the angular speed on axis 2
-    inline double   getAngle2Rate(void) const ;
+    inline ooReal   getAngle2Rate(void) const ;
 /* ======================================================================= */
 
 

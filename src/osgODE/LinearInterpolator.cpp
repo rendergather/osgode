@@ -73,7 +73,7 @@ LinearInterpolator::~LinearInterpolator(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-LinearInterpolator::interpolateImplementation(double x, double& result)
+LinearInterpolator::interpolateImplementation(ooReal x, ooReal& result)
 {
     unsigned int            size = m_points.size() ;
 

@@ -25,9 +25,6 @@
 /* ======================================================================= */
 /* ....................................................................... */
 #include <osgODE/Events>
-
-#include <osg/io_utils>
-#include <iostream>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -45,7 +42,9 @@ Events::Events(void):
     m_button_mask               ( 0 ),
     m_dirty_view_projection     ( false ),
     m_frame_counter             ( 0 ),
-    m_fps_mode                  ( false )
+    m_warp_pointer_enabled      ( false ),
+    m_warp_pointer_normalized   ( false ),
+    m_motion                    ( false )
 {
     for(unsigned int i=0; i<256; i++) {
         m_key_pressed[i] = false ;
@@ -63,17 +62,19 @@ Events::Events(const Events& other, const osg::CopyOp& copyop):
     osg::Object                     ( other, copyop ),
     m_cursor_position               ( other.m_cursor_position ),
     m_normalized_cursor_position    ( other.m_normalized_cursor_position ),
+    m_relative_cursor_position      ( other.m_relative_cursor_position ),
     m_button_mask                   ( other.m_button_mask ),
     m_dirty_view_projection         ( other.m_dirty_view_projection ),
     m_inverse_view_projection       ( other.m_inverse_view_projection ),
-    m_frame_counter                 ( 0 ),
+    m_frame_counter                 ( other.m_frame_counter ),
     m_view                          ( other.m_view ),
     m_view_matrix                   ( other.m_view_matrix ),
-    m_fps_mode                      ( other.m_fps_mode )
+    m_warp_pointer_enabled          ( other.m_warp_pointer_enabled ),
+    m_warp_pointer_normalized       ( other.m_warp_pointer_normalized ),
+    m_warp_pointer                  ( other.m_warp_pointer ),
+    m_motion                        ( other.m_motion )
 {
-    for(unsigned int i=0; i<256; i++) {
-        m_key_pressed[i] = other.m_key_pressed[i] ;
-    }
+    memcpy( m_key_pressed, other.m_key_pressed, 256 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -85,6 +86,33 @@ Events::Events(const Events& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 Events::~Events(void)
 {
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Events::copy( const Events* events )
+{
+    m_cursor_position =             events->m_cursor_position ;
+    m_normalized_cursor_position =  events->m_normalized_cursor_position ;
+    m_relative_cursor_position =    events->m_relative_cursor_position ;
+    m_button_mask =                 events->m_button_mask ;
+    m_dirty_view_projection =       events->m_dirty_view_projection ;
+    m_inverse_view_projection =     events->m_inverse_view_projection ;
+    m_frame_counter =               events->m_frame_counter ;
+    m_view =                        events->m_view ;
+    m_view_matrix =                 events->m_view_matrix ;
+    m_warp_pointer_enabled =        events->m_warp_pointer_enabled ;
+    m_warp_pointer_normalized =     events->m_warp_pointer_normalized ;
+    m_warp_pointer =                events->m_warp_pointer ;
+    m_motion =                      events->m_motion ;
+
+    memcpy( m_key_pressed, events->m_key_pressed, 256 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -36,7 +36,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::HingeServoMotor::setPosition(double position)
+osgODE::HingeServoMotor::setPosition(ooReal position)
 {
     m_position = position ;
 }
@@ -48,7 +48,7 @@ osgODE::HingeServoMotor::setPosition(double position)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::HingeServoMotor::getPosition(void) const
 {
     return m_position ;
@@ -62,7 +62,7 @@ osgODE::HingeServoMotor::getPosition(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::HingeServoMotor::setForce(double force)
+osgODE::HingeServoMotor::setForce(ooReal force)
 {
     m_force = force ;
 }
@@ -74,7 +74,7 @@ osgODE::HingeServoMotor::setForce(double force)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::HingeServoMotor::getForce(void) const
 {
     return m_force ;
@@ -88,7 +88,7 @@ osgODE::HingeServoMotor::getForce(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::HingeServoMotor::setMaxVel(double max_vel)
+osgODE::HingeServoMotor::setMaxVel(ooReal max_vel)
 {
     m_max_vel = max_vel ;
 }
@@ -100,7 +100,7 @@ osgODE::HingeServoMotor::setMaxVel(double max_vel)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::HingeServoMotor::getMaxVel(void) const
 {
     return m_max_vel ;

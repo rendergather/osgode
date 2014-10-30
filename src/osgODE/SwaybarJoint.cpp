@@ -113,7 +113,7 @@ SwaybarJoint::~SwaybarJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-SwaybarJoint::update(double step_size)
+SwaybarJoint::update(ooReal step_size)
 {
 
     if( m_reference_body.valid() ) {

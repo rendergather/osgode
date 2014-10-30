@@ -43,14 +43,14 @@ namespace osgODE
 
 /* ======================================================================= */
 //! Convert value from rpm to radians per sec
-inline double   inRPM( double value )
+inline ooReal   inRPM( ooReal value )
 {
     return value * 0.10471975511965977 ;
 }
 
 
 //! Convert value from kilometre per hour to metre per second
-inline double   inKmh( double value )
+inline ooReal   inKmh( ooReal value )
 {
     return value * 0.27777777777777778 ;
 }
@@ -95,79 +95,79 @@ public:
 /* ======================================================================= */
 public:
     //! Set the current speed
-    inline void     setSpeed( double speed ) ;
+    inline void     setSpeed( ooReal speed ) ;
 
     //! Get the current speed
-    inline double   getSpeed(void) const ;
+    inline ooReal   getSpeed(void) const ;
 
 
     //! Set the speed limit. Default: FLT_MAX
     /*!
      * torque is applied only if the abs speed is less than this value
      */
-    inline void     setSpeedLimit( double speed_limit ) ;
+    inline void     setSpeedLimit( ooReal speed_limit ) ;
 
     //! Get the speed limit. Default: FLT_MAX
     /*!
      * torque is applied only if the abs speed is less than this value
      */
-    inline double   getSpeedLimit(void) const ;
+    inline ooReal   getSpeedLimit(void) const ;
 
 
     //! Set the torque
-    inline void     setFMax( double fmax ) ;
+    inline void     setFMax( ooReal fmax ) ;
 
     //! Get the torque
-    inline double   getFMax(void) const ;
+    inline ooReal   getFMax(void) const ;
 
 
     //! Set the velocity to reach
-    inline void     setVel( double vel ) ;
+    inline void     setVel( ooReal vel ) ;
 
     //! Get the velocity to reach
-    inline double   getVel(void) const ;
+    inline ooReal   getVel(void) const ;
 
 
     //! Set the inertia. Default: 1
-    inline void     setInertia( double inertia ) ;
+    inline void     setInertia( ooReal inertia ) ;
 
     //! Get the inertia. Default: 1
-    inline double   getInertia(void) const ;
+    inline ooReal   getInertia(void) const ;
 
 
     //! Set the drag. Default: 0
-    inline void     setDrag( double drag ) ;
+    inline void     setDrag( ooReal drag ) ;
 
     //! Get the drag. Default: 0
-    inline double   getDrag(void) const ;
+    inline ooReal   getDrag(void) const ;
 
 
     //! Set the friction between the two plates in [0,1]. Default: 0.0
-    inline void     setFriction( double friction ) ;
+    inline void     setFriction( ooReal friction ) ;
 
     //! Get the friction between the two plates in [0,1]. Default: 0.0
-    inline double   getFriction(void) const ;
+    inline ooReal   getFriction(void) const ;
 
 
     //! Set the ratio. Default: 1
-    inline void     setRatio( double ratio ) ;
+    inline void     setRatio( ooReal ratio ) ;
 
     //! Get the ratio. Default: 1
-    inline double   getRatio(void) const ;
+    inline ooReal   getRatio(void) const ;
 
 
     //! Set the gas [0,1]
-    inline void     setGas( double gas ) ;
+    inline void     setGas( ooReal gas ) ;
 
     //! Get the gas [0,1]
-    inline double   getGas(void) const ;
+    inline ooReal   getGas(void) const ;
 
 
     //! Set the minimum speed. Default: 0
-    inline void     setSpeedStall( double speed_stall ) ;
+    inline void     setSpeedStall( ooReal speed_stall ) ;
 
     //! Get the minimum speed. Default: 0
-    inline double   getSpeedStall(void) const ;
+    inline ooReal   getSpeedStall(void) const ;
 /* ======================================================================= */
 
 
@@ -187,7 +187,7 @@ public:
      *  - inertia > 0.0
      *  - drag >= 0.0
      */
-    virtual void    propagate( double step_size, double& vel_out, double& fmax_out ) ;
+    virtual void    propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out ) ;
 
 
     //! Read back the speed
@@ -195,7 +195,7 @@ public:
      * Assert:
      *  - friction >= 0.0
      */
-    /*virtual*/ void    feedback( double step_size, double speed_in ) ;
+    /*virtual*/ void    feedback( ooReal step_size, ooReal speed_in ) ;
 /* ======================================================================= */
 
 
@@ -203,16 +203,16 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_speed ;
-    double      m_fmax ;
-    double      m_vel ;
-    double      m_inertia ;
-    double      m_drag ;
-    double      m_friction ;
-    double      m_ratio ;
-    double      m_speed_limit ;
-    double      m_gas ;
-    double      m_speed_stall ;
+    ooReal      m_speed ;
+    ooReal      m_fmax ;
+    ooReal      m_vel ;
+    ooReal      m_inertia ;
+    ooReal      m_drag ;
+    ooReal      m_friction ;
+    ooReal      m_ratio ;
+    ooReal      m_speed_limit ;
+    ooReal      m_gas ;
+    ooReal      m_speed_stall ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -83,29 +83,29 @@ public:
 /* ======================================================================= */
 public:
     //! friction must be in the range [0,1] Default: 0
-    inline void             setFriction(double friction) ;
+    inline void             setFriction(ooReal friction) ;
 
     //! friction must be in the range [0,1] Default: 0
-    inline double           getFriction(void) const ;
+    inline ooReal           getFriction(void) const ;
 
 
     //! Set the ratio for the first body. Default: 1
-    inline void     setRatio1(double ratio) ;
+    inline void     setRatio1(ooReal ratio) ;
 
     //! Get the ratio for the first body. Default: 1
-    inline double   getRatio1(void) const ;
+    inline ooReal   getRatio1(void) const ;
 
 
     //! Set the ratio for the second body. Default: 1
-    inline void     setRatio2(double ratio) ;
+    inline void     setRatio2(ooReal ratio) ;
 
     //! Get the ratio for the second body. Default: 1
-    inline double   getRatio2(void) const ;
+    inline ooReal   getRatio2(void) const ;
 
 
 
     //! Get the angular speed around the differential axis
-    double          getAngleRate(void) ;
+    ooReal          getAngleRate(void) ;
 /* ======================================================================= */
 
 

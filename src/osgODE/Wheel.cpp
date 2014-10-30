@@ -84,7 +84,7 @@ Wheel::~Wheel(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Wheel::update(double step_size)
+Wheel::update(ooReal step_size)
 {
     this->setFiniteRotationAxis( this->getQuaternion() * m_rotation_axis ) ;
 

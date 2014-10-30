@@ -99,17 +99,17 @@ HUD::traverse(osg::NodeVisitor& nv)
     if( nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR ) {
 
         {
-            const double    speed = m_car->getBody()->getLinearVelocity().length() ;
-            const double    angle = 0.5 * osg::PI - osg::PI * speed * (3.6 / 240.0) ;
+            const ooReal    speed = m_car->getBody()->getLinearVelocity().length() ;
+            const ooReal    angle = 0.5 * osg::PI - osg::PI * speed * (3.6 / 240.0) ;
 
             m_speed_hand->setAttitude( osg::Quat( angle, osg::Z_AXIS ) ) ;
         }
 
 
         {
-            const double    speed = m_car->getEngine()->getSpeed() ;
-            const double    rpm = 60.0 * speed / (2.0 * osg::PI) ;
-            const double    angle = 0.5 * osg::PI - osg::PI * rpm / 9000 ;
+            const ooReal    speed = m_car->getEngine()->getSpeed() ;
+            const ooReal    rpm = 60.0 * speed / (2.0 * osg::PI) ;
+            const ooReal    angle = 0.5 * osg::PI - osg::PI * rpm / 9000 ;
 
             m_rpm_hand->setAttitude( osg::Quat( angle, osg::Z_AXIS ) ) ;
         }
@@ -147,7 +147,7 @@ HUD::traverse(osg::NodeVisitor& nv)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-HUD::init(double aspect)
+HUD::init(ooReal aspect)
 {
     removeChildren( 0, getNumChildren() ) ;
 
@@ -226,7 +226,7 @@ HUD::_createStaticObjects(void)
 
 
     {
-        osg::Image* image = osgDB::readImageFile("car_rpm.png") ;
+        osg::Image* image = osgDB::readImageFile("textures/car_rpm.png") ;
 
         PS_ASSERT1( image ) ;
 
@@ -239,7 +239,7 @@ HUD::_createStaticObjects(void)
 
 
     {
-        osg::Image* image = osgDB::readImageFile("car_speed.png") ;
+        osg::Image* image = osgDB::readImageFile("textures/car_speed.png") ;
 
         PS_ASSERT1( image ) ;
 
@@ -316,7 +316,7 @@ HUD::_createDynamicObjects(void)
         m_gear_text->setText( " " ) ;
 
 
-        osg::Image* image = osgDB::readImageFile("alphadigit.png") ;
+        osg::Image* image = osgDB::readImageFile("textures/alphadigit.png") ;
 
         PS_ASSERT1( image ) ;
 
@@ -374,7 +374,7 @@ HUD::_createHand(void)
 
 
     {
-        osg::Image* image = osgDB::readImageFile("hud_hand.png") ;
+        osg::Image* image = osgDB::readImageFile("textures/hud_hand.png") ;
 
         PS_ASSERT1( image ) ;
 

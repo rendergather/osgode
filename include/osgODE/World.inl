@@ -185,7 +185,7 @@ osgODE::World::setCurrentFrame(unsigned int f)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getSimulationTime(void) const
 {
     return m_simulation_time ;
@@ -199,7 +199,7 @@ osgODE::World::getSimulationTime(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::World::setSimulationTime(double time)
+osgODE::World::setSimulationTime(ooReal time)
 {
     m_simulation_time = time ;
 }
@@ -238,7 +238,7 @@ osgODE::World::getWind(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::World::setWindFrequency(double Hz)
+osgODE::World::setWindFrequency(ooReal Hz)
 {
     m_wind_frequency = Hz ;
 }
@@ -250,7 +250,7 @@ osgODE::World::setWindFrequency(double Hz)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getWindFrequency(void) const
 {
     return m_wind_frequency ;
@@ -277,7 +277,7 @@ osgODE::World::getCurrentWind(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::World::setAirDensity(double density)
+osgODE::World::setAirDensity(ooReal density)
 {
     m_air_density = density ;
 }
@@ -289,7 +289,7 @@ osgODE::World::setAirDensity(double density)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getAirDensity(void) const
 {
     return m_air_density ;
@@ -429,7 +429,7 @@ osgODE::World::getOperationList(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getCurrentStepSize(void) const
 {
     return m_current_step_size ;
@@ -444,7 +444,7 @@ osgODE::World::getCurrentStepSize(void) const
 // Auto generated
 /* ....................................................................... */
 inline void
-osgODE::World::setERP(double value)
+osgODE::World::setERP(ooReal value)
 {
     dWorldSetERP(m_ODE_world, value) ;
 }
@@ -457,7 +457,7 @@ osgODE::World::setERP(double value)
 /* ======================================================================= */
 // Auto generated
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getERP(void) const
 {
     return dWorldGetERP(m_ODE_world) ;
@@ -472,7 +472,7 @@ osgODE::World::getERP(void) const
 // Auto generated
 /* ....................................................................... */
 inline void
-osgODE::World::setCFM(double value)
+osgODE::World::setCFM(ooReal value)
 {
     dWorldSetCFM(m_ODE_world, value) ;
 }
@@ -485,7 +485,7 @@ osgODE::World::setCFM(double value)
 /* ======================================================================= */
 // Auto generated
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getCFM(void) const
 {
     return dWorldGetCFM(m_ODE_world) ;
@@ -528,7 +528,7 @@ osgODE::World::getQuickStepNumIterations(void) const
 // Auto generated
 /* ....................................................................... */
 inline void
-osgODE::World::setQuickStepW(double value)
+osgODE::World::setQuickStepW(ooReal value)
 {
     dWorldSetQuickStepW(m_ODE_world, value) ;
 }
@@ -541,7 +541,7 @@ osgODE::World::setQuickStepW(double value)
 /* ======================================================================= */
 // Auto generated
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getQuickStepW(void) const
 {
     return dWorldGetQuickStepW(m_ODE_world) ;
@@ -556,7 +556,7 @@ osgODE::World::getQuickStepW(void) const
 // Auto generated
 /* ....................................................................... */
 inline void
-osgODE::World::setContactMaxCorrectingVel(double value)
+osgODE::World::setContactMaxCorrectingVel(ooReal value)
 {
     dWorldSetContactMaxCorrectingVel(m_ODE_world, value) ;
 }
@@ -569,7 +569,7 @@ osgODE::World::setContactMaxCorrectingVel(double value)
 /* ======================================================================= */
 // Auto generated
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getContactMaxCorrectingVel(void) const
 {
     return dWorldGetContactMaxCorrectingVel(m_ODE_world) ;
@@ -584,7 +584,7 @@ osgODE::World::getContactMaxCorrectingVel(void) const
 // Auto generated
 /* ....................................................................... */
 inline void
-osgODE::World::setContactSurfaceLayer(double value)
+osgODE::World::setContactSurfaceLayer(ooReal value)
 {
     dWorldSetContactSurfaceLayer(m_ODE_world, value) ;
 }
@@ -597,7 +597,7 @@ osgODE::World::setContactSurfaceLayer(double value)
 /* ======================================================================= */
 // Auto generated
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::World::getContactSurfaceLayer(void) const
 {
     return dWorldGetContactSurfaceLayer(m_ODE_world) ;
@@ -611,7 +611,7 @@ osgODE::World::getContactSurfaceLayer(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::World::advanceInternal(double step_size)
+osgODE::World::advanceInternal(ooReal step_size)
 {
     ++m_current_frame ;
 

@@ -71,6 +71,14 @@ StaticWorld::StaticWorld(void)
     dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
     dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
     dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
+
+
+
+    dWorldSetERP(m_ODE_world, 0.2) ;
+    dWorldSetCFM(m_ODE_world, 1.0e-5) ;
+
+    dWorldSetContactMaxCorrectingVel( m_ODE_world, FLT_MAX ) ;
+    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -97,6 +105,14 @@ StaticWorld::StaticWorld(const StaticWorld& other, const osg::CopyOp& copyop):
     dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
     dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
     dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
+
+
+
+    dWorldSetERP(m_ODE_world, 0.2) ;
+    dWorldSetCFM(m_ODE_world, 1.0e-5) ;
+
+    dWorldSetContactMaxCorrectingVel( m_ODE_world, FLT_MAX ) ;
+    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

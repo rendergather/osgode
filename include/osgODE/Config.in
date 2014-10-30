@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -53,6 +53,18 @@
 
 #ifndef PS_DEFAULT_LOG_LEVEL
     #define PS_DEFAULT_LOG_LEVEL        @PS_DEFAULT_LOG_LEVEL@
+#endif
+
+
+#ifndef OSGODE_SINGLE_PRECISION
+    #define OSGODE_SINGLE_PRECISION     @OSGODE_SINGLE_PRECISION@
+#endif
+
+
+#if OSGODE_SINGLE_PRECISION
+    typedef float ooReal ;
+#else
+    typedef double ooReal ;
 #endif
 /* ....................................................................... */
 /* ======================================================================= */

@@ -81,11 +81,11 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     setRatio(double ratio) ;
-    inline double   getRatio(void) const ;
+    inline void     setRatio(ooReal ratio) ;
+    inline ooReal   getRatio(void) const ;
 
-    inline void     setFriction(double friction) ;
-    inline double   getFriction(void) const ;
+    inline void     setFriction(ooReal friction) ;
+    inline ooReal   getFriction(void) const ;
 /* ======================================================================= */
 
 
@@ -111,7 +111,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -119,8 +119,8 @@ public:
 
 /* ======================================================================= */
 private:
-    double  m_ratio ;
-    double  m_friction ;
+    ooReal  m_ratio ;
+    ooReal  m_friction ;
 
     osg::Vec3   m_axis1 ;
     osg::Vec3   m_axis2 ;

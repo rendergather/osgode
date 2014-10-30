@@ -27,6 +27,8 @@
 #include <osgODE/RigidBody>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -96,7 +98,7 @@ static bool readODEMass(osgDB::InputStream& is, osgODE::RigidBody& body)
 {
     dMass   mass ;
 
-    double  tmp ;
+    ooReal  tmp ;
 
     is >> tmp ; mass.mass = tmp ;
 
@@ -126,7 +128,7 @@ static bool writeODEMass(osgDB::OutputStream& os, const osgODE::RigidBody& body)
 {
     dMass   mass = body.getODEMass() ;
 
-    double  tmp ;
+    ooReal  tmp ;
 
     tmp = mass.mass ; os << tmp ;
 
@@ -176,19 +178,19 @@ REGISTER_OBJECT_WRAPPER( RigidBody,
     ADD_BOOL_SERIALIZER(GravityMode, true) ;
 
     ADD_BOOL_SERIALIZER(AutoDisableFlag, false) ;
-    ADD_DOUBLE_SERIALIZER(AutoDisableLinearThreshold, 0.1) ;
-    ADD_DOUBLE_SERIALIZER(AutoDisableAngularThreshold, 0.1) ;
+    ADD_REAL_SERIALIZER(AutoDisableLinearThreshold, 0.1) ;
+    ADD_REAL_SERIALIZER(AutoDisableAngularThreshold, 0.1) ;
     ADD_UINT_SERIALIZER(AutoDisableSteps, 180) ;
-    ADD_DOUBLE_SERIALIZER(AutoDisableTime, 3.0) ;
+    ADD_REAL_SERIALIZER(AutoDisableTime, 3.0) ;
     ADD_UINT_SERIALIZER(AutoDisableAverageSamplesCount, 6) ;
 
-    ADD_DOUBLE_SERIALIZER(LinearDamping, 0.01) ;
-    ADD_DOUBLE_SERIALIZER(AngularDamping, 0.01) ;
-    ADD_DOUBLE_SERIALIZER(LinearDampingThreshold, 0.01) ;
-    ADD_DOUBLE_SERIALIZER(AngularDampingThreshold, 0.01) ;
-    ADD_DOUBLE_SERIALIZER(MaxAngularSpeed, FLT_MAX) ;
+    ADD_REAL_SERIALIZER(LinearDamping, 0.01) ;
+    ADD_REAL_SERIALIZER(AngularDamping, 0.01) ;
+    ADD_REAL_SERIALIZER(LinearDampingThreshold, 0.01) ;
+    ADD_REAL_SERIALIZER(AngularDampingThreshold, 0.01) ;
+    ADD_REAL_SERIALIZER(MaxAngularSpeed, FLT_MAX) ;
 
-    ADD_DOUBLE_SERIALIZER(Mass, 1.0) ;
+    ADD_REAL_SERIALIZER(Mass, 1.0) ;
     ADD_USER_SERIALIZER(ODEMass) ;
 
     ADD_BOOL_SERIALIZER(Kinematic, false) ;

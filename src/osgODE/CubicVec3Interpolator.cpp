@@ -104,7 +104,7 @@ CubicVec3Interpolator::init(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-CubicVec3Interpolator::interpolateImplementation(double x, osg::Vec3& result)
+CubicVec3Interpolator::interpolateImplementation(ooReal x, osg::Vec3& result)
 {
     unsigned int            size = m_points.size() ;
 
@@ -148,8 +148,8 @@ CubicVec3Interpolator::interpolateImplementation(double x, osg::Vec3& result)
     const unsigned int  x0 = findX0(x) ;
 
 
-    const double    xxx = pow(x, 3) ;
-    const double    xx = pow(x, 2) ;
+    const ooReal    xxx = pow(x, 3) ;
+    const ooReal    xx = pow(x, 2) ;
 
     osg::Vec3   a, b, c, d ;
     _getCoefficients(x0, a, b, c, d) ;
@@ -247,7 +247,7 @@ namespace {
 
 
 
-typedef double  real_t ;
+typedef ooReal  real_t ;
 
 
 
@@ -364,21 +364,21 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
                                             const Point& p3
                                           )
 {
-    const double    t1 = p1.first ;
-    const double    t2 = p2.first ;
-    const double    t0 = p0.first ;
-    const double    t3 = p3.first ;
+    const ooReal    t1 = p1.first ;
+    const ooReal    t2 = p2.first ;
+    const ooReal    t0 = p0.first ;
+    const ooReal    t3 = p3.first ;
 
-    const double    ttt1 = pow(t1, 3) ;
-    const double    tt1 = pow(t1, 2) ;
-    const double    ttt2 = pow(t2, 3) ;
-    const double    tt2 = pow(t2, 2) ;
+    const ooReal    ttt1 = pow(t1, 3) ;
+    const ooReal    tt1 = pow(t1, 2) ;
+    const ooReal    ttt2 = pow(t2, 3) ;
+    const ooReal    tt2 = pow(t2, 2) ;
 
-    const double    t1_2 = 2.0 * t1 ;
-    const double    t2_2 = 2.0 * t2 ;
+    const ooReal    t1_2 = 2.0 * t1 ;
+    const ooReal    t2_2 = 2.0 * t2 ;
 
-    const double    tt1_3 = 3.0 * tt1 ;
-    const double    tt2_3 = 3.0 * tt2 ;
+    const ooReal    tt1_3 = 3.0 * tt1 ;
+    const ooReal    tt2_3 = 3.0 * tt2 ;
 
 
 
@@ -391,7 +391,7 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
     for(int i=0; i<3; i++) {
 
 
-        double  A[16] = {   ttt1,       tt1,        t1,     1,
+        ooReal  A[16] = {   ttt1,       tt1,        t1,     1,
                             ttt2,       tt2,        t2,     1,
                             tt1_3,      t1_2,       1,      0,
                             tt2_3,      t2_2,       1,      0
@@ -400,16 +400,16 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
 
 
 
-        const double    y0 = p0.second[i] ;
-        const double    y1 = p1.second[i] ;
-        const double    y2 = p2.second[i] ;
-        const double    y3 = p3.second[i] ;
+        const ooReal    y0 = p0.second[i] ;
+        const ooReal    y1 = p1.second[i] ;
+        const ooReal    y2 = p2.second[i] ;
+        const ooReal    y3 = p3.second[i] ;
 
 
 
 
 
-        double  b[4] = {    y1,
+        ooReal  b[4] = {    y1,
                             y2,
                             (y2 - y0)  /  (t2 - t0),
                             (y3 - y1)  /  (t3 - t1)
@@ -442,14 +442,14 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
                                             const Point& p2
                                           )
 {
-    const double    t0 = p0.first ;
-    const double    t1 = p1.first ;
-    const double    t2 = p2.first ;
+    const ooReal    t0 = p0.first ;
+    const ooReal    t1 = p1.first ;
+    const ooReal    t2 = p2.first ;
 
-    const double    tt0 = t0 * t0 ;
-    const double    tt1 = t1 * t1 ;
+    const ooReal    tt0 = t0 * t0 ;
+    const ooReal    tt1 = t1 * t1 ;
 
-    const double    t1_2 = 2.0 * t1 ;
+    const ooReal    t1_2 = 2.0 * t1 ;
 
 
 
@@ -462,7 +462,7 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
     for(int i=0; i<3; i++) {
 
 
-        double  A[9] =  {   t1_2,   1,      0,
+        ooReal  A[9] =  {   t1_2,   1,      0,
                             tt1,    t1,     1,
                             tt0,    t0,     1
                         } ;
@@ -470,15 +470,15 @@ CubicVec3Interpolator::_computeCoefficient( const Point& p0,
 
 
 
-        const double    y0 = p0.second[i] ;
-        const double    y1 = p1.second[i] ;
-        const double    y2 = p2.second[i] ;
+        const ooReal    y0 = p0.second[i] ;
+        const ooReal    y1 = p1.second[i] ;
+        const ooReal    y2 = p2.second[i] ;
 
 
 
 
 
-        double  b[3] =  {   (y2 - y0)  /  (t2 - t0),
+        ooReal  b[3] =  {   (y2 - y0)  /  (t2 - t0),
                             y1,
                             y0
                         } ;

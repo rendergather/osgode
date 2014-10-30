@@ -35,6 +35,8 @@
 
 #include <vector>
 #include <algorithm>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -172,12 +174,12 @@ public:
 
 /* ======================================================================= */
 public:
-    typedef std::pair<double, T>    Point ;
+    typedef std::pair<ooReal, T>    Point ;
     typedef std::vector<Point>      PointList ;
 
 
 
-    void    addPoint(double t, const T& p) {
+    void    addPoint(ooReal t, const T& p) {
         m_points.push_back( Point(t, p) ) ;
         setDirty(true) ;
     }
@@ -198,7 +200,7 @@ public:
     }
 
 
-    double  getDuration(void) {
+    ooReal  getDuration(void) {
 
         if( getDirty() ) {
             init() ;
@@ -217,7 +219,7 @@ public:
 
 /* ======================================================================= */
 public:
-    T   interpolate(double x)
+    T   interpolate(ooReal x)
     {
         if( getDirty() ) {
             init() ;
@@ -246,7 +248,7 @@ public:
 
                 if( getLooping() ) {
 
-                    double  delta = last.first - first.first ;
+                    ooReal  delta = last.first - first.first ;
 
                     do {
                         x -= delta ;
@@ -298,7 +300,7 @@ protected:
 
 
     //! interpolation
-    virtual void    interpolateImplementation(double t, T& result) = 0 ;
+    virtual void    interpolateImplementation(ooReal t, T& result) = 0 ;
 /* ======================================================================= */
 
 
@@ -307,7 +309,7 @@ protected:
 /* ======================================================================= */
 protected:
     //! Return the index of the point before t (or t if it matches)
-    unsigned int    findX0(double x)
+    unsigned int    findX0(ooReal x)
     {
         if( getDirty() ) {
             init() ;
@@ -363,7 +365,7 @@ protected:
 //! ScalarInterpolator base class
 /*!
  */
-class OSG_EXPORT ScalarInterpolator: public Interpolator<double>
+class OSG_EXPORT ScalarInterpolator: public Interpolator<ooReal>
 {
 /* ======================================================================= */
 public:

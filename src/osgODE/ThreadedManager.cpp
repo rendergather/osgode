@@ -118,22 +118,24 @@ ThreadedManager::run(void)
 
 
 
-        double  t_s = osg::Timer::instance()->time_s() ;
+        ooReal  t_s = osg::Timer::instance()->time_s() ;
 
         if( m_time < 0.0 ) {
             m_time = t_s ;
         }
 
-        double  dt = t_s - m_time ;
+        ooReal  dt = t_s - m_time ;
 
 
-        dt = osg::minimum( dt, 1.0e-1 ) ;
+        dt = osg::minimum( dt, (ooReal)1.0e-1 ) ;
 
 
         if( dt >= getStepSize() ) {
             frame( dt ) ;
             m_time = t_s ;
             m_rdy = true ;
+        } else {
+            OpenThreads::Thread::YieldCurrentThread() ;
         }
 
     }
@@ -153,7 +155,7 @@ DONE:
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-ThreadedManager::frame(double dt)
+ThreadedManager::frame(ooReal dt)
 {
     bool    advanced = false ;
 
@@ -176,7 +178,11 @@ ThreadedManager::frame(double dt)
 
     if( world ) {
 
-        const double    step_size= getStepSize() ;
+
+        // moved to ThreadedManagerUpdateCallback
+//         world->copyEventsInternal() ;
+
+        const ooReal    step_size= getStepSize() ;
 
         advanced =   m_delta >= step_size ;
 

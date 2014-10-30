@@ -78,14 +78,14 @@ Engine::~Engine(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Engine::propagate( double step_size, double& vel_out, double& fmax_out )
+Engine::propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out )
 {
 
     // find current torque
     //
     if( m_torque_curve.valid() ) {
 
-        const double    fmax = m_torque_curve->interpolate( getSpeed() ) ;
+        const ooReal    fmax = m_torque_curve->interpolate( getSpeed() ) ;
 
         setFMax( fmax ) ;
         setVel( FLT_MAX ) ;
@@ -99,16 +99,16 @@ Engine::propagate( double step_size, double& vel_out, double& fmax_out )
 
         m_current_gear = osg::minimum( m_current_gear, (unsigned int)(m_gear_list.size() - 1) ) ;
 
-        const double    current_ratio = getRatio() ;
-        const double    new_ratio = m_gear_list[m_current_gear] ;
+        const ooReal    current_ratio = getRatio() ;
+        const ooReal    new_ratio = m_gear_list[m_current_gear] ;
 
 
 
-        const double    N = 10 ;
-        const double    interpolated_ratio = (current_ratio * N + new_ratio) / (N+1) ;
+        const ooReal    N = 10 ;
+        const ooReal    interpolated_ratio = (current_ratio * N + new_ratio) / (N+1) ;
 
 
-        const double    EPSILON = 1.0e-3 ;
+        const ooReal    EPSILON = 1.0e-3 ;
 
 
         if( fabs(new_ratio) > EPSILON   &&   fabs(current_ratio) > EPSILON ) {

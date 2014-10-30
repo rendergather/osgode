@@ -89,6 +89,7 @@ World::World(void):
     dWorldSetCFM(m_ODE_world, 1.0e-5) ;
 
     setContactMaxCorrectingVel(FLT_MAX) ;
+    setContactSurfaceLayer(0.0) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -252,7 +253,7 @@ World::removeObject(ODEObject* obj)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::update(double step_size)
+World::update(ooReal step_size)
 {
     advanceInternal( step_size ) ;
     step( step_size ) ;
@@ -266,7 +267,7 @@ World::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::step(double step_size)
+World::step(ooReal step_size)
 {
     if( step_size <= 0.0 ) {
         return ;
@@ -313,7 +314,7 @@ World::step(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::_callObjectsCallbacks(double step_size)
+World::_callObjectsCallbacks(ooReal step_size)
 {
     PS_DBG3("osgODE::World::_callObjectsCallbacks(%p, step_size=%f)", this, step_size) ;
 
@@ -342,7 +343,7 @@ World::_callObjectsCallbacks(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::_callObjectsPostCallbacks(double step_size)
+World::_callObjectsPostCallbacks(ooReal step_size)
 {
     PS_DBG3("osgODE::World::_callObjectsPostCallbacks(%p, step_size=%f)", this, step_size) ;
 
@@ -789,9 +790,11 @@ World::updateTransformsInternal(void)
 
     if( m_events.valid() ) {
 
+
         Events::ViewMatrix& vm = m_events->getViewMatrix() ;
 
         if( vm.getPriority() > 0 ) {
+
             m_events->getView()->getCamera()->setViewMatrix( vm.getMatrix() ) ;
             vm.setPriority( 0 ) ;
         }

@@ -22,7 +22,7 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgt") ;
 
     PS_ASSERT1( cube != NULL ) ;
 
@@ -62,7 +62,7 @@ main(int argc, char** argv)
 
 
         // let the box spin around the local Z axis...
-        const double    W = 2.0 * osg::PI *  10 ;
+        const ooReal    W = 2.0 * osg::PI *  10 ;
 
         body->setAngularVelocity( osg::Z_AXIS * W ) ;
     }

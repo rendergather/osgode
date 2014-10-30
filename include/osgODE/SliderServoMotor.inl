@@ -36,7 +36,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SliderServoMotor::setPosition(double position)
+osgODE::SliderServoMotor::setPosition(ooReal position)
 {
     m_position = position ;
 }
@@ -48,7 +48,7 @@ osgODE::SliderServoMotor::setPosition(double position)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SliderServoMotor::getPosition(void) const
 {
     return m_position ;
@@ -62,7 +62,7 @@ osgODE::SliderServoMotor::getPosition(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SliderServoMotor::setForce(double force)
+osgODE::SliderServoMotor::setForce(ooReal force)
 {
     m_force = force ;
 }
@@ -74,7 +74,7 @@ osgODE::SliderServoMotor::setForce(double force)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SliderServoMotor::getForce(void) const
 {
     return m_force ;
@@ -88,7 +88,7 @@ osgODE::SliderServoMotor::getForce(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SliderServoMotor::setMaxVel(double max_vel)
+osgODE::SliderServoMotor::setMaxVel(ooReal max_vel)
 {
     m_max_vel = max_vel ;
 }
@@ -100,7 +100,7 @@ osgODE::SliderServoMotor::setMaxVel(double max_vel)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SliderServoMotor::getMaxVel(void) const
 {
     return m_max_vel ;

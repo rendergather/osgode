@@ -155,7 +155,7 @@ RagDoll::updateTransformInternal(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-RagDoll::postUpdate( double step_size )
+RagDoll::postUpdate( ooReal step_size )
 {
     if( m_dirty ) {
 

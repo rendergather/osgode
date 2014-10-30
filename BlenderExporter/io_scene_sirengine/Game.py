@@ -184,6 +184,9 @@ class Game(ODECallback.ODECallback):
             elif a.type == "GAME":
                 actuator = Actuator.GameActuator(self.RigidBody, a)
 
+            elif a.type == "MOUSE":
+                actuator = Actuator.MouseActuator(self.RigidBody, a)
+
 
             if actuator:
                 actuator.buildGraph()

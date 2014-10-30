@@ -88,9 +88,9 @@ private:
     {
         osgODE::Collidable* collidable = static_cast<osgODE::Collidable*>( m_template->clone(osg::CopyOp::SHALLOW_COPY) ) ;
 
-        double  X = 2 * _rand() - 1 ;
-        double  Y = 2 * _rand() - 1 ;
-        double  Z = _rand() + 5 ;
+        ooReal  X = 2 * _rand() - 1 ;
+        ooReal  Y = 2 * _rand() - 1 ;
+        ooReal  Z = _rand() + 5 ;
 
         collidable->setPosition( osg::Vec3(X, Y, Z) ) ;
 
@@ -104,7 +104,7 @@ private:
 
     osgODE::Collidable* _createTemplate(void)
     {
-        osg::Node*  graphics = osgDB::readNodeFile("capsule.osgb") ;
+        osg::Node*  graphics = osgDB::readNodeFile("capsule.osgt") ;
         PS_ASSERT1( graphics != NULL ) ;
 
 
@@ -176,7 +176,7 @@ main(int argc, char** argv)
      * [2] Create the floor
      */
     {
-        osg::Node*  floor_graphics = osgDB::readNodeFile("floor.osgb") ;
+        osg::Node*  floor_graphics = osgDB::readNodeFile("floor.osgt") ;
         PS_ASSERT1( floor_graphics != NULL ) ;
 
         floor_graphics->getOrCreateStateSet()->setAttributeAndModes( new osg::CullFace(osg::CullFace::BACK) ) ;

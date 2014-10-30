@@ -48,7 +48,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Joint::setParamImplementation(int param, double value)
+Joint::setParamImplementation(int param, ooReal value)
 {
     if( m_functions.SetParam ) {
         m_functions.SetParam(m_ODE_joint, param, static_cast<dReal>(value)) ;
@@ -62,7 +62,7 @@ Joint::setParamImplementation(int param, double value)
 
 /* ======================================================================= */
 /* ....................................................................... */
-double
+ooReal
 Joint::getParamImplementation(int param)
 {
     if( m_functions.GetParam ) {

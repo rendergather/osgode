@@ -125,7 +125,7 @@ osgODE::SwaybarJoint::getReferenceAxis(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SwaybarJoint::setRigidity(double rigidity)
+osgODE::SwaybarJoint::setRigidity(ooReal rigidity)
 {
     setParam(dParamStopCFM, -1.0  +  1.0 / rigidity) ;
 }
@@ -137,10 +137,10 @@ osgODE::SwaybarJoint::setRigidity(double rigidity)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SwaybarJoint::getRigidity(void) const
 {
-    const double    c = const_cast<SwaybarJoint*>(this)->getParam(dParamStopCFM) ;
+    const ooReal    c = const_cast<SwaybarJoint*>(this)->getParam(dParamStopCFM) ;
 
     return 1 / (c + 1) ;
 }

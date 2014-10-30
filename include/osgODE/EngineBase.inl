@@ -39,7 +39,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setSpeed( double speed )
+osgODE::EngineBase::setSpeed( ooReal speed )
 {
     m_speed = speed ;
 }
@@ -51,7 +51,7 @@ osgODE::EngineBase::setSpeed( double speed )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getSpeed(void) const
 {
     return m_speed ;
@@ -65,7 +65,7 @@ osgODE::EngineBase::getSpeed(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setSpeedLimit( double speed_limit )
+osgODE::EngineBase::setSpeedLimit( ooReal speed_limit )
 {
     m_speed_limit = speed_limit ;
 }
@@ -77,7 +77,7 @@ osgODE::EngineBase::setSpeedLimit( double speed_limit )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getSpeedLimit(void) const
 {
     return m_speed_limit ;
@@ -92,7 +92,7 @@ osgODE::EngineBase::getSpeedLimit(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setFMax( double fmax )
+osgODE::EngineBase::setFMax( ooReal fmax )
 {
     m_fmax = fmax ;
 }
@@ -104,7 +104,7 @@ osgODE::EngineBase::setFMax( double fmax )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getFMax(void) const
 {
     return m_fmax ;
@@ -118,7 +118,7 @@ osgODE::EngineBase::getFMax(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setVel( double vel )
+osgODE::EngineBase::setVel( ooReal vel )
 {
     m_vel = vel ;
 }
@@ -130,7 +130,7 @@ osgODE::EngineBase::setVel( double vel )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getVel(void) const
 {
     return m_vel ;
@@ -144,7 +144,7 @@ osgODE::EngineBase::getVel(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setInertia( double inertia )
+osgODE::EngineBase::setInertia( ooReal inertia )
 {
     m_inertia = inertia ;
 }
@@ -156,7 +156,7 @@ osgODE::EngineBase::setInertia( double inertia )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getInertia(void) const
 {
     return m_inertia ;
@@ -170,7 +170,7 @@ osgODE::EngineBase::getInertia(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setDrag( double drag )
+osgODE::EngineBase::setDrag( ooReal drag )
 {
     m_drag = drag ;
 }
@@ -182,7 +182,7 @@ osgODE::EngineBase::setDrag( double drag )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getDrag(void) const
 {
     return m_drag ;
@@ -196,7 +196,7 @@ osgODE::EngineBase::getDrag(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setFriction( double friction )
+osgODE::EngineBase::setFriction( ooReal friction )
 {
     m_friction = friction ;
 }
@@ -208,7 +208,7 @@ osgODE::EngineBase::setFriction( double friction )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getFriction(void) const
 {
     return m_friction ;
@@ -222,7 +222,7 @@ osgODE::EngineBase::getFriction(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setRatio( double ratio )
+osgODE::EngineBase::setRatio( ooReal ratio )
 {
     m_ratio = ratio ;
 }
@@ -234,7 +234,7 @@ osgODE::EngineBase::setRatio( double ratio )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getRatio(void) const
 {
     return m_ratio ;
@@ -248,7 +248,7 @@ osgODE::EngineBase::getRatio(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setGas( double gas )
+osgODE::EngineBase::setGas( ooReal gas )
 {
     m_gas = gas ;
 }
@@ -260,7 +260,7 @@ osgODE::EngineBase::setGas( double gas )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getGas(void) const
 {
     return m_gas ;
@@ -274,7 +274,7 @@ osgODE::EngineBase::getGas(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::EngineBase::setSpeedStall( double speed_stall )
+osgODE::EngineBase::setSpeedStall( ooReal speed_stall )
 {
     m_speed_stall = speed_stall ;
 }
@@ -286,7 +286,7 @@ osgODE::EngineBase::setSpeedStall( double speed_stall )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::EngineBase::getSpeedStall(void) const
 {
     return m_speed_stall ;

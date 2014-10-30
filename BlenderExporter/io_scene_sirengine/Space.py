@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -260,7 +260,7 @@ class Space(Writable.Writable):
                 return Capsule.Capsule(self.Data, obj)
 
             else:
-                print("This exporter does not support %s collision bounds" %obj.game.collision_bounds_type)
+                print("This exporter does not support %s collision bound" %obj.game.collision_bounds_type)
 
 
             pass
@@ -296,6 +296,9 @@ class Space(Writable.Writable):
         writer.writeLine("ERP %f" %self.ERP)
         writer.writeLine("CFM %f" %self.CFM)
 
+
+        if self.Data.ContactSurfaceLayer:
+            writer.writeLine("ContactSurfaceLayer %s" %self.Data.ContactSurfaceLayer)
 
         writer.writeLine("WorldStepFunction %s" %self.Data.WorldStep)
 

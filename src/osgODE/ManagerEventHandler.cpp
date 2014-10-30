@@ -41,7 +41,9 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-ManagerEventHandler::ManagerEventHandler(void)
+ManagerEventHandler::ManagerEventHandler(void):
+    m_warp_pointer_requested    ( false ),
+    m_motion                    ( false )
 {
 }
 /* ....................................................................... */
@@ -53,7 +55,9 @@ ManagerEventHandler::ManagerEventHandler(void)
 /* ======================================================================= */
 /* ....................................................................... */
 ManagerEventHandler::ManagerEventHandler(const ManagerEventHandler& other, const osg::CopyOp& copyop):
-    osgGA::GUIEventHandler      ( other, copyop )
+    osgGA::GUIEventHandler      ( other, copyop ),
+    m_warp_pointer_requested    ( false ),
+    m_motion                    ( false )
 {
 }
 /* ....................................................................... */
@@ -111,18 +115,34 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
             events->incFrameCounterInternal() ;
 
 
-            if( events->getFPSMode() ) {
-                const float xmin = ea.getXmin() ;
-                const float xmax = ea.getXmax() ;
-                const float ymin = ea.getYmin() ;
-                const float ymax = ea.getYmax() ;
+            events->setMotion( m_motion ) ;
+            m_motion = false ;
 
-                osg::Vec2   warp = osg::Vec2(1.0, 1.0) * 0.5 ;
 
-                warp.x() = xmin + (xmax - xmin) * warp.x() ;
-                warp.y() = ymin + (ymax - ymin) * warp.y() ;
+            osg::Vec2   warp_pointer ;
+            bool        normalized ;
 
-                aa.requestWarpPointer( warp.x(), warp.y() ) ;
+
+            if( events->getWarpPointer( warp_pointer, normalized ) ) {
+
+                if( normalized ) {
+                    const float xmin = ea.getXmin() ;
+                    const float xmax = ea.getXmax() ;
+                    const float ymin = ea.getYmin() ;
+                    const float ymax = ea.getYmax() ;
+
+                    // map from [-1,1] to [0,1]
+                    warp_pointer = ( warp_pointer + osg::Vec2(1.0, 1.0) ) * 0.5 ;
+
+                    warp_pointer.x() = xmin + (xmax - xmin) * warp_pointer.x() ;
+                    warp_pointer.y() = ymin + (ymax - ymin) * warp_pointer.y() ;
+                }
+
+                aa.requestWarpPointer( warp_pointer.x(), warp_pointer.y() ) ;
+
+                m_warp_pointer_requested = true ;
+
+                events->setWarpPointer( false ) ;
             }
         }
         break ;
@@ -133,8 +153,25 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
         case osgGA::GUIEventAdapter::MOVE:
         case osgGA::GUIEventAdapter::DRAG:
         {
-            events->setCursorPosition( osg::Vec2( ea.getX(), ea.getY() ) ) ;
-            events->setNormalizedCursorPosition( osg::Vec2( ea.getXnormalized(), ea.getYnormalized() ) ) ;
+            m_motion = true ;
+
+
+            osg::Vec2   previous_position = events->getCursorPosition() ;
+            osg::Vec2   cursor_position( ea.getX(), ea.getY() ) ;
+            osg::Vec2   normalized_cursor_position( ea.getXnormalized(), ea.getYnormalized() ) ;
+
+            events->setCursorPosition( cursor_position ) ;
+            events->setNormalizedCursorPosition( normalized_cursor_position ) ;
+
+            if( ! m_warp_pointer_requested ) {
+
+                events->setRelativeCursorPosition( cursor_position - previous_position) ;
+
+            } else {
+
+                events->setRelativeCursorPosition( osg::Vec2(0,0) ) ;
+                m_warp_pointer_requested = false ;
+            }
         }
         break ;
 

@@ -31,6 +31,8 @@
 /* ======================================================================= */
 #include <osg/Object>
 #include <osg/Vec3>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -85,38 +87,38 @@ public:
     inline void             setMode(int mode) ;
     inline int              getMode(void) const ;
 
-    inline void             setMu(double mu) ;
-    inline double           getMu(void) const ;
+    inline void             setMu(ooReal mu) ;
+    inline ooReal           getMu(void) const ;
 
-    inline void             setMu2(double mu2) ;
-    inline double           getMu2(void) const ;
+    inline void             setMu2(ooReal mu2) ;
+    inline ooReal           getMu2(void) const ;
 
-    inline void             setBounce(double bounce) ;
-    inline double           getBounce(void) const ;
+    inline void             setBounce(ooReal bounce) ;
+    inline ooReal           getBounce(void) const ;
 
-    inline void             setBounceVel(double bounce_vel) ;
-    inline double           getBounceVel(void) const ;
+    inline void             setBounceVel(ooReal bounce_vel) ;
+    inline ooReal           getBounceVel(void) const ;
 
-    inline void             setSoftERP(double soft_erp) ;
-    inline double           getSoftERP(void) const ;
+    inline void             setSoftERP(ooReal soft_erp) ;
+    inline ooReal           getSoftERP(void) const ;
 
-    inline void             setSoftCFM(double soft_cfm) ;
-    inline double           getSoftCFM(void) const ;
+    inline void             setSoftCFM(ooReal soft_cfm) ;
+    inline ooReal           getSoftCFM(void) const ;
 
-    inline void             setMotion1(double motion1) ;
-    inline double           getMotion1(void) const ;
+    inline void             setMotion1(ooReal motion1) ;
+    inline ooReal           getMotion1(void) const ;
 
-    inline void             setMotion2(double motion2) ;
-    inline double           getMotion2(void) const ;
+    inline void             setMotion2(ooReal motion2) ;
+    inline ooReal           getMotion2(void) const ;
 
-    inline void             setMotionN(double motionN) ;
-    inline double           getMotionN(void) const ;
+    inline void             setMotionN(ooReal motionN) ;
+    inline ooReal           getMotionN(void) const ;
 
-    inline void             setSlip1(double slip1) ;
-    inline double           getSlip1(void) const ;
+    inline void             setSlip1(ooReal slip1) ;
+    inline ooReal           getSlip1(void) const ;
 
-    inline void             setSlip2(double slip2) ;
-    inline double           getSlip2(void) const ;
+    inline void             setSlip2(ooReal slip2) ;
+    inline ooReal           getSlip2(void) const ;
 
     //! Taken into account only if this structure is owned by a Space
     inline void             setMaxContactNum(unsigned int max_contact_num) ;
@@ -145,17 +147,17 @@ public:
 /* ======================================================================= */
 private:
     int             m_mode ;
-    double          m_mu ;
-    double          m_mu2 ;
-    double          m_bounce ;
-    double          m_bounce_vel ;
-    double          m_soft_erp ;
-    double          m_soft_cfm ;
-    double          m_motion1 ;
-    double          m_motion2 ;
-    double          m_motionN ;
-    double          m_slip1 ;
-    double          m_slip2 ;
+    ooReal          m_mu ;
+    ooReal          m_mu2 ;
+    ooReal          m_bounce ;
+    ooReal          m_bounce_vel ;
+    ooReal          m_soft_erp ;
+    ooReal          m_soft_cfm ;
+    ooReal          m_motion1 ;
+    ooReal          m_motion2 ;
+    ooReal          m_motionN ;
+    ooReal          m_slip1 ;
+    ooReal          m_slip2 ;
     unsigned int    m_max_contact_num ;
     bool            m_collide_connected ;
     bool            m_collisions_enabled ;

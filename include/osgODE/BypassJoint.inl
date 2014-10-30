@@ -39,7 +39,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::BypassJoint::setERP( int i, double v)
+osgODE::BypassJoint::setERP( int i, ooReal v)
 {
     m_erp[i] = v ;
 }
@@ -51,7 +51,7 @@ osgODE::BypassJoint::setERP( int i, double v)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::BypassJoint::getERP( int i )
 {
     return m_erp[i] ;
@@ -65,7 +65,7 @@ osgODE::BypassJoint::getERP( int i )
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::BypassJoint::setCFM( int i, double v)
+osgODE::BypassJoint::setCFM( int i, ooReal v)
 {
     m_cfm[i] = v ;
 }
@@ -77,7 +77,7 @@ osgODE::BypassJoint::setCFM( int i, double v)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::BypassJoint::getCFM( int i )
 {
     return m_cfm[i] ;

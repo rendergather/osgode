@@ -39,7 +39,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::PIDController::setProportional( double proportional )
+osgODE::PIDController::setProportional( ooReal proportional )
 {
     m_proportional = proportional ;
 }
@@ -51,7 +51,7 @@ osgODE::PIDController::setProportional( double proportional )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PIDController::getProportional(void) const
 {
     return m_proportional ;
@@ -65,7 +65,7 @@ osgODE::PIDController::getProportional(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::PIDController::setIntegral( double integral )
+osgODE::PIDController::setIntegral( ooReal integral )
 {
     m_integral = integral ;
 }
@@ -77,7 +77,7 @@ osgODE::PIDController::setIntegral( double integral )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PIDController::getIntegral(void) const
 {
     return m_integral ;
@@ -91,7 +91,7 @@ osgODE::PIDController::getIntegral(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::PIDController::setDerivative( double derivative )
+osgODE::PIDController::setDerivative( ooReal derivative )
 {
     m_derivative = derivative ;
 }
@@ -103,7 +103,7 @@ osgODE::PIDController::setDerivative( double derivative )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PIDController::getDerivative(void) const
 {
     return m_derivative ;
@@ -117,7 +117,7 @@ osgODE::PIDController::getDerivative(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::PIDController::setErrorInternal( double error_internal )
+osgODE::PIDController::setErrorInternal( ooReal error_internal )
 {
     m_error_internal = error_internal ;
 }
@@ -129,7 +129,7 @@ osgODE::PIDController::setErrorInternal( double error_internal )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PIDController::getErrorInternal(void) const
 {
     return m_error_internal ;

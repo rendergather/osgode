@@ -317,6 +317,9 @@ class MouseSensor(Sensor):
         elif self.BlenderSensor.mouse_event == "MOUSEOVER":
             self.MouseEvent = "MOUSE_OVER"
 
+        elif self.BlenderSensor.mouse_event == "MOVEMENT":
+            self.MouseEvent = "MOTION"
+
         return True
 ############################################################################
 

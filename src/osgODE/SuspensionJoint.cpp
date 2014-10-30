@@ -119,20 +119,20 @@ SuspensionJoint::~SuspensionJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-SuspensionJoint::update(double step_size)
+SuspensionJoint::update(ooReal step_size)
 {
     _computeDisplacement(step_size) ;
 
     _applyPreload() ;
 
 
-    const double    damp = m_displacement_dsdt < 0.0 ? m_damp_rebound : m_damp_bound ;
+    const ooReal    damp = m_displacement_dsdt < 0.0 ? m_damp_rebound : m_damp_bound ;
 
 
-    double  K1 = step_size * m_spring ;
-    double  K2 = K1 + damp ;
-    double  ERP = K1 / K2 ;
-    double  CFM = 1.0 / K2 ;
+    ooReal  K1 = step_size * m_spring ;
+    ooReal  K2 = K1 + damp ;
+    ooReal  ERP = K1 / K2 ;
+    ooReal  CFM = 1.0 / K2 ;
 
     setParam(dParamSuspensionERP1, ERP) ;
     setParam(dParamSuspensionCFM1, CFM) ;
@@ -149,7 +149,7 @@ SuspensionJoint::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-SuspensionJoint::postUpdate(double step_size)
+SuspensionJoint::updateTransformInternal(void)
 {
     osg::Vec3   C = this->getAnchor2() ;
     osg::Vec3   X = this->getAxis1() ;
@@ -170,10 +170,6 @@ SuspensionJoint::postUpdate(double step_size)
 
     this->getMatrixTransform()->setMatrix( m ) ;
     this->getMatrixTransform()->dirtyBound() ;
-
-
-
-    this->Hinge2Joint::postUpdate(step_size) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -184,9 +180,9 @@ SuspensionJoint::postUpdate(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-SuspensionJoint::_computeDisplacement(double step_size)
+SuspensionJoint::_computeDisplacement(ooReal step_size)
 {
-    const double    prev_displacement = m_displacement ;
+    const ooReal    prev_displacement = m_displacement ;
 
 
     const osg::Vec3&    anchor1 = this->getAnchor1() ;
@@ -194,7 +190,7 @@ SuspensionJoint::_computeDisplacement(double step_size)
 
     osg::Vec3   displacement = anchor1 - anchor2 ;
 
-    const double    cur_abs_displacement = displacement.normalize() ;
+    const ooReal    cur_abs_displacement = displacement.normalize() ;
 
 
 
@@ -235,7 +231,7 @@ SuspensionJoint::_computeDisplacement(double step_size)
 void
 SuspensionJoint::_applyPreload(void)
 {
-    const double        load = m_preload - getOrCreateJointFeedback()->getF1().normalize() ;
+    const ooReal        load = m_preload - getOrCreateJointFeedback()->getF1().normalize() ;
 
 
     if(load > 0.0) {

@@ -27,6 +27,8 @@
 #include <osgODE/RigidBodyServoMotor>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -55,9 +57,9 @@ REGISTER_OBJECT_WRAPPER( RigidBodyServoMotor,
 
     ADD_VEC3_SERIALIZER( Axis, osg::Vec3() ) ;
 
-    ADD_DOUBLE_SERIALIZER( MaxForce, 0.0 ) ;
+    ADD_REAL_SERIALIZER( MaxForce, 0.0 ) ;
 
-    ADD_DOUBLE_SERIALIZER( Speed, 0.0 ) ;
+    ADD_REAL_SERIALIZER( Speed, 0.0 ) ;
 
     ADD_BOOL_SERIALIZER( AxisLocal, true ) ;
 }

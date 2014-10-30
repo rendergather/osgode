@@ -70,7 +70,7 @@ static bool readPointList(osgDB::InputStream& is, osgODE::QuatInterpolator& inte
 
         for(unsigned int i=0; i<size; i++) {
 
-            double      t ;
+            ooReal      t ;
             osg::Quat   q ;
             is >> t ;
             is >> q ;

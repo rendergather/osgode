@@ -168,45 +168,45 @@ public:
 
 
     //! Set the height. Default: 1.75
-    inline void     setHeight(double height) ;
+    inline void     setHeight(ooReal height) ;
 
     //! Get the height. Default: 1.75
-    inline double   getHeight(void) const ;
+    inline ooReal   getHeight(void) const ;
 
 
 
     //! Set the rotation around the up versor
-    inline void     setYaw(double yaw) ;
+    inline void     setYaw(ooReal yaw) ;
 
     //! Get the rotation around the up versor
-    inline double   getYaw(void) const ;
+    inline ooReal   getYaw(void) const ;
 
     //! Set the rotation around the side versor. Default: 1/2 pi
-    inline void     setPitch(double pitch) ;
+    inline void     setPitch(ooReal pitch) ;
 
     //! Get the rotation around the side versor. Default: 1/2 pi
-    inline double   getPitch(void) const ;
+    inline ooReal   getPitch(void) const ;
 
 
 
     //! Get the current rotation around the up versor
-    inline double   getCurrentYaw(void) const ;
+    inline ooReal   getCurrentYaw(void) const ;
 
     //! Get the current rotation around the side versor. Default: 1/2 pi
-    inline double   getCurrentPitch(void) const ;
+    inline ooReal   getCurrentPitch(void) const ;
 
     //! Set the current rotation around the up versor
-    inline void     setCurrentYaw(double yaw) ;
+    inline void     setCurrentYaw(ooReal yaw) ;
 
     //! Set the current rotation around the side versor. Default: 1/2 pi
-    inline void     setCurrentPitch(double pitch) ;
+    inline void     setCurrentPitch(ooReal pitch) ;
 
 
     //! Set the elasticity for yaw/pitch update (default: 1/15)
-    inline void     setElasticity(double elasticity) ;
+    inline void     setElasticity(ooReal elasticity) ;
 
     //! Get the elasticity for yaw/pitch update (default: 1/15)
-    inline double   getElasticity(void) const ;
+    inline ooReal   getElasticity(void) const ;
 /* ======================================================================= */
 
 
@@ -221,9 +221,9 @@ public:
 public:
     struct FootContactInfo
     {
-        double  Spring ;
-        double  Damper ;
-        double  MaxDepth ;
+        ooReal  Spring ;
+        ooReal  Damper ;
+        ooReal  MaxDepth ;
     } ;
 
 
@@ -279,10 +279,10 @@ public:
      */
     struct FootstepInfo
     {
-        double  Magnitude ;
-        double  PowerFactor ;
-        double  TimeMultiplier ;
-        double  SpeedThreshold ;
+        ooReal  Magnitude ;
+        ooReal  PowerFactor ;
+        ooReal  TimeMultiplier ;
+        ooReal  SpeedThreshold ;
     } ;
 
     //! Set the footstep info. Default: { Mag=250, Pow=0.25, Mul=0.5, Thres = 0.1 }
@@ -312,10 +312,10 @@ public:
      * @param   fmax        The maximum force that can be used to push the
      *                      humanoid
      */
-    inline void     setMotion(const osg::Vec3& velocity, double fmax) ;
+    inline void     setMotion(const osg::Vec3& velocity, ooReal fmax) ;
 
 
-    inline void     getMotion(osg::Vec3& velocity, double& fmax) const ;
+    inline void     getMotion(osg::Vec3& velocity, ooReal& fmax) const ;
 
 
     //! Add a force to the body in world frame
@@ -326,7 +326,7 @@ public:
      *                      effect for res_time seconds, starting at next
      *                      world step.
      */
-    inline void     setJump(const osg::Vec3& force, double res_time = 0.0) ;
+    inline void     setJump(const osg::Vec3& force, ooReal res_time = 0.0) ;
 /* ======================================================================= */
 
 
@@ -344,7 +344,7 @@ public:
 
 
     //! Get the first derivative of the footstep sinusoidal function
-    inline double   getFootstepDerivative(void) const ;
+    inline ooReal   getFootstepDerivative(void) const ;
 /* ======================================================================= */
 
 
@@ -357,7 +357,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -373,10 +373,10 @@ public:
 
 /* ======================================================================= */
 private:
-    void    _updateOrientation(double step_size) ;
-    void    _collideAgainstGround(double step_size) ;
-    void    _move(double step_size) ;
-    void    _jump(double step_size) ;
+    void    _updateOrientation(ooReal step_size) ;
+    void    _collideAgainstGround(ooReal step_size) ;
+    void    _move(ooReal step_size) ;
+    void    _jump(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -396,26 +396,26 @@ private:
     osg::Vec3   m_side_versor ;
     osg::Vec3   m_front_versor ;
 
-    double      m_yaw ;
-    double      m_pitch ;
+    ooReal      m_yaw ;
+    ooReal      m_pitch ;
 
-    double      m_current_yaw ;
-    double      m_current_pitch ;
+    ooReal      m_current_yaw ;
+    ooReal      m_current_pitch ;
 
-    double      m_avg_side_velocity ;
+    ooReal      m_avg_side_velocity ;
 
-    double      m_footstep_time ;
+    ooReal      m_footstep_time ;
 
-    double      m_height ;
+    ooReal      m_height ;
 
 
-    double          m_elasticity ;
+    ooReal          m_elasticity ;
 
     osg::Vec3       m_motion_velocity ;
-    double          m_motion_fmax ;
+    ooReal          m_motion_fmax ;
 
     osg::Vec3       m_jump_force ;
-    double          m_jump_res_time ;
+    ooReal          m_jump_res_time ;
 
 
 
@@ -430,9 +430,9 @@ private:
     FootContactInfo m_foot_contact_info ;
     FootstepInfo    m_footstep_info ;
 
-    double          m_footstep_derivative ;
+    ooReal          m_footstep_derivative ;
 
-    double          m_motion_fmax_mult ;
+    ooReal          m_motion_fmax_mult ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

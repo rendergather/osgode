@@ -114,7 +114,7 @@ osgODE::CharacterBase::getLinearMotor(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setHeight(double height)
+osgODE::CharacterBase::setHeight(ooReal height)
 {
     m_height = height ;
 }
@@ -126,7 +126,7 @@ osgODE::CharacterBase::setHeight(double height)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getHeight(void) const
 {
     return m_height ;
@@ -140,7 +140,7 @@ osgODE::CharacterBase::getHeight(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setMotion(const osg::Vec3& velocity, double fmax)
+osgODE::CharacterBase::setMotion(const osg::Vec3& velocity, ooReal fmax)
 {
     m_motion_velocity = velocity ;
     m_motion_fmax = fmax ;
@@ -154,7 +154,7 @@ osgODE::CharacterBase::setMotion(const osg::Vec3& velocity, double fmax)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::getMotion(osg::Vec3& velocity, double& fmax) const
+osgODE::CharacterBase::getMotion(osg::Vec3& velocity, ooReal& fmax) const
 {
     velocity = m_motion_velocity ;
     fmax = m_motion_fmax ;
@@ -246,7 +246,7 @@ osgODE::CharacterBase::getFrontVersor(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setYaw(double yaw)
+osgODE::CharacterBase::setYaw(ooReal yaw)
 {
     m_yaw = yaw ;
 }
@@ -258,7 +258,7 @@ osgODE::CharacterBase::setYaw(double yaw)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getYaw(void) const
 {
     return m_yaw ;
@@ -271,7 +271,7 @@ osgODE::CharacterBase::getYaw(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getCurrentYaw(void) const
 {
     return m_current_yaw ;
@@ -285,7 +285,7 @@ osgODE::CharacterBase::getCurrentYaw(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setCurrentYaw(double yaw)
+osgODE::CharacterBase::setCurrentYaw(ooReal yaw)
 {
     m_current_yaw = yaw ;
 }
@@ -298,7 +298,7 @@ osgODE::CharacterBase::setCurrentYaw(double yaw)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setPitch(double pitch)
+osgODE::CharacterBase::setPitch(ooReal pitch)
 {
     m_pitch = pitch ;
 }
@@ -310,7 +310,7 @@ osgODE::CharacterBase::setPitch(double pitch)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getPitch(void) const
 {
     return m_pitch ;
@@ -323,7 +323,7 @@ osgODE::CharacterBase::getPitch(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getCurrentPitch(void) const
 {
     return m_current_pitch ;
@@ -337,7 +337,7 @@ osgODE::CharacterBase::getCurrentPitch(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setCurrentPitch(double pitch)
+osgODE::CharacterBase::setCurrentPitch(ooReal pitch)
 {
     m_current_pitch = pitch ;
 }
@@ -350,7 +350,7 @@ osgODE::CharacterBase::setCurrentPitch(double pitch)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setElasticity(double elasticity)
+osgODE::CharacterBase::setElasticity(ooReal elasticity)
 {
     m_elasticity = elasticity ;
 }
@@ -362,7 +362,7 @@ osgODE::CharacterBase::setElasticity(double elasticity)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getElasticity(void) const
 {
     return m_elasticity ;
@@ -376,7 +376,7 @@ osgODE::CharacterBase::getElasticity(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CharacterBase::setJump(const osg::Vec3& force, double res_time)
+osgODE::CharacterBase::setJump(const osg::Vec3& force, ooReal res_time)
 {
     if( m_jump_res_time <= 0.0 ) {
         m_jump_force = force ;
@@ -456,7 +456,7 @@ osgODE::CharacterBase::getFootContactInfo(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CharacterBase::getFootstepDerivative(void) const
 {
     return m_footstep_derivative ;

@@ -45,9 +45,6 @@ SET(TARGET_H
     ${HEADER_PATH}/DefaultNearCallback.inl
     ${HEADER_PATH}/DifferentialJoint
     ${HEADER_PATH}/DifferentialJoint.inl
-    ${HEADER_PATH}/DynamicParticleGeode
-    ${HEADER_PATH}/DynamicParticleSystem
-    ${HEADER_PATH}/DynamicParticleSystem.inl
     ${HEADER_PATH}/Engine
     ${HEADER_PATH}/Engine.inl
     ${HEADER_PATH}/EngineBase
@@ -172,8 +169,6 @@ SET(TARGET_SRC
     DHingeJoint.cpp
     DefaultNearCallback.cpp
     DifferentialJoint.cpp
-    DynamicParticleGeode.cpp
-    DynamicParticleSystem.cpp
     Engine.cpp
     EngineBase.cpp
     Events.cpp

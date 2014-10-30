@@ -24,8 +24,6 @@ SET(TARGET_SRC
     DHingeJoint_serializer.cpp
     DefaultNearCallback_serializer.cpp
     DifferentialJoint_serializer.cpp
-    DynamicParticleGeode_serializer.cpp
-    DynamicParticleSystem_serializer.cpp
     EngineBase_serializer.cpp
     Engine_serializer.cpp
     Events_serializer.cpp

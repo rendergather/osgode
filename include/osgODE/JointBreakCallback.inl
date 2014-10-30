@@ -62,7 +62,7 @@ osgODE::JointBreakCallback::getEnabled(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::JointBreakCallback::setForceLimit(double limit)
+osgODE::JointBreakCallback::setForceLimit(ooReal limit)
 {
     m_force_limit = limit ;
 }
@@ -74,7 +74,7 @@ osgODE::JointBreakCallback::setForceLimit(double limit)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::JointBreakCallback::getForceLimit(void) const
 {
     return m_force_limit ;
@@ -88,7 +88,7 @@ osgODE::JointBreakCallback::getForceLimit(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::JointBreakCallback::setTorqueLimit(double limit)
+osgODE::JointBreakCallback::setTorqueLimit(ooReal limit)
 {
     m_torque_limit = limit ;
 }
@@ -100,7 +100,7 @@ osgODE::JointBreakCallback::setTorqueLimit(double limit)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::JointBreakCallback::getTorqueLimit(void) const
 {
     return m_torque_limit ;

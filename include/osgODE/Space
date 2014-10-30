@@ -100,7 +100,7 @@ public:
         virtual void    addContact( Collidable* other,
                                     const osg::Vec3& position,
                                     const osg::Vec3& surface_normal,
-                                    double distance ) = 0 ;
+                                    ooReal distance ) = 0 ;
     } ;
 
 
@@ -197,11 +197,11 @@ public:
 /* ======================================================================= */
 public:
     //! advance, collide, step
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 
 
     //! advance, collide, threadStep
-    virtual void    threadUpdate(double step_size) ;
+    virtual void    threadUpdate(ooReal step_size) ;
 
     //! Invokes dCollide and the collision callbacks
     void    collide(void) ;

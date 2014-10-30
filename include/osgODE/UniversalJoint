@@ -84,7 +84,7 @@ public:
      * When the constraint is created, the positions of the bodies are
      * examined and that consiguration will be the "zero position"
      */
-    inline double   getAngle1(void) const ;
+    inline ooReal   getAngle1(void) const ;
 
 
     //! Get the angle between the bodies on axis 2
@@ -92,13 +92,13 @@ public:
      * When the constraint is created, the positions of the bodies are
      * examined and that consiguration will be the "zero position"
      */
-    inline double   getAngle2(void) const ;
+    inline ooReal   getAngle2(void) const ;
 
     //! Get the angular speed around axis 1
-    inline double   getAngle1Rate(void) const ;
+    inline ooReal   getAngle1Rate(void) const ;
 
     //! Get the angular speed around axis 2
-    inline double   getAngle2Rate(void) const ;
+    inline ooReal   getAngle2Rate(void) const ;
 /* ======================================================================= */
 
 
@@ -114,7 +114,7 @@ public:
      * - Z = X ^ Y ;\n
      * - The origin is in anchor
      */
-    virtual void    postUpdate(double step_size) ;
+    virtual void    postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 

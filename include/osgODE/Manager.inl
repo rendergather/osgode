@@ -37,7 +37,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::Manager::setStepSize(double step_size)
+osgODE::Manager::setStepSize(ooReal step_size)
 {
     m_step_size = step_size ;
 }
@@ -49,7 +49,7 @@ osgODE::Manager::setStepSize(double step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Manager::getStepSize(void) const
 {
     return m_step_size ;
@@ -63,7 +63,7 @@ osgODE::Manager::getStepSize(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::Manager::setTimeMultiplier(double multiplier)
+osgODE::Manager::setTimeMultiplier(ooReal multiplier)
 {
     m_time_multiplier = multiplier ;
 }
@@ -75,7 +75,7 @@ osgODE::Manager::setTimeMultiplier(double multiplier)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Manager::getTimeMultiplier(void) const
 {
     return m_time_multiplier ;

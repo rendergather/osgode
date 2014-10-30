@@ -201,7 +201,7 @@ public:
 /* ======================================================================= */
 public:
     //! Update the camera manipulator
-    virtual void    postUpdate(double step_size) ;
+    virtual void    postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -209,7 +209,7 @@ public:
 
 /* ======================================================================= */
 private:
-    void    _updateCameraManipulator(double step_size) ;
+    void    _updateCameraManipulator(ooReal step_size) ;
 /* ======================================================================= */
 
 

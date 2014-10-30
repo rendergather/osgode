@@ -48,7 +48,7 @@ namespace {
 class PlayVisitor: public osg::NodeVisitor
 {
     public:
-        PlayVisitor(double gain = 1.0): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN), m_gain(gain) {}
+        PlayVisitor(ooReal gain = 1.0): osg::NodeVisitor(TRAVERSE_ALL_CHILDREN), m_gain(gain) {}
 
         virtual void    apply(osg::Node& node)
         {
@@ -68,7 +68,7 @@ class PlayVisitor: public osg::NodeVisitor
         }
 
     private:
-        double  m_gain ;
+        ooReal  m_gain ;
 } ;
 
 
@@ -111,10 +111,10 @@ public:
         osg::Vec3   vv = v1 - v2 ;
 
 
-        double      v = vv * n ;
+        ooReal      v = vv * n ;
 
-        double      m = b1->getMass() + b2->getMass() ;
-        double      e = 0.5 * m * v * v ;
+        ooReal      m = b1->getMass() + b2->getMass() ;
+        ooReal      e = 0.5 * m * v * v ;
 
 
         if( e > 1.0 ) {
@@ -154,10 +154,10 @@ public:
         m_dt(dt),
         m_start_time(0.0)
     {
-        m_templates[0] = _createTemplate("woodenbox1.osgb") ;
-        m_templates[1] = _createTemplate("woodenbox2.osgb") ;
-        m_templates[2] = _createTemplate("woodenbox3.osgb") ;
-        m_templates[3] = _createTemplate("woodenbox4.osgb") ;
+        m_templates[0] = _createTemplate("woodenbox1.osgt") ;
+        m_templates[1] = _createTemplate("woodenbox2.osgt") ;
+        m_templates[2] = _createTemplate("woodenbox3.osgt") ;
+        m_templates[3] = _createTemplate("woodenbox4.osgt") ;
     }
 
 
@@ -242,7 +242,7 @@ main(int argc, char** argv)
 
     pSound::ALState::instance()->setDistanceModel(pSound::ALState::EXPONENT_DISTANCE_CLAMPED) ;
 
-    hit_sound = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("hit.wav") ) ;
+    hit_sound = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("sounds/hit.wav") ) ;
 
 
     PS_ASSERT1( hit_sound ) ;
@@ -287,7 +287,7 @@ main(int argc, char** argv)
      * [2] Create the floor
      */
     {
-        osg::Node*  floor_graphics = osgDB::readNodeFile("ground.osgb") ;
+        osg::Node*  floor_graphics = osgDB::readNodeFile("ground.osgt") ;
         PS_ASSERT1( floor_graphics != NULL ) ;
 
 

@@ -96,7 +96,7 @@ FixedJoint::~FixedJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-FixedJoint::update( double step_size )
+FixedJoint::update( ooReal step_size )
 {
     int row = 0 ;
 

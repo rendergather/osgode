@@ -94,7 +94,7 @@ EngineBase::~EngineBase(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
+EngineBase::propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out )
 {
     PS_ASSERT1( m_fmax >= 0.0 ) ;
     PS_ASSERT1( m_inertia > 0.0 ) ;
@@ -102,37 +102,37 @@ EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
 
 
     // idle
-    const double    idle_throttle = 1.0 - osg::minimum(m_speed_stall, m_speed) / m_speed_stall ;
-    const double    gas = osg::maximum( m_gas, pow( idle_throttle, 1.0/2.0 ) ) ;
+    const ooReal    idle_throttle = 1.0 - osg::minimum(m_speed_stall, m_speed) / m_speed_stall ;
+    const ooReal    gas = osg::maximum( m_gas, (ooReal)pow( idle_throttle, 1.0/2.0 ) ) ;
 
 
     // max speed variation for the powered part
-    const double    DV  = m_vel - m_speed ;
+    const ooReal    DV  = m_vel - m_speed ;
 
     // cache
-    const double    I   = step_size / m_inertia ;
+    const ooReal    I   = step_size / m_inertia ;
 
 
     // Disable torque if we're above the speed limit
-    const double    apply_torque = (double) ( fabs(m_speed) < m_speed_limit) ;
+    const ooReal    apply_torque = (ooReal) ( fabs(m_speed) < m_speed_limit) ;
 
 
     // compute gas
-    const double    fmax = m_fmax * gas ;
+    const ooReal    fmax = m_fmax * gas ;
 
 
     // sign of the constrained acceleration (caused by vel and fmax)
-    const double    constr_accel_sgn    = osg::signOrZero( DV ) ;
+    const ooReal    constr_accel_sgn    = osg::signOrZero( DV ) ;
 
     // sign of the free acceleration (caused by drag)
-    const double    free_accel_sgn      = osg::signOrZero( m_speed ) * -1.0 ;
+    const ooReal    free_accel_sgn      = osg::signOrZero( m_speed ) * -1.0 ;
 
 
     // speed variation caused by the constrained acceleration (cannot exceed DV)
-    const double    constr_ds           = osg::minimum( I * fmax, fabs(DV) )  *  apply_torque ;
+    const ooReal    constr_ds           = osg::minimum( I * fmax, (ooReal)fabs(DV) )  *  apply_torque ;
 
     // speed variation caused by the free acceleration (cannot exceed current speed)
-    const double    free_ds             = osg::minimum( I * m_drag,   fabs(m_speed) ) ;
+    const ooReal    free_ds             = osg::minimum( I * m_drag,   (ooReal)fabs(m_speed) ) ;
 
 
 
@@ -147,7 +147,7 @@ EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
     // restitute angular speed and torque
     //
 
-    const double    EPSILON = 1.0e-3 ;
+    const ooReal    EPSILON = 1.0e-3 ;
 
 
     if( fabs(m_ratio) > EPSILON ) {
@@ -167,7 +167,7 @@ EngineBase::propagate( double step_size, double& vel_out, double& fmax_out )
 /* ======================================================================= */
 /* ....................................................................... */
 void
-EngineBase::feedback( double step_size, double speed_in )
+EngineBase::feedback( ooReal step_size, ooReal speed_in )
 {
     (void) step_size ;
 
@@ -175,7 +175,7 @@ EngineBase::feedback( double step_size, double speed_in )
     PS_ASSERT1( m_friction >= 0.0 ) ;
 
 
-    const double    EPSILON = 1.0e-3 ;
+    const ooReal    EPSILON = 1.0e-3 ;
 
     if( fabs(m_ratio) > EPSILON ) {
 

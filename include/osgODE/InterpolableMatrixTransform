@@ -30,6 +30,8 @@
 
 /* ======================================================================= */
 #include <osg/MatrixTransform>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -83,7 +85,7 @@ public:
     void    push(void) ;
 
     //! interpolate from first point to second with a mixing factor "t"
-    void    interpolate(double t) ;
+    void    interpolate(ooReal t) ;
 /* ======================================================================= */
 
 

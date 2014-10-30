@@ -82,10 +82,10 @@ public:
 /* ======================================================================= */
 public:
     //! Get the joint extension
-    inline double   getPosition(void) const ;
+    inline ooReal   getPosition(void) const ;
 
     //! Get the joint extension speed
-    inline double   getPositionRate(void) const ;
+    inline ooReal   getPositionRate(void) const ;
 
     //! Set the auto compute relative values
     inline void setAutoComputeRelativeValues( bool auto_compute_relative_values ) ;

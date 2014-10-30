@@ -129,7 +129,7 @@ public:
     /*!
      * see http://ode-wiki.org/wiki/index.php?title=Manual:_Joint_Types_and_Functions#Parameter_Functions
      */
-    inline void     setParam(int param, double value) ;
+    inline void     setParam(int param, ooReal value) ;
 
     //! Set the first axis
     inline void     setAxis1(const osg::Vec3& axis) ;
@@ -145,7 +145,7 @@ public:
 
     //! Set the anchor relative to the second body
     /*!
-     * This method affects the "double joints" introduced by Joseph Cooper
+     * This method affects the "ooReal joints" introduced by Joseph Cooper
      */
     inline void     setAnchor2(const osg::Vec3& anchor) ;
 
@@ -154,7 +154,7 @@ public:
     /*!
      * see http://ode-wiki.org/wiki/index.php?title=Manual:_Joint_Types_and_Functions#Parameter_Functions
      */
-    inline double               getParam(int param) ;
+    inline ooReal               getParam(int param) ;
 
     //! Get the first axis
     inline const osg::Vec3&     getAxis1(void) ;
@@ -193,7 +193,7 @@ public:
 /* ======================================================================= */
 protected:
     //! Invoke the appropriate dJointSet*Param
-    virtual void    setParamImplementation(int param, double value) ;
+    virtual void    setParamImplementation(int param, ooReal value) ;
 
     //! Invoke the appropriate dJointSet*Axis1
     virtual void    setAxis1Implementation(const osg::Vec3& axis) ;
@@ -212,7 +212,7 @@ protected:
 
 
     //! Invoke the appropriate dJointGet*Param
-    virtual double  getParamImplementation(int param) ;
+    virtual ooReal  getParamImplementation(int param) ;
 
     //! Invoke the appropriate dJointGet*Axis1
     virtual void    readAxis1Implementation(osg::Vec3& axis) ;
@@ -283,7 +283,7 @@ public:
 public:
     virtual Joint*      asJoint(void) ;
 
-    virtual void        postUpdate(double step_size) ;
+    virtual void        postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -374,7 +374,7 @@ private:
 
 
 
-    typedef std::map<int, double> ParamMap ;
+    typedef std::map<int, ooReal> ParamMap ;
     ParamMap    m_param_map ;
 /* ======================================================================= */
 } ;

@@ -27,6 +27,8 @@
 #include <osgODE/SuspensionJoint>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,11 +50,11 @@ REGISTER_OBJECT_WRAPPER( SuspensionJoint,
                          osgODE::SuspensionJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::Hinge2Joint osgODE::SuspensionJoint" )
 {
-    ADD_DOUBLE_SERIALIZER(Spring, 1.0) ;
-    ADD_DOUBLE_SERIALIZER(DamperBound, 0.0) ;
-    ADD_DOUBLE_SERIALIZER(DamperRebound, 0.0) ;
-    ADD_DOUBLE_SERIALIZER(Preload, 0.0) ;
-    ADD_DOUBLE_SERIALIZER(SteerAngle, 0.0) ;
+    ADD_REAL_SERIALIZER(Spring, 1.0) ;
+    ADD_REAL_SERIALIZER(DamperBound, 0.0) ;
+    ADD_REAL_SERIALIZER(DamperRebound, 0.0) ;
+    ADD_REAL_SERIALIZER(Preload, 0.0) ;
+    ADD_REAL_SERIALIZER(SteerAngle, 0.0) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

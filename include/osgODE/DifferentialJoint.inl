@@ -36,7 +36,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::DifferentialJoint::setFriction(double friction)
+osgODE::DifferentialJoint::setFriction(ooReal friction)
 {
     this->setParam(dParamCFM2, -1.0 + 1.0 / friction) ;
 }
@@ -48,10 +48,10 @@ osgODE::DifferentialJoint::setFriction(double friction)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::DifferentialJoint::getFriction(void) const
 {
-    const double    c = const_cast<DifferentialJoint*>(this)->getParam(dParamCFM2) ;
+    const ooReal    c = const_cast<DifferentialJoint*>(this)->getParam(dParamCFM2) ;
 
     return 1.0 / (c + 1.0) ;
 }
@@ -64,7 +64,7 @@ osgODE::DifferentialJoint::getFriction(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::DifferentialJoint::setRatio1(double ratio)
+osgODE::DifferentialJoint::setRatio1(ooReal ratio)
 {
     dJointSetDifferentialRatio1(m_ODE_joint, ratio) ;
 }
@@ -76,7 +76,7 @@ osgODE::DifferentialJoint::setRatio1(double ratio)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::DifferentialJoint::getRatio1(void) const
 {
     return dJointGetDifferentialRatio1(m_ODE_joint) ;
@@ -90,7 +90,7 @@ osgODE::DifferentialJoint::getRatio1(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::DifferentialJoint::setRatio2(double ratio)
+osgODE::DifferentialJoint::setRatio2(ooReal ratio)
 {
     dJointSetDifferentialRatio2(m_ODE_joint, ratio) ;
 }
@@ -102,7 +102,7 @@ osgODE::DifferentialJoint::setRatio2(double ratio)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::DifferentialJoint::getRatio2(void) const
 {
     return dJointGetDifferentialRatio2(m_ODE_joint) ;

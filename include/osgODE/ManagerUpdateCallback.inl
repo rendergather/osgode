@@ -62,7 +62,7 @@ osgODE::ManagerUpdateCallback::getMaxFramesPerUpdate(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::ManagerUpdateCallback::setMaxStepSize( double max_step_size )
+osgODE::ManagerUpdateCallback::setMaxStepSize( ooReal max_step_size )
 {
     m_max_step_size = max_step_size ;
 }
@@ -74,7 +74,7 @@ osgODE::ManagerUpdateCallback::setMaxStepSize( double max_step_size )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::ManagerUpdateCallback::getMaxStepSize(void) const
 {
     return m_max_step_size ;

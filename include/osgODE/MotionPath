@@ -92,8 +92,8 @@ public:
     inline const QuatInterpolator*  getQuaternionInterpolator(void) const ;
 
 
-    inline void     setTime(double t) ;
-    inline double   getTime(void) const ;
+    inline void     setTime(ooReal t) ;
+    inline ooReal   getTime(void) const ;
 
 
     typedef enum {
@@ -138,7 +138,7 @@ private:
     osg::ref_ptr<Vec3Interpolator>  m_position ;
     osg::ref_ptr<QuatInterpolator>  m_quaternion ;
 
-    double      m_time ;
+    ooReal      m_time ;
     Status      m_status ;
 
     bool        m_remove_when_done ;

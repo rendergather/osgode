@@ -93,7 +93,7 @@ GearboxJoint::~GearboxJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-GearboxJoint::update( double step_size )
+GearboxJoint::update( ooReal step_size )
 {
     osg::Vec3   axis1 = m_axis1 ;
     osg::Vec3   axis2 = m_axis2 ;

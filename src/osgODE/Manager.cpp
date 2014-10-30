@@ -114,7 +114,7 @@ Manager::~Manager(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Manager::setup(bool accept_visitors, double step_size)
+Manager::setup(bool accept_visitors, ooReal step_size)
 {
     PS_DBG( "osgODE::Manager::setup(%p, accept_visitors=%d, step_size=%lf)",
             this, accept_visitors, step_size) ;
@@ -134,7 +134,7 @@ Manager::setup(bool accept_visitors, double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-Manager::frame(double dt)
+Manager::frame(ooReal dt)
 {
     bool    advanced = false ;
 
@@ -153,6 +153,7 @@ Manager::frame(double dt)
 
 
     if(m_world.valid()) {
+
 
         advanced =   m_delta >= m_step_size ;
 

@@ -70,7 +70,7 @@ static bool readGearList(osgDB::InputStream& is, osgODE::Engine& engine)
 
         for(unsigned int i=0; i<size; i++) {
 
-            double      v ;
+            ooReal      v ;
             is >> v ;
 
             gears.push_back( v ) ;

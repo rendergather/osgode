@@ -53,7 +53,7 @@ main(int argc, char** argv)
     /*
      * [3] Creates two bodies
      */
-    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgt") ;
 
     PS_ASSERT1( weight != NULL ) ;
 
@@ -100,7 +100,7 @@ main(int argc, char** argv)
         hinge->setAnchor1( b1->getPosition() ) ;
         hinge->setAxis1( osg::Y_AXIS ) ;
 
-        const double    FREQUENCY = 0.5 ;
+        const ooReal    FREQUENCY = 0.5 ;
 
         hinge->setParam(dParamVel, FREQUENCY * 2.0 * osg::PI) ;
         hinge->setParam(dParamFMax, 1.0) ;

@@ -44,7 +44,7 @@ main(int argc, char** argv)
         base->setPosition( osg::Vec3(0.0, 0.0, 0.0) ) ;
         base->setMass(1.0e4) ;
 
-        osg::Node*  graphics = osgDB::readNodeFile("ground.osgb") ;
+        osg::Node*  graphics = osgDB::readNodeFile("ground.osgt") ;
         PS_ASSERT1( graphics != NULL ) ;
 
         base->getMatrixTransform()->addChild( graphics ) ;
@@ -52,7 +52,7 @@ main(int argc, char** argv)
 
 
 
-    osg::Node*  weight_graphics = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*  weight_graphics = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( weight_graphics != NULL ) ;
 
 

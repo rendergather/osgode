@@ -102,7 +102,7 @@ InterpolableMatrixTransform::push(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-InterpolableMatrixTransform::interpolate(double t)
+InterpolableMatrixTransform::interpolate(ooReal t)
 {
     osg::Vec3   p = m_points[0].Position + (m_points[1].Position - m_points[0].Position) * t ;
     osg::Vec3   s = m_points[0].Scale + (m_points[1].Scale - m_points[0].Scale) * t ;

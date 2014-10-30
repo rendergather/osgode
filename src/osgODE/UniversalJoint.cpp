@@ -104,7 +104,7 @@ UniversalJoint::~UniversalJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-UniversalJoint::postUpdate(double step_size)
+UniversalJoint::postUpdate(ooReal step_size)
 {
     osg::Vec3   C = this->getAnchor2() ;
     osg::Vec3   X = this->getAxis1() ;

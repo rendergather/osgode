@@ -31,6 +31,8 @@
 /* ======================================================================= */
 #include <osgAnimation/BasicAnimationManager>
 #include <osg/observer_ptr>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -120,7 +122,7 @@ public:
             osg::Referenced(other),
             m_nested( other.m_nested ) {}
 
-        virtual bool    operator()(double sim_time) = 0 ;
+        virtual bool    operator()(ooReal sim_time) = 0 ;
         virtual void    init(void) = 0 ;
 
         void    setNested(AnimationOperator* op) { m_nested = op ; }
@@ -135,7 +137,7 @@ public:
             }
         }
 
-        void    traverse(double sim_time)
+        void    traverse(ooReal sim_time)
         {
             if( m_nested.valid() ) {
                 if( (*m_nested)(sim_time) ) {

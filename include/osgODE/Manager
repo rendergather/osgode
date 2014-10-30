@@ -105,17 +105,17 @@ public:
 /* ======================================================================= */
 public:
     //! Set the step size (default: 1/60)
-    inline void     setStepSize(double step_size) ;
+    inline void     setStepSize(ooReal step_size) ;
 
     //! Get the step size (default: 1/60)
-    inline double   getStepSize(void) const ;
+    inline ooReal   getStepSize(void) const ;
 
 
     //! Set the time multiplier (default: 1.0)
-    inline void     setTimeMultiplier(double multiplier) ;
+    inline void     setTimeMultiplier(ooReal multiplier) ;
 
     //! Get the time multiplier (default: 1.0)
-    inline double   getTimeMultiplier(void) const ;
+    inline ooReal   getTimeMultiplier(void) const ;
 
 
     //! Set the world
@@ -140,7 +140,7 @@ public:
      *
      * Must be called once before everything else
      */
-    void    setup(bool accept_visitors=true, double step_size=1.0/60.0) ;
+    void    setup(bool accept_visitors=true, ooReal step_size=1.0/60.0) ;
 /* ======================================================================= */
 
 
@@ -152,7 +152,7 @@ public:
     /*!
      * If step_size <= 0.0 returns immediately
      */
-    virtual bool    frame(double step_size) ;
+    virtual bool    frame(ooReal step_size) ;
 
 
     //! quick dynamic cast
@@ -175,11 +175,11 @@ public:
 
 /* ======================================================================= */
 protected:
-    double              m_delta ;
+    ooReal              m_delta ;
 
 private:
-    double              m_step_size ;
-    double              m_time_multiplier ;
+    ooReal              m_step_size ;
+    ooReal              m_time_multiplier ;
 
     bool                m_accept_visitors ;
 

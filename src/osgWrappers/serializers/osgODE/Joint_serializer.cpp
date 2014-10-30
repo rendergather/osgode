@@ -108,7 +108,7 @@ ADD_AXIS_FUNC(Axis3, osg::Z_AXIS) ;
 static bool check##PAR_PROP(const osgODE::Joint& joint) { return const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) != (DEF_VAL) ; } \
 static bool write##PAR_PROP(osgDB::OutputStream& os, const osgODE::Joint& joint) \
 { \
-    double  par = const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) ; \
+    ooReal  par = const_cast<osgODE::Joint&>(joint).getParam(PAR_PROP) ; \
     if( par >= dInfinity )           par = FLT_MAX ; \
     else if ( par <= -dInfinity )    par = -FLT_MAX ; \
     os << par << std::endl ; \
@@ -116,7 +116,7 @@ static bool write##PAR_PROP(osgDB::OutputStream& os, const osgODE::Joint& joint)
 } \
 static bool read##PAR_PROP(osgDB::InputStream& is, osgODE::Joint& joint) \
 { \
-    double  par ; \
+    ooReal  par ; \
     is >> par ; \
     joint.setParam(PAR_PROP, par) ; \
     return true ; \

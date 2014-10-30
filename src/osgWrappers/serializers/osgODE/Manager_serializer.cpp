@@ -27,6 +27,8 @@
 #include <osgODE/Manager>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,8 +50,8 @@ REGISTER_OBJECT_WRAPPER( Manager,
                          osgODE::Manager,
                          "osg::Object osg::Node osgODE::Manager" )
 {
-    ADD_DOUBLE_SERIALIZER(StepSize, 1.0/60.0) ;
-    ADD_DOUBLE_SERIALIZER(TimeMultiplier, 1.0) ;
+    ADD_REAL_SERIALIZER(StepSize, 1.0/60.0) ;
+    ADD_REAL_SERIALIZER(TimeMultiplier, 1.0) ;
     ADD_BOOL_SERIALIZER(AcceptVisitors, false) ;
     ADD_BOOL_SERIALIZER(ForceUpdateTraversal, false) ;
     ADD_OBJECT_SERIALIZER(World, osgODE::World, NULL) ;

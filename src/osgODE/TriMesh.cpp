@@ -145,7 +145,7 @@ TriMesh::getSize(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 void
-TriMesh::setMass(double mass)
+TriMesh::setMass(ooReal mass)
 {
     PS_DBG2("osgODE::TriMesh::setMass(%p, mass=%f)", this, mass) ;
 
@@ -155,7 +155,7 @@ TriMesh::setMass(double mass)
 //     bool    kinematic_flag = this->RigidBody::getKinematic() ;
 
 
-    //! @bug    TriMesh::setMass(double) doesn't work
+    //! @bug    TriMesh::setMass(ooReal) doesn't work
 //     dMass   m ;
 // 
 //     dMassSetTrimeshTotal(&m, mass, m_ODE_geom) ;
@@ -178,7 +178,7 @@ TriMesh::setMass(double mass)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-TriMesh::setDensity(double density)
+TriMesh::setDensity(ooReal density)
 {
     PS_DBG2("osgODE::TriMesh::setDensity(%p, density=%f)", this, density) ;
 
@@ -268,7 +268,7 @@ TriMesh::build(bool compute_size)
 
 
     /*!
-     * @todo    single/double in TriMesh::build
+     * @todo    single/ooReal in TriMesh::build
      */
 
 
@@ -310,7 +310,7 @@ TriMesh::destroy(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-TriMesh::update(double step_size)
+TriMesh::update(ooReal step_size)
 {
     this->Collidable::update(step_size) ;
 
@@ -325,7 +325,7 @@ TriMesh::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-TriMesh::postUpdate(double step_size)
+TriMesh::postUpdate(ooReal step_size)
 {
     this->Collidable::postUpdate(step_size) ;
 

@@ -148,6 +148,44 @@ class Root(Writable.Writable):
             writer.writeLine("Name \"%s\"" % self.SceneName)
 
 
+
+
+
+
+
+        writer.moveIn( "UserDataContainer TRUE" )
+        writer.moveIn( "osg::DefaultUserDataContainer" )
+
+
+
+        writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() )
+
+        writer.moveIn( "UDC_UserObjects 1" )
+
+
+        writer.moveIn( "osg::BoolValueObject" ) ;
+
+        writer.writeLine( "UniqueID %d" % self.Data.UniqueID.generate() ) ;
+
+        writer.writeLine( "Name \"oo_scene\"" ) ;
+
+        writer.writeLine( "Value TRUE" ) ;
+
+        writer.moveOut( "osg::BoolValueObject" ) ;
+
+
+        writer.moveOut( "UDC_UserObjects 1" )
+
+
+
+        writer.moveOut( "osg::DefaultUserDataContainer" )
+        writer.moveOut( "UserDataContainer TRUE" )
+
+
+
+
+
+
         if self.StateSet:
             self.StateSet.writeToStream(writer)
 

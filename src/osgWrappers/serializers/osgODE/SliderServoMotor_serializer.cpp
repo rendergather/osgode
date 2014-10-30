@@ -27,6 +27,8 @@
 #include <osgODE/SliderServoMotor>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,9 +50,9 @@ REGISTER_OBJECT_WRAPPER( SliderServoMotor,
                          osgODE::SliderServoMotor,
                          "osg::Object osgODE::ODECallback osgODE::ServoMotor osgODE::SliderServoMotor" )
 {
-    ADD_DOUBLE_SERIALIZER( Position,    0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Force,       0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( MaxVel,      -1.0 ) ;
+    ADD_REAL_SERIALIZER( Position,    0.0 ) ;
+    ADD_REAL_SERIALIZER( Force,       0.0 ) ;
+    ADD_REAL_SERIALIZER( MaxVel,      -1.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

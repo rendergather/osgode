@@ -30,6 +30,8 @@
 
 /* ======================================================================= */
 #include <osg/NodeCallback>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -85,10 +87,10 @@ public:
 
 
     //! Set the max step size
-    inline void     setMaxStepSize( double max_step_size ) ;
+    inline void     setMaxStepSize( ooReal max_step_size ) ;
 
     //! Get the max step size
-    inline double   getMaxStepSize(void) const ;
+    inline ooReal   getMaxStepSize(void) const ;
 /* ======================================================================= */
 
 
@@ -104,9 +106,9 @@ public:
 
 /* ======================================================================= */
 private:
-    double          m_last_s ;
-    double          m_delta ;
-    double          m_max_step_size ;
+    ooReal          m_last_s ;
+    ooReal          m_delta ;
+    ooReal          m_max_step_size ;
     unsigned int    m_max_frames_per_update ;
 /* ======================================================================= */
 } ;

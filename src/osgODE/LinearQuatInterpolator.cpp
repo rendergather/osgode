@@ -81,7 +81,7 @@ LinearQuatInterpolator::~LinearQuatInterpolator(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-LinearQuatInterpolator::interpolateImplementation(double x, osg::Quat& result)
+LinearQuatInterpolator::interpolateImplementation(ooReal x, osg::Quat& result)
 {
     unsigned int            size = m_points.size() ;
 
@@ -118,9 +118,9 @@ LinearQuatInterpolator::interpolateImplementation(double x, osg::Quat& result)
     const Point&    p1 = m_points[x0] ;
     const Point&    p2 = m_points[x0+1] ;
 
-    const double    t1 = p1.first ;
-    const double    t2 = p2.first ;
-    const double    t = (x - t1) / (t2 - t1) ;
+    const ooReal    t1 = p1.first ;
+    const ooReal    t2 = p2.first ;
+    const ooReal    t = (x - t1) / (t2 - t1) ;
 
 
     result.slerp( t, p1.second, p2.second ) ;

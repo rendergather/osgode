@@ -33,6 +33,7 @@
 #include <osg/NodeVisitor>
 #include <osg/observer_ptr>
 
+#include <osgODE/Config>
 #include <osgODE/ODE>
 #include <osgODE/ODECallback>
 /* ======================================================================= */
@@ -170,11 +171,11 @@ public:
 
 
     //! Called by the world before the World::step
-    virtual void                update(double step_size) ;
+    virtual void                update(ooReal step_size) ;
 
 
     //! Called by the world after the World::step
-    virtual void                postUpdate(double step_size) ;
+    virtual void                postUpdate(ooReal step_size) ;
 
 
 

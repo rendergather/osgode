@@ -27,6 +27,8 @@
 #include <osgODE/JointBreakCallback>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,8 +50,8 @@ REGISTER_OBJECT_WRAPPER( JointBreakCallback,
                          osgODE::JointBreakCallback,
                          "osg::Object osgODE::ODECallback osgODE::JointBreakCallback" )
 {
-    ADD_DOUBLE_SERIALIZER(ForceLimit, FLT_MAX) ;
-    ADD_DOUBLE_SERIALIZER(TorqueLimit, FLT_MAX) ;
+    ADD_REAL_SERIALIZER(ForceLimit, FLT_MAX) ;
+    ADD_REAL_SERIALIZER(TorqueLimit, FLT_MAX) ;
     ADD_BOOL_SERIALIZER(RemoveOnBreak, true) ;
     ADD_BOOL_SERIALIZER(Enabled, true) ;
 }

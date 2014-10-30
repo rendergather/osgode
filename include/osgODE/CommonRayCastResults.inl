@@ -154,7 +154,7 @@ osgODE::NearestRayCastResult::getNormal(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline const double&
+inline const ooReal&
 osgODE::NearestRayCastResult::getDistance(void) const
 {
     return m_distance ;

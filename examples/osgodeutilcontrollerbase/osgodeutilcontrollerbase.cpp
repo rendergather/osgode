@@ -187,7 +187,7 @@ main(int argc, char** argv)
 
 
 
-    osg::Node*      axis = osgDB::readNodeFile("axis3.osgb") ;
+    osg::Node*      axis = osgDB::readNodeFile("axis3.osgt") ;
 
     PS_ASSERT1( axis != NULL ) ;
 

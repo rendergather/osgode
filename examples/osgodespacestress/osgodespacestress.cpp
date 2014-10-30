@@ -44,7 +44,7 @@ public:
 class BoxEmitter: public osgODE::ODECallback
 {
 public:
-    BoxEmitter(double g=0.025)
+    BoxEmitter(ooReal g=0.025)
     {
         _init() ;
         m_g = g ;
@@ -74,16 +74,16 @@ private:
         osgODE::ODECallback*    cbk = new BodyRemover() ;
 
 
-        m_boxes[0] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox1.osgb") ) ;
+        m_boxes[0] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox1.osgt") ) ;
         PS_ASSERT1( m_boxes[0].get() ) ;
 
-        m_boxes[1] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox2.osgb") ) ;
+        m_boxes[1] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox2.osgt") ) ;
         PS_ASSERT1( m_boxes[1].get() ) ;
 
-        m_boxes[2] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox3.osgb") ) ;
+        m_boxes[2] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox3.osgt") ) ;
         PS_ASSERT1( m_boxes[2].get() ) ;
 
-        m_boxes[3] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox4.osgb") ) ;
+        m_boxes[3] = dynamic_cast<osgODE::RigidBody*>( osgDB::readObjectFile("woodenbox4.osgt") ) ;
         PS_ASSERT1( m_boxes[3].get() ) ;
 
         m_dt = 0.0 ;
@@ -113,8 +113,8 @@ private:
 
 
     osg::ref_ptr<osgODE::RigidBody> m_boxes[4] ;
-    double                          m_dt ;
-    double                          m_g ;
+    ooReal                          m_dt ;
+    ooReal                          m_g ;
 } ;
 
 
@@ -148,7 +148,7 @@ main(int argc, char** argv)
 
 
 
-    osgODE::Transformable*  base = dynamic_cast<osgODE::Transformable*>( osgDB::readObjectFile("space_stress_trimesh.osgb") ) ;
+    osgODE::Transformable*  base = dynamic_cast<osgODE::Transformable*>( osgDB::readObjectFile("space_stress_trimesh.osgt") ) ;
     PS_ASSERT1( base != NULL ) ;
 
     manager->getWorld()->addObject(base) ;

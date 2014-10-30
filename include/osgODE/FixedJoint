@@ -136,7 +136,7 @@ public:
 
 /* ======================================================================= */
 protected:
-    virtual void        update( double step_size ) ;
+    virtual void        update( ooReal step_size ) ;
     virtual void        finalize(void) ;
 
     //! Quick dynamic cast

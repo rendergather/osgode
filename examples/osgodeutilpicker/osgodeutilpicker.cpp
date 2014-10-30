@@ -91,7 +91,7 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgt") ;
 
     PS_ASSERT1( cube != NULL ) ;
 

@@ -125,22 +125,22 @@ public:
     inline unsigned int getAutoDisableSteps(void) const ;
 
     //! Seconds it can be idle before it is disabled. Default: 1
-    inline void         setAutoDisableTime(double secs) ;
+    inline void         setAutoDisableTime(ooReal secs) ;
 
     //! Seconds it can be idle before it is disabled. Default: 1
-    inline double       getAutoDisableTime(void) const ;
+    inline ooReal       getAutoDisableTime(void) const ;
 
     //! Velocity threshold for auto disabling. Default: 0.01
-    inline void         setAutoDisableLinearThreshold(double speed) ;
+    inline void         setAutoDisableLinearThreshold(ooReal speed) ;
 
     //! Velocity threshold for auto disabling. Default: 0.01
-    inline double       getAutoDisableLinearThreshold(void) const ;
+    inline ooReal       getAutoDisableLinearThreshold(void) const ;
 
     //! Velocity threshold for auto disabling. Default: 0.01
-    inline void         setAutoDisableAngularThreshold(double speed) ;
+    inline void         setAutoDisableAngularThreshold(ooReal speed) ;
 
     //! Velocity threshold for auto disabling. Default: 0.01
-    inline double       getAutoDisableAngularThreshold(void) const ;
+    inline ooReal       getAutoDisableAngularThreshold(void) const ;
 
     //! The body speeds are the mean of those in the last N steps. Default: 5
     inline void         setAutoDisableAverageSamplesCount(unsigned int n) ;
@@ -160,14 +160,14 @@ public:
      * @param   size        AABB size
      * @param   type_class  class type as from dGeomGetClass
      */
-    void                    setMass(double mass, const osg::Vec3& size, int type_class) ;
+    void                    setMass(ooReal mass, const osg::Vec3& size, int type_class) ;
 
     //! Assume a unit sphere
     /*!
      * If "mass" is less than or equal to zero, setGravityMode(false) is
      * called and the body fluctuates
      */
-    virtual void            setMass(double mass) ;
+    virtual void            setMass(ooReal mass) ;
 
     //! Set the dMass
     inline void             setODEMass(const dMass& mass) ;
@@ -176,7 +176,7 @@ public:
     inline dMass            getODEMass(void) const ;
 
     //! Get the total mass
-    inline double           getMass(void) const ;
+    inline ooReal           getMass(void) const ;
 
 
     //! Set the density
@@ -185,10 +185,10 @@ public:
      * @param   size        AABB size
      * @param   type_class  class type as from dGeomGetClass
      */
-    void                    setDensity(double density, const osg::Vec3& size, int type_class) ;
+    void                    setDensity(ooReal density, const osg::Vec3& size, int type_class) ;
 
     //! Assume a unit sphere
-    virtual void            setDensity(double density) ;
+    virtual void            setDensity(ooReal density) ;
 /* ======================================================================= */
 
 
@@ -275,10 +275,10 @@ public:
     inline osg::Vec3    getAngularVelocity(void) const ;
 
     //! Default: FLT_MAX
-    inline void         setMaxAngularSpeed(double s) ;
+    inline void         setMaxAngularSpeed(ooReal s) ;
 
     //! Default: FLT_MAX
-    inline double       getMaxAngularSpeed(void) const ;
+    inline ooReal       getMaxAngularSpeed(void) const ;
 
 
     //! Get the linear acceleration
@@ -345,34 +345,34 @@ public:
 /* ======================================================================= */
 public:
     //! Default: 0.0
-    inline void     setDamping(double linear, double angular) ;
+    inline void     setDamping(ooReal linear, ooReal angular) ;
 
     //! Default: 0.0
-    inline void     getDamping(double& linear, double& angular) const ;
+    inline void     getDamping(ooReal& linear, ooReal& angular) const ;
 
     //! Default: 0.0
-    inline void     setLinearDamping(double damping) ;
+    inline void     setLinearDamping(ooReal damping) ;
 
     //! Default: 0.0
-    inline double   getLinearDamping(void) const ;
+    inline ooReal   getLinearDamping(void) const ;
 
     //! Default: 0.0
-    inline void     setAngularDamping(double damping) ;
+    inline void     setAngularDamping(ooReal damping) ;
 
     //! Default: 0.0
-    inline double   getAngularDamping(void) const ;
+    inline ooReal   getAngularDamping(void) const ;
 
     //! Threshold for angular damping. Default: 0.0
-    inline void     setLinearDampingThreshold(double threshold) ;
+    inline void     setLinearDampingThreshold(ooReal threshold) ;
 
     //! Threshold for angular damping. Default: 0.0
-    inline double   getLinearDampingThreshold(void) const ;
+    inline ooReal   getLinearDampingThreshold(void) const ;
 
     //! Threshold for angular damping. Default: 0.0
-    inline void     setAngularDampingThreshold(double threshold) ;
+    inline void     setAngularDampingThreshold(ooReal threshold) ;
 
     //! Threshold for angular damping. Default: 0.0
-    inline double   getAngularDampingThreshold(void) const ;
+    inline ooReal   getAngularDampingThreshold(void) const ;
 /* ======================================================================= */
 
 
@@ -418,10 +418,10 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 
     //! update the transformation
-    virtual void    postUpdate(double step_size) ;
+    virtual void    postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 
@@ -472,7 +472,7 @@ private:
 
 
     //! Compute the acceleration
-    void    _computeAcceleration(double step_size) ;
+    void    _computeAcceleration(ooReal step_size) ;
 /* ======================================================================= */
 
 

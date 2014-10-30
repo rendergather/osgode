@@ -27,6 +27,8 @@
 #include <osgODE/DifferentialJoint>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,8 +50,8 @@ REGISTER_OBJECT_WRAPPER( DifferentialJoint,
                          osgODE::DifferentialJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::DifferentialJoint" )
 {
-    ADD_DOUBLE_SERIALIZER( Ratio1, 1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Ratio2, 1.0 ) ;
+    ADD_REAL_SERIALIZER( Ratio1, 1.0 ) ;
+    ADD_REAL_SERIALIZER( Ratio2, 1.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

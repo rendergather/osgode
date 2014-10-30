@@ -275,7 +275,7 @@ osgODE::Joint::setAxis3(const osg::Vec3& axis)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::Joint::setParam(int param, double value)
+osgODE::Joint::setParam(int param, ooReal value)
 {
     setParamImplementation(param, value) ;
     m_param_map[param] = value ;
@@ -363,7 +363,7 @@ osgODE::Joint::getAxis3(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Joint::getParam(int param)
 {
     return m_param_map[param] ;

@@ -204,10 +204,10 @@ public:
 /* ======================================================================= */
 public:
     //! Set the total mass
-    virtual void        setMass(double mass) ;
+    virtual void        setMass(ooReal mass) ;
 
     //! Set the density
-    virtual void        setDensity(double density) ;
+    virtual void        setDensity(ooReal density) ;
 /* ======================================================================= */
 
 

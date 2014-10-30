@@ -102,14 +102,14 @@ AerodynamicDevice::operator()(ODEObject* object)
     const unsigned int  num_points = m_point_list.size() ;
 
     const osg::Vec3&    wind = world->getCurrentWind() ;
-    const double        air_half_density = world->getAirDensity() * 0.5 ;
+    const ooReal        air_half_density = world->getAirDensity() * 0.5 ;
 
 
     for(unsigned int i=0; i<num_points; i++) {
 
         const osg::Vec4&    current = m_point_list[i] ;
         const osg::Vec3     point( current.x(), current.y(), current.z() ) ;
-        const double        drag = current.w() ;
+        const ooReal        drag = current.w() ;
 
         const osg::Vec3     current_wind = wind - body->getPointVelocity( point, true ) ;
 

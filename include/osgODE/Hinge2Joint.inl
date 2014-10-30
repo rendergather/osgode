@@ -35,7 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Hinge2Joint::getAngle1(void) const
 {
     return dJointGetHinge2Angle1(m_ODE_joint) ;
@@ -48,7 +48,7 @@ osgODE::Hinge2Joint::getAngle1(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Hinge2Joint::getAngle1Rate(void) const
 {
     return dJointGetHinge2Angle1Rate(m_ODE_joint) ;
@@ -61,7 +61,7 @@ osgODE::Hinge2Joint::getAngle1Rate(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::Hinge2Joint::getAngle2Rate(void) const
 {
     return dJointGetHinge2Angle2Rate(m_ODE_joint) ;

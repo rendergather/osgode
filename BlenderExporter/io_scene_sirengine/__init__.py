@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 by Rocco Martino                                   #
+#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -77,14 +77,16 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
 
 
-    threading_mode = BoolProperty( name="Compute dynamics in a separate thread", default=True)
+    threading_mode = BoolProperty( name="Compute dynamics in a separate thread", description="Experimental", default=False)
 
-    export_selected = BoolProperty( name="Export only selected", default=False)
+    export_selected = BoolProperty( name="Export selected only", default=False)
+
+    export_current_scene = BoolProperty( name="Export current scene only", default=False)
 
 
-    export_lights = BoolProperty( name="Export pViewer (requires pViewer)", default=True)
-    export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=True)
-    export_game   = BoolProperty( name="Export game (requiers ooGame)", default=True)
+    export_lights = BoolProperty( name="Export pViewer (requires pViewer)", default=False)
+    export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=False)
+    export_game   = BoolProperty( name="Export game (requiers ooGame)", default=False)
 
 
     max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
@@ -98,6 +100,9 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
     stop_erp = FloatProperty( name="Stop ERP", default=0.2, min=0.0, max=1.0)
     stop_cfm = FloatProperty( name="Stop CFM", default=1.0e-5, min=0.0, max=1.0)
+
+
+    contact_surface_layer = FloatProperty( name="Contact surface layer", default=0.005, min=0.0, max=1.0)
 
 
 
@@ -128,7 +133,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
 
         data.FilePath = self.filepath
         data.Context = context
-        data.Scene = bpy.data.scenes[0]
+        data.Scene = data.Context.scene
         data.Operator = self
         data.Threaded = self.threading_mode
         data.UniqueID = IDGenerator.IDGenerator()
@@ -139,9 +144,11 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.RigidBodyMap = {}
         data.RigidBodyNames = {}
         data.ExportSelected = self.export_selected
+        data.ExportCurrentScene = self.export_current_scene
         data.ExportLights = self.export_lights
         data.ExportSounds = self.export_sounds
         data.ExportGame = self.export_game
+        data.ContactSurfaceLayer = self.contact_surface_layer
         data.WorldStep = self.world_step
         data.MaxAnisotropy = self.max_anisotropy
         data.AmbientMultiplier = self.ambient_multiplier

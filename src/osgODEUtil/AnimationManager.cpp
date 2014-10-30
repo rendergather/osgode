@@ -60,7 +60,7 @@ namespace {
             m_start_time    ( other.m_start_time ) {}
 
 
-        virtual bool    operator()(double sim_time)
+        virtual bool    operator()(ooReal sim_time)
         {
             PS_ASSERT1( m_animation.valid() ) ;
 
@@ -93,7 +93,7 @@ namespace {
     private:
         osg::ref_ptr<osgAnimation::Animation>   m_animation ;
         float   m_weight, m_fadein ;
-        double  m_start_time ;
+        ooReal  m_start_time ;
     } ;
 } // anon namespace
 /* ....................................................................... */

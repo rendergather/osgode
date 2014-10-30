@@ -92,7 +92,7 @@ public:
         osg::ref_ptr<Collidable>            mCollidable ;
         osg::Vec3                           mPosition ;
         osg::Vec3                           mNormal ;
-        double                              mDistance ;
+        ooReal                              mDistance ;
     } Collision ;
 
     typedef std::vector<Collision>  CollisionList ;
@@ -120,7 +120,7 @@ public:
     virtual void    addContact( Collidable* other,
                                 const osg::Vec3& position,
                                 const osg::Vec3& surface_normal,
-                                double distance ) ;
+                                ooReal distance ) ;
 /* ======================================================================= */
 
 
@@ -190,7 +190,7 @@ public:
     inline const Collidable*            getCollidable(void) const ;
     inline const osg::Vec3&             getPosition(void) const ;
     inline const osg::Vec3&             getNormal(void) const ;
-    inline const double&                getDistance(void) const ;
+    inline const ooReal&                getDistance(void) const ;
 /* ======================================================================= */
 
 
@@ -203,7 +203,7 @@ public:
     virtual void    addContact( Collidable* other,
                                 const osg::Vec3& position,
                                 const osg::Vec3& surface_normal,
-                                double distance ) ;
+                                ooReal distance ) ;
 /* ======================================================================= */
 
 
@@ -214,7 +214,7 @@ private:
     osg::ref_ptr<Collidable>            m_collidable ;
     osg::Vec3                           m_position ;
     osg::Vec3                           m_normal ;
-    double                              m_distance ;
+    ooReal                              m_distance ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */
@@ -278,7 +278,7 @@ public:
     virtual void    addContact( Collidable* other,
                                 const osg::Vec3& position,
                                 const osg::Vec3& surface_normal,
-                                double distance ) ;
+                                ooReal distance ) ;
 /* ======================================================================= */
 
 

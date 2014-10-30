@@ -68,7 +68,7 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-JointBreakCallback::JointBreakCallback(double force_limit, double torque_limit):
+JointBreakCallback::JointBreakCallback(ooReal force_limit, ooReal torque_limit):
     m_force_limit( force_limit ),
     m_torque_limit( torque_limit ),
     m_remove_on_break( true ),
@@ -124,8 +124,8 @@ JointBreakCallback::operator()(ODEObject* object)
 
         const JointFeedback*    feedback = joint->getOrCreateJointFeedback() ;
 
-        const double    force = osg::maximum( feedback->getF1().length(), feedback->getF2().length() ) ;
-        const double    torque = osg::maximum( feedback->getT1().length(), feedback->getT2().length() ) ;
+        const ooReal    force = osg::maximum( feedback->getF1().length(), feedback->getF2().length() ) ;
+        const ooReal    torque = osg::maximum( feedback->getT1().length(), feedback->getT2().length() ) ;
 
 
 

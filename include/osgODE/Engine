@@ -94,7 +94,7 @@ public:
 
 
 
-    typedef std::vector<double> GearList ;
+    typedef std::vector<ooReal> GearList ;
 
     //! Set the gear list
     inline void     setGearList( const GearList& gear_list ) ;
@@ -118,7 +118,7 @@ public:
 
 /* ======================================================================= */
 public:
-    virtual void    propagate( double step_size, double& vel_out, double& fmax_out ) ;
+    virtual void    propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out ) ;
 /* ======================================================================= */
 
 

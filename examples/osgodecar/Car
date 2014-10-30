@@ -65,7 +65,7 @@ public:
 
 
 
-    virtual void    update(double step_size) ;
+    virtual void    update(ooReal step_size) ;
 
 
     void            handleKeyUp(const int& key, const int& mod_key_mask, bool& handled) ;
@@ -80,12 +80,12 @@ public:
 
 
 private:
-    double  _computeUnderSteer(void) ;
+    ooReal  _computeUnderSteer(void) ;
     SuspensionJoint*    _createSuspension(RigidBody* wheel, const osg::Vec3& axis, osg::Node* graphics) ;
 
 
-    void    _applyTorque( double step_size ) ;
-    void    _applySteer( double step_size ) ;
+    void    _applyTorque( ooReal step_size ) ;
+    void    _applySteer( ooReal step_size ) ;
 
 
 
@@ -108,7 +108,7 @@ private:
     bool    m_steering_left ;
     bool    m_steering_right ;
 
-    double  m_current_steer_angle ;
+    ooReal  m_current_steer_angle ;
 } ;
 
 

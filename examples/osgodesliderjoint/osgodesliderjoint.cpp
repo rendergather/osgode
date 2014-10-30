@@ -57,7 +57,7 @@ main(int argc, char** argv)
      * [3] Create two bodies: a kinematic one to the right and a dynamic one
      *     to the left
      */
-    osg::Node*      graphics = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      graphics = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( graphics != NULL ) ;
 
 

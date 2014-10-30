@@ -48,7 +48,7 @@ osgODE::ScopedTimer::start(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::ScopedTimer::time(void) const
 {
     return osg::Timer::instance()->time_s() - m_start ;

@@ -1,9 +1,9 @@
 /*!
- * @file DynamicParticleGeode_serializer.cpp
+ * @file real_serializer
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2014 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,20 +22,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* ======================================================================= */
-/* ....................................................................... */
-#include <osgODE/DynamicParticleGeode>
-
-#include <osgDB/Registry>
-/* ....................................................................... */
-/* ======================================================================= */
+#ifndef _OSGODE_REAL_SERIALIZER_H
+#define _OSGODE_REAL_SERIALIZER_H
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -43,12 +37,15 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-REGISTER_OBJECT_WRAPPER( DynamicParticleGeode,
-                         new osgODE::DynamicParticleGeode,
-                         osgODE::DynamicParticleGeode,
-                         "osg::Object osg::Node osg::Geode osgODE::DynamicParticleGeode" )
-{
-    (void) wrapper ;
-}
+#if OSGODE_SINGLE_PRECISION
+#   define ADD_REAL_SERIALIZER ADD_FLOAT_SERIALIZER
+#else
+#   define ADD_REAL_SERIALIZER ADD_DOUBLE_SERIALIZER
+#endif
 /* ....................................................................... */
 /* ======================================================================= */
+
+
+
+
+#endif /* _OSGODE_REAL_SERIALIZER_H */

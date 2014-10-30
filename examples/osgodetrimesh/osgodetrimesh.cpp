@@ -103,7 +103,7 @@ main(int argc, char** argv)
 {
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
-    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      weight = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( weight != NULL ) ;
 
     /*

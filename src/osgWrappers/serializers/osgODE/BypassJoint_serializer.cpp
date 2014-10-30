@@ -45,7 +45,7 @@ static bool checkRows(const osgODE::BypassJoint& j)
 static bool writeRows(osgDB::OutputStream& os, const osgODE::BypassJoint& j)
 {
     osg::Vec3   J1a, J1l, J2a, J2l ;
-    double      rhs, cfm ;
+    ooReal      rhs, cfm ;
 
     os << os.BEGIN_BRACKET << std::endl ;
 
@@ -71,7 +71,7 @@ static bool writeRows(osgDB::OutputStream& os, const osgODE::BypassJoint& j)
 static bool readRows(osgDB::InputStream& is, osgODE::BypassJoint& j)
 {
     osg::Vec3   J1a, J1l, J2a, J2l ;
-    double      rhs, cfm ;
+    ooReal      rhs, cfm ;
 
     is >> is.BEGIN_BRACKET ;
 

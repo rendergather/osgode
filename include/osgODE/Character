@@ -87,7 +87,7 @@ public:
      * Perform a ray cast from the position of the body along the front
      * axis specified with CharacterBase::setFrontVersor
      */
-    RigidBody*  touch( double distance_max = 1.0 ) ;
+    RigidBody*  touch( ooReal distance_max = 1.0 ) ;
 
 
 
@@ -96,7 +96,7 @@ public:
      * Perform a ray cast from the position of the body along the front
      * axis specified with CharacterBase::setFrontVersor
      */
-    RigidBody*  touch( double distance_max, osg::Vec3& position, osg::Vec3& normal ) ;
+    RigidBody*  touch( ooReal distance_max, osg::Vec3& position, osg::Vec3& normal ) ;
 /* ======================================================================= */
 
 
@@ -120,8 +120,8 @@ public:
      */
     Joint*          attach( RigidBody*  body,
                             bool        constrain_rotation = true,
-                            double      erp = 0.2,
-                            double      cfm = 1.0e-5 ) ;
+                            ooReal      erp = 0.2,
+                            ooReal      cfm = 1.0e-5 ) ;
 
 
 

@@ -82,11 +82,11 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     setERP( int i, double v ) ;
-    inline double   getERP( int i ) ;
+    inline void     setERP( int i, ooReal v ) ;
+    inline ooReal   getERP( int i ) ;
 
-    inline void     setCFM( int i, double v ) ;
-    inline double   getCFM( int i ) ;
+    inline void     setCFM( int i, ooReal v ) ;
+    inline ooReal   getCFM( int i ) ;
 /* ======================================================================= */
 
 
@@ -100,8 +100,8 @@ public:
                     const osg::Vec3& J1l,
                     const osg::Vec3& J2a,
                     const osg::Vec3& J2l,
-                    double rhs,
-                    double cfm ) ;
+                    ooReal rhs,
+                    ooReal cfm ) ;
 
 
 
@@ -111,8 +111,8 @@ public:
                     osg::Vec3& J1l,
                     osg::Vec3& J2a,
                     osg::Vec3& J2l,
-                    double& rhs,
-                    double& cfm ) const ;
+                    ooReal& rhs,
+                    ooReal& cfm ) const ;
 
 
 
@@ -149,21 +149,21 @@ protected:
 
 
     //! Set the relative quaternion between the bodies
-    void    setRelativeRotation(    double              step_size,
+    void    setRelativeRotation(    ooReal              step_size,
                                     const osg::Quat&    qrel,
                                     int&                row,
-                                    double              erp = 1.0,
-                                    double              cfm = 0.0,
+                                    ooReal              erp = 1.0,
+                                    ooReal              cfm = 0.0,
                                     BodyMask            mask = CONSTRAIN_ALL
                                ) ;
 
 
     //! Set the distance between the bodies
-    void    setRelativePosition(    double              step_size,
+    void    setRelativePosition(    ooReal              step_size,
                                     const osg::Vec3&    prel,
                                     int&                row,
-                                    double              erp = 1.0,
-                                    double              cfm = 0.0,
+                                    ooReal              erp = 1.0,
+                                    ooReal              cfm = 0.0,
                                     BodyMask            mask = CONSTRAIN_ALL
                                ) ;
 /* ======================================================================= */
@@ -181,8 +181,8 @@ protected:
 
 /* ======================================================================= */
 protected:
-    double      m_erp[3] ;
-    double      m_cfm[3] ;
+    ooReal      m_erp[3] ;
+    ooReal      m_cfm[3] ;
 /* ======================================================================= */
 
 

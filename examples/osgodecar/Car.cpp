@@ -64,7 +64,7 @@ Car::~Car(void)
 
 
 void
-Car::update(double step_size)
+Car::update(ooReal step_size)
 {
     _applyTorque( step_size ) ;
     _applySteer( step_size ) ;
@@ -79,7 +79,7 @@ Car::update(double step_size)
 
 
 void
-Car::_applyTorque(double step_size)
+Car::_applyTorque(ooReal step_size)
 {
     //
     // apply the torque to the differentials
@@ -88,13 +88,13 @@ Car::_applyTorque(double step_size)
 
 
 
-    double  vel, fmax ;
+    ooReal  vel, fmax ;
 
 
 
     // really need a third differential
     //
-    const double    vel_in = ( m_front_differential->getAngleRate() + m_rear_differential->getAngleRate() ) * 0.5 ;
+    const ooReal    vel_in = ( m_front_differential->getAngleRate() + m_rear_differential->getAngleRate() ) * 0.5 ;
 
 
     m_engine->feedback( step_size, vel_in ) ;
@@ -105,7 +105,7 @@ Car::_applyTorque(double step_size)
 
 
     // torque balance       0 -> 1  :  rear -> front
-    const double    BALANCE = 3.0/7.0 ;
+    const ooReal    BALANCE = 3.0/7.0 ;
 
     m_front_differential->setParam( dParamVel, vel ) ;
     m_front_differential->setParam( dParamFMax, fmax * BALANCE ) ;
@@ -123,20 +123,20 @@ Car::_applyTorque(double step_size)
 
 
 void
-Car::_applySteer(double step_size)
+Car::_applySteer(ooReal step_size)
 {
     // modulus of the maximum rotation angle
-    const double    MAX_STEER = (1.0/6.0) * osg::PI ;
+    const ooReal    MAX_STEER = (1.0/6.0) * osg::PI ;
 
     // Sensitivity
-    const double    SENSITIVITY = 2.0 ;
+    const ooReal    SENSITIVITY = 2.0 ;
 
     // The wheels will steer gently
     // This variable holds the maximum allowed rotation for the current step
-    const double    ds = MAX_STEER * step_size * SENSITIVITY ;
+    const ooReal    ds = MAX_STEER * step_size * SENSITIVITY ;
 
 
-    const double    UNDERSTEER_MAX = 0.2 ;
+    const ooReal    UNDERSTEER_MAX = 0.2 ;
 
     // Is the vehicle understeering too much?
     const bool      understeer = _computeUnderSteer() >= UNDERSTEER_MAX ;
@@ -162,11 +162,11 @@ Car::_applySteer(double step_size)
             if( m_current_steer_angle > 0.0 ) {
                 m_current_steer_angle -= ds * 2.0 ;
 
-                m_current_steer_angle = osg::maximum(0.0, m_current_steer_angle) ;
+                m_current_steer_angle = osg::maximum((ooReal)0.0, m_current_steer_angle) ;
             } else {
                 m_current_steer_angle += ds * 2.0 ;
 
-                m_current_steer_angle = osg::minimum(0.0, m_current_steer_angle) ;
+                m_current_steer_angle = osg::minimum((ooReal)0.0, m_current_steer_angle) ;
             }
         }
         break ;
@@ -182,7 +182,7 @@ Car::_applySteer(double step_size)
 
                 // This minimum angle is always allowed
                 // Note that commenting out the following line results in an oversteer correction, too
-                m_current_steer_angle = osg::minimum(-ds * 4.0, m_current_steer_angle) ;
+                m_current_steer_angle = osg::minimum(-ds * (ooReal)4.0, m_current_steer_angle) ;
 
             } else {
                 m_current_steer_angle -= ds ;
@@ -201,7 +201,7 @@ Car::_applySteer(double step_size)
 
                 // This minimum angle is always allowed
                 // Note that commenting out the following line results in an oversteer correction, too
-                m_current_steer_angle = osg::maximum(ds * 4.0, m_current_steer_angle) ;
+                m_current_steer_angle = osg::maximum(ds * (ooReal)4.0, m_current_steer_angle) ;
 
             } else {
                 m_current_steer_angle += ds ;
@@ -247,10 +247,10 @@ Car::_applySteer(double step_size)
 // is finally modified to indicate the understeer when it's positive
 
 
-double
+ooReal
 Car::_computeUnderSteer(void)
 {
-    const double    steer_sign = (int)m_steering_left - (int)m_steering_right ;
+    const ooReal    steer_sign = (int)m_steering_left - (int)m_steering_right ;
 
 
     // This point is in local coord. I choose it because it's between the two wheels
@@ -262,7 +262,7 @@ Car::_computeUnderSteer(void)
     dir.normalize() ;
     axis.normalize() ;
 
-    double  dot = axis * dir ;
+    ooReal  dot = axis * dir ;
 
 
     return dot * steer_sign ;

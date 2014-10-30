@@ -70,8 +70,8 @@ static bool readPointList(osgDB::InputStream& is, osgODE::ScalarInterpolator& in
 
         for(unsigned int i=0; i<size; i++) {
 
-            double      t ;
-            double      v ;
+            ooReal      t ;
+            ooReal      v ;
             is >> t ;
             is >> v ;
 

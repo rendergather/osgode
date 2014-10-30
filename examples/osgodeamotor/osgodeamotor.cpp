@@ -35,7 +35,7 @@ main(int argc, char** argv)
 
     osgODE::Joint*      motor = new osgODE::AMotorJoint() ;
 
-    const double    FREQUENCY = 10.0 ;
+    const ooReal    FREQUENCY = 10.0 ;
 
     motor->setParam(dParamVel2, FREQUENCY * 2.0 * osg::PI) ;
     motor->setParam(dParamFMax2, 0.5) ;
@@ -43,7 +43,7 @@ main(int argc, char** argv)
 
 
 
-    osg::Node*      axis = osgDB::readNodeFile("axis3.osgb") ;
+    osg::Node*      axis = osgDB::readNodeFile("axis3.osgt") ;
 
     PS_ASSERT1( axis != NULL ) ;
 

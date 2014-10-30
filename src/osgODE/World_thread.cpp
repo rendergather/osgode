@@ -50,7 +50,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::threadUpdate(double step_size)
+World::threadUpdate(ooReal step_size)
 {
     advanceInternal( step_size ) ;
     threadStep( step_size ) ;
@@ -64,7 +64,7 @@ World::threadUpdate(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-World::threadStep(double step_size)
+World::threadStep(ooReal step_size)
 {
     if( step_size <= 0.0 ) {
         return ;

@@ -25,10 +25,10 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      cube = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( cube != NULL ) ;
 
-    osg::Node*      transparent_box = osgDB::readNodeFile("transparent_box.osgb") ;
+    osg::Node*      transparent_box = osgDB::readNodeFile("transparent_box.osgt") ;
     PS_ASSERT1( transparent_box != NULL ) ;
 
     /*
@@ -89,9 +89,11 @@ main(int argc, char** argv)
         // make the body insensitive to the forces
         body->setKinematic(true) ;
 
-        const double    v = 2.0 * osg::PI * 1.0/16.0 ;
+        const ooReal    v = 2.0 * osg::PI * 1.0/16.0 ;
 
         body->setAngularVelocity( osg::Vec3(v, v, v) ) ;
+
+        body->setAngularDamping( 0.0 ) ;
     }
 
 

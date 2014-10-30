@@ -185,7 +185,7 @@ Container::asContainer(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Container::update(double step_size)
+Container::update(ooReal step_size)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;
@@ -203,7 +203,7 @@ Container::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Container::postUpdate(double step_size)
+Container::postUpdate(ooReal step_size)
 {
     ObjectList::iterator    itr = m_object_list.begin() ;
     ObjectList::iterator    itr_end = m_object_list.end() ;

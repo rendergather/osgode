@@ -132,26 +132,31 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64
 \n
 \n
 You are about to verify the installation. \n
+Download the sample data from the repository:
+@verbatim
+$ svn checkout https://osgode.googlecode.com/svn/data-2.0.0 path/to/data
+@endverbatim
 \n
 In the osgODE-X.Y.Z folder there are various subfolders, but the most
 interesting ones are "include", "src" and "examples".\n
 Move to the "examples" directory, select one of the examples, compile and run
 it. The simpliest test is located in the "osgoderigidbody" folder.\n
-You need to link the osgODE and the osgDB.\n
+You need to link osgODE and osgDB.\n
 \n
 Shell:
 @verbatim
-$ g++ osgoderigidbody.cpp -o osgoderigidbody -losgODE -losgDB -losg -lode
+$ g++ osgoderigidbody.cpp -o osgoderigidbody -Wall -losgODE -losgDB -losg -lode -DOSGODE_DATA_PATH=\"path/to/data/\"
 @endverbatim
 \n
 or, if pkg-config did a goog job:
 @verbatim
-$ g++ osgoderigidbody.cpp -o osgoderigidbody \
-> `pkg-config osgODE openscenegraph-osgDB --libs --cflags` -Wall
+$ g++ osgoderigidbody.cpp -o osgoderigidbody -Wall -DOSGODE_DATA_PATH=\"path/to/data/\" \
+> `pkg-config osgODE openscenegraph-osgDB --libs --cflags`
 @endverbatim
 \n
-You should not see any warning or error message. As always, if something doesn't work feel free to contact me.\n
-
+You should not see any warning or error message. As always, if something
+doesn't work feel free to contact me.\n
+\n
 \n
 The executable will produce a file named "output.osgb". If the osgviewer
 application is able to load and show it, almost everything is certainly
@@ -167,6 +172,18 @@ $ osgviewer output.osgb
 \n
 \n
 \n
+It is possible to build all the examples at compile time:
+@verbatim
+$ cmake ..  -DCMAKE_BUILD_TYPE=Debug \
+>           -DBUILD_OSGODE_EXAMPLES=ON \
+>           -DOSGODE_DATA_PATH="/absolute/path/to/data/"
+@endverbatim
+\n
+\n
+\n
+\n
+
+
 @section quickstart_section    Working principles
 I have worked hard to keep the interface clean and, in many cases, I think I
 succeeded.\n

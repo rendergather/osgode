@@ -117,7 +117,7 @@ osgODE::RigidBodyServoMotor::getAxisLocal(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBodyServoMotor::setMaxForce( double max_force )
+osgODE::RigidBodyServoMotor::setMaxForce( ooReal max_force )
 {
     m_max_force = max_force ;
 }
@@ -129,7 +129,7 @@ osgODE::RigidBodyServoMotor::setMaxForce( double max_force )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBodyServoMotor::getMaxForce(void) const
 {
     return m_max_force ;
@@ -143,7 +143,7 @@ osgODE::RigidBodyServoMotor::getMaxForce(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::RigidBodyServoMotor::setSpeed( double speed )
+osgODE::RigidBodyServoMotor::setSpeed( ooReal speed )
 {
     m_speed = speed ;
 }
@@ -155,7 +155,7 @@ osgODE::RigidBodyServoMotor::setSpeed( double speed )
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::RigidBodyServoMotor::getSpeed(void) const
 {
     return m_speed ;

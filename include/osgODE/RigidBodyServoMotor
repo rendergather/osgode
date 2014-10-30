@@ -124,16 +124,16 @@ public:
     inline bool getAxisLocal(void) const ;
 
     //! Set the max force
-    inline void setMaxForce( double max_force ) ;
+    inline void setMaxForce( ooReal max_force ) ;
 
     //! Get the const max force
-    inline double getMaxForce(void) const ;
+    inline ooReal getMaxForce(void) const ;
 
     //! Set the speed
-    inline void setSpeed( double speed ) ;
+    inline void setSpeed( ooReal speed ) ;
 
     //! Get the const speed
-    inline double getSpeed(void) const ;
+    inline ooReal getSpeed(void) const ;
 /* ======================================================================= */
 
 
@@ -161,8 +161,8 @@ private:
 private:
     Mode        m_mode ;
     osg::Vec3   m_axis ;
-    double      m_max_force ;
-    double      m_speed ;
+    ooReal      m_max_force ;
+    ooReal      m_speed ;
     bool        m_axis_local ;
 /* ======================================================================= */
 } ;

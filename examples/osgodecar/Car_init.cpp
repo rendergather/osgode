@@ -111,9 +111,9 @@ public:
         RigidBody*  body = obj->asRigidBody() ;
         PS_ASSERT1( body != NULL ) ;
 
-        const double    speed = body->getLinearVelocity().length() ;
+        const ooReal    speed = body->getLinearVelocity().length() ;
 
-        const double    f = osg::minimum(1.0, speed / 50.0) ;
+        const ooReal    f = osg::minimum(1.0, speed / 50.0) ;
 
         m_source->setParam(pSound::Source::GAIN, f * 2.0) ;
         m_source->setParam(pSound::Source::PITCH, f) ;
@@ -160,17 +160,17 @@ public:
         PS_ASSERT1( car != NULL ) ;
 
 
-        const double    f = car->getEngine()->getSpeed() / car->getEngine()->getSpeedLimit() ;
+        const ooReal    f = car->getEngine()->getSpeed() / car->getEngine()->getSpeedLimit() ;
 
 
         {
-            const double    gain0 = m_source->getParam(pSound::Source::GAIN) ;
-            const double    gain1 = osg::maximum(0.1, f * 2.0 * car->getEngine()->getGas()) ;
+            const ooReal    gain0 = m_source->getParam(pSound::Source::GAIN) ;
+            const ooReal    gain1 = osg::maximum(0.1, f * 2.0 * car->getEngine()->getGas()) ;
 
-            const double    pitch0 = m_source->getParam(pSound::Source::PITCH) ;
-            const double    pitch1 = osg::maximum(0.1, f * 2.0) ;
+            const ooReal    pitch0 = m_source->getParam(pSound::Source::PITCH) ;
+            const ooReal    pitch1 = osg::maximum(0.1, f * 2.0) ;
 
-            const double    N = 10 ;
+            const ooReal    N = 10 ;
 
             m_source->setParam(pSound::Source::GAIN, (gain0 * N + gain1) / (N+1) ) ;
             m_source->setParam(pSound::Source::PITCH, (pitch0 * N + pitch1) / (N+1) ) ;
@@ -179,8 +179,8 @@ public:
 
 
 
-        m_source2->setParam(pSound::Source::GAIN, osg::maximum(0.5, f)) ;
-        m_source2->setParam(pSound::Source::PITCH, osg::maximum(0.125, f)) ;
+        m_source2->setParam(pSound::Source::GAIN, osg::maximum((ooReal)0.5, f)) ;
+        m_source2->setParam(pSound::Source::PITCH, osg::maximum((ooReal)0.125, f)) ;
 
         traverse(obj) ;
     }
@@ -220,7 +220,7 @@ Car::init(void)
     //
     {
         // the wheel
-        osg::ref_ptr<Cylinder>      wheel = dynamic_cast<Cylinder*>( osgDB::readObjectFile("car_wheel.osgb") ) ;
+        osg::ref_ptr<Cylinder>      wheel = dynamic_cast<Cylinder*>( osgDB::readObjectFile("car_wheel.osgt") ) ;
         PS_ASSERT1( wheel.valid() ) ;
 
 
@@ -275,14 +275,14 @@ Car::init(void)
     // [2] Body:
     //
     {
-        m_body = dynamic_cast<RigidBody*>( osgDB::readObjectFile("car_body.osgb") ) ;
+        m_body = dynamic_cast<RigidBody*>( osgDB::readObjectFile("car_body.osgt") ) ;
         PS_ASSERT1( m_body.valid() ) ;
 
 
         m_body->setGyroscopicMode( false ) ;
 
 
-        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("wind.wav") ) ;
+        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("sounds/wind.wav") ) ;
         PS_ASSERT1( buffer ) ;
 
 
@@ -308,7 +308,7 @@ Car::init(void)
     // [3] Suspensions
     //
     {
-        osg::ref_ptr<osg::Node>     joint_graphics = osgDB::readNodeFile("car_suspension.osgb") ;
+        osg::ref_ptr<osg::Node>     joint_graphics = osgDB::readNodeFile("car_suspension.osgt") ;
         PS_ASSERT1( joint_graphics.valid() ) ;
 
 
@@ -450,7 +450,7 @@ Car::init(void)
         //
         // engine sound
         //
-        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("engine.wav") ) ;
+        pSound::Buffer*     buffer = dynamic_cast<pSound::Buffer*>( osgDB::readObjectFile("sounds/engine.wav") ) ;
         PS_ASSERT1( buffer ) ;
 
         this->addUpdateCallback( new EngineCallback(buffer) ) ;
@@ -468,10 +468,10 @@ Car::init(void)
 SuspensionJoint*
 Car::_createSuspension(RigidBody* wheel, const osg::Vec3& axis2, osg::Node* graphics)
 {
-    const double    SPRING = 20000.0 ;
-    const double    DAMPER_BOUND = 2000.0 ;
-    const double    DAMPER_REBOUND = 2000.0 ;
-    const double    PRELOAD = 5000.0 ;
+    const ooReal    SPRING = 20000.0 ;
+    const ooReal    DAMPER_BOUND = 2000.0 ;
+    const ooReal    DAMPER_REBOUND = 2000.0 ;
+    const ooReal    PRELOAD = 5000.0 ;
 
 
 
@@ -479,7 +479,7 @@ Car::_createSuspension(RigidBody* wheel, const osg::Vec3& axis2, osg::Node* grap
 
     // The anchor of the wheel is 20 centimeters towards the interior
     // of the car
-    const double        offset = 0.2 ;
+    const ooReal        offset = 0.2 ;
 
 
     // The anchor

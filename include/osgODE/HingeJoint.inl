@@ -35,7 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::HingeJoint::getAngle(void) const
 {
     return dJointGetHingeAngle(m_ODE_joint) ;
@@ -48,7 +48,7 @@ osgODE::HingeJoint::getAngle(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::HingeJoint::getAngleRate(void) const
 {
     return dJointGetHingeAngleRate(m_ODE_joint) ;

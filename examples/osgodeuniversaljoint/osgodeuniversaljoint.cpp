@@ -23,8 +23,8 @@ main(int argc, char** argv)
     osgDB::Registry::instance()->getDataFilePathList().push_back( OSGODE_DATA_PATH ) ;
 
 
-    osg::Node*      arm_graphics   = osgDB::readNodeFile("universal_arm.osgb") ;
-    osg::Node*      joint_graphics = osgDB::readNodeFile("universal_joint.osgb") ;
+    osg::Node*      arm_graphics   = osgDB::readNodeFile("universal_arm.osgt") ;
+    osg::Node*      joint_graphics = osgDB::readNodeFile("universal_joint.osgt") ;
 
     PS_ASSERT1( arm_graphics != NULL ) ;
     PS_ASSERT1( joint_graphics != NULL ) ;
@@ -69,6 +69,12 @@ main(int argc, char** argv)
 
         body2->getMatrixTransform()->addChild(arm_graphics) ;
         body2->setQuaternion(  osg::Quat( osg::inDegrees(90.0), osg::Z_AXIS ) * osg::Quat( osg::inDegrees(-150.0), osg::Y_AXIS ) ) ;
+
+        body1->setLinearDamping( 0.0 ) ;
+        body1->setAngularDamping( 0.0 ) ;
+
+        body2->setLinearDamping( 0.0 ) ;
+        body2->setAngularDamping( 0.0 ) ;
     }
 
 
@@ -107,8 +113,8 @@ main(int argc, char** argv)
 
         hinge2->setAxis1( body2->getQuaternion() * -osg::Z_AXIS ) ;
 
-        const double    FREQUENCY = 100.0 ;
-        const double    FORCE = 1.0 ;
+        const ooReal    FREQUENCY = 100.0 ;
+        const ooReal    FORCE = 1.0 ;
 
         hinge2->setParam( dParamVel1, FREQUENCY * 2.0 * osg::PI ) ;
         hinge2->setParam( dParamFMax1, FORCE ) ;

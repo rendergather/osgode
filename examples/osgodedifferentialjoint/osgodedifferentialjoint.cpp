@@ -123,7 +123,7 @@ Scene::init(int argc, char** argv)
     /*
      * [3] Creates two bodies
      */
-    osg::ref_ptr<osgODE::Collidable>    wheel = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("car_wheel.osgb") ) ;
+    osg::ref_ptr<osgODE::Collidable>    wheel = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile("car_wheel.osgt") ) ;
     PS_ASSERT1( wheel.valid() ) ;
 
     // clear the local parameters, if there are any
@@ -205,7 +205,7 @@ Scene::init(int argc, char** argv)
      */
 
     {
-        osg::ref_ptr<osgODE::Collidable>    cube = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile( "woodenbox1.osgb" ) ) ;
+        osg::ref_ptr<osgODE::Collidable>    cube = dynamic_cast<osgODE::Collidable*>( osgDB::readObjectFile( "woodenbox1.osgt" ) ) ;
         PS_ASSERT1( cube.valid() ) ;
 
         cube->setCollisionParameters(NULL) ;
@@ -344,21 +344,21 @@ Scene::handleKeyDown(const int& key, const int& mod, bool& handled)
 
 
     if( key == 'x' ) {
-        double  friction = osg::clampTo(m_differential->getFriction() + 0.05, 0.0, 1.0) ;
+        ooReal  friction = osg::clampTo(m_differential->getFriction() + 0.05, 0.0, 1.0) ;
 
         m_differential->setFriction( friction ) ;
     }
 
 
     if( key == 'z' ) {
-        double  friction = osg::clampTo(m_differential->getFriction() - 0.05, 0.0, 1.0) ;
+        ooReal  friction = osg::clampTo(m_differential->getFriction() - 0.05, 0.0, 1.0) ;
 
         m_differential->setFriction( friction ) ;
     }
 
 
     if( key == 'c' ) {
-        const double    ratio = m_differential->getRatio1() * 0.5 ;
+        const ooReal    ratio = m_differential->getRatio1() * 0.5 ;
 
         m_differential->setRatio1( ratio ) ;
         m_differential->setRatio2( 1.0 / ratio ) ;
@@ -366,7 +366,7 @@ Scene::handleKeyDown(const int& key, const int& mod, bool& handled)
 
 
     if( key == 'v' ) {
-        const double    ratio = m_differential->getRatio1() * 2.0 ;
+        const ooReal    ratio = m_differential->getRatio1() * 2.0 ;
 
         m_differential->setRatio1( ratio ) ;
         m_differential->setRatio2( 1.0 / ratio ) ;

@@ -117,7 +117,7 @@ Transformable::setCameraManipulator(osgGA::CameraManipulator* manipulator)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Transformable::postUpdate(double step_size)
+Transformable::postUpdate(ooReal step_size)
 {
     if( m_camera_manipulator.valid() ) {
         _updateCameraManipulator(step_size) ;
@@ -135,7 +135,7 @@ Transformable::postUpdate(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Transformable::_updateCameraManipulator(double step_size)
+Transformable::_updateCameraManipulator(ooReal step_size)
 {
     PS_ASSERT1( m_camera_manipulator.valid() ) ;
     PS_ASSERT1( m_matrix_transform.valid() ) ;
@@ -147,7 +147,7 @@ Transformable::_updateCameraManipulator(double step_size)
     osg::Vec3           up = osg::Matrix::transform3x3(m_camera_manipulator_up, transform) ;
 
 
-    const double    elasticity = m_camera_manipulator_elasticity / (step_size * 100) ;
+    const ooReal    elasticity = m_camera_manipulator_elasticity / (step_size * 100) ;
 
 
     m_camera_manipulator_center_ws = (m_camera_manipulator_center_ws * elasticity + eye) /

@@ -100,7 +100,7 @@ CollisionPredictor::operator()(ODEObject* object)
 
     const osg::Vec3 size = body->getSize() ;
 
-    const double    size_min = osg::minimum( size.x(), osg::minimum(size.y(), size.z()) ) ;
+    const ooReal    size_min = osg::minimum( size.x(), osg::minimum(size.y(), size.z()) ) ;
 
 
 

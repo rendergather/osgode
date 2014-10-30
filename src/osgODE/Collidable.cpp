@@ -213,7 +213,7 @@ Collidable::removeFromWorldInternal(World* world)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Collidable::setMass(double mass)
+Collidable::setMass(ooReal mass)
 {
     this->RigidBody::setMass(mass, getSize(), dGeomGetClass(m_ODE_geom)) ;
 }
@@ -226,7 +226,7 @@ Collidable::setMass(double mass)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-Collidable::setDensity(double density)
+Collidable::setDensity(ooReal density)
 {
     this->RigidBody::setDensity(density, getSize(), dGeomGetClass(m_ODE_geom)) ;
 }

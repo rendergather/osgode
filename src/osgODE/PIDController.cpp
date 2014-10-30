@@ -82,12 +82,12 @@ PIDController::~PIDController(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-double
-PIDController::solve( double error, double dt )
+ooReal
+PIDController::solve( ooReal error, ooReal dt )
 {
     m_accum += 0.5 * ( error + m_error_internal ) * dt ;
 
-    double  deriv = ( error - m_error_internal ) / dt ;
+    ooReal  deriv = ( error - m_error_internal ) / dt ;
 
     m_error_internal = error ;
 

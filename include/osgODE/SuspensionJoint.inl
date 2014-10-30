@@ -36,7 +36,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setSpring(double spring)
+osgODE::SuspensionJoint::setSpring(ooReal spring)
 {
     m_spring = spring ;
 }
@@ -48,7 +48,7 @@ osgODE::SuspensionJoint::setSpring(double spring)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SuspensionJoint::getSpring(void) const
 {
     return m_spring ;
@@ -62,7 +62,7 @@ osgODE::SuspensionJoint::getSpring(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setDamperBound(double damp)
+osgODE::SuspensionJoint::setDamperBound(ooReal damp)
 {
     m_damp_bound = damp ;
 }
@@ -74,7 +74,7 @@ osgODE::SuspensionJoint::setDamperBound(double damp)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SuspensionJoint::getDamperBound(void) const
 {
     return m_damp_bound ;
@@ -88,7 +88,7 @@ osgODE::SuspensionJoint::getDamperBound(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setDamperRebound(double damp)
+osgODE::SuspensionJoint::setDamperRebound(ooReal damp)
 {
     m_damp_rebound = damp ;
 }
@@ -100,7 +100,7 @@ osgODE::SuspensionJoint::setDamperRebound(double damp)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SuspensionJoint::getDamperRebound(void) const
 {
     return m_damp_rebound ;
@@ -114,7 +114,7 @@ osgODE::SuspensionJoint::getDamperRebound(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setPreload(double preload)
+osgODE::SuspensionJoint::setPreload(ooReal preload)
 {
     m_preload = preload ;
 }
@@ -126,7 +126,7 @@ osgODE::SuspensionJoint::setPreload(double preload)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SuspensionJoint::getPreload(void) const
 {
     return m_preload ;
@@ -140,7 +140,7 @@ osgODE::SuspensionJoint::getPreload(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setDamp(double damp)
+osgODE::SuspensionJoint::setDamp(ooReal damp)
 {
     setDamperBound(damp) ;
     setDamperRebound(damp) ;
@@ -154,7 +154,7 @@ osgODE::SuspensionJoint::setDamp(double damp)
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::SuspensionJoint::setSteerAngle(double angle)
+osgODE::SuspensionJoint::setSteerAngle(ooReal angle)
 {
     setParam(dParamLoStop, angle) ;
     setParam(dParamHiStop, angle) ;
@@ -167,7 +167,7 @@ osgODE::SuspensionJoint::setSteerAngle(double angle)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::SuspensionJoint::getSteerAngle(void) const
 {
     SuspensionJoint*    joint = const_cast<SuspensionJoint*>(this) ;

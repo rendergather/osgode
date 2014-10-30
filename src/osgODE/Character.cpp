@@ -88,8 +88,8 @@ Character::~Character(void)
 Joint*
 Character::attach(  RigidBody*  body,
                     bool        constrain_rotation,
-                    double      erp,
-                    double      cfm
+                    ooReal      erp,
+                    ooReal      cfm
                  )
 {
 
@@ -171,7 +171,7 @@ Character::detach(  RigidBody* body )
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody*
-Character::touch( double max_distance )
+Character::touch( ooReal max_distance )
 {
 
     World*  world = getWorld() ;
@@ -233,7 +233,7 @@ Character::touch( double max_distance )
 /* ======================================================================= */
 /* ....................................................................... */
 RigidBody*
-Character::touch( double max_distance, osg::Vec3& position, osg::Vec3& normal )
+Character::touch( ooReal max_distance, osg::Vec3& position, osg::Vec3& normal )
 {
 
     World*  world = getWorld() ;

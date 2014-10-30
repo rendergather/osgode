@@ -114,7 +114,7 @@ osgODE::MotionPath::getQuaternionInterpolator(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::MotionPath::setTime(double t)
+osgODE::MotionPath::setTime(ooReal t)
 {
     m_time = t ;
 }
@@ -126,7 +126,7 @@ osgODE::MotionPath::setTime(double t)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::MotionPath::getTime(void) const
 {
     return m_time ;

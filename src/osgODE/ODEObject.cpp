@@ -170,7 +170,7 @@ ODEObject::generateID(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObject::update(double step_size)
+ODEObject::update(ooReal step_size)
 {
     (void) step_size ;
 }
@@ -183,7 +183,7 @@ ODEObject::update(double step_size)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-ODEObject::postUpdate(double step_size)
+ODEObject::postUpdate(ooReal step_size)
 {
     (void) step_size ;
 }

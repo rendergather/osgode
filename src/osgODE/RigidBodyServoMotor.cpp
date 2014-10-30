@@ -121,12 +121,12 @@ RigidBodyServoMotor::solveLinear( RigidBody* body )
     World*      world = body->getWorld() ;
     PS_ASSERT1( world != NULL ) ;
 
-    const double    err = m_speed - body->getLinearVelocity() * direction ;
+    const ooReal    err = m_speed - body->getLinearVelocity() * direction ;
 
 
     PIDController*  pid = getPIDController() ;
 
-    double  force = 0.0 ;
+    ooReal  force = 0.0 ;
 
     if( pid ) {
         force = pid->solve( err, world->getCurrentStepSize() ) ;
@@ -163,12 +163,12 @@ RigidBodyServoMotor::solveAngular( RigidBody* body )
     World*      world = body->getWorld() ;
     PS_ASSERT1( world != NULL ) ;
 
-    const double    err = m_speed - body->getAngularVelocity() * axis ;
+    const ooReal    err = m_speed - body->getAngularVelocity() * axis ;
 
 
     PIDController*  pid = getPIDController() ;
 
-    double  force = 0.0 ;
+    ooReal  force = 0.0 ;
 
     if( pid ) {
         force = pid->solve( err, world->getCurrentStepSize() ) ;

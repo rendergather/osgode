@@ -67,9 +67,13 @@ main(int argc, char** argv)
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
         container->addObject( body ) ;
 
+        // no damping
+        body->setLinearDamping( 0.0 ) ;
+        body->setAngularDamping( 0.0 ) ;
+
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("pendulum_4.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_4.osgt") ;
         PS_ASSERT1( node ) ;
 
 
@@ -96,9 +100,13 @@ main(int argc, char** argv)
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
         container->addObject( body ) ;
 
+        // no damping
+        body->setLinearDamping( 0.0 ) ;
+        body->setAngularDamping( 0.0 ) ;
+
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("pendulum_3.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_3.osgt") ;
         PS_ASSERT1( node ) ;
 
 
@@ -121,9 +129,13 @@ main(int argc, char** argv)
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
         container->addObject( body ) ;
 
+        // no damping
+        body->setLinearDamping( 0.0 ) ;
+        body->setAngularDamping( 0.0 ) ;
+
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("pendulum_2.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_2.osgt") ;
         PS_ASSERT1( node ) ;
 
 
@@ -145,9 +157,13 @@ main(int argc, char** argv)
         osgODE::RigidBody*  body = new osgODE::RigidBody() ;
         container->addObject( body ) ;
 
+        // no damping
+        body->setLinearDamping( 0.0 ) ;
+        body->setAngularDamping( 0.0 ) ;
+
 
         // graphics
-        osg::Node*  node = osgDB::readNodeFile("pendulum_1.osgb") ;
+        osg::Node*  node = osgDB::readNodeFile("pendulum_1.osgt") ;
         PS_ASSERT1( node ) ;
 
 

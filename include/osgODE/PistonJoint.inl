@@ -35,7 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PistonJoint::getPosition(void) const
 {
     return dJointGetPistonPosition(m_ODE_joint) ;
@@ -48,7 +48,7 @@ osgODE::PistonJoint::getPosition(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PistonJoint::getPositionRate(void) const
 {
     return dJointGetPistonPositionRate(m_ODE_joint) ;
@@ -61,7 +61,7 @@ osgODE::PistonJoint::getPositionRate(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PistonJoint::getAngle(void) const
 {
     return dJointGetPistonAngle(m_ODE_joint) ;
@@ -74,7 +74,7 @@ osgODE::PistonJoint::getAngle(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::PistonJoint::getAngleRate(void) const
 {
     return dJointGetPistonAngleRate(m_ODE_joint) ;

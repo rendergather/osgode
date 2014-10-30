@@ -96,11 +96,11 @@ DifferentialJoint::~DifferentialJoint(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-double
+ooReal
 DifferentialJoint::getAngleRate(void)
 {
-    double  v1 = 0.0 ;
-    double  v2 = 0.0 ;
+    ooReal  v1 = 0.0 ;
+    ooReal  v2 = 0.0 ;
 
     if( m_body1.valid() ) {
         v1 = m_body1->getAngularVelocity() * getAxis1() ;

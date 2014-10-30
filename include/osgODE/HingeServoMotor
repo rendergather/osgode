@@ -83,27 +83,27 @@ public:
 /* ======================================================================= */
 public:
     //! Set the desired position in radians
-    inline void         setPosition( double position ) ;
+    inline void         setPosition( ooReal position ) ;
 
     //! Get the desired position in radians
-    inline double       getPosition( void ) const ;
+    inline ooReal       getPosition( void ) const ;
 
 
     //! Set the force
-    inline void         setForce( double force ) ;
+    inline void         setForce( ooReal force ) ;
 
     //! Get the force
-    inline double       getForce( void ) const ;
+    inline ooReal       getForce( void ) const ;
 
 
     //! Set a speed limit. Default: -1
     /*!
      * Set a negative value to disable the limit. 
      */
-    inline void         setMaxVel( double max_vel ) ;
+    inline void         setMaxVel( ooReal max_vel ) ;
 
     //! Get the speed limit. Default: -1
-    inline double       getMaxVel( void ) const ;
+    inline ooReal       getMaxVel( void ) const ;
 /* ======================================================================= */
 
 
@@ -132,9 +132,9 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_position ;
-    double      m_force ;
-    double      m_max_vel ;
+    ooReal      m_position ;
+    ooReal      m_force ;
+    ooReal      m_max_vel ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

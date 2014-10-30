@@ -159,7 +159,7 @@ BypassJoint::~BypassJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 void
-BypassJoint::setRelativeRotation( double step_size, const osg::Quat& qrel, int& row, double erp, double cfm, BodyMask mask )
+BypassJoint::setRelativeRotation( ooReal step_size, const osg::Quat& qrel, int& row, ooReal erp, ooReal cfm, BodyMask mask )
 {
     if(  !  ( m_body1.valid() || m_body2.valid() )  ) {
         return ;
@@ -214,7 +214,7 @@ BypassJoint::setRelativeRotation( double step_size, const osg::Quat& qrel, int& 
 /* ======================================================================= */
 /* ....................................................................... */
 void
-BypassJoint::setRelativePosition( double step_size, const osg::Vec3& prel, int& row, double erp, double cfm, BodyMask mask )
+BypassJoint::setRelativePosition( ooReal step_size, const osg::Vec3& prel, int& row, ooReal erp, ooReal cfm, BodyMask mask )
 {
     if(  !  ( m_body1.valid() || m_body2.valid() )  ) {
         return ;
@@ -280,8 +280,8 @@ BypassJoint::setRow(    unsigned int row,
                         const osg::Vec3& J1l,
                         const osg::Vec3& J2a,
                         const osg::Vec3& J2l,
-                        double rhs,
-                        double cfm )
+                        ooReal rhs,
+                        ooReal cfm )
 {
 
     PS_ASSERT1( row < 6 ) ;
@@ -311,8 +311,8 @@ BypassJoint::getRow(    unsigned int row,
                         osg::Vec3& J1l,
                         osg::Vec3& J2a,
                         osg::Vec3& J2l,
-                        double& rhs,
-                        double& cfm ) const
+                        ooReal& rhs,
+                        ooReal& cfm ) const
 {
 
     PS_ASSERT1( row < 6 ) ;

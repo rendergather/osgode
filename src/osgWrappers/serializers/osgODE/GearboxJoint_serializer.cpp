@@ -27,6 +27,8 @@
 #include <osgODE/GearboxJoint>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,8 +50,8 @@ REGISTER_OBJECT_WRAPPER( GearboxJoint,
                          osgODE::GearboxJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::GearboxJoint" )
 {
-    ADD_DOUBLE_SERIALIZER(Ratio, 1.0) ;
-    ADD_DOUBLE_SERIALIZER(Friction, 1.0) ;
+    ADD_REAL_SERIALIZER(Ratio, 1.0) ;
+    ADD_REAL_SERIALIZER(Friction, 1.0) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

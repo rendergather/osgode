@@ -36,7 +36,7 @@ main(int argc, char** argv)
     osgODE::Joint*      j = new osgODE::LMotorJoint() ;
 
 
-    osg::Node*      graphics = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*      graphics = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( graphics != NULL ) ;
 
 

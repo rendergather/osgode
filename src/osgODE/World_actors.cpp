@@ -1,5 +1,5 @@
 /*!
- * @file World_interaction.cpp
+ * @file World_actors.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
@@ -174,7 +174,7 @@ World::intersectRaySphere(  const osg::BoundingSphere& sphere,
 
 
 
-    const double&       radius = sphere.radius() ;
+    const ooReal&       radius = sphere.radius() ;
     const osg::Vec3&    center = sphere.center() ;
 
 
@@ -196,7 +196,7 @@ World::intersectRaySphere(  const osg::BoundingSphere& sphere,
     // salvo la lunghezza del vettore perché poi mi servirà per calcolare
     // l'altezza del triangolo che si va a formare fra from, il centro e la
     // proiezione di centro-from sulla retta del segmento
-    const double    ip = V1.normalize() ;
+    const ooReal    ip = V1.normalize() ;
 
     // controllo se from è interno alla sfera
     if( ip <= radius ) {
@@ -230,7 +230,7 @@ World::intersectRaySphere(  const osg::BoundingSphere& sphere,
 
     // L'ipoten. è ip; il seno è il prod. vett. fra V1 e V2; la distanza è
     // sin * ip
-    const double    CtoR = (V1^V2).length() * ip ;
+    const ooReal    CtoR = (V1^V2).length() * ip ;
 
     // Se la distanza è maggiore del raggio, di sicuro non c'è collisione
     if( CtoR > radius ) {

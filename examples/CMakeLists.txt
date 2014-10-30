@@ -24,7 +24,7 @@ IF( WIN32 )
     ADD_DEFINITIONS( /wd4250 )
 ENDIF( WIN32 )
 
-ADD_DEFINITIONS( -DOSGODE_DATA_PATH="${CMAKE_SOURCE_DIR}/data" )
+ADD_DEFINITIONS( -DOSGODE_DATA_PATH="${OSGODE_SAMPLE_DATA}" )
 
 
 
@@ -41,8 +41,6 @@ IF( BUILD_OSGODE_PSOUND_EXAMPLES )
 ENDIF( BUILD_OSGODE_PSOUND_EXAMPLES )
 
 ADD_SUBDIRECTORY( osgodecharacter )
-ADD_SUBDIRECTORY( osgodecharacterbase )
-ADD_SUBDIRECTORY( osgodecollisionprediction )
 
 IF( BUILD_OSGODE_PSOUND_EXAMPLES )
     ADD_SUBDIRECTORY( osgodecollisionsound )
@@ -50,7 +48,6 @@ ENDIF( BUILD_OSGODE_PSOUND_EXAMPLES )
 
 ADD_SUBDIRECTORY( osgodedhingejoint )
 ADD_SUBDIRECTORY( osgodedifferentialjoint )
-ADD_SUBDIRECTORY( osgodedynamicparticle )
 ADD_SUBDIRECTORY( osgodeengine )
 ADD_SUBDIRECTORY( osgodegearboxjoint )
 ADD_SUBDIRECTORY( osgodehingejoint )

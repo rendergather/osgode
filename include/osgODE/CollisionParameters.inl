@@ -62,7 +62,7 @@ osgODE::CollisionParameters::getMode(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setMu(double mu)
+osgODE::CollisionParameters::setMu(ooReal mu)
 {
     m_mu = mu ;
 }
@@ -74,7 +74,7 @@ osgODE::CollisionParameters::setMu(double mu)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getMu(void) const
 {
     return m_mu  ;
@@ -88,7 +88,7 @@ osgODE::CollisionParameters::getMu(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setMu2(double mu2)
+osgODE::CollisionParameters::setMu2(ooReal mu2)
 {
     m_mu2 = mu2 ;
 }
@@ -100,7 +100,7 @@ osgODE::CollisionParameters::setMu2(double mu2)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getMu2(void) const
 {
     return m_mu2  ;
@@ -114,7 +114,7 @@ osgODE::CollisionParameters::getMu2(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setBounce(double bounce)
+osgODE::CollisionParameters::setBounce(ooReal bounce)
 {
     m_bounce = bounce ;
 }
@@ -126,7 +126,7 @@ osgODE::CollisionParameters::setBounce(double bounce)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getBounce(void) const
 {
     return m_bounce  ;
@@ -140,7 +140,7 @@ osgODE::CollisionParameters::getBounce(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setBounceVel(double bounce_vel)
+osgODE::CollisionParameters::setBounceVel(ooReal bounce_vel)
 {
     m_bounce_vel = bounce_vel ;
 }
@@ -152,7 +152,7 @@ osgODE::CollisionParameters::setBounceVel(double bounce_vel)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getBounceVel(void) const
 {
     return m_bounce_vel  ;
@@ -166,7 +166,7 @@ osgODE::CollisionParameters::getBounceVel(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setSoftERP(double soft_erp)
+osgODE::CollisionParameters::setSoftERP(ooReal soft_erp)
 {
     m_soft_erp = soft_erp ;
 }
@@ -178,7 +178,7 @@ osgODE::CollisionParameters::setSoftERP(double soft_erp)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getSoftERP(void) const
 {
     return m_soft_erp  ;
@@ -192,7 +192,7 @@ osgODE::CollisionParameters::getSoftERP(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setSoftCFM(double soft_cfm)
+osgODE::CollisionParameters::setSoftCFM(ooReal soft_cfm)
 {
     m_soft_cfm = soft_cfm ;
 }
@@ -204,7 +204,7 @@ osgODE::CollisionParameters::setSoftCFM(double soft_cfm)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getSoftCFM(void) const
 {
     return m_soft_cfm ;
@@ -218,7 +218,7 @@ osgODE::CollisionParameters::getSoftCFM(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setMotion1(double motion1)
+osgODE::CollisionParameters::setMotion1(ooReal motion1)
 {
     m_motion1 = motion1 ;
 }
@@ -230,7 +230,7 @@ osgODE::CollisionParameters::setMotion1(double motion1)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getMotion1(void) const
 {
     return m_motion1 ;
@@ -244,7 +244,7 @@ osgODE::CollisionParameters::getMotion1(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setMotion2(double motion2)
+osgODE::CollisionParameters::setMotion2(ooReal motion2)
 {
     m_motion2 = motion2 ;
 }
@@ -256,7 +256,7 @@ osgODE::CollisionParameters::setMotion2(double motion2)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getMotion2(void) const
 {
     return m_motion2 ;
@@ -270,7 +270,7 @@ osgODE::CollisionParameters::getMotion2(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setMotionN(double motionN)
+osgODE::CollisionParameters::setMotionN(ooReal motionN)
 {
     m_motionN = motionN ;
 }
@@ -282,7 +282,7 @@ osgODE::CollisionParameters::setMotionN(double motionN)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getMotionN(void) const
 {
     return m_motionN ;
@@ -296,7 +296,7 @@ osgODE::CollisionParameters::getMotionN(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setSlip1(double slip1)
+osgODE::CollisionParameters::setSlip1(ooReal slip1)
 {
     m_slip1 = slip1 ;
 }
@@ -308,7 +308,7 @@ osgODE::CollisionParameters::setSlip1(double slip1)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getSlip1(void) const
 {
     return m_slip1 ;
@@ -322,7 +322,7 @@ osgODE::CollisionParameters::getSlip1(void) const
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::CollisionParameters::setSlip2(double slip2)
+osgODE::CollisionParameters::setSlip2(ooReal slip2)
 {
     m_slip2 = slip2 ;
 }
@@ -334,7 +334,7 @@ osgODE::CollisionParameters::setSlip2(double slip2)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline double
+inline ooReal
 osgODE::CollisionParameters::getSlip2(void) const
 {
     return m_slip2 ;

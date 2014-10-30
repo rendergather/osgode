@@ -27,6 +27,8 @@
 #include <osgODE/PIDController>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,10 +50,10 @@ REGISTER_OBJECT_WRAPPER( PIDController,
                          osgODE::PIDController,
                          "osg::Object osgODE::PIDController" )
 {
-    ADD_DOUBLE_SERIALIZER   ( Proportional,     1.0 ) ;
-    ADD_DOUBLE_SERIALIZER   ( Integral,         0.0 ) ;
-    ADD_DOUBLE_SERIALIZER   ( Derivative,       0.0 ) ;
-    ADD_DOUBLE_SERIALIZER   ( ErrorInternal,    0.0 ) ;
+    ADD_REAL_SERIALIZER   ( Proportional,     1.0 ) ;
+    ADD_REAL_SERIALIZER   ( Integral,         0.0 ) ;
+    ADD_REAL_SERIALIZER   ( Derivative,       0.0 ) ;
+    ADD_REAL_SERIALIZER   ( ErrorInternal,    0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

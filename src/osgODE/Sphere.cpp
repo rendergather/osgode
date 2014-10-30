@@ -120,7 +120,7 @@ Sphere::setSize(const osg::Vec3& size)
 osg::Vec3
 Sphere::getSize(void) const
 {
-    const double        diameter = dGeomSphereGetRadius(m_ODE_geom) * 2.0 ;
+    const ooReal        diameter = dGeomSphereGetRadius(m_ODE_geom) * 2.0 ;
 
     return osg::Vec3(diameter, diameter, diameter) ;
 }

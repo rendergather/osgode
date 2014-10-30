@@ -64,7 +64,7 @@ private:
 
 
         for(unsigned int i=0; i<m_num_bodies; i++) {
-            double  t = (double)i / (double)m_num_bodies ;
+            ooReal  t = (ooReal)i / (ooReal)m_num_bodies ;
 
             osg::Vec3   p = m_bodies[i]->getPosition() ;
 
@@ -76,14 +76,14 @@ private:
 
 
 
-    void    _interpolate(osg::Geometry* rope, double scale)
+    void    _interpolate(osg::Geometry* rope, ooReal scale)
     {
 
         rope->setPrimitiveSetList( osg::Geometry::PrimitiveSetList() ) ;
 
         osg::Vec3Array* vertices = new osg::Vec3Array() ;
 
-        for(double t=0.0; t<1.0 + scale * 0.5; t+= scale) {
+        for(ooReal t=0.0; t<1.0 + scale * 0.5; t+= scale) {
             osg::Vec3   p = m_interpolator->interpolate(t) ;
 
             vertices->push_back(p) ;
@@ -177,7 +177,7 @@ main(int argc, char** argv)
     transform->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON ) ;
 
 
-    osg::Node*  weight = osgDB::readNodeFile("companioncube.osgb") ;
+    osg::Node*  weight = osgDB::readNodeFile("companioncube.osgt") ;
     PS_ASSERT1( weight ) ;
 
     transform->addChild( weight ) ;

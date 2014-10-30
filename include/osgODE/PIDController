@@ -30,8 +30,9 @@
 
 /* ======================================================================= */
 #include <osg/Object>
-
 #include <osg/Vec3>
+
+#include <osgODE/Config>
 /* ======================================================================= */
 
 
@@ -85,28 +86,28 @@ public:
 /* ======================================================================= */
 public:
     //! Set the proportional
-    inline void     setProportional( double proportional ) ;
+    inline void     setProportional( ooReal proportional ) ;
 
     //! Get the const proportional
-    inline double   getProportional(void) const ;
+    inline ooReal   getProportional(void) const ;
 
     //! Set the integral
-    inline void     setIntegral( double integral ) ;
+    inline void     setIntegral( ooReal integral ) ;
 
     //! Get the const integral
-    inline double   getIntegral(void) const ;
+    inline ooReal   getIntegral(void) const ;
 
     //! Set the derivative
-    inline void     setDerivative( double derivative ) ;
+    inline void     setDerivative( ooReal derivative ) ;
 
     //! Get the const derivative
-    inline double   getDerivative(void) const ;
+    inline ooReal   getDerivative(void) const ;
 
     //! Set the error internal
-    inline void     setErrorInternal( double error_internal ) ;
+    inline void     setErrorInternal( ooReal error_internal ) ;
 
     //! Get the const error internal
-    inline double   getErrorInternal(void) const ;
+    inline ooReal   getErrorInternal(void) const ;
 
 
     inline void resetIntegral(void)
@@ -118,7 +119,7 @@ public:
 
 /* ======================================================================= */
 public:
-    double  solve( double error, double dt ) ;
+    ooReal  solve( ooReal error, ooReal dt ) ;
 /* ======================================================================= */
 
 
@@ -126,12 +127,12 @@ public:
 
 /* ======================================================================= */
 private:
-    double      m_proportional ;
-    double      m_integral ;
-    double      m_derivative ;
-    double      m_error_internal ;
+    ooReal      m_proportional ;
+    ooReal      m_integral ;
+    ooReal      m_derivative ;
+    ooReal      m_error_internal ;
 
-    double      m_accum ;
+    ooReal      m_accum ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

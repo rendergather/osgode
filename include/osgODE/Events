@@ -103,6 +103,15 @@ public:
     //! Get the const normalized cursor position
     inline const osg::Vec2& getNormalizedCursorPosition(void) const ;
 
+    //! Set the relative cursor position
+    inline void setRelativeCursorPosition( const osg::Vec2& relative_cursor_position ) ;
+
+    //! Get the relative cursor position
+    inline osg::Vec2& getRelativeCursorPosition(void) ;
+
+    //! Get the const relative cursor position
+    inline const osg::Vec2& getRelativeCursorPosition(void) const ;
+
     //! Set the button mask
     inline void setButtonMask( unsigned int button_mask ) ;
 
@@ -127,11 +136,25 @@ public:
     //! set the key state
     inline void setKeyPressed(unsigned int keysym, bool pressed) ;
 
-    //! Set the fps mode. Default: false
-    inline void setFPSMode( bool fps_mode ) ;
+    //! set the warp pointer
+    inline void setWarpPointer( bool enabled, const osg::Vec2& warp_pointer = osg::Vec2(), bool normalized = false ) ;
 
-    //! Get the const fps mode. Default: false
-    inline bool getFPSMode(void) const ;
+    //! get the const warp pointer
+    inline bool getWarpPointer( osg::Vec2& warp_pointer, bool& normalized ) const ;
+
+    //! set the motion
+    inline void setMotion( bool motion ) ;
+
+    //! get the const motion
+    inline bool getMotion(void) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    void    copy( const Events* other ) ;
 /* ======================================================================= */
 
 
@@ -203,6 +226,7 @@ public:
 private:
     osg::Vec2       m_cursor_position ;
     osg::Vec2       m_normalized_cursor_position ;
+    osg::Vec2       m_relative_cursor_position ;
     unsigned int    m_button_mask ;
 
     bool            m_dirty_view_projection ;
@@ -216,7 +240,11 @@ private:
 
     ViewMatrix  m_view_matrix ;
 
-    bool            m_fps_mode ;
+    bool            m_warp_pointer_enabled ;
+    bool            m_warp_pointer_normalized ;
+    osg::Vec2       m_warp_pointer ;
+
+    bool        m_motion ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

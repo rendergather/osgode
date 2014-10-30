@@ -162,10 +162,10 @@ public:
 
 
     //! Transmit the update to the objects in the list
-    virtual void                update(double step_size) ;
+    virtual void                update(ooReal step_size) ;
 
     //! Transmit the update to the objects in the list
-    virtual void                postUpdate(double step_size) ;
+    virtual void                postUpdate(ooReal step_size) ;
 /* ======================================================================= */
 
 

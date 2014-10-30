@@ -27,6 +27,8 @@
 #include <osgODE/EngineBase>
 
 #include <osgDB/Registry>
+
+#include "real_serializer"
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -48,16 +50,16 @@ REGISTER_OBJECT_WRAPPER( EngineBase,
                          osgODE::EngineBase,
                          "osg::Object osgODE::EngineBase" )
 {
-    ADD_DOUBLE_SERIALIZER( Speed,       0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( SpeedLimit,  FLT_MAX ) ;
-    ADD_DOUBLE_SERIALIZER( FMax,        0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Vel,         0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Inertia,     1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Drag,        0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Friction,    0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Ratio,       1.0 ) ;
-    ADD_DOUBLE_SERIALIZER( Gas,         0.0 ) ;
-    ADD_DOUBLE_SERIALIZER( SpeedStall,  0.0 ) ;
+    ADD_REAL_SERIALIZER( Speed,       0.0 ) ;
+    ADD_REAL_SERIALIZER( SpeedLimit,  FLT_MAX ) ;
+    ADD_REAL_SERIALIZER( FMax,        0.0 ) ;
+    ADD_REAL_SERIALIZER( Vel,         0.0 ) ;
+    ADD_REAL_SERIALIZER( Inertia,     1.0 ) ;
+    ADD_REAL_SERIALIZER( Drag,        0.0 ) ;
+    ADD_REAL_SERIALIZER( Friction,    0.0 ) ;
+    ADD_REAL_SERIALIZER( Ratio,       1.0 ) ;
+    ADD_REAL_SERIALIZER( Gas,         0.0 ) ;
+    ADD_REAL_SERIALIZER( SpeedStall,  0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

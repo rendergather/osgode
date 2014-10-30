@@ -1,5 +1,5 @@
 /*!
- * @file World_interaction.cpp
+ * @file World_actors.cpp
  * @author Rocco Martino
  */
 /***************************************************************************

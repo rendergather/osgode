@@ -1645,7 +1645,12 @@ class MessageActuator(Actuator):
     def buildGraph(self):
         super(MessageActuator, self).buildGraph()
 
-        self.TargetByName = self.Data.RigidBodyNames[self.BlenderActuator.to_property]
+        try:
+            self.TargetByName = self.Data.RigidBodyNames[self.BlenderActuator.to_property]
+        except:
+            print(self.Object.name + ": Missing to_property")
+            self.TargetByName = ""
+
         self.Type = "TEXT"
         self.Subject = self.BlenderActuator.subject
 

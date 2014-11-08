@@ -99,7 +99,10 @@ class Sensor(Writable.Writable):
 
 
             for c in self.BlenderSensor.controllers:
-                self.ControllerList.append( self.Object.game.controllers.find(c.name) )
+                try:
+                    self.ControllerList.append( self.Object.game.controllers.find(c.name) )
+                except:
+                    print(" Error appending controller from %s" % self.Object.name)
 
 
 

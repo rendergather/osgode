@@ -182,6 +182,24 @@ ManagerEventHandler::handle( const osgGA::GUIEventAdapter&  ea,
         case osgGA::GUIEventAdapter::RELEASE:
         {
             events->setButtonMask( ea.getButtonMask() ) ;
+
+
+            osg::Vec2   previous_position = events->getCursorPosition() ;
+            osg::Vec2   cursor_position( ea.getX(), ea.getY() ) ;
+            osg::Vec2   normalized_cursor_position( ea.getXnormalized(), ea.getYnormalized() ) ;
+
+            events->setCursorPosition( cursor_position ) ;
+            events->setNormalizedCursorPosition( normalized_cursor_position ) ;
+
+            if( ! m_warp_pointer_requested ) {
+
+                events->setRelativeCursorPosition( cursor_position - previous_position) ;
+
+            } else {
+
+                events->setRelativeCursorPosition( osg::Vec2(0,0) ) ;
+                m_warp_pointer_requested = false ;
+            }
         }
         break ;
 

@@ -116,6 +116,20 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
         }
 
 
+
+
+        if( m_delta >= step_size ) {
+
+            World*  world = manager->getWorld() ;
+            PS_ASSERT1( world ) ;
+
+            world->swapEventsBuffer() ;
+
+        }
+
+
+
+
         if( m_max_frames_per_update == 0 ) {
 
             while( m_delta >= step_size ) {
@@ -136,6 +150,16 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
                 m_delta -= step_size ;
             }
         }
+
+
+
+        const Events::ViewMatrixRequests&   view_matrix_requests = manager->getWorld()->getFrontEventsBuffer()->getViewMatrixRequests() ;
+
+        for( unsigned int i=0; i<view_matrix_requests.size(); i++ ) {
+            view_matrix_requests[i].first->getCamera()->setViewMatrix( view_matrix_requests[i].second ) ;
+        }
+
+
 
     } else {
 

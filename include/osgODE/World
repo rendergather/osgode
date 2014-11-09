@@ -221,14 +221,26 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the events
-    inline void setEvents( Events* events ) ;
+    //! Set the front events buffer
+    inline void setFrontEventsBuffer( Events* front_events_buffer ) ;
 
-    //! Get the events
-    inline Events* getEvents(void) ;
+    //! Get the front events buffer
+    inline Events* getFrontEventsBuffer(void) ;
 
-    //! Get the const events
-    inline const Events* getEvents(void) const ;
+    //! Get the const front events buffer
+    inline const Events* getFrontEventsBuffer(void) const ;
+
+    //! Set the back events buffer
+    inline void setBackEventsBuffer( Events* back_events_buffer ) ;
+
+    //! Get the back events buffer
+    inline Events* getBackEventsBuffer(void) ;
+
+    //! Get the const back events buffer
+    inline const Events* getBackEventsBuffer(void) const ;
+
+    //! tmp = front ; front = back ; back = tmp ; back.clear()
+    inline void swapEventsBuffer(void) ;
 /* ======================================================================= */
 
 
@@ -522,7 +534,8 @@ private:
 
     ooReal          m_current_step_size ;
 
-    osg::ref_ptr<Events>    m_events ;
+    osg::ref_ptr<Events>    m_front_events_buffer ;
+    osg::ref_ptr<Events>    m_back_events_buffer ;
 
     bool            m_dirty_actors ;
     Objects         m_actors ;

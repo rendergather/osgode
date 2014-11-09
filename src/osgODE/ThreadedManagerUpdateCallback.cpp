@@ -100,6 +100,17 @@ ThreadedManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
         world->updateTransformsInternal() ;
         world->runOperationsInternal() ;
 
+
+
+        const Events::ViewMatrixRequests&   view_matrix_requests = world->getFrontEventsBuffer()->getViewMatrixRequests() ;
+
+        for( unsigned int i=0; i<view_matrix_requests.size(); i++ ) {
+            view_matrix_requests[i].first->getCamera()->setViewMatrix( view_matrix_requests[i].second ) ;
+        }
+
+        world->swapEventsBuffer() ;
+
+
         manager->rdy(false) ;
         manager->unpause() ;
 

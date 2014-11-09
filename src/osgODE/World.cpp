@@ -110,7 +110,8 @@ World::World(const World& other, const osg::CopyOp& copyop):
     m_air_density           ( other.m_air_density ),
     m_current_wind          ( other.m_current_wind ),
     m_current_step_size     ( other.m_current_step_size ),
-    m_events                ( osg::clone( other.m_events.get(), copyop ) ),
+    m_front_events_buffer   ( osg::clone( other.m_front_events_buffer.get(), copyop ) ),
+    m_back_events_buffer    ( osg::clone( other.m_back_events_buffer.get(), copyop ) ),
     m_dirty_actors          ( other.m_dirty_actors ),
     m_actors                ( other.m_actors )
 {
@@ -362,21 +363,6 @@ World::_callObjectsPostCallbacks(ooReal step_size)
         o->updateTransformInternal() ;
         o->postUpdate(step_size) ;
         o->callPostUpdateCallbackInternal() ;
-    }
-
-
-
-
-
-    if( m_events.valid() ) {
-
-        Events::ViewMatrix& vm = m_events->getViewMatrix() ;
-
-        if( vm.getPriority() > 0 ) {
-            m_events->getView()->getCamera()->setViewMatrix( vm.getMatrix() ) ;
-            vm.setPriority( 0 ) ;
-        }
-
     }
 }
 /* ....................................................................... */
@@ -782,23 +768,6 @@ World::updateTransformsInternal(void)
     while(iter != iter_end) {
 
         (*iter++)->updateTransformInternal() ;
-    }
-
-
-
-
-
-    if( m_events.valid() ) {
-
-
-        Events::ViewMatrix& vm = m_events->getViewMatrix() ;
-
-        if( vm.getPriority() > 0 ) {
-
-            m_events->getView()->getCamera()->setViewMatrix( vm.getMatrix() ) ;
-            vm.setPriority( 0 ) ;
-        }
-
     }
 }
 /* ....................................................................... */

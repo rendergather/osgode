@@ -104,10 +104,10 @@ World::threadStep(ooReal step_size)
     // !!!!!!!!!!!!
 
 #if 0
-    // away because writes to the matrix transforms
+    // away because writes to the matrix transforms. See ThreadedManagerUodateCallback
     _callObjectsPostCallbacks(step_size) ;
 
-    // away vbecause could add/remove nodes
+    // away vbecause could add/remove nodes. See ThreadedManagerUodateCallback
     runOperationsInternal() ;
 #else
 

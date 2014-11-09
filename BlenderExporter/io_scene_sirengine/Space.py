@@ -312,11 +312,16 @@ class Space(Writable.Writable):
 
 
         if self.Data.ExportGame:
-            writer.moveIn("Events TRUE")
+            writer.moveIn("FrontEventsBuffer TRUE")
             writer.moveIn("osgODE::Events")
             writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
             writer.moveOut("osgODE::Events")
-            writer.moveOut("Events TRUE")
+            writer.moveOut("FrontEventsBuffer TRUE")
+            writer.moveIn("BackEventsBuffer TRUE")
+            writer.moveIn("osgODE::Events")
+            writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate() )
+            writer.moveOut("osgODE::Events")
+            writer.moveOut("BackEventsBuffer TRUE")
 
 
         writer.moveIn("NearCallback TRUE")

@@ -161,7 +161,8 @@ REGISTER_OBJECT_WRAPPER( World,
 
     ADD_USER_SERIALIZER(ODEObjects) ;
 
-    ADD_OBJECT_SERIALIZER( Events, osgODE::Events, NULL ) ;
+    ADD_OBJECT_SERIALIZER( FrontEventsBuffer, osgODE::Events, NULL ) ;
+    ADD_OBJECT_SERIALIZER( BackEventsBuffer, osgODE::Events, NULL ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

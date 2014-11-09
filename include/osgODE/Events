@@ -30,9 +30,11 @@
 
 /* ======================================================================= */
 #include <osg/View>
-#include <osg/Vec2>
-#include <osg/Matrix>
 #include <osg/observer_ptr>
+
+#include <osgGA/GUIEventAdapter>
+
+// #include <vector>
 /* ======================================================================= */
 
 
@@ -85,68 +87,21 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the cursor position
-    inline void setCursorPosition( const osg::Vec2& cursor_position ) ;
+    typedef std::pair< osg::ref_ptr<const osgGA::GUIEventAdapter>, osg::observer_ptr<osg::View> >    Event ;
+    typedef std::vector< Event >    EventList ;
 
-    //! Get the cursor position
-    inline osg::Vec2& getCursorPosition(void) ;
+    //! Set the event list
+    inline void setEventList( const EventList& event_list ) ;
 
-    //! Get the const cursor position
-    inline const osg::Vec2& getCursorPosition(void) const ;
+    //! Get the event list
+    inline EventList& getEventList(void) ;
 
-    //! Set the normalized cursor position
-    inline void setNormalizedCursorPosition( const osg::Vec2& normalized_cursor_position ) ;
+    //! Get the const event list
+    inline const EventList& getEventList(void) const ;
 
-    //! Get the normalized cursor position
-    inline osg::Vec2& getNormalizedCursorPosition(void) ;
+    inline void enqueue( const osgGA::GUIEventAdapter* ea, osg::View* aa ) ;
 
-    //! Get the const normalized cursor position
-    inline const osg::Vec2& getNormalizedCursorPosition(void) const ;
-
-    //! Set the relative cursor position
-    inline void setRelativeCursorPosition( const osg::Vec2& relative_cursor_position ) ;
-
-    //! Get the relative cursor position
-    inline osg::Vec2& getRelativeCursorPosition(void) ;
-
-    //! Get the const relative cursor position
-    inline const osg::Vec2& getRelativeCursorPosition(void) const ;
-
-    //! Set the button mask
-    inline void setButtonMask( unsigned int button_mask ) ;
-
-    //! Get the const button mask
-    inline unsigned int getButtonMask(void) const ;
-
-    //! Set the view
-    inline void setView( osg::View* view ) ;
-
-    //! Get the view
-    inline osg::View* getView(void) ;
-
-    //! Get the const view
-    inline const osg::View* getView(void) const ;
-
-    //! Get the const inverse projection matrix
-    inline const osg::Matrix& getInverseViewProjectionMatrix(void) ;
-
-    //! returns true if the key is pressed
-    inline bool isKeyPressed(unsigned int keysym) const ;
-
-    //! set the key state
-    inline void setKeyPressed(unsigned int keysym, bool pressed) ;
-
-    //! set the warp pointer
-    inline void setWarpPointer( bool enabled, const osg::Vec2& warp_pointer = osg::Vec2(), bool normalized = false ) ;
-
-    //! get the const warp pointer
-    inline bool getWarpPointer( osg::Vec2& warp_pointer, bool& normalized ) const ;
-
-    //! set the motion
-    inline void setMotion( bool motion ) ;
-
-    //! get the const motion
-    inline bool getMotion(void) const ;
+    inline void clear(void) ;
 /* ======================================================================= */
 
 
@@ -154,69 +109,12 @@ public:
 
 /* ======================================================================= */
 public:
-    void    copy( const Events* other ) ;
-/* ======================================================================= */
+    inline void     requestViewMatrix(osg::View* view, const osg::Matrix& matrix) ;
+    inline void     clearViewMatrixRequests(void) ;
 
+    typedef std::vector< std::pair<osg::View*, osg::Matrix> >   ViewMatrixRequests ;
 
-
-
-/* ======================================================================= */
-public:
-    class OSG_EXPORT ViewMatrix
-    {
-    public:
-        ViewMatrix(const osg::Matrix& m = osg::Matrix::identity(), unsigned int p=0):
-            m_view      ( m ),
-            m_priority  ( p ) {}
-
-        ViewMatrix(const ViewMatrix& other):
-            m_view      ( other.m_view ),
-            m_priority  ( other.m_priority ) {}
-
-        inline void set(const ViewMatrix& vm)
-        {
-            m_view = vm.m_view ;
-            m_priority = vm.m_priority ;
-        }
-
-        inline void setPriority(unsigned int p)
-        {
-            m_priority = p ;
-        }
-
-        inline unsigned int getPriority(void) const
-        {
-            return m_priority ;
-        }
-
-        inline const osg::Matrix& getMatrix(void) const
-        {
-            return m_view ;
-        }
-
-        inline void setMatrix( const osg::Matrix& m)
-        {
-            m_view = m ;
-        }
-
-    private:
-        osg::Matrix     m_view ;
-        unsigned int    m_priority ;
-    } ;
-
-    inline void requestViewMatrix( const ViewMatrix& vm ) ;
-
-    inline ViewMatrix&          getViewMatrix(void) ;
-    inline const ViewMatrix&    getViewMatrix(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
-    inline unsigned int getFrameCounterInternal(void) const ;
-    inline void         incFrameCounterInternal(void) ;
+    const ViewMatrixRequests&   getViewMatrixRequests(void) const ;
 /* ======================================================================= */
 
 
@@ -224,27 +122,9 @@ public:
 
 /* ======================================================================= */
 private:
-    osg::Vec2       m_cursor_position ;
-    osg::Vec2       m_normalized_cursor_position ;
-    osg::Vec2       m_relative_cursor_position ;
-    unsigned int    m_button_mask ;
+    EventList   m_event_list ;
 
-    bool            m_dirty_view_projection ;
-    osg::Matrix     m_inverse_view_projection ;
-
-    unsigned int    m_frame_counter ;
-
-    bool            m_key_pressed[256] ;
-
-    osg::observer_ptr<osg::View>    m_view ;
-
-    ViewMatrix  m_view_matrix ;
-
-    bool            m_warp_pointer_enabled ;
-    bool            m_warp_pointer_normalized ;
-    osg::Vec2       m_warp_pointer ;
-
-    bool        m_motion ;
+    ViewMatrixRequests  m_view_matrix_requests ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

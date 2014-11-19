@@ -243,7 +243,7 @@ CharacterBase::_move(double step_size)
         const double    speed = direction.normalize() ;
         const osg::Vec3 velocity = direction * speed ;
 
-        const osg::Vec3 force = direction * m_body->getMass() * 9.80665 ;
+        const osg::Vec3 force = direction * m_body->getMass() * 9.80665f ;
 
 
         m_lmotor->setParam(dParamVel,   velocity.x()        ) ;

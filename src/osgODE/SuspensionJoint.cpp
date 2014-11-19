@@ -64,7 +64,7 @@ SuspensionJoint::SuspensionJoint(void):
     setParam(dParamCFM3, 0.0) ;
 
 
-    setParam(dParamStopERP1, 0.1) ;
+    setParam(dParamStopERP1, 0.1f) ;
     setParam(dParamStopERP2, 1.0) ;
     setParam(dParamStopERP3, 1.0) ;
 

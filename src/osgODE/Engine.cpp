@@ -108,7 +108,7 @@ Engine::propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out )
         const ooReal    interpolated_ratio = (current_ratio * N + new_ratio) / (N+1) ;
 
 
-        const ooReal    EPSILON = 1.0e-3 ;
+        const ooReal    EPSILON = 1.0e-3f ;
 
 
         if( fabs(new_ratio) > EPSILON   &&   fabs(current_ratio) > EPSILON ) {

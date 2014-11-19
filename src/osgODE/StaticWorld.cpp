@@ -59,26 +59,26 @@ StaticWorld::StaticWorld(void)
 
     m_ODE_world = dWorldCreate() ;
 
-    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665 ) ;
+    dWorldSetGravity                        ( m_ODE_world, 0.0f, 0.0f, -9.80665f ) ;
     dWorldSetMaxAngularSpeed                ( m_ODE_world, FLT_MAX ) ;
-    dWorldSetLinearDamping                  ( m_ODE_world, 0.01 ) ;
-    dWorldSetAngularDamping                 ( m_ODE_world, 0.01 ) ;
-    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01 ) ;
-    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01 ) ;
-    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1 ) ;
-    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1 ) ;
+    dWorldSetLinearDamping                  ( m_ODE_world, 0.01f ) ;
+    dWorldSetAngularDamping                 ( m_ODE_world, 0.01f ) ;
+    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01f ) ;
+    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01f ) ;
+    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1f ) ;
+    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1f ) ;
     dWorldSetAutoDisableFlag                ( m_ODE_world, 0 ) ;
     dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
-    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
+    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0f ) ;
     dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
 
 
 
-    dWorldSetERP(m_ODE_world, 0.2) ;
-    dWorldSetCFM(m_ODE_world, 1.0e-5) ;
+    dWorldSetERP(m_ODE_world, 0.2f) ;
+    dWorldSetCFM(m_ODE_world, 0.00001f) ;
 
     dWorldSetContactMaxCorrectingVel( m_ODE_world, FLT_MAX ) ;
-    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0 ) ;
+    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0f ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -93,26 +93,26 @@ StaticWorld::StaticWorld(const StaticWorld& other, const osg::CopyOp& copyop):
 {
     m_ODE_world = dWorldCreate() ;
 
-    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665 ) ;
+    dWorldSetGravity                        ( m_ODE_world, 0.0, 0.0, -9.80665f ) ;
     dWorldSetMaxAngularSpeed                ( m_ODE_world, FLT_MAX ) ;
-    dWorldSetLinearDamping                  ( m_ODE_world, 0.01 ) ;
-    dWorldSetAngularDamping                 ( m_ODE_world, 0.01 ) ;
-    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01 ) ;
-    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01 ) ;
-    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1 ) ;
-    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1 ) ;
+    dWorldSetLinearDamping                  ( m_ODE_world, 0.01f ) ;
+    dWorldSetAngularDamping                 ( m_ODE_world, 0.01f ) ;
+    dWorldSetLinearDampingThreshold         ( m_ODE_world, 0.01f ) ;
+    dWorldSetAngularDampingThreshold        ( m_ODE_world, 0.01f ) ;
+    dWorldSetAutoDisableLinearThreshold     ( m_ODE_world, 0.1f ) ;
+    dWorldSetAutoDisableAngularThreshold    ( m_ODE_world, 0.1f ) ;
     dWorldSetAutoDisableFlag                ( m_ODE_world, 0 ) ;
     dWorldSetAutoDisableSteps               ( m_ODE_world, 180 ) ;
-    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0 ) ;
+    dWorldSetAutoDisableTime                ( m_ODE_world, 3.0f ) ;
     dWorldSetAutoDisableAverageSamplesCount ( m_ODE_world, 6 ) ;
 
 
 
-    dWorldSetERP(m_ODE_world, 0.2) ;
-    dWorldSetCFM(m_ODE_world, 1.0e-5) ;
+    dWorldSetERP(m_ODE_world, 0.2f) ;
+    dWorldSetCFM(m_ODE_world, 0.00001f) ;
 
     dWorldSetContactMaxCorrectingVel( m_ODE_world, FLT_MAX ) ;
-    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0 ) ;
+    dWorldSetContactSurfaceLayer( m_ODE_world, 0.0f ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

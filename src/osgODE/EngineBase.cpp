@@ -147,7 +147,7 @@ EngineBase::propagate( ooReal step_size, ooReal& vel_out, ooReal& fmax_out )
     // restitute angular speed and torque
     //
 
-    const ooReal    EPSILON = 1.0e-3 ;
+    const ooReal    EPSILON = 1.0e-3f ;
 
 
     if( fabs(m_ratio) > EPSILON ) {
@@ -175,7 +175,7 @@ EngineBase::feedback( ooReal step_size, ooReal speed_in )
     PS_ASSERT1( m_friction >= 0.0 ) ;
 
 
-    const ooReal    EPSILON = 1.0e-3 ;
+    const ooReal    EPSILON = 1.0e-3f ;
 
     if( fabs(m_ratio) > EPSILON ) {
 

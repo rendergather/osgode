@@ -215,7 +215,7 @@ MACRO(OSGODE_SETUP_PLUGIN)
 
         IF( WIN32 )
 
-            EXECUTE_PROCESS(COMMAND ${OSG_BINARIES}\\osgversion.exe --version-number OUTPUT_VARIABLE OSG_VERSION)
+            EXECUTE_PROCESS(COMMAND ${OSGODE_OSG_BINARIES}\\osgversion.exe --version-number OUTPUT_VARIABLE OSG_VERSION)
             STRING(REGEX REPLACE "\n" "" OSG_VERSION "${OSG_VERSION}")
 
         ELSE( WIN32 )

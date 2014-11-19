@@ -49,12 +49,6 @@
 #       else
 #           define OSGODE_DEPRECATED
 #       endif
-#   elif defined(_MSC_VER)
-#       if _MSC_VER >= 1300
-#           define __declspec(deprecated)
-#       else
-#           define OSGODE_DEPRECATED
-#       endif
 #   else
 #       define OSGODE_DEPRECATED
 #   endif

@@ -115,7 +115,7 @@ MACRO(OSGODE_SETUP_LIBRARY)
 
     IF(ANDROID)
         FOREACH(arg ${TARGET_SRC})
-            SET(MODULE_SRC_FILES "${MODULE_SRC_FILES} ${arg}\\\n                   ")
+            SET(MODULE_SRC_FILES "${MODULE_SRC_FILES} ${PROJECT_SOURCE_DIR}/src/${MODULE_NAME}/${arg}\\\n                   ")
         ENDFOREACH(arg ${TARGET_SRC})
 
         CONFIGURE_FILE("${OSGODE_ANDROID_TEMPLATES}/Android.mk.library.in" "${CMAKE_CURRENT_BINARY_DIR}/Android.mk")
@@ -263,7 +263,7 @@ MACRO(OSGODE_SETUP_PLUGIN)
     IF(ANDROID)
 
         FOREACH(arg ${TARGET_SRC})
-            SET(MODULE_SRC_FILES "${MODULE_SRC_FILES} ${arg}\\\n                   ")
+            SET(MODULE_SRC_FILES "${MODULE_SRC_FILES} ${PROJECT_SOURCE_DIR}/src/osgWrappers/serializers/${LIBRARY_NAME}/${arg}\\\n                   ")
         ENDFOREACH(arg ${TARGET_SRC})
 
         CONFIGURE_FILE("${OSGODE_ANDROID_TEMPLATES}/Android.mk.library.in" "${CMAKE_CURRENT_BINARY_DIR}/Android.mk")

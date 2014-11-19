@@ -193,8 +193,8 @@ ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 
 IF( WIN32 )
-    SET(OSG_INCLUDE "$ENV{PROGRAMFILES}\\OpenSceneGraph\\include" CACHE PATH "OSG Headers")
-    SET(ODE_INCLUDE "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\include" CACHE PATH "ODE Headers")
+    SET(OSGODE_OSG_INCLUDE "$ENV{PROGRAMFILES}\\OpenSceneGraph\\include" CACHE PATH "OSG Headers")
+    SET(OSGODE_ODE_INCLUDE "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\include" CACHE PATH "ODE Headers")
 
 ELSE( WIN32 )
 
@@ -204,7 +204,7 @@ ELSE( WIN32 )
         STRING(REGEX REPLACE "\n" "" tmp_var "${tmp_var}")
         STRING(REGEX REPLACE "-I" "" tmp_var "${tmp_var}")
 
-        SET(OSG_INCLUDE ${tmp_var} CACHE PATH "OSG Headers")
+        SET(OSGODE_OSG_INCLUDE ${tmp_var} CACHE PATH "OSG Headers")
 
 
 
@@ -213,23 +213,23 @@ ELSE( WIN32 )
         STRING(REGEX REPLACE "\n" "" tmp_var "${tmp_var}")
         STRING(REGEX REPLACE "-I" "" tmp_var "${tmp_var}")
 
-        SET(ODE_INCLUDE ${tmp_var} CACHE PATH "ODE Headers")
+        SET(OSGODE_ODE_INCLUDE ${tmp_var} CACHE PATH "ODE Headers")
 
     ENDIF( NOT ANDROID )
 
 ENDIF( WIN32 )
 
 
-MESSAGE(STATUS "OSG include: ${OSG_INCLUDE}")
-MESSAGE(STATUS "ODE include: ${ODE_INCLUDE}")
+MESSAGE(STATUS "OSG include: ${OSGODE_OSG_INCLUDE}")
+MESSAGE(STATUS "ODE include: ${OSGODE_ODE_INCLUDE}")
 
 
 
 
 
 IF( WIN32 )
-    SET(OSG_LIBRARIES "$ENV{PROGRAMFILES}\\OpenSceneGraph\\lib" CACHE PATH "OSG Libraries")
-    SET(ODE_LIBRARIES "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\lib" CACHE PATH "ODE Libraries")
+    SET(OSGODE_OSG_LIBRARIES "$ENV{PROGRAMFILES}\\OpenSceneGraph\\lib" CACHE PATH "OSG Libraries")
+    SET(OSGODE_ODE_LIBRARIES "$ENV{PROGRAMFILES}\\OpenDynamicsEngine\\lib" CACHE PATH "ODE Libraries")
 
 ELSE( WIN32 )
 
@@ -239,7 +239,7 @@ ELSE( WIN32 )
         STRING(REGEX REPLACE "\n" "" tmp_var "${tmp_var}")
         STRING(REGEX REPLACE "-L" "" tmp_var "${tmp_var}")
 
-        SET(OSG_LIBRARIES ${tmp_var} CACHE PATH "OSG libraries")
+        SET(OSGODE_OSG_LIBRARIES ${tmp_var} CACHE PATH "OSG libraries")
 
 
 
@@ -247,15 +247,15 @@ ELSE( WIN32 )
         STRING(REGEX REPLACE "\n" "" tmp_var "${tmp_var}")
         STRING(REGEX REPLACE "-L" "" tmp_var "${tmp_var}")
 
-        SET(ODE_LIBRARIES ${tmp_var} CACHE PATH "ODE libraries")
+        SET(OSGODE_ODE_LIBRARIES ${tmp_var} CACHE PATH "ODE libraries")
 
     ENDIF( NOT ANDROID )
 
 ENDIF( WIN32 )
 
 
-MESSAGE(STATUS "OSG libraries: ${OSG_LIBRARIES}")
-MESSAGE(STATUS "ODE libraries: ${ODE_LIBRARIES}")
+MESSAGE(STATUS "OSG libraries: ${OSGODE_OSG_LIBRARIES}")
+MESSAGE(STATUS "ODE libraries: ${OSGODE_ODE_LIBRARIES}")
 
 
 
@@ -270,11 +270,11 @@ ENDIF( WIN32 )
 
 
 IF(NOT ANDROID)
-    INCLUDE_DIRECTORIES(${OSG_INCLUDE})
-    INCLUDE_DIRECTORIES(${ODE_INCLUDE})
+    INCLUDE_DIRECTORIES(${OSGODE_OSG_INCLUDE})
+    INCLUDE_DIRECTORIES(${OSGODE_ODE_INCLUDE})
 
-    LINK_DIRECTORIES( ${OSG_LIBRARIES} )
-    LINK_DIRECTORIES( ${ODE_LIBRARIES} )
+    LINK_DIRECTORIES( ${OSGODE_OSG_LIBRARIES} )
+    LINK_DIRECTORIES( ${OSGODE_ODE_LIBRARIES} )
 ENDIF(NOT ANDROID)
 
 
@@ -326,32 +326,32 @@ ADD_SUBDIRECTORY(doc)
 
 
 IF( NOT ANDROID )
-    OPTION(BUILD_OSGODE_EXAMPLES "Build osgODE examples" OFF)
-    MESSAGE(STATUS "osgODE examples: ${BUILD_OSGODE_EXAMPLES}")
+    OPTION(OSGODE_BUILD_EXAMPLES "Build osgODE examples" OFF)
+    MESSAGE(STATUS "osgODE examples: ${OSGODE_BUILD_EXAMPLES}")
 
-    OPTION(BUILD_OSGODE_PSOUND_EXAMPLES "Build pSound based osgODE examples" OFF)
-    MESSAGE(STATUS "osgODE pSound examples: ${BUILD_OSGODE_PSOUND_EXAMPLES}")
+    OPTION(OSGODE_BUILD_PSOUND_EXAMPLES "Build pSound based osgODE examples" OFF)
+    MESSAGE(STATUS "osgODE pSound examples: ${OSGODE_BUILD_PSOUND_EXAMPLES}")
 
 
-    IF( BUILD_OSGODE_EXAMPLES )
+    IF( OSGODE_BUILD_EXAMPLES )
 
         SET(OSGODE_SAMPLE_DATA "${CMAKE_SOURCE_DIR}/../data-2.0.0" CACHE PATH "osgODE sample data")
         MESSAGE(STATUS "osgODE sample data: ${OSGODE_SAMPLE_DATA}")
 
         ADD_SUBDIRECTORY( examples )
 
-    ENDIF( BUILD_OSGODE_EXAMPLES )
+    ENDIF( OSGODE_BUILD_EXAMPLES )
 ENDIF( NOT ANDROID )
 
 
 IF( NOT ANDROID )
-    OPTION(BUILD_OSGODE_APPLICATIONS "Build osgODE applications" ON)
-    MESSAGE(STATUS "osgODE applications: ${BUILD_OSGODE_APPLICATIONS}")
+    OPTION(OSGODE_BUILD_APPLICATIONS "Build osgODE applications" ON)
+    MESSAGE(STATUS "osgODE applications: ${OSGODE_BUILD_APPLICATIONS}")
 
 
-    IF( BUILD_OSGODE_APPLICATIONS )
+    IF( OSGODE_BUILD_APPLICATIONS )
         ADD_SUBDIRECTORY( applications )
-    ENDIF( BUILD_OSGODE_APPLICATIONS )
+    ENDIF( OSGODE_BUILD_APPLICATIONS )
 ENDIF( NOT ANDROID )
 
 
@@ -369,6 +369,8 @@ MESSAGE(STATUS "${PROJECT_NAME} install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 
 IF(ANDROID)
+    SET(OSGODE_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
+
     CONFIGURE_FILE("${OSGODE_ANDROID_TEMPLATES}/Android.mk.master.in" "${CMAKE_BINARY_DIR}/Android.mk")
     CONFIGURE_FILE("${OSGODE_ANDROID_TEMPLATES}/Application.mk.master.in" "${CMAKE_BINARY_DIR}/Application.mk")
     CONFIGURE_FILE("${OSGODE_ANDROID_TEMPLATES}/AndroidManifest.xml.master.in" "${CMAKE_BINARY_DIR}/AndroidManifest.xml")

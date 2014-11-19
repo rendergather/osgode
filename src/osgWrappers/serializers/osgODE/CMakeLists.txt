@@ -1,4 +1,5 @@
 SET(MODULE_NAME osgdb_serializers_osgode)
+SET(LIBRARY_NAME osgODE)
 
 
 

@@ -175,7 +175,7 @@ $ osgviewer output.osgb
 It is possible to build all the examples at compile time:
 @verbatim
 $ cmake ..  -DCMAKE_BUILD_TYPE=Debug \
->           -DBUILD_OSGODE_EXAMPLES=ON \
+>           -DOSGODE_BUILD_EXAMPLES=ON \
 >           -DOSGODE_DATA_PATH="/absolute/path/to/data/"
 @endverbatim
 \n

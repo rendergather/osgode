@@ -230,7 +230,7 @@ SET(TARGET_SRC
 
 
 
-SET( MODULE_LINK_LIBRARIES_GNU "osgAnimation osgGA osgParticle ode" )
-SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osgGA osgAnimation osgParticle osg OpenThreads ODE_WIN" )
+SET( MODULE_LINK_LIBRARIES_GNU "osgAnimation osgGA ode" )
+SET( MODULE_LINK_LIBRARIES_WIN "opengl32 osgGA osgAnimation osg OpenThreads ODE_WIN" )
 
 OSGODE_SETUP_LIBRARY()

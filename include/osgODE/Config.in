@@ -56,16 +56,9 @@
 #endif
 
 
-#ifndef OSGODE_SINGLE_PRECISION
-    #define OSGODE_SINGLE_PRECISION     @OSGODE_SINGLE_PRECISION@
-#endif
+#define OSGODE_SINGLE_PRECISION @OSGODE_SINGLE_PRECISION@
 
-
-#if OSGODE_SINGLE_PRECISION
-    typedef float ooReal ;
-#else
-    typedef double ooReal ;
-#endif
+typedef @OSGODE_REAL@ ooReal ;
 /* ....................................................................... */
 /* ======================================================================= */
 

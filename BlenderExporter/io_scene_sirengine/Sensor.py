@@ -497,12 +497,13 @@ class PropertySensor(Sensor):
 
 
         self.ValueType = p[2]
-        self.EvaluationType = self.BlenderSensor.evaluation_type.replace("PROP", "")
+        self.EvaluationType = self.BlenderSensor.evaluation_type.replace("PROP", "").replace("THAN", "_THAN")
         self.Property = self.BlenderSensor.property
         self.Value = self.BlenderSensor.value
         self.ValueMin = self.BlenderSensor.value_min
         self.ValueMax = self.BlenderSensor.value_max
         self.PrevRhs = self.BlenderSensor.value
+
 
 
         if not self.Value:

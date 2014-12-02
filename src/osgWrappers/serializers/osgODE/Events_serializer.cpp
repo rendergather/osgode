@@ -35,6 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+#if 0
 namespace {
 static bool checkEventList(const osgODE::Events& events)
 {
@@ -81,6 +82,7 @@ static bool readEventList(osgDB::InputStream& is, osgODE::Events& events)
     return true ;
 }
 } // anon namespace
+#endif
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -94,7 +96,12 @@ REGISTER_OBJECT_WRAPPER( Events,
                          osgODE::Events,
                          "osg::Object osgODE::Events" )
 {
+#if 0
+    // missing osgViewer::Viewer serializer
     ADD_USER_SERIALIZER( EventList ) ;
+#else
+    (void) wrapper ;
+#endif
 }
 /* ....................................................................... */
 /* ======================================================================= */

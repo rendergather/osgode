@@ -109,7 +109,7 @@ LMPlusJoint::~LMPlusJoint(void)
 dJointID
 LMPlusJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::LMPlusJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::LMPlusJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
     dJointID    j = dJointCreateLMPlus(world, NULL) ;
 

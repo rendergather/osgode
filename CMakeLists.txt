@@ -157,6 +157,24 @@ MESSAGE(STATUS "osgODE precision: ${OSGODE_REAL}")
 
 
 
+OPTION(OSGODE_USE_ALIAS_OO "" OFF)
+
+MARK_AS_ADVANCED(OSGODE_USE_ALIAS_OO)
+
+IF(OSGODE_USE_ALIAS_OO)
+    MESSAGE(STATUS "osgODE: using alias")
+    SET(OSGODE_SET_ALIAS "    namespace osgODE {}\n    namespace oo = osgODE ;")
+
+ELSE(OSGODE_USE_ALIAS_OO)
+    MESSAGE(STATUS "osgODE: NOT using alias")
+    SET(OSGODE_SET_ALIAS "//     namespace osgODE {}\n//     namespace oo = osgODE ;")
+
+ENDIF(OSGODE_USE_ALIAS_OO)
+
+
+
+
+
 IF( WIN32 )
     ADD_DEFINITIONS(-W4 -DOSG_LIBRARY)
 ELSE( WIN32 )
@@ -372,3 +390,33 @@ IF(ANDROID)
 
     MESSAGE(STATUS "Android build: use <PATH_TO_NDK>/ndk-build NDK_APPLICATION_MK=Application.mk")
 ENDIF(ANDROID)
+
+
+
+
+
+
+
+
+
+IF(OSGODE_USE_ALIAS_OO)
+
+IF(WIN32)
+
+    INSTALL( CODE
+                "EXECUTE_PROCESS(
+                    COMMAND
+                        mklink /d ${CMAKE_INSTALL_PREFIX}/include/oo ${CMAKE_INSTALL_PREFIX}/include/osgODE
+                )")
+
+ELSE(WIN32)
+
+    INSTALL( CODE
+                "EXECUTE_PROCESS(
+                    COMMAND
+                        ln -sf ${CMAKE_INSTALL_PREFIX}/include/osgODE  ${CMAKE_INSTALL_PREFIX}/include/oo
+                )")
+
+ENDIF(WIN32)
+
+ENDIF(OSGODE_USE_ALIAS_OO)

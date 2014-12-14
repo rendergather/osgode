@@ -113,7 +113,7 @@ DefaultNearCallback::setCollisionParameters(CollisionParameters* collision_param
 bool
 DefaultNearCallback::allocateContactArray(unsigned int N)
 {
-    PS_DBG2("osgODE::DefaultNearCallback::allocateContactArray(%p, N=%u)", this, N) ;
+    PS_DBG2("oo::DefaultNearCallback::allocateContactArray(%p, N=%u)", this, N) ;
 
 
     delete m_contacts ;
@@ -137,7 +137,7 @@ DefaultNearCallback::allocateContactArray(unsigned int N)
 void
 DefaultNearCallback::reset(void)
 {
-    PS_DBG3("osgODE::DefaultNearCallback::reset(%p)", this) ;
+    PS_DBG3("oo::DefaultNearCallback::reset(%p)", this) ;
 
     dJointGroupEmpty(m_contact_group) ;
 }
@@ -152,7 +152,7 @@ DefaultNearCallback::reset(void)
 int
 DefaultNearCallback::collide(OverlappingPair* op)
 {
-//     PS_DBG3("osgODE::DefaultNearCallback::collide(%p, op=%p)", this, op) ;
+//     PS_DBG3("oo::DefaultNearCallback::collide(%p, op=%p)", this, op) ;
 
 
     entryPoint(op) ;
@@ -343,7 +343,7 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
     int num_contacts = dCollide(geom1, geom2, m_collision_parameters->getMaxContactNum(), &(m_contacts->geom), sizeof(dContact)) ;
 
 
-    PS_DBG3("osgODE::DefaultNearCallback::generateContacts(%p, ...): %p <=> %p num contacts: %d", this, collidable1, collidable2, num_contacts) ;
+    PS_DBG3("oo::DefaultNearCallback::generateContacts(%p, ...): %p <=> %p num contacts: %d", this, collidable1, collidable2, num_contacts) ;
 
 
     if(num_contacts > 0) {
@@ -536,7 +536,7 @@ DefaultNearCallback::generateContacts(OverlappingPair* op, CollisionParameters* 
 CollisionParameters*
 DefaultNearCallback::_mixCollisionParameters(CollisionParameters* cp1, CollisionParameters* cp2)
 {
-//     PS_DBG3("osgODE::DefaultNearCallback::_mixCollisionParameters(%p, cp1=%p, cp2=%p)", this, cp1, cp2) ;
+//     PS_DBG3("oo::DefaultNearCallback::_mixCollisionParameters(%p, cp1=%p, cp2=%p)", this, cp1, cp2) ;
 
 
     CollisionParameters*    result = new CollisionParameters() ;

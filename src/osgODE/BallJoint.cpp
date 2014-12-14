@@ -100,7 +100,7 @@ BallJoint::~BallJoint(void)
 dJointID
 BallJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::BallJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::BallJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateBall(world, NULL) ;

@@ -101,7 +101,7 @@ Sphere::~Sphere(void)
 void
 Sphere::setSize(const osg::Vec3& size)
 {
-    PS_DBG2("osgODE::Sphere::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
+    PS_DBG2("oo::Sphere::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
 
     dGeomSphereSetRadius(m_ODE_geom, (size[0] + size[1] + size[2]) / 6.0) ;
 
@@ -135,7 +135,7 @@ Sphere::getSize(void) const
 void
 Sphere::_cloneODESphere(dGeomID src, dGeomID dst)
 {
-    PS_DBG2("osgODE::Sphere::_cloneODESphere(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::Sphere::_cloneODESphere(src=%p, dest=%p)", src, dst) ;
 
 
     dGeomSphereSetRadius(dst, dGeomSphereGetRadius(src)) ;

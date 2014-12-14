@@ -143,7 +143,7 @@ SwaybarJoint::update(ooReal step_size)
 dJointID
 SwaybarJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::SwaybarJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::SwaybarJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateSwaybar(world, NULL) ;

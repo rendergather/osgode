@@ -100,7 +100,7 @@ Cylinder::~Cylinder(void)
 void
 Cylinder::setSize(const osg::Vec3& size)
 {
-    PS_DBG2("osgODE::Cylinder::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
+    PS_DBG2("oo::Cylinder::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
 
     dGeomCylinderSetParams(m_ODE_geom, (size[0] + size[1]) * 0.25, size[2]) ;
 
@@ -137,7 +137,7 @@ Cylinder::getSize(void) const
 void
 Cylinder::_cloneODECylinder(dGeomID src, dGeomID dst)
 {
-    PS_DBG2("osgODE::Cylinder::_cloneODECylinder(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::Cylinder::_cloneODECylinder(src=%p, dest=%p)", src, dst) ;
 
     dReal   r, l ;
     dGeomCylinderGetParams(src, &r, &l) ;

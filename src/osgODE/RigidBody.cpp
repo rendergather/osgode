@@ -217,7 +217,7 @@ RigidBody::setMass(ooReal mass, const osg::Vec3& size, int type_class)
 
 
         default:
-            PS_FATAL("osgODE::RigidBody::setMass(%p, ...): invalid type (%u)", this, type_class) ;
+            PS_FATAL("oo::RigidBody::setMass(%p, ...): invalid type (%u)", this, type_class) ;
         break ;
     }
 
@@ -324,7 +324,7 @@ RigidBody::setDensity(ooReal density, const osg::Vec3& size, int type_class)
 
 
         default:
-            PS_FATAL("osgODE::RigidBody::setDensity(%p, ...): invalid type (%u)", this, type_class) ;
+            PS_FATAL("oo::RigidBody::setDensity(%p, ...): invalid type (%u)", this, type_class) ;
         break ;
     }
 
@@ -437,7 +437,7 @@ RigidBody::getAABB(void) const
 bool
 RigidBody::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::RigidBody::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::RigidBody::addToWorldInternal(%p, world=%p)", this, world) ;
 
     if( dBodyGetWorld(m_ODE_body) != world->getODEWorld() ) {
 
@@ -480,7 +480,7 @@ RigidBody::addToWorldInternal(World* world)
 
 
 
-        PS_DBG3("osgODE::RigidBody::addToWorldInternal(%p): ODE body: %p", this, m_ODE_body) ;
+        PS_DBG3("oo::RigidBody::addToWorldInternal(%p): ODE body: %p", this, m_ODE_body) ;
 
 
 
@@ -501,7 +501,7 @@ RigidBody::addToWorldInternal(World* world)
 bool
 RigidBody::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::RigidBody::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::RigidBody::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
     if( dBodyGetWorld(m_ODE_body) == world->getODEWorld() ) {
 
@@ -545,7 +545,7 @@ RigidBody::removeFromWorldInternal(World* world)
 
 
 
-    PS_WARN("osgODE::RigidBody::removeFromWorldInternal(%p): world != getWorld()", this) ;
+    PS_WARN("oo::RigidBody::removeFromWorldInternal(%p): world != getWorld()", this) ;
 
 
     return false ;
@@ -695,7 +695,7 @@ RigidBody::asRigidBody(void)
 void
 RigidBody::_cloneODEBody(dBodyID src, dBodyID dst)
 {
-    PS_DBG2("osgODE::RigidBody::_cloneODEBody(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::RigidBody::_cloneODEBody(src=%p, dest=%p)", src, dst) ;
 
     // position and orientation
     {

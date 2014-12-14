@@ -110,7 +110,7 @@ class StateSet(Writable.Writable):
 
 
             try:
-                if self.Object["oo_polygon_offset"] != 0.0:
+                if self.Object["oo_polygon_offset"] != 0.0 and self.Data.PolygonOffsetMultiplier > 0.0:
                     self.ModeList.addMode("GL_POLYGON_OFFSET_POINT ON")
                     self.ModeList.addMode("GL_POLYGON_OFFSET_LINE ON")
                     self.ModeList.addMode("GL_POLYGON_OFFSET_FILL ON")

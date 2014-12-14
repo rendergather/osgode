@@ -94,12 +94,12 @@ Character::attach(  RigidBody*  body,
 {
 
     if( ! body ) {
-        PS_WARN("osgODE::Character::attach(%p): null body", this) ;
+        PS_WARN("oo::Character::attach(%p): null body", this) ;
         return NULL ;
     }
 
 
-    PS_DBG("osgODE::Character::attach(%p, body=%p)", this, body) ;
+    PS_DBG("oo::Character::attach(%p, body=%p)", this, body) ;
 
 
     FixedJoint* joint = new FixedJoint() ;
@@ -142,12 +142,12 @@ void
 Character::detach(  RigidBody* body )
 {
     if( ! body ) {
-        PS_WARN("osgODE::Character::detach(%p): null body", this) ;
+        PS_WARN("oo::Character::detach(%p): null body", this) ;
         return ;
     }
 
 
-    PS_DBG("osgODE::Character::detach(%p, body=%p)", this, body) ;
+    PS_DBG("oo::Character::detach(%p, body=%p)", this, body) ;
 
 
     RigidBody::JointList    joint_list( body->getJointList() ) ;
@@ -192,7 +192,7 @@ Character::touch( ooReal max_distance )
 
 
     if( NULL == body ) {
-        PS_WARN("osgODE::Character::touch(%p): no rigid body", this) ;
+        PS_WARN("oo::Character::touch(%p): no rigid body", this) ;
         return NULL ;
     }
 
@@ -254,7 +254,7 @@ Character::touch( ooReal max_distance, osg::Vec3& position, osg::Vec3& normal )
 
 
     if( NULL == body ) {
-        PS_WARN("osgODE::Character::touch(%p): no rigid body", this) ;
+        PS_WARN("oo::Character::touch(%p): no rigid body", this) ;
         return NULL ;
     }
 

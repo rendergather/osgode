@@ -56,9 +56,18 @@
 #endif
 
 
+
+
 #define OSGODE_SINGLE_PRECISION @OSGODE_SINGLE_PRECISION@
 
 typedef @OSGODE_REAL@ ooReal ;
+
+
+
+
+#ifdef __cplusplus
+@OSGODE_SET_ALIAS@
+#endif
 /* ....................................................................... */
 /* ======================================================================= */
 

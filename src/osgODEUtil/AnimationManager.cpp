@@ -189,14 +189,14 @@ AnimationManager::play(const std::string& name, float weight, float fadein)
             this->osgAnimation::BasicAnimationManager::playAnimation( animation, 0, weight ) ;
 
         } else {
-            PS_DBG2("osgODEUtil::AnimationManager::play(%p): fadein operator for \"%s\"", this, name.c_str()) ;
+            PS_DBG2("ooUtil::AnimationManager::play(%p): fadein operator for \"%s\"", this, name.c_str()) ;
             AnimationOperator*  op = new AnimationFadeinOperator(animation, weight, fadein) ;
             op->init() ;
             addAnimationOperator(op) ;
             this->osgAnimation::BasicAnimationManager::playAnimation( animation, 0, animation->getWeight() ) ;
         }
     } else {
-        PS_DBG("osgODEUtil::AnimationManager::play(%p): cannot find animation \"%s\"", this, name.c_str()) ;
+        PS_DBG("ooUtil::AnimationManager::play(%p): cannot find animation \"%s\"", this, name.c_str()) ;
     }
 }
 /* ....................................................................... */
@@ -217,7 +217,7 @@ AnimationManager::stop(const std::string& name)
     if( animation ) {
         this->osgAnimation::BasicAnimationManager::stopAnimation( animation ) ;
     } else {
-        PS_DBG("osgODEUtil::AnimationManager::stop(%p): cannot find animation \"%s\"", this, name.c_str()) ;
+        PS_DBG("ooUtil::AnimationManager::stop(%p): cannot find animation \"%s\"", this, name.c_str()) ;
     }
 }
 /* ....................................................................... */

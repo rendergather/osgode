@@ -104,7 +104,7 @@ MotorJoint::~MotorJoint(void)
 void
 MotorJoint::finalize(void)
 {
-    PS_DBG2("osgODE::MotorJoint::finalize(%p)", this) ;
+    PS_DBG2("oo::MotorJoint::finalize(%p)", this) ;
 
 
 

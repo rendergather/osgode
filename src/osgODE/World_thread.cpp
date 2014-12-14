@@ -71,7 +71,7 @@ World::threadStep(ooReal step_size)
     }
 
 
-    PS_DBG3("osgODE::World::threadStep(%p, step_size=%lf)", this, step_size) ;
+    PS_DBG3("oo::World::threadStep(%p, step_size=%lf)", this, step_size) ;
 
 
 
@@ -87,7 +87,7 @@ World::threadStep(ooReal step_size)
 
 
 
-    PS_DBG3("osgODE::World::threadStep(%p, step_size=%lf): calling WorldStep", this, step_size) ;
+    PS_DBG3("oo::World::threadStep(%p, step_size=%lf): calling WorldStep", this, step_size) ;
     {
         PS_SCOPED_TIMER("WorldStep") ;
 
@@ -113,7 +113,7 @@ World::threadStep(ooReal step_size)
 
 
 
-    PS_DBG3("osgODE::World::threadStep(%p): calling post callbacks", this) ;
+    PS_DBG3("oo::World::threadStep(%p): calling post callbacks", this) ;
 
 
 

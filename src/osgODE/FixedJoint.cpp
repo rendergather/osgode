@@ -149,7 +149,7 @@ FixedJoint::update( ooReal step_size )
 void
 FixedJoint::finalize(void)
 {
-    PS_DBG2("osgODE::FixedJoint::finalize(%p)", this) ;
+    PS_DBG2("oo::FixedJoint::finalize(%p)", this) ;
 
 
     RigidBody*  b1 = NULL ;

@@ -124,7 +124,7 @@ DifferentialJoint::getAngleRate(void)
 dJointID
 DifferentialJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::DifferentialJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::DifferentialJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateDifferential(world, NULL) ;

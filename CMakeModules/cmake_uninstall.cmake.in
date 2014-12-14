@@ -29,3 +29,21 @@ FOREACH(file ${files})
         MESSAGE(STATUS "File \"${file}\" does not exist.")
     ENDIF()
 ENDFOREACH()
+
+
+
+
+SET( OSGODE_UNLINK_OO @OSGODE_USE_ALIAS_OO@ )
+
+IF( OSGODE_UNLINK_OO )
+
+    IF(WIN32)
+
+        EXECUTE_PROCESS( COMMAND rmdir  @CMAKE_INSTALL_PREFIX@/include/oo )
+
+    ELSE(WIN32)
+
+        EXECUTE_PROCESS( COMMAND unlink  @CMAKE_INSTALL_PREFIX@/include/oo )
+
+    ENDIF(WIN32)
+ENDIF( OSGODE_UNLINK_OO )

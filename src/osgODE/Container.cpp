@@ -241,7 +241,7 @@ Container::updateTransformInternal(void)
 bool
 Container::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Container::addToWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -253,13 +253,13 @@ Container::addToWorldInternal(World* world)
         ODEObject*  current = *itr++ ;
 
         if( current->addToWorldInternal(world) ) {
-            PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p): %p added to world",
+            PS_DBG2("oo::Container::addToWorldInternal(%p, world=%p): %p added to world",
                             this, world, current) ;
 
             current->setWorldInternal(world) ;
 
         } else {
-            PS_FATAL("osgODE::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
+            PS_FATAL("oo::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
                             this, world, current->libraryName(), current->className(), current) ;
 
             current->setWorldInternal(NULL) ;
@@ -281,7 +281,7 @@ Container::addToWorldInternal(World* world)
 bool
 Container::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Container::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
 
     ObjectList::iterator    itr = m_object_list.begin() ;
@@ -292,13 +292,13 @@ Container::removeFromWorldInternal(World* world)
         ODEObject*  current = *itr++ ;
 
         if( current->removeFromWorldInternal(world) ) {
-            PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
+            PS_DBG2("oo::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
                             this, world, current) ;
 
             current->setWorldInternal(NULL) ;
 
         } else {
-            PS_FATAL("osgODE::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
+            PS_FATAL("oo::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
                             this, world, current->libraryName(), current->className(), current) ;
         }
     }
@@ -358,7 +358,7 @@ Container::getBound(void) const
 void
 Container::addObject(ODEObject* obj)
 {
-    PS_DBG2("osgODE::Container::addObject(%p, obj=%p)", this, obj) ;
+    PS_DBG2("oo::Container::addObject(%p, obj=%p)", this, obj) ;
 
     if( ! obj ) {
         return ;
@@ -373,12 +373,12 @@ Container::addObject(ODEObject* obj)
 
     if( world ) {
         if( obj->addToWorldInternal(world) ) {
-            PS_DBG2("osgODE::Container::addToWorldInternal(%p, world=%p): %p added to world",
+            PS_DBG2("oo::Container::addToWorldInternal(%p, world=%p): %p added to world",
                             this, world, obj) ;
 
             obj->setWorldInternal(world) ;
         } else {
-            PS_FATAL("osgODE::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
+            PS_FATAL("oo::Container::addToWorldInternal(%p, world=%p): cannot add %s::%s (%p)",
                             this, world, obj->libraryName(), obj->className(), obj) ;
         }
     }
@@ -400,7 +400,7 @@ Container::removeObject(unsigned int idx, bool preserve_order)
 
 
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("oo::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return false ;
     }
 
@@ -408,7 +408,7 @@ Container::removeObject(unsigned int idx, bool preserve_order)
     osg::ref_ptr<ODEObject> obj = m_object_list[idx].get() ;
 
 
-    PS_DBG2("osgODE::Container::removeObject(%p, obj=%p)", this, obj.get()) ;
+    PS_DBG2("oo::Container::removeObject(%p, obj=%p)", this, obj.get()) ;
 
 
     if( preserve_order ) {
@@ -425,11 +425,11 @@ Container::removeObject(unsigned int idx, bool preserve_order)
 
     if( world ) {
         if( obj->removeFromWorldInternal(world) ) {
-            PS_DBG2("osgODE::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
+            PS_DBG2("oo::Container::removeFromWorldInternal(%p, world=%p): %p removed from world",
                             this, world, obj.get()) ;
 
         } else {
-            PS_FATAL("osgODE::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
+            PS_FATAL("oo::Container::removeFromWorldInternal(%p, world=%p): cannot remove %s::%s (%p)",
                             this, world, obj->libraryName(), obj->className(), obj.get()) ;
         }
     }
@@ -465,7 +465,7 @@ osgODE::ODEObject*
 Container::getObject(unsigned int idx)
 {
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("oo::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return NULL ;
     }
 
@@ -484,7 +484,7 @@ const osgODE::ODEObject*
 Container::getObject(unsigned int idx) const
 {
     if( idx >= m_object_list.size() ) {
-        PS_FATAL("osgODE::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
+        PS_FATAL("oo::Container::removeObject(%p, idx=%u): index out of range", this, idx) ;
         return NULL ;
     }
 

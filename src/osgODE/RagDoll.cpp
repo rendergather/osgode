@@ -264,7 +264,7 @@ namespace {
 void
 RagDoll::_initRagDoll(void)
 {
-    PS_DBG2("osgODE::RagDoll::_initRagDoll(%p)", this) ;
+    PS_DBG2("oo::RagDoll::_initRagDoll(%p)", this) ;
 
 
     /*
@@ -291,7 +291,7 @@ RagDoll::_initRagDoll(void)
                 const unsigned int  num_children = body->getMatrixTransform()->getNumChildren() ;
 
                 if( num_children != 0 ) {
-                    PS_WARN("osgODE::RagDoll::_initRagDoll(%p): body \"%s\" has %u children. Removing", this, body->getName().c_str(), num_children) ;
+                    PS_WARN("oo::RagDoll::_initRagDoll(%p): body \"%s\" has %u children. Removing", this, body->getName().c_str(), num_children) ;
 
                     body->getMatrixTransform()->removeChildren( 0, num_children ) ;
                 }
@@ -361,7 +361,7 @@ RagDoll::_initRagDoll(void)
         osgAnimation::Bone* bone = bone_map[ body->getName() ] ;
 
         if( ! bone ) {
-            PS_WARN("osgODE::RagDoll::_initRagDoll(%p): cannot find bone \"%s\"", this, body->getName().c_str()) ;
+            PS_WARN("oo::RagDoll::_initRagDoll(%p): cannot find bone \"%s\"", this, body->getName().c_str()) ;
 
             continue ;
         }

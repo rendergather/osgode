@@ -100,7 +100,7 @@ Capsule::~Capsule(void)
 void
 Capsule::setSize(const osg::Vec3& size)
 {
-    PS_DBG2("osgODE::Capsule::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
+    PS_DBG2("oo::Capsule::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
 
     const dReal radius = (size[0] + size[1]) * 0.25 ;
     const dReal length = size[2] - radius * 2.0 ;
@@ -143,7 +143,7 @@ Capsule::getSize(void) const
 void
 Capsule::_cloneODECapsule(dGeomID src, dGeomID dst)
 {
-    PS_DBG2("osgODE::Capsule::_cloneODECapsule(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::Capsule::_cloneODECapsule(src=%p, dest=%p)", src, dst) ;
 
     dReal   r, l ;
     dGeomCapsuleGetParams(src, &r, &l) ;

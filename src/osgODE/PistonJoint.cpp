@@ -103,7 +103,7 @@ PistonJoint::~PistonJoint(void)
 dJointID
 PistonJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::PistonJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::PistonJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
     dJointID    j = dJointCreatePiston(world, NULL) ;
 

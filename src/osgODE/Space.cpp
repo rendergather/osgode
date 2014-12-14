@@ -191,7 +191,7 @@ Space::threadUpdate(ooReal step_size)
 void
 Space::collide(void)
 {
-    PS_DBG3("osgODE::Space::collide(%p)", this) ;
+    PS_DBG3("oo::Space::collide(%p)", this) ;
 
 
 
@@ -201,7 +201,7 @@ Space::collide(void)
         m_near_callback->reset() ;
 
         {
-            PS_DBG3("osgODE::Space::collide(%p): dSpaceCollide", this) ;
+            PS_DBG3("oo::Space::collide(%p): dSpaceCollide", this) ;
             PS_SCOPED_TIMER("dSpaceCollide") ;
 
             dSpaceCollide(m_ODE_space, (void*)m_near_callback, m_overlapping_pairs_dispatcher) ;
@@ -240,7 +240,7 @@ Space::copySpace(const Space* other)
 void
 Space::_cloneODESpace(dSpaceID src, dSpaceID dst)
 {
-    PS_DBG2("osgODE::Space::_cloneODESpace(src=%p, dst=%p)", src, dst) ;
+    PS_DBG2("oo::Space::_cloneODESpace(src=%p, dst=%p)", src, dst) ;
 
     dSpaceSetCleanup(dst, dSpaceGetCleanup(src)) ;
     dSpaceSetSublevel(dst, dSpaceGetSublevel(src)) ;
@@ -256,7 +256,7 @@ Space::_cloneODESpace(dSpaceID src, dSpaceID dst)
 bool
 Space::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Space::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Space::addToWorldInternal(%p, world=%p)", this, world) ;
 
 	(void) world ;
 
@@ -273,7 +273,7 @@ Space::addToWorldInternal(World* world)
 bool
 Space::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Space::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Space::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
 	(void) world ;
 

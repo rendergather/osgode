@@ -109,7 +109,7 @@ Hinge2Joint::~Hinge2Joint(void)
 dJointID
 Hinge2Joint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::Hinge2Joint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Hinge2Joint::cloneODEJoint(%p, world=%p)", this, world) ;
 
     dJointID    j = dJointCreateHinge2(world, NULL) ;
 

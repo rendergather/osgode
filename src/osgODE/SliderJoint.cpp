@@ -111,7 +111,7 @@ SliderJoint::asSliderJoint(void)
 dJointID
 SliderJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::SliderJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::SliderJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
     dJointID    j = dJointCreateSlider(world, NULL) ;
 

@@ -147,7 +147,7 @@ World::~World(void)
 bool
 World::addObject(ODEObject* obj)
 {
-    PS_DBG2("osgODE::World::addObject(%p, obj=%p)", this, obj) ;
+    PS_DBG2("oo::World::addObject(%p, obj=%p)", this, obj) ;
 
     PS_ASSERT1(obj != NULL) ;
 
@@ -172,9 +172,9 @@ World::addObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("osgODE::World(%p): Objects: %lu", this, m_objects.size()) ;
+    PS_DBG2("oo::World(%p): Objects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("osgODE::World(%p): Objects: %u", this, m_objects.size()) ;
+    PS_DBG2("oo::World(%p): Objects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;
@@ -190,7 +190,7 @@ World::addObject(ODEObject* obj)
 bool
 World::removeObject(ODEObject* obj)
 {
-    PS_DBG2("osgODE::World::removeObject(%p, obj=%p)", this, obj) ;
+    PS_DBG2("oo::World::removeObject(%p, obj=%p)", this, obj) ;
 
     PS_ASSERT1(obj != NULL) ;
 
@@ -238,9 +238,9 @@ World::removeObject(ODEObject* obj)
 
 
 #if IS_X86_64
-    PS_DBG2("osgODE::World(%p): Objects: %lu", this, m_objects.size()) ;
+    PS_DBG2("oo::World(%p): Objects: %lu", this, m_objects.size()) ;
 #else
-    PS_DBG2("osgODE::World(%p): Objects: %u", this, m_objects.size()) ;
+    PS_DBG2("oo::World(%p): Objects: %u", this, m_objects.size()) ;
 #endif
 
     return ret_val ;
@@ -275,7 +275,7 @@ World::step(ooReal step_size)
     }
 
 
-    PS_DBG3("osgODE::World::step(%p, step_size=%lf)", this, step_size) ;
+    PS_DBG3("oo::World::step(%p, step_size=%lf)", this, step_size) ;
 
 
 
@@ -291,7 +291,7 @@ World::step(ooReal step_size)
 
 
 
-    PS_DBG3("osgODE::World::step(%p, step_size=%lf): calling WorldStep", this, step_size) ;
+    PS_DBG3("oo::World::step(%p, step_size=%lf): calling WorldStep", this, step_size) ;
     {
         PS_SCOPED_TIMER("WorldStep") ;
 
@@ -317,7 +317,7 @@ World::step(ooReal step_size)
 void
 World::_callObjectsCallbacks(ooReal step_size)
 {
-    PS_DBG3("osgODE::World::_callObjectsCallbacks(%p, step_size=%f)", this, step_size) ;
+    PS_DBG3("oo::World::_callObjectsCallbacks(%p, step_size=%f)", this, step_size) ;
 
 
     std::vector< osg::ref_ptr<ODEObject> >::iterator    iter = m_objects.begin() ;
@@ -346,7 +346,7 @@ World::_callObjectsCallbacks(ooReal step_size)
 void
 World::_callObjectsPostCallbacks(ooReal step_size)
 {
-    PS_DBG3("osgODE::World::_callObjectsPostCallbacks(%p, step_size=%f)", this, step_size) ;
+    PS_DBG3("oo::World::_callObjectsPostCallbacks(%p, step_size=%f)", this, step_size) ;
 
 
 
@@ -381,7 +381,7 @@ World::runOperationsInternal(void)
         OperationList   operations = m_operations ;
         m_operations.clear() ;
 
-        PS_DBG3("osgODE::World::runOperationsInternal(%p)", this) ;
+        PS_DBG3("oo::World::runOperationsInternal(%p)", this) ;
 
         OperationList::iterator itr = operations.begin() ;
         OperationList::iterator itr_end = operations.end() ;
@@ -394,7 +394,7 @@ World::runOperationsInternal(void)
             PS_ASSERT1( op != NULL ) ;
 
 
-            PS_DBG3("osgODE::World::runOperationsInternal(%p): new operation %p", this, op) ;
+            PS_DBG3("oo::World::runOperationsInternal(%p): new operation %p", this, op) ;
 
             (*op)(this) ;
         }
@@ -556,9 +556,9 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
     (void) regcomp_cflags ;
 
 #ifdef ANDROID
-    PS_FATAL("osgODE::World::getObjectsByRegexName(%p): not supported in Android build", this) ;
+    PS_FATAL("oo::World::getObjectsByRegexName(%p): not supported in Android build", this) ;
 #else
-    PS_FATAL("osgODE::World::getObjectsByRegexName(%p): not supported in Windows build", this) ;
+    PS_FATAL("oo::World::getObjectsByRegexName(%p): not supported in Windows build", this) ;
 #endif
 
 
@@ -625,7 +625,7 @@ World::copyWorld(const World* other)
 void
 World::_cloneODEWorld(dWorldID src, dWorldID dst)
 {
-    PS_DBG2("osgODE::World::_cloneODEWorld(src=%p, dst=%p)", src, dst) ;
+    PS_DBG2("oo::World::_cloneODEWorld(src=%p, dst=%p)", src, dst) ;
 
     // general functions
     {
@@ -678,7 +678,7 @@ World::_cloneODEWorld(dWorldID src, dWorldID dst)
 bool
 World::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::World::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::World::addToWorldInternal(%p, world=%p)", this, world) ;
 
     return ODEObject::addToWorldInternal( world ) ;
 }
@@ -693,7 +693,7 @@ World::addToWorldInternal(World* world)
 bool
 World::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::World::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::World::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
     return ODEObject::removeFromWorldInternal( world ) ;
 }
@@ -758,7 +758,7 @@ World::traverse(osg::NodeVisitor& nv)
 void
 World::updateTransformsInternal(void)
 {
-    PS_DBG3("osgODE::World::updateTransformsInternal(%p)", this) ;
+    PS_DBG3("oo::World::updateTransformsInternal(%p)", this) ;
 
 
 

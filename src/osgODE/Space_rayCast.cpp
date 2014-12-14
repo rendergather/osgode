@@ -144,7 +144,7 @@ Space::performRayCast(  const osg::Vec3&    from,
                         int                 category_bits )
 {
 
-    PS_DBG3("osgODE::Space::performRayCast(%p, [%f, %f, %f], [%f, %f, %f])",
+    PS_DBG3("oo::Space::performRayCast(%p, [%f, %f, %f], [%f, %f, %f])",
             this,
             from.x(), from.y(), from.z(),
             to.x(), to.y(), to.z()
@@ -203,7 +203,7 @@ Space::performRayCast(  const osg::Vec3&    from,
      */
     dGeomDestroy(ray) ;
 
-    PS_DBG3("osgODE::Space::rayCast(%p, ...): %u contacts", this, rnc_data.NumContacts) ;
+    PS_DBG3("oo::Space::rayCast(%p, ...): %u contacts", this, rnc_data.NumContacts) ;
 
     return rnc_data.NumContacts ;
 }
@@ -230,7 +230,7 @@ Space::rayCast( const osg::Vec3&    from,
                 bool                closest_hit)
 {
 
-    PS_DBG3("osgODE::Space::rayCast(%p, [%f, %f, %f], [%f, %f, %f])",
+    PS_DBG3("oo::Space::rayCast(%p, [%f, %f, %f], [%f, %f, %f])",
             this,
             from.x(), from.y(), from.z(),
             to.x(), to.y(), to.z()
@@ -280,7 +280,7 @@ Space::rayCast( const osg::Vec3&    from,
      */
     dGeomDestroy(ray) ;
 
-    PS_DBG3("osgODE::Space::rayCast(%p, ...): %u contacts", this, rnc_data.NumContacts) ;
+    PS_DBG3("oo::Space::rayCast(%p, ...): %u contacts", this, rnc_data.NumContacts) ;
 
     return rnc_data.NumContacts ;
 }

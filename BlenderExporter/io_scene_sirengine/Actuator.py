@@ -1757,6 +1757,9 @@ class GameActuator(Actuator):
         elif self.BlenderActuator.mode == "START" :
             self.Mode = "START_FROM_FILE"
 
+        else:
+            self.Mode = "USER"
+
 
         return True
 ############################################################################

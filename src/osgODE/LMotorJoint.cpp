@@ -104,7 +104,7 @@ LMotorJoint::~LMotorJoint(void)
 dJointID
 LMotorJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::LMotorJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::LMotorJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
     dJointID    j = dJointCreateLMotor(world, NULL) ;
 

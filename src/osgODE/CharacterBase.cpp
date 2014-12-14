@@ -518,7 +518,7 @@ CharacterBase:: _collideAgainstGround(ooReal step_size)
         contact.geom.g2 = collidable->getODEGeom() ;
 
 
-//         PS_DBG3("osgODE::CharacterBase::_collideAgainstGround(%p): generating contact", this) ;
+//         PS_DBG3("oo::CharacterBase::_collideAgainstGround(%p): generating contact", this) ;
 
 
         m_foot_contact_joint = dJointCreateContact(space->getODEWorld(), NULL, &contact) ;

@@ -104,7 +104,7 @@ DHingeJoint::~DHingeJoint(void)
 void
 DHingeJoint::finalize(void)
 {
-    PS_DBG2("osgODE::DHingeJoint::finalize(%p)", this) ;
+    PS_DBG2("oo::DHingeJoint::finalize(%p)", this) ;
 
 
 
@@ -149,7 +149,7 @@ DHingeJoint::finalize(void)
 dJointID
 DHingeJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::DHingeJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::DHingeJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateDHinge(world, NULL) ;

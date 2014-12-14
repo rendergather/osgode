@@ -165,7 +165,7 @@ ThreadedManager::frame(ooReal dt)
 
 
 
-    PS_DBG3("osgODE::Manager::threadFrame(%p, dt=%lf)", this, dt) ;
+    PS_DBG3("oo::Manager::threadFrame(%p, dt=%lf)", this, dt) ;
 
     PS_SCOPED_TIMER("Manager::threadFrame") ;
 

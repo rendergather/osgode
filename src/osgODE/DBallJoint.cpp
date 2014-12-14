@@ -101,7 +101,7 @@ DBallJoint::~DBallJoint(void)
 dJointID
 DBallJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::DBallJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::DBallJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateDBall(world, NULL) ;

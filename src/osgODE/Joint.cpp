@@ -122,7 +122,7 @@ Joint::postUpdate(ooReal step_size)
 bool
 Joint::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Joint::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Joint::addToWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -178,7 +178,7 @@ Joint::addToWorldInternal(World* world)
 bool
 Joint::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Joint::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Joint::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -225,7 +225,7 @@ Joint::removeFromWorldInternal(World* world)
 void
 Joint::finalize(void)
 {
-    PS_DBG2("osgODE::Joint::finalize(%p)", this) ;
+    PS_DBG2("oo::Joint::finalize(%p)", this) ;
 
 
 
@@ -265,7 +265,7 @@ Joint::finalize(void)
 void
 Joint::setBody1(osgODE::RigidBody* body)
 {
-    PS_DBG2("osgODE::Joint::setBody1(%p, body=%p)", this, body) ;
+    PS_DBG2("oo::Joint::setBody1(%p, body=%p)", this, body) ;
 
     if( m_body1.valid() ) {
         m_body1->removeJointInternal(this) ;
@@ -290,7 +290,7 @@ Joint::setBody1(osgODE::RigidBody* body)
 void
 Joint::setBody2(osgODE::RigidBody* body)
 {
-    PS_DBG2("osgODE::Joint::setBody2(%p, body=%p)", this, body) ;
+    PS_DBG2("oo::Joint::setBody2(%p, body=%p)", this, body) ;
 
     if( m_body2.valid() ) {
         m_body2->removeJointInternal(this) ;

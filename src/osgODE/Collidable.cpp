@@ -123,7 +123,7 @@ Collidable::setCollidableOffset(const osg::Matrix& offset)
 bool
 Collidable::addToWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Collidable::addToWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Collidable::addToWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -157,7 +157,7 @@ Collidable::addToWorldInternal(World* world)
         }
 
     } else {
-        PS_WARN("osgODE::Collidable::addToWorldInternal(%p, ...): %p not a Space", this, world) ;
+        PS_WARN("oo::Collidable::addToWorldInternal(%p, ...): %p not a Space", this, world) ;
     }
 
 
@@ -174,7 +174,7 @@ Collidable::addToWorldInternal(World* world)
 bool
 Collidable::removeFromWorldInternal(World* world)
 {
-    PS_DBG2("osgODE::Collidable::removeFromWorldInternal(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::Collidable::removeFromWorldInternal(%p, world=%p)", this, world) ;
 
 
 
@@ -198,7 +198,7 @@ Collidable::removeFromWorldInternal(World* world)
         }
 
     } else {
-        PS_WARN("osgODE::Collidable::removeFromWorldInternal(%p, ...): %p not a Space", this, world) ;
+        PS_WARN("oo::Collidable::removeFromWorldInternal(%p, ...): %p not a Space", this, world) ;
     }
 
 
@@ -290,7 +290,7 @@ Collidable::isColliding(void) const
 void
 Collidable::_cloneODEGeom(dGeomID src, dGeomID dst)
 {
-    PS_DBG2("osgODE::Collidable::_cloneODEGeom(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::Collidable::_cloneODEGeom(src=%p, dest=%p)", src, dst) ;
 
 
     // position and orientation

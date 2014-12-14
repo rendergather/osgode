@@ -102,7 +102,7 @@ Box::~Box(void)
 void
 Box::setSize(const osg::Vec3& size)
 {
-    PS_DBG2("osgODE::Box::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
+    PS_DBG2("oo::Box::setSize(%p, size=[%lf, %lf, %lf])", this, size[0], size[1], size[2]) ;
 
     dGeomBoxSetLengths(m_ODE_geom, size[0], size[1], size[2]) ;
 
@@ -137,7 +137,7 @@ Box::getSize(void) const
 void
 Box::_cloneODEBox(dGeomID src, dGeomID dst)
 {
-    PS_DBG2("osgODE::Box::_cloneODEBox(src=%p, dest=%p)", src, dst) ;
+    PS_DBG2("oo::Box::_cloneODEBox(src=%p, dest=%p)", src, dst) ;
 
     dVector3    l ;
     dGeomBoxGetLengths(src, l) ;

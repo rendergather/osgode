@@ -147,7 +147,7 @@ TriMesh::getSize(void) const
 void
 TriMesh::setMass(ooReal mass)
 {
-    PS_DBG2("osgODE::TriMesh::setMass(%p, mass=%f)", this, mass) ;
+    PS_DBG2("oo::TriMesh::setMass(%p, mass=%f)", this, mass) ;
 
 
 
@@ -180,7 +180,7 @@ TriMesh::setMass(ooReal mass)
 void
 TriMesh::setDensity(ooReal density)
 {
-    PS_DBG2("osgODE::TriMesh::setDensity(%p, density=%f)", this, density) ;
+    PS_DBG2("oo::TriMesh::setDensity(%p, density=%f)", this, density) ;
 
 
 
@@ -226,18 +226,18 @@ TriMesh::setDensity(ooReal density)
 bool
 TriMesh::build(bool compute_size)
 {
-    PS_DBG2("osgODE::TriMesh::build(%p)", this) ;
+    PS_DBG2("oo::TriMesh::build(%p)", this) ;
 
 
     if( ! m_vertex_array.valid() ) {
-        PS_FATAL("osgODE::TriMesh::build(%p): m_vertex_array == NULL", this) ;
+        PS_FATAL("oo::TriMesh::build(%p): m_vertex_array == NULL", this) ;
         return false ;
     }
 
 
 
     if( ! m_index_array.valid() ) {
-        PS_WARN("osgODE::TriMesh::build(%p): m_index_array == NULL, building now assuming array of triangles", this) ;
+        PS_WARN("oo::TriMesh::build(%p): m_index_array == NULL, building now assuming array of triangles", this) ;
 
         m_index_array = new osg::IntArray() ;
 

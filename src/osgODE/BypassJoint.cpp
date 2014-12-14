@@ -355,7 +355,7 @@ BypassJoint::asBypassJoint(void)
 dJointID
 BypassJoint::cloneODEJoint(dWorldID world) const
 {
-    PS_DBG2("osgODE::BypassJoint::cloneODEJoint(%p, world=%p)", this, world) ;
+    PS_DBG2("oo::BypassJoint::cloneODEJoint(%p, world=%p)", this, world) ;
 
 
     dJointID    j = dJointCreateBypass(world, NULL) ;

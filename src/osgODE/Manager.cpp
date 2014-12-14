@@ -102,7 +102,7 @@ Manager::Manager(const Manager& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 Manager::~Manager(void)
 {
-    PS_DBG3("osgODE::Manager::~Manager(%p)", this) ;
+    PS_DBG3("oo::Manager::~Manager(%p)", this) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -144,7 +144,7 @@ Manager::frame(ooReal dt)
 
 
 
-    PS_DBG3("osgODE::Manager::frame(%p, dt=%lf)", this, dt) ;
+    PS_DBG3("oo::Manager::frame(%p, dt=%lf)", this, dt) ;
 
     PS_SCOPED_TIMER("Manager::frame") ;
 

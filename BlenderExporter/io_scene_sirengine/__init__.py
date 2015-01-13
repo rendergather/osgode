@@ -27,7 +27,7 @@ import bpy
 
 from bpy_extras.io_utils import ExportHelper
 
-from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty, IntProperty
 
 
 if "osgt_exporter" in locals():
@@ -88,6 +88,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=False)
     export_game   = BoolProperty( name="Export game (requiers ooGame)", default=False)
 
+    gl_lighting   = BoolProperty( name="GL_LIGHTING", default=False)
+
 
     max_anisotropy = FloatProperty( name="Max anisotropy", default=4, min=0)
 
@@ -98,11 +100,16 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     polygon_offset_multiplier = FloatProperty( name="PolygonOffset multiplier", default=1.0, min=0.0)
 
 
+    erp = FloatProperty( name="ERP", default=0.2, min=0.0, max=1.0)
+    cfm = FloatProperty( name="CFM", default=1.0e-5, min=0.0, max=1.0)
+
     stop_erp = FloatProperty( name="Stop ERP", default=0.2, min=0.0, max=1.0)
     stop_cfm = FloatProperty( name="Stop CFM", default=1.0e-5, min=0.0, max=1.0)
 
 
     contact_surface_layer = FloatProperty( name="Contact surface layer", default=0.005, min=0.0, max=1.0)
+
+    max_contacts = IntProperty( name="Max contact num", default=16, min=0, max=1024)
 
 
 
@@ -113,6 +120,8 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
                                 name = "World step",
                                 description = "Select a world step function",
                                 default = "dWorldQuickStep" )
+
+
 ############################################################################
 
 
@@ -148,13 +157,17 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.ExportLights = self.export_lights
         data.ExportSounds = self.export_sounds
         data.ExportGame = self.export_game
+        data.GL_LIGHTING = self.gl_lighting
         data.ContactSurfaceLayer = self.contact_surface_layer
+        data.MaxContactNum = self.max_contacts
         data.WorldStep = self.world_step
         data.MaxAnisotropy = self.max_anisotropy
         data.AmbientMultiplier = self.ambient_multiplier
         data.PolygonOffsetMultiplier = self.polygon_offset_multiplier
         data.StopERP = self.stop_erp
         data.StopCFM = self.stop_cfm
+        data.ERP = self.erp
+        data.CFM = self.cfm
 
         return exporter.export()
 ############################################################################

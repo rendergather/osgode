@@ -54,6 +54,8 @@ class ODEObject(Writable.Writable):
 
     UpdateCallback = None
 
+    IsCharacter = False
+
     Name = ""
 ############################################################################
 
@@ -74,6 +76,7 @@ class ODEObject(Writable.Writable):
         self.UserValues = []
         self.UpdateCallback = None
         self.Name = ""
+        self.IsCharacter = False
 ############################################################################
 
 

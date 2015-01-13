@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# file CollisionParameters.py
+# file AttributeList.py
 # author Rocco Martino
 #
 ############################################################################
@@ -24,6 +24,7 @@
 
 ############################################################################
 from . import Writable
+import math
 ############################################################################
 
 
@@ -39,20 +40,16 @@ from . import Writable
 
 ############################################################################
 # ........................................................................ #
-class CollisionParameters(Writable.Writable):
-    """osgODE::CollisionParameters"""
+class AttributeList(Writable.Writable):
+    """AttributeList in the scene"""
 
 
 
 
 
 ############################################################################
-    Mode = 12314
-    Mu = 1.0
-    Mu2 = 1.0
-    SoftERP = 0.2
-    SoftCFM = 1.0e-5
-    MaxContactNum = 16
+    Object = None
+    Attributes = []
 ############################################################################
 
 
@@ -64,16 +61,11 @@ class CollisionParameters(Writable.Writable):
 
 
 ############################################################################
-    def __init__(self, data):
-        super(CollisionParameters, self).__init__(data)
+    def __init__(self, data, obj):
+        super(AttributeList, self).__init__(data)
 
-        self.Mode = 12314
-        self.Mu = 1.0
-        self.Mu2 = 1.0
-        self.Bounce = 0.0
-        self.SoftERP = self.Data.StopERP
-        self.SoftCFM = self.Data.StopCFM
-        self.MaxContactNum = self.Data.MaxContactNum
+        self.Object = obj
+        self.Attributes = []
 ############################################################################
 
 
@@ -81,9 +73,42 @@ class CollisionParameters(Writable.Writable):
 
 ############################################################################
     def buildGraph(self):
-        super(CollisionParameters, self).buildGraph()
+        super(AttributeList, self).buildGraph()
 
-        return True
+        polygon_offset = 0.0 ;
+
+        try:
+            polygon_offset = self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier
+        except:
+            polygon_offset = 0.0
+
+
+
+        transparency = self.Object.data.materials[0] and self.Object.data.materials[0].use_transparency and not self.Data.ExportLights
+
+
+
+        if polygon_offset > 0.0:
+            self.Attributes.append(
+                (   "osg::PolygonOffset", \
+                    "UniqueID %d" %self.Data.UniqueID.generate(), \
+                    "Factor %f" %(math.copysign(1.0, polygon_offset) * -1.0), \
+                    "Units %f" %(polygon_offset * -1.0) \
+                ) \
+            )
+
+
+
+        if transparency:
+            self.Attributes.append(
+                (   "osg::Depth", \
+                    "UniqueID %d" %self.Data.UniqueID.generate(), \
+                    "WriteMask FALSE", \
+                ) \
+            )
+
+
+        return self.traverseBuild()
 ############################################################################
 
 
@@ -91,37 +116,25 @@ class CollisionParameters(Writable.Writable):
 
 ############################################################################
     def writeToStream(self, writer):
-        writer.moveIn("osgODE::CollisionParameters") ;
-
-        if not super(CollisionParameters, self).writeToStream(writer) :
-            return False
-
-        if self.Bounce != 0.0:
-            self.Mode = self.Mode + 4
-
-        if self.Mode != 0:
-            writer.writeLine("Mode %d"              %self.Mode)
+        num_attributes = len(self.Attributes)
 
 
-        if self.Mu != 1.0:
-            writer.writeLine("Mu %f"                %self.Mu)
+        if num_attributes:
+
+            writer.moveIn("AttributeList %d" % num_attributes)
+
+            for attribute in self.Attributes:
+                writer.moveIn(attribute[0])
+
+                for i in attribute[1:]:
+                    writer.writeLine( i )
+
+                writer.moveOut(attribute[0])
+
+                writer.writeLine("Value OFF")
 
 
-        if self.Mu2 != 1.0:
-            writer.writeLine("Mu2 %f"               %self.Mu2)
-
-
-        if self.Bounce != 0.0:
-            writer.writeLine("Bounce %f"            %self.Bounce)
-
-
-        writer.writeLine("SoftERP %f"           %self.SoftERP)
-        writer.writeLine("SoftCFM %f"           %self.SoftCFM)
-        writer.writeLine("MaxContactNum %d"     %self.MaxContactNum)
-
-
-
-        writer.moveOut("osgODE::CollisionParameters")
+            writer.moveOut("AttributeList %d" % num_attributes)
 
         return True
 ############################################################################

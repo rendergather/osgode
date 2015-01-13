@@ -520,7 +520,7 @@ World::getObjectByName(const std::string& name, bool traverse_containers)
             }
 
 
-            osgODE::Container*  container = obj->asContainer() ;
+            Container*  container = obj->asContainer() ;
 
 
             if( container ) {

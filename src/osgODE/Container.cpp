@@ -602,6 +602,18 @@ Container::getObjectByName(const std::string& name)
             found = obj ;
             break ;
         }
+
+
+        Container*  container = obj->asContainer() ;
+
+
+        if( container ) {
+            found = container->getObjectByName( name ) ;
+
+            if( found ) {
+                break ;
+            }
+        }
     }
 
     return found ;

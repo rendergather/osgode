@@ -234,8 +234,9 @@ class Joint(ODEObject.ODEObject):
             mat1 = Matrix(self.Constraint.matrix_world)
 
             if o2:
-                mat1.invert()
-                mrel = mat1 * Matrix(o2.matrix_world)
+                mat2 = Matrix(self.Object.target.matrix_world)
+                mat2.invert()
+                mrel = mat2 * mat1
                 self.RelativePosition, self.RelativeRotation, srel = mrel.decompose()
             else:
                 self.RelativePosition, self.RelativeRotation, srel = mat1.decompose()
@@ -278,6 +279,8 @@ class Joint(ODEObject.ODEObject):
 
 
 
+        self.ERP = self.Data.ERP * 60.0 / self.Data.Scene.game_settings.fps
+        self.CFM = self.Data.CFM * 60.0 / self.Data.Scene.game_settings.fps
         self.StopERP = self.Data.StopERP * 60.0 / self.Data.Scene.game_settings.fps
         self.StopCFM = self.Data.StopCFM * 60.0 / self.Data.Scene.game_settings.fps
 
@@ -286,6 +289,8 @@ class Joint(ODEObject.ODEObject):
 
         self.StopCFM = self.readProperty( self.Body1, self.Object.name, "StopCFM", self.StopCFM )
         self.StopERP = self.readProperty( self.Body1, self.Object.name, "StopERP", self.StopERP )
+        self.CFM = self.readProperty( self.Body1, self.Object.name, "CFM", self.CFM )
+        self.ERP = self.readProperty( self.Body1, self.Object.name, "ERP", self.ERP )
 
 
 

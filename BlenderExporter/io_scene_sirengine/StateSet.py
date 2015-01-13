@@ -24,6 +24,7 @@
 
 ############################################################################
 from . import Writable
+import math
 ############################################################################
 
 
@@ -51,6 +52,7 @@ class StateSet(Writable.Writable):
     TextureModeList = None
     TextureAttributeList = None
     ModeList = None
+    AttributeList = None
     UniformList = None
     Transparent = None
 ############################################################################
@@ -71,11 +73,15 @@ class StateSet(Writable.Writable):
         self.TextureModeList = None
         self.TextureAttributeList = None
         self.ModeList = None
+        self.AttributeList = None
         self.UniformList = None
         self.Transparent = None
 
         from . import ModeList
         self.ModeList = ModeList.ModeList(self.Data)
+
+        from . import AttributeList
+        self.AttributeList = AttributeList.AttributeList(self.Data, obj)
 
         from . import UniformList
         self.UniformList = UniformList.UniformList(self.Data)
@@ -117,6 +123,8 @@ class StateSet(Writable.Writable):
             except:
                 pass
 
+
+            self.AttributeList.buildGraph()
 
 
 
@@ -181,28 +189,8 @@ class StateSet(Writable.Writable):
 
 
 
-        if self.Data.PolygonOffsetMultiplier > 0.0:
-
-            try:
-                if self.Object["oo_polygon_offset"] != 0.0:
-
-                    writer.moveIn("AttributeList 1")
-
-                    writer.moveIn("osg::PolygonOffset")
-
-                    writer.writeLine("UniqueID %d" % self.Data.UniqueID.generate())
-                    #writer.writeLine("Factor %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                    #writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                    writer.writeLine("Factor %f" % (0.1 * self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-                    writer.writeLine("Units %f" % (self.Object["oo_polygon_offset"] * self.Data.PolygonOffsetMultiplier * -1.0))
-
-                    writer.moveOut("osg::PolygonOffset")
-
-                    writer.writeLine("Value OFF")
-
-                    writer.moveOut("AttributeList 1")
-            except:
-                pass
+        if self.AttributeList:
+            self.AttributeList.writeToStream( writer )
 
 
 

@@ -133,6 +133,11 @@ class Collidable(RigidBody.RigidBody):
             self.CollisionParameters.Mu = self.Object.material_slots[0].material.physics.friction
             self.CollisionParameters.Bounce = self.Object.material_slots[0].material.physics.elasticity
 
+            try:
+                self.CollisionParameters.Mu2 = self.Object.material_slots[0].material["oo_mu2"]
+            except:
+                self.CollisionParameters.Mu2 = 1.0
+
 
         return self.CollisionParameters.buildGraph()
 ############################################################################

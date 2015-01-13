@@ -163,11 +163,11 @@ MARK_AS_ADVANCED(OSGODE_USE_ALIAS_OO)
 
 IF(OSGODE_USE_ALIAS_OO)
     MESSAGE(STATUS "osgODE: using alias")
-    SET(OSGODE_SET_ALIAS "    namespace osgODE {}\n    namespace oo = osgODE ;")
+    SET(OSGODE_SET_ALIAS "    namespace osgODE {}\n    namespace oo = osgODE ;\n\n    namespace osgODEUtil {}\n    namespace ooUtil = osgODEUtil ;")
 
 ELSE(OSGODE_USE_ALIAS_OO)
     MESSAGE(STATUS "osgODE: NOT using alias")
-    SET(OSGODE_SET_ALIAS "//     namespace osgODE {}\n//     namespace oo = osgODE ;")
+    SET(OSGODE_SET_ALIAS "//     namespace osgODE {}\n//     namespace oo = osgODE ;\n\n//     namespace osgODEUtil {}\n//     namespace ooUtil = osgODEUtil ;")
 
 ENDIF(OSGODE_USE_ALIAS_OO)
 
@@ -409,12 +409,24 @@ IF(WIN32)
                         mklink /d ${CMAKE_INSTALL_PREFIX}/include/oo ${CMAKE_INSTALL_PREFIX}/include/osgODE
                 )")
 
+    INSTALL( CODE
+                "EXECUTE_PROCESS(
+                    COMMAND
+                        mklink /d ${CMAKE_INSTALL_PREFIX}/include/ooUtil ${CMAKE_INSTALL_PREFIX}/include/osgODEUtil
+                )")
+
 ELSE(WIN32)
 
     INSTALL( CODE
                 "EXECUTE_PROCESS(
                     COMMAND
                         ln -sf ${CMAKE_INSTALL_PREFIX}/include/osgODE  ${CMAKE_INSTALL_PREFIX}/include/oo
+                )")
+
+    INSTALL( CODE
+                "EXECUTE_PROCESS(
+                    COMMAND
+                        ln -sf ${CMAKE_INSTALL_PREFIX}/include/osgODEUtil  ${CMAKE_INSTALL_PREFIX}/include/ooUtil
                 )")
 
 ENDIF(WIN32)

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2014 by Rocco Martino                            *
+ *   Copyright (C) 2012 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -93,16 +93,16 @@ public:
     //! Get the const auto compute relative values
     inline bool getAutoComputeRelativeValues(void) const ;
 
-    //! Set the relative rotation
+    //! Set the relative rotation of body1 w.r.t. body2
     inline void setRelativeRotation( const osg::Quat& relative_rotation ) ;
 
-    //! Get the relative rotation
+    //! Get the relative rotation of body1 w.r.t. body2
     inline osg::Quat getRelativeRotation(void) const ;
 
-    //! Set the relative position
+    //! Set the relative position of body1 w.r.t. body2
     inline void setRelativePosition( const osg::Vec3& relative_position ) ;
 
-    //! Get the relative position
+    //! Get the relative position of body1 w.r.t. body2
     inline osg::Vec3 getRelativePosition(void) const ;
 /* ======================================================================= */
 

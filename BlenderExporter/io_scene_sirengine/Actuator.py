@@ -928,6 +928,10 @@ class SceneActuator(Actuator):
             writer.writeLine("SceneName \"%s\"" % self.Scene)
 
 
+        if self.Mode == 'CAMERA':
+            writer.writeLine( "RemoveExistingManipulator TRUE" )
+
+
 
         return True
 ############################################################################
@@ -973,6 +977,7 @@ class EditObjectActuator(Actuator):
     UpWorld = None
     UpLocal = None
     FrontLocal = None
+    Mesh = None
 ############################################################################
 
 
@@ -1004,6 +1009,7 @@ class EditObjectActuator(Actuator):
         self.UpWorld = [0,0,1]
         self.UpLocal = [0,0,1]
         self.FrontLocal = [0,1,0]
+        self.Mesh = None
 ############################################################################
 
 
@@ -1024,6 +1030,9 @@ class EditObjectActuator(Actuator):
 
         elif self.BlenderActuator.mode == "DYNAMICS":
             self.Mode = "DYNAMICS"
+
+        elif self.BlenderActuator.mode == "REPLACEMESH":
+            self.Mode = "REPLACE_MESH"
 
         else:
             return False
@@ -1075,6 +1084,12 @@ class EditObjectActuator(Actuator):
 
         if self.Mode == "TRACK_TO":
             self.TrackToByName = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+
+
+        elif self.Mode == "REPLACE_MESH":
+
+            from . import ODETransform
+            self.Mesh = ODETransform.ODETransform(self.Data, self.Data.Scene.objects[self.BlenderActuator.mesh.name])
 
 
         elif self.Mode == "ADD_OBJECT":
@@ -1130,6 +1145,11 @@ class EditObjectActuator(Actuator):
                 else:
                     print("EditObjectActuator does not support %s physics type" %obj.game.physics_type)
                     return False
+
+
+
+        if self.Mesh:
+            self.Mesh.buildGraph()
 
 
 
@@ -1352,6 +1372,16 @@ class EditObjectActuator(Actuator):
 
             writer.moveOut("osgODE::PIDController")
             writer.moveOut("AngularPID TRUE")
+
+
+
+        if self.Mesh:
+            writer.moveIn("Mesh TRUE")
+
+            if not self.Mesh.writeToStream(writer):
+                return False
+
+            writer.moveOut("Mesh TRUE")
 
 
         return True

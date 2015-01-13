@@ -168,7 +168,7 @@ BypassJoint::setRelativeRotation( ooReal step_size, const osg::Quat& qrel, int& 
 
     osg::Quat   q1 = m_body1.valid() ? m_body1->getQuaternion()                 : osg::Quat(0,0,0,1) ;
 
-    osg::Quat   q2 = m_body2.valid() ? m_body2->getQuaternion() * q1.inverse()  : osg::Quat(0,0,0,1) ;
+    osg::Quat   q2 = m_body2.valid() ? m_body2->getQuaternion() * q1.inverse()  : q1.inverse() ;
 
     osg::Quat   qe = qrel.inverse() * q2 ;
 

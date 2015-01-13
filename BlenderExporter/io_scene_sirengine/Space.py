@@ -74,8 +74,8 @@ class Space(Writable.Writable):
         self.ODEObjects = []
         self.Gravity = -9.80665
         self.ID = 0
-        self.ERP = 0.2
-        self.CFM = 1.0e-5
+        self.ERP = self.Data.ERP
+        self.CFM = self.Data.CFM
         self.RigidBodies = []
 ############################################################################
 
@@ -139,6 +139,9 @@ class Space(Writable.Writable):
         if self.Data.ExportGame:
 
             for rigid_body in self.RigidBodies:
+
+                if rigid_body.IsCharacter:
+                    rigid_body = rigid_body.Physics
 
                 if ( len(rigid_body.Object.game.sensors) + len(rigid_body.Object.game.properties) ) > 0:
 
@@ -218,6 +221,13 @@ class Space(Writable.Writable):
 ############################################################################
     def selectODEObject(self, obj):
 
+        force_character = False
+
+        try:
+            force_character = obj["oo_character"] != 0
+        except:
+            force_character = False
+
         if obj.parent != None:
             return None
 
@@ -233,6 +243,13 @@ class Space(Writable.Writable):
 
             from . import RigidBody
             return RigidBody.RigidBody(self.Data, obj)
+
+
+
+        elif obj.game.physics_type == 'CHARACTER'  or  force_character :
+
+            from . import Character
+            return Character.Character(self.Data, obj)
 
 
 

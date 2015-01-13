@@ -1,7 +1,7 @@
-oo_polygon_offset <height>, Object property
+oo_polygon_offset <units>, Object property
     displace a surface above the others.
     When two surfaces conicide, that one with the higher offset is shown.
-    glPolygonOffset( factor = value * -0.1, units = value * -1.0 ) is applied
+    glPolygonOffset( -1 * sign(units), -1 * units ) is applied
 
 
 

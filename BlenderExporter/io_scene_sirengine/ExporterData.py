@@ -65,11 +65,15 @@ class ExporterData(object):
     ExportLights = False
     ExportSounds = False
     ExportGame = False
+    GL_LIGHTING = False
     ContactSurfaceLayer = None
+    MaxContactNum = None
     WorldStep = None
     MaxAnisotropy = None
     AmbientMultiplier = None
     PolygonOffsetMultiplier = None
+    ERP = None
+    CFM = None
     StopERP = None
     StopCFM = None
 ############################################################################
@@ -105,11 +109,15 @@ class ExporterData(object):
             self.ExportLights = data.ExportLights
             self.ExportSounds = data.ExportSounds
             self.ExportGame = data.ExportGame
+            self.GL_LIGHTING = data.GL_LIGHTING
             self.ContactSurfaceLayer = data.ContactSurfaceLayer
+            self.MaxContactNum = data.MaxContactNum
             self.WorldStep = data.WorldStep
             self.MaxAnisotropy = data.MaxAnisotropy
             self.AmbientMultiplier = data.AmbientMultiplier
             self.PolygonOffsetMultiplier = data.PolygonOffsetMultiplier
+            self.ERP = data.ERP
+            self.CFM = data.CFM
             self.StopERP = data.StopERP
             self.StopCFM = data.StopCFM
 
@@ -133,11 +141,15 @@ class ExporterData(object):
             self.ExportLights = False
             self.ExportSounds = False
             self.ExportGame = False
+            self.GL_LIGHTING = False
             self.ContactSurfaceLayer = None
+            self.MaxContactNum = None
             self.WorldStep = None
             self.MaxAnisotropy = None
             self.AmbientMultiplier = None
             self.PolygonOffsetMultiplier = None
+            self.ERP = None
+            self.CFM = None
             self.StopERP = None
             self.StopCFM = None
 ############################################################################

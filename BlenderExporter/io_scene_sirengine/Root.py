@@ -114,6 +114,9 @@ class Root(Writable.Writable):
         self.StateSet.ModeList.addMode("GL_CULL_FACE ON")
         self.StateSet.ModeList.addMode("GL_BLEND OFF")
 
+        if not self.Data.GL_LIGHTING:
+            self.StateSet.ModeList.addMode("GL_LIGHTING OFF" )
+
         if self.Data.ExportLights:
             self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
             self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])

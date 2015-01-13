@@ -268,7 +268,7 @@ TriMesh::build(bool compute_size)
 
 
     /*!
-     * @todo    single/ooReal in TriMesh::build
+     * @todo    single/double in TriMesh::build
      */
 
 

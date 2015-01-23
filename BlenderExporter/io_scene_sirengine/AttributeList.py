@@ -108,6 +108,17 @@ class AttributeList(Writable.Writable):
             )
 
 
+            self.Attributes.append(
+                (   "osg::BlendFunc", \
+                    "UniqueID %d" %self.Data.UniqueID.generate(), \
+                    "SourceRGB SRC_ALPHA", \
+                    "SourceAlpha SRC_ALPHA", \
+                    "DestinationRGB ONE_MINUS_SRC_ALPHA ", \
+                    "DestinationAlpha ONE_MINUS_SRC_ALPHA", \
+                ) \
+            )
+
+
         return self.traverseBuild()
 ############################################################################
 

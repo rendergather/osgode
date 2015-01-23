@@ -1089,7 +1089,11 @@ class EditObjectActuator(Actuator):
         elif self.Mode == "REPLACE_MESH":
 
             from . import ODETransform
-            self.Mesh = ODETransform.ODETransform(self.Data, self.Data.Scene.objects[self.BlenderActuator.mesh.name])
+            try:
+                self.Mesh = ODETransform.ODETransform(self.Data, self.Data.Scene.objects[self.BlenderActuator.mesh.name])
+            except:
+                print("OOE failed REPLACE_MESH: " + self.BlenderActuator.name + "@" + self.Object.name)
+                return False
 
 
         elif self.Mode == "ADD_OBJECT":
@@ -1678,7 +1682,7 @@ class MessageActuator(Actuator):
         try:
             self.TargetByName = self.Data.RigidBodyNames[self.BlenderActuator.to_property]
         except:
-            print(self.Object.name + ": Missing to_property")
+            print("OOE Missing to_property: " + self.BlenderActuator.name + "@" + self.Object.name)
             self.TargetByName = ""
 
         self.Type = "TEXT"

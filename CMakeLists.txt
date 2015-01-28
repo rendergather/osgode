@@ -429,6 +429,44 @@ ELSE(WIN32)
                         ln -sf ${CMAKE_INSTALL_PREFIX}/include/osgODEUtil  ${CMAKE_INSTALL_PREFIX}/include/ooUtil
                 )")
 
+
+
+    IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+
+        INSTALL( CODE
+                    "EXECUTE_PROCESS(
+                        COMMAND
+                            ln -sf ${CMAKE_INSTALL_PREFIX}/lib64/libosgODE.so  ${CMAKE_INSTALL_PREFIX}/lib64/liboo.so
+                    )")
+
+        INSTALL( CODE
+                    "EXECUTE_PROCESS(
+                        COMMAND
+                            ln -sf ${CMAKE_INSTALL_PREFIX}/lib64/libosgODEUtil.so  ${CMAKE_INSTALL_PREFIX}/lib64/libooUtil.so
+                    )")
+
+
+
+    ELSE( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+
+        INSTALL( CODE
+                    "EXECUTE_PROCESS(
+                        COMMAND
+                            ln -sf ${CMAKE_INSTALL_PREFIX}/lib/libosgODE.so  ${CMAKE_INSTALL_PREFIX}/lib/liboo.so
+                    )")
+
+        INSTALL( CODE
+                    "EXECUTE_PROCESS(
+                        COMMAND
+                            ln -sf ${CMAKE_INSTALL_PREFIX}/lib/libosgODEUtil.so  ${CMAKE_INSTALL_PREFIX}/lib/libooUtil.so
+                    )")
+
+
+
+    ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+
+
+
 ENDIF(WIN32)
 
 ENDIF(OSGODE_USE_ALIAS_OO)

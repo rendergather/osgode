@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2014 by Rocco Martino                                   *
+ *   Copyright (C) 2014 - 2015 by Rocco Martino ...                        *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -165,9 +165,9 @@ ThreadedManager::frame(ooReal dt)
 
 
 
-    PS_DBG3("oo::Manager::threadFrame(%p, dt=%lf)", this, dt) ;
+    PS_DBG3("oo::ThreadedManager::frame(%p, dt=%lf)", this, dt) ;
 
-    PS_SCOPED_TIMER("Manager::threadFrame") ;
+    PS_SCOPED_TIMER("ThreadedManager::frame") ;
 
 
     m_delta += dt ;
@@ -180,7 +180,7 @@ ThreadedManager::frame(ooReal dt)
 
 
         // moved to ThreadedManagerUpdateCallback
-//         world->copyEventsInternal() ;
+//         world->swapEventsBuffer() ;
 
         const ooReal    step_size= getStepSize() ;
 

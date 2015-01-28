@@ -161,7 +161,7 @@ ManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 
 
 
-    } else {
+    } else { // m_last_s <= 0.0 (first iteration)
 
         m_last_s = sim_time ;
 

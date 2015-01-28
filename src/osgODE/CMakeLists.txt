@@ -105,8 +105,6 @@ SET(TARGET_H
     ${HEADER_PATH}/Plane2DJoint.inl
     ${HEADER_PATH}/RagDoll
     ${HEADER_PATH}/RagDoll.inl
-    ${HEADER_PATH}/RayCar
-    ${HEADER_PATH}/RayCar.inl
     ${HEADER_PATH}/RigidBody
     ${HEADER_PATH}/RigidBody.inl
     ${HEADER_PATH}/RigidBodyServoMotor
@@ -205,7 +203,6 @@ SET(TARGET_SRC
     PistonJoint.cpp
     Plane2DJoint.cpp
     RagDoll.cpp
-    RayCar.cpp
     RigidBody.cpp
     RigidBodyServoMotor.cpp
     ScopedTimer.cpp

@@ -123,21 +123,63 @@ class SceneGraph(object):
 
 
             else:
-                writer.moveIn("osg::Group")
+                if self.Data.ExportViewer:
 
-                writer.writeLine("UniqueID %u" % self.RootID)
-                writer.writeLine("Name \"%s\"" % "SceneGraph")
+                    writer.moveIn("ooViewer::Root")
 
-                writer.moveIn("Children %u" % len(self.Roots))
+                    writer.writeLine("UniqueID %u" % self.RootID)
+                    writer.writeLine("Name \"%s\"" % "SceneGraph")
 
-                for root in self.Roots:
-                    if not root.writeToStream(writer):
-                        return False
+                    writer.moveIn("Children %u" % len(self.Roots))
 
-                writer.moveOut("Children %u" % len(self.Roots))
+                    for root in self.Roots:
+                        if not root.writeToStream(writer):
+                            return False
 
 
-                writer.moveOut("osg::Group")
+                    writer.moveOut("Children %u" % len(self.Roots))
+
+
+                    writer.moveIn( "CurrentScene \"%s\"" %self.Data.Context.scene.name )
+
+
+                    writer.moveOut("ooViewer::Root")
+
+
+                else:
+                    value_list = ""
+
+                    writer.moveIn("osg::Switch")
+
+                    writer.writeLine("UniqueID %u" % self.RootID)
+                    writer.writeLine("Name \"%s\"" % "SceneGraph")
+
+                    writer.moveIn("Children %u" % len(self.Roots))
+
+                    for root in self.Roots:
+                        if not root.writeToStream(writer):
+                            return False
+
+
+                        if root.Data.Scene == bpy.context.scene:
+                            value_list = value_list + "TRUE "
+                        else:
+                            value_list = value_list + "FALSE "
+
+
+                    writer.moveOut("Children %u" % len(self.Roots))
+
+
+
+
+                    writer.moveIn( "ValueList %u" %len(self.Roots) )
+
+                    writer.writeLine( value_list ) ;
+
+                    writer.moveOut( "ValueList %u" %len(self.Roots) )
+
+
+                    writer.moveOut("osg::Switch")
 
         else:
             for root in self.Roots:

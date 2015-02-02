@@ -77,11 +77,34 @@ ThreadedManager::ThreadedManager(const ThreadedManager& other, const osg::CopyOp
 /* ....................................................................... */
 ThreadedManager::~ThreadedManager(void)
 {
-    done( true ) ;
+    setDone( true ) ;
 
+#if 0
     while( isRunning() ) {
         OpenThreads::Thread::YieldCurrentThread() ;
     }
+#else
+
+    unsigned int    accum = 1 ;
+
+    for( unsigned int i=0; i<10; i++ ) {
+
+        if( ! isRunning() ) {
+            break ;
+        }
+
+        OpenThreads::Thread::microSleep( 1.0e3 * accum ) ;
+
+        accum *= 2.0 ;
+    }
+
+    if( isRunning() ) {
+        PS_FATAL("oo::ThreadedManager::~ThreadedManager(%p): taking too long to shutdown. cancel()", this) ;
+
+        cancel() ;
+    }
+
+#endif
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -144,6 +167,9 @@ ThreadedManager::run(void)
 
 
 DONE:
+
+    m_time = -1.0 ;
+
     return ;
 }
 /* ....................................................................... */

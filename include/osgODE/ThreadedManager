@@ -98,14 +98,22 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     done( bool done ) ;
+    //! Set done. default false
+    inline void     setDone( bool done ) ;
 
-    inline void     pause(void) ;
+    //! get done. default false
+    inline bool     getDone(void) const ;
 
+    //! internal use only
+    inline void     pause( bool wait = true ) ;
+
+    //! internal use only
     inline void     unpause(void) ;
 
+    //! internal use only
     inline bool     rdy(void) const ;
 
+    //! internal use only
     inline void     rdy( bool v ) ;
 /* ======================================================================= */
 

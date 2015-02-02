@@ -85,7 +85,10 @@ ThreadedManagerUpdateCallback::operator()(osg::Node* n, osg::NodeVisitor* nv)
 
     PS_ASSERT1( world ) ;
 
-    if( ! manager->isRunning() ) {
+
+
+    if(     !  ( manager->getDone()  ||  manager->isRunning() )  ) {
+
         manager->startThread() ;
     }
 

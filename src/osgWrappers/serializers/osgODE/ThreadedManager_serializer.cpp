@@ -48,7 +48,7 @@ REGISTER_OBJECT_WRAPPER( ThreadedManager,
                          osgODE::ThreadedManager,
                          "osg::Object osg::Node osgODE::Manager osgODE::ThreadedManager" )
 {
-    (void) wrapper ;
+    ADD_BOOL_SERIALIZER( Done, false ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

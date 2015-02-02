@@ -39,7 +39,7 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::ThreadedManager::done( bool done )
+osgODE::ThreadedManager::setDone( bool done )
 {
     m_done = done ;
 }
@@ -51,13 +51,28 @@ osgODE::ThreadedManager::done( bool done )
 
 /* ======================================================================= */
 /* ....................................................................... */
+inline bool
+osgODE::ThreadedManager::getDone(void) const
+{
+    return m_done ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
 inline void
-osgODE::ThreadedManager::pause(void)
+osgODE::ThreadedManager::pause( bool wait )
 {
     m_pause_request = true ;
 
-    while( ! m_paused ) {
-        OpenThreads::Thread::YieldCurrentThread() ;
+    if( wait ) {
+        while( ! m_paused ) {
+            OpenThreads::Thread::YieldCurrentThread() ;
+        }
     }
 }
 /* ....................................................................... */

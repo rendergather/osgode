@@ -102,7 +102,7 @@ class Root(Writable.Writable):
         self.addChild(group)
 
 
-        if self.Data.ExportLights:
+        if self.Data.ExportViewer:
             from . import LightGroup
 
             group = LightGroup.LightGroup(self.Data)
@@ -117,7 +117,7 @@ class Root(Writable.Writable):
         if not self.Data.GL_LIGHTING:
             self.StateSet.ModeList.addMode("GL_LIGHTING OFF" )
 
-        if self.Data.ExportLights:
+        if self.Data.ExportViewer:
             self.StateSet.UniformList.addVec4Uniform("uMaterial", [1.0, 0.0, 1.0, 0.0])
             self.StateSet.UniformList.addVec4Uniform("uColor", [0.8, 0.8, 0.8, 1.0])
             self.StateSet.UniformList.addVec4Uniform("uWaterSpeed", [0.01, 0.0, 0.0, 0.01])
@@ -138,7 +138,7 @@ class Root(Writable.Writable):
 ############################################################################
     def writeToStream(self, writer):
 
-        if self.Data.ExportLights:
+        if self.Data.ExportViewer:
             writer.moveIn("pViewer::Root")
         else:
             writer.moveIn("osg::Group")
@@ -204,7 +204,7 @@ class Root(Writable.Writable):
             writer.moveOut("Children %s" % num_children)
 
 
-        if self.Data.ExportLights:
+        if self.Data.ExportViewer:
             writer.moveOut("pViewer::Root")
         else:
             writer.moveOut("osg::Group")

@@ -84,9 +84,9 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
     export_current_scene = BoolProperty( name="Export current scene only", default=False)
 
 
-    export_lights = BoolProperty( name="Export pViewer (requires pViewer)", default=False)
-    export_sounds = BoolProperty( name="Export sounds (requires pSound)", default=False)
-    export_game   = BoolProperty( name="Export game (requiers ooGame)", default=False)
+    export_viewer   = BoolProperty( name="Export ooViewer (requires ooViewer)", default=False)
+    export_sounds   = BoolProperty( name="Export sounds (requires pSound)", default=False)
+    export_game     = BoolProperty( name="Export game (requiers ooGame)", default=False)
 
     gl_lighting   = BoolProperty( name="GL_LIGHTING", default=False)
 
@@ -154,7 +154,7 @@ class ExportOSGT(bpy.types.Operator, ExportHelper):
         data.RigidBodyNames = {}
         data.ExportSelected = self.export_selected
         data.ExportCurrentScene = self.export_current_scene
-        data.ExportLights = self.export_lights
+        data.ExportViewer = self.export_viewer
         data.ExportSounds = self.export_sounds
         data.ExportGame = self.export_game
         data.GL_LIGHTING = self.gl_lighting

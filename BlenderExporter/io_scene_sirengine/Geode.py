@@ -147,7 +147,7 @@ class Geode(Writable.Writable):
                     material = self.MeshData.MaterialArray[0]
                     material[0] *= self.Data.AmbientMultiplier
 
-                    if self.Data.ExportLights:
+                    if self.Data.ExportViewer:
                         self.StateSet.UniformList.addVec4Uniform("uMaterial", material)
                         self.StateSet.UniformList.addVec4Uniform("uColor", self.MeshData.MaterialColor)
                         self.StateSet.UniformList.addFloatUniform("uEmission", self.Object.data.materials[0].emit)
@@ -183,7 +183,7 @@ class Geode(Writable.Writable):
                             speed[0] = self.Object.fog_speed_x
                             speed[1] = self.Object.fog_speed_y
 
-                            if self.Data.ExportLights:
+                            if self.Data.ExportViewer:
                                 self.StateSet.UniformList.addVec2Uniform("uFogSpeed", speed)
                     except:
                         pass

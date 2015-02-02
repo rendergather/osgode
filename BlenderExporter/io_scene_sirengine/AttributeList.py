@@ -84,7 +84,7 @@ class AttributeList(Writable.Writable):
 
 
 
-        transparency = self.Object.data.materials[0] and self.Object.data.materials[0].use_transparency and not self.Data.ExportLights
+        transparency = self.Object.data.materials[0] and self.Object.data.materials[0].use_transparency and not self.Data.ExportViewer
 
 
 

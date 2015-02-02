@@ -62,7 +62,7 @@ class ExporterData(object):
     Selected = None
     ExportSelected = False
     ExportCurrentScene = False
-    ExportLights = False
+    ExportViewer = False
     ExportSounds = False
     ExportGame = False
     GL_LIGHTING = False
@@ -106,7 +106,7 @@ class ExporterData(object):
             self.Selected = data.Selected
             self.ExportSelected = data.ExportSelected
             self.ExportCurrentScene = data.ExportCurrentScene
-            self.ExportLights = data.ExportLights
+            self.ExportViewer = data.ExportViewer
             self.ExportSounds = data.ExportSounds
             self.ExportGame = data.ExportGame
             self.GL_LIGHTING = data.GL_LIGHTING
@@ -138,7 +138,7 @@ class ExporterData(object):
             self.Selected = None
             self.ExportSelected = False
             self.ExportCurrentScene = False
-            self.ExportLights = False
+            self.ExportViewer = False
             self.ExportSounds = False
             self.ExportGame = False
             self.GL_LIGHTING = False

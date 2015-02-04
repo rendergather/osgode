@@ -3,7 +3,7 @@
 # author Rocco Martino
 #
 ############################################################################
-#    Copyright (C) 2012 - 2014 by Rocco Martino                            #
+#    Copyright (C) 2012 - 2015 by Rocco Martino                            #
 #    martinorocco@gmail.com                                                #
 #                                                                          #
 #    This program is free software; you can redistribute it and/or modify  #
@@ -140,7 +140,7 @@ class SceneGraph(object):
                     writer.moveOut("Children %u" % len(self.Roots))
 
 
-                    writer.moveIn( "CurrentScene \"%s\"" %self.Data.Context.scene.name )
+                    writer.writeLine( "CurrentScene \"%s\"" %self.Data.Context.scene.name )
 
 
                     writer.moveOut("ooViewer::Root")

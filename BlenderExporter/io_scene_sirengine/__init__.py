@@ -45,7 +45,7 @@ bl_info = {
     "author"        :   "Rocco Martino",
     "blender"       :   (2, 6, 2),
     "location"      :   "File > Export",
-    "description"   :   "Export meshes and game physics",
+    "description"   :   "Export scenes and game physics",
     "category"      :   "Import-Export"
 }
 # ........................................................................ #

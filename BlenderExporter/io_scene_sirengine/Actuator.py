@@ -786,7 +786,11 @@ class PropertyActuator(Actuator):
                 self.Value = "FALSE"
 
         if self.BlenderActuator.object:
-            self.ReferenceObject = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+            try:
+                self.ReferenceObject = self.Data.RigidBodyMap[self.BlenderActuator.object].Name
+            except:
+                print("OOE PropertyActuator: cannot find ReferenceObject: " + self.BlenderActuator.name + "@" + self.Object.name + " : " + self.BlenderActuator.object.name)
+                return False
 
 
 

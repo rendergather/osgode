@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2012 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -105,60 +105,15 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the manipulator
-    void        setCameraManipulator(osgGA::CameraManipulator* manipulator) ;
+    //! Set the visibility. Default: treu
+    inline void setVisibility( bool visibility ) ;
 
-    //! Get the manipulator
-    inline osgGA::CameraManipulator*        getCameraManipulator(void) ;
+    //! Get the visibility. Default: treu
+    inline bool getVisibility(void) ;
 
-    //! Get the const manipulator
-    inline const osgGA::CameraManipulator*  getCameraManipulator(void) const ;
+    //! Get the const visibility. Default: treu
+    inline bool getVisibility(void) const ;
 
-
-    //! Set the manipulator center in relative co. Default [0,0,0]
-    /*!
-     * Default: [0,0,0]
-     */
-    inline void     setCameraManipulatorCenter(const osg::Vec3& center) ;
-
-    //! Get the manipulator center in relative co. Default [0,0,0]
-    inline const osg::Vec3& getCameraManipulatorCenter(void) const ;
-
-
-    //! Set the direction of the manipulator in relative co. Default: -Z
-    inline void     setCameraManipulatorDirection(const osg::Vec3& direction) ;
-
-    //! Get the direction of the manipulator in relative co. Default: -Z
-    inline const osg::Vec3& getCameraManipulatorDirection(void) const ;
-
-
-    //! Set the up vector. Default: Y
-    inline void     setCameraManipulatorUp(const osg::Vec3& up) ;
-
-
-    //! Get the up vector. Default: Y
-    inline const osg::Vec3& getCameraManipulatorUp(void) const ;
-
-
-    //! Up vector is in relative co? Default: true
-    inline void     setCameraManipulatorUpObjectSpace(bool flag) ;
-
-    //! Up vector is in relative co? Default: true
-    inline bool     getCameraManipulatorUpObjectSpace(void) const ;
-
-
-    //! Set the elasticity of the manipulator. Default: 5
-    inline void     setCameraManipulatorElasticity(unsigned int elasticity) ;
-
-    //! Get the elasticity of the manipulator. Default: 5
-    inline unsigned int getCameraManipulatorElasticity(void) const ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
     //! Set the transform
     inline void     setMatrixTransform(osg::MatrixTransform* transform) ;
 
@@ -192,6 +147,60 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set the manipulator
+    void        setCameraManipulator(osgGA::CameraManipulator* manipulator) OSGODE_DEPRECATED ;
+
+    //! Get the manipulator
+    inline osgGA::CameraManipulator*        getCameraManipulator(void) OSGODE_DEPRECATED  ;
+
+    //! Get the const manipulator
+    inline const osgGA::CameraManipulator*  getCameraManipulator(void) const OSGODE_DEPRECATED  ;
+
+
+    //! Set the manipulator center in relative co. Default [0,0,0]
+    /*!
+     * Default: [0,0,0]
+     */
+    inline void     setCameraManipulatorCenter(const osg::Vec3& center) OSGODE_DEPRECATED  ;
+
+    //! Get the manipulator center in relative co. Default [0,0,0]
+    inline const osg::Vec3& getCameraManipulatorCenter(void) const OSGODE_DEPRECATED  ;
+
+
+    //! Set the direction of the manipulator in relative co. Default: -Z
+    inline void     setCameraManipulatorDirection(const osg::Vec3& direction) OSGODE_DEPRECATED  ;
+
+    //! Get the direction of the manipulator in relative co. Default: -Z
+    inline const osg::Vec3& getCameraManipulatorDirection(void) const OSGODE_DEPRECATED  ;
+
+
+    //! Set the up vector. Default: Y
+    inline void     setCameraManipulatorUp(const osg::Vec3& up) OSGODE_DEPRECATED  ;
+
+
+    //! Get the up vector. Default: Y
+    inline const osg::Vec3& getCameraManipulatorUp(void) const OSGODE_DEPRECATED  ;
+
+
+    //! Up vector is in relative co? Default: true
+    inline void     setCameraManipulatorUpObjectSpace(bool flag) OSGODE_DEPRECATED  ;
+
+    //! Up vector is in relative co? Default: true
+    inline bool     getCameraManipulatorUpObjectSpace(void) const OSGODE_DEPRECATED  ;
+
+
+    //! Set the elasticity of the manipulator. Default: 5
+    inline void     setCameraManipulatorElasticity(unsigned int elasticity) OSGODE_DEPRECATED  ;
+
+    //! Get the elasticity of the manipulator. Default: 5
+    inline unsigned int getCameraManipulatorElasticity(void) const OSGODE_DEPRECATED  ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     virtual const osg::BoundingSphere&  getBound(void) const ;
 /* ======================================================================= */
 
@@ -217,6 +226,8 @@ private:
 
 /* ======================================================================= */
 private:
+    bool            m_visibility ;
+
     osg::ref_ptr<osg::MatrixTransform>  m_matrix_transform ;
 
     osg::ref_ptr<osgGA::CameraManipulator>  m_camera_manipulator ;

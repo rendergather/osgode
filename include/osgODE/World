@@ -288,19 +288,20 @@ public:
 
 
 
-    typedef std::vector< osg::ref_ptr<ODEObject> >  Objects ;
+    typedef std::vector< osg::ref_ptr<ODEObject> >  ObjectList ;
 
-    //! Get the objects ordered by id
-    inline OSGODE_DEPRECATED Objects& getObjects(void) ;
+    //! Set the object list
+    inline void setObjectList(const ObjectList& object_list) ;
 
-    //! Get the objects
-    inline OSGODE_DEPRECATED const Objects& getObjects(void) const ;
+    //! Get the object list
+    inline ObjectList&   getObjectList(void) ;
 
-    //! Get the unsorted objects
-    inline Objects&   getUnsortedObjects(void) ;
+    //! Get the const object list
+    inline const ObjectList&   getObjectList(void) const ;
 
-    //! Get the const unsorted objects
-    inline const Objects&   getUnsortedObjects(void) const ;
+
+    //! return true if the object list is sorted
+    inline bool isObjectListSorted(void) const ;
 
     //! Sort the objects by ID
     inline void sortObjectsByID(void) ;
@@ -310,7 +311,7 @@ public:
     /*!
      * On android doesn0t work (assert or sigsegv)
      */
-    bool            getObjectsByRegexName(const std::string& pattern, Objects& result, int regcomp_cflags=0) ;
+    bool            getObjectsByRegexName(const std::string& pattern, ObjectList& result, int regcomp_cflags=0) ;
 /* ======================================================================= */
 
 
@@ -434,10 +435,10 @@ public:
 
 
     //! Get the actors
-    inline Objects& getActors(void) ;
+    inline ObjectList& getActors(void) ;
 
     //! Get the const actors
-    inline const Objects& getActors(void) const ;
+    inline const ObjectList& getActors(void) const ;
 
     //! Set the dirty actors
     inline void setDirtyActors( bool dirty_actors ) ;
@@ -503,7 +504,7 @@ private:
 
 /* ======================================================================= */
 protected:
-    Objects     m_objects ;
+    ObjectList  m_objects ;
 /* ======================================================================= */
 
 
@@ -538,7 +539,7 @@ private:
     osg::ref_ptr<Events>    m_back_events_buffer ;
 
     bool            m_dirty_actors ;
-    Objects         m_actors ;
+    ObjectList      m_actors ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

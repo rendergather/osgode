@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 by Rocco Martino                                   *
+ *   Copyright (C) 2012 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -48,8 +48,9 @@ REGISTER_OBJECT_WRAPPER( Transformable,
                          osgODE::Transformable,
                          "osg::Object osgODE::ODEObject osgODE::Transformable" )
 {
+    ADD_BOOL_SERIALIZER( Visibility, true ) ;
+    ADD_OBJECT_SERIALIZER(MatrixTransform, osg::MatrixTransform, NULL) ;
     ADD_OBJECT_SERIALIZER(StateSet, osg::StateSet, NULL) ;
-    ADD_OBJECT_SERIALIZER(MatrixTransform, osg::MatrixTransform, new osg::MatrixTransform()) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2014 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,6 +50,7 @@ using namespace osgODE ;
 /* ======================================================================= */
 /* ....................................................................... */
 Transformable::Transformable(void):
+    m_visibility                        ( true ),
     m_matrix_transform                  ( new osg::MatrixTransform() ),
     m_camera_manipulator_center         ( osg::Vec3(0,0,0) ),
     m_camera_manipulator_direction      ( -osg::Z_AXIS ),
@@ -70,8 +71,9 @@ Transformable::Transformable(void):
 /* ======================================================================= */
 /* ....................................................................... */
 Transformable::Transformable(const Transformable& other, const osg::CopyOp& copyop):
-    ODEObject(other, copyop),
-    m_matrix_transform( static_cast<osg::MatrixTransform*>( other.m_matrix_transform->clone(copyop) ) ),
+    ODEObject                           ( other, copyop ),
+    m_visibility                        ( other.m_visibility ),
+    m_matrix_transform                  ( osg::clone(other.m_matrix_transform.get(), copyop) ),
 
     m_camera_manipulator                ( other.m_camera_manipulator ),
     m_camera_manipulator_center         ( other.m_camera_manipulator_center ),
@@ -195,7 +197,9 @@ Transformable::asTransformable(void)
 void
 Transformable::accept(osg::NodeVisitor& nv)
 {
-    m_matrix_transform->accept(nv) ;
+    if( m_visibility ) {
+        m_matrix_transform->accept(nv) ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

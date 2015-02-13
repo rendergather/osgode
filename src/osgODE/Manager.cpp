@@ -218,10 +218,10 @@ Manager::computeBound(void) const
 
 
 
-        const osgODE::World::Objects&   objects = m_world->getUnsortedObjects() ;
+        const osgODE::World::ObjectList&   objects = m_world->getObjectList() ;
 
-        osgODE::World::Objects::const_iterator  itr = objects.begin() ;
-        osgODE::World::Objects::const_iterator  itr_end = objects.end() ;
+        World::ObjectList::const_iterator  itr = objects.begin() ;
+        World::ObjectList::const_iterator  itr_end = objects.end() ;
 
         while( itr != itr_end ) {
             bound.expandBy( (*itr++)->getBound() ) ;

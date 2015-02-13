@@ -494,8 +494,8 @@ World::getObjectByName(const std::string& name, bool traverse_containers)
 
     ODEObject*  found = NULL ;
 
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+    ObjectList::iterator   itr = m_objects.begin() ;
+    ObjectList::iterator   itr_end = m_objects.end() ;
 
 
     if( ! traverse_containers ) {
@@ -544,7 +544,7 @@ World::getObjectByName(const std::string& name, bool traverse_containers)
 /* ======================================================================= */
 /* ....................................................................... */
 bool
-World::getObjectsByRegexName(const std::string& pattern, Objects& result, int regcomp_cflags)
+World::getObjectsByRegexName(const std::string& pattern, ObjectList& result, int regcomp_cflags)
 {
     bool    found = false ;
 
@@ -579,8 +579,8 @@ World::getObjectsByRegexName(const std::string& pattern, Objects& result, int re
 
     regcomp( &regex, pattern.c_str(), regcomp_cflags ) ;
 
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+    ObjectList::iterator   itr = m_objects.begin() ;
+    ObjectList::iterator   itr_end = m_objects.end() ;
 
     while( itr != itr_end ) {
         ODEObject*  obj = *itr++ ;
@@ -734,8 +734,8 @@ World::accept(osg::NodeVisitor& nv)
 void
 World::traverse(osg::NodeVisitor& nv)
 {
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+    ObjectList::iterator   itr = m_objects.begin() ;
+    ObjectList::iterator   itr_end = m_objects.end() ;
 
 
     while( itr != itr_end ) {

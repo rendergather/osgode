@@ -269,12 +269,12 @@ osgODEUtil::findJoints(osgODE::World* world, Joints& joints, const std::string& 
 {
 
 
-    osgODE::World::Objects  objects ;
+    osgODE::World::ObjectList  objects ;
 
     world->getObjectsByRegexName(regex, objects) ;
 
-    osgODE::World::Objects::iterator    itr = objects.begin() ;
-    osgODE::World::Objects::iterator    itr_end = objects.end() ;
+    osgODE::World::ObjectList::iterator    itr = objects.begin() ;
+    osgODE::World::ObjectList::iterator    itr_end = objects.end() ;
 
     while( itr != itr_end ) {
         osgODE::Joint*  joint = (*itr++)->asJoint() ;
@@ -300,12 +300,12 @@ osgODEUtil::findRigidBodies(osgODE::World* world, RigidBodies& bodies, const std
 {
 
 
-    osgODE::World::Objects  objects ;
+    osgODE::World::ObjectList  objects ;
 
     world->getObjectsByRegexName(regex, objects) ;
 
-    osgODE::World::Objects::iterator    itr = objects.begin() ;
-    osgODE::World::Objects::iterator    itr_end = objects.end() ;
+    osgODE::World::ObjectList::iterator    itr = objects.begin() ;
+    osgODE::World::ObjectList::iterator    itr_end = objects.end() ;
 
     while( itr != itr_end ) {
         osgODE::RigidBody*  body = (*itr++)->asRigidBody() ;

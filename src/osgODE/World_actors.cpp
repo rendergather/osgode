@@ -58,8 +58,8 @@ World::findActors(  ActorCallback* cbk,
     }
 
 
-    Objects::iterator   itr = m_actors.begin() ;
-    Objects::iterator   itr_end = m_actors.end() ;
+    ObjectList::iterator   itr = m_actors.begin() ;
+    ObjectList::iterator   itr_end = m_actors.end() ;
 
     unsigned int    found = 0 ;
 
@@ -112,8 +112,8 @@ World::findActors(  ActorCallback* cbk,
     }
 
 
-    Objects::iterator   itr = m_actors.begin() ;
-    Objects::iterator   itr_end = m_actors.end() ;
+    ObjectList::iterator   itr = m_actors.begin() ;
+    ObjectList::iterator   itr_end = m_actors.end() ;
 
     unsigned int    found = 0 ;
 
@@ -281,8 +281,8 @@ World::collectActors(void)
 {
     m_actors.clear() ;
 
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+    ObjectList::iterator   itr = m_objects.begin() ;
+    ObjectList::iterator   itr_end = m_objects.end() ;
 
 
     while( itr != itr_end ) {

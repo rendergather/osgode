@@ -120,10 +120,10 @@ public:
     inline void             setSlip2(ooReal slip2) ;
     inline ooReal           getSlip2(void) const ;
 
-    //! Taken into account only if this structure is owned by a Space
+    //! Space only
     inline void             setMaxContactNum(unsigned int max_contact_num) ;
 
-    //! Taken into account only if this structure is owned by a Space
+    //! Space only
     inline unsigned int     getMaxContactNum(void) const ;
 
     //! If false, bodies connected to the same joint will not collide each other

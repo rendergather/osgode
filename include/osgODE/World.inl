@@ -90,14 +90,17 @@ osgODE::World::getODEWorld(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODE::World::Objects&
-osgODE::World::getObjects(void)
+inline void
+osgODE::World::setObjectList( const ObjectList& object_list)
 {
-    if( ! m_objects_sorted ) {
-        _sortObjectsByID() ;
+    removeAllObjects() ;
+
+    ObjectList::const_iterator   itr = object_list.begin() ;
+    ObjectList::const_iterator   itr_end = object_list.end() ;
+
+    while( itr != itr_end ) {
+        addObject( *itr++ ) ;
     }
-
-    return m_objects ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -107,8 +110,8 @@ osgODE::World::getObjects(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline const osgODE::World::Objects&
-osgODE::World::getObjects(void) const
+inline osgODE::World::ObjectList&
+osgODE::World::getObjectList(void)
 {
     return m_objects ;
 }
@@ -120,21 +123,8 @@ osgODE::World::getObjects(void) const
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODE::World::Objects&
-osgODE::World::getUnsortedObjects(void)
-{
-    return m_objects ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osgODE::World::Objects&
-osgODE::World::getUnsortedObjects(void) const
+inline const osgODE::World::ObjectList&
+osgODE::World::getObjectList(void) const
 {
     return m_objects ;
 }
@@ -347,8 +337,8 @@ template<class T>
 inline void
 osgODE::World::traverseObjects(T& t, void (T::*member)(ODEObject*))
 {
-    Objects::iterator   itr = m_objects.begin() ;
-    Objects::iterator   itr_end = m_objects.end() ;
+    ObjectList::iterator   itr = m_objects.begin() ;
+    ObjectList::iterator   itr_end = m_objects.end() ;
 
 
     while( itr != itr_end ) {
@@ -625,7 +615,7 @@ osgODE::World::advanceInternal(ooReal step_size)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline osgODE::World::Objects&
+inline osgODE::World::ObjectList&
 osgODE::World::getActors(void)
 {
     return m_actors ;
@@ -638,7 +628,7 @@ osgODE::World::getActors(void)
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline const osgODE::World::Objects&
+inline const osgODE::World::ObjectList&
 osgODE::World::getActors(void) const
 {
     return m_actors ;

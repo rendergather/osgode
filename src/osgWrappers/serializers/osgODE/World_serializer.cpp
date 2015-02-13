@@ -38,38 +38,6 @@
 /* ======================================================================= */
 /* ....................................................................... */
 namespace {
-static bool checkODEObjects(const osgODE::World& world)
-{
-    (void) world ;
-
-    return true ;
-}
-
-static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::World& world)
-{
-    const osgODE::World::Objects&   objs = world.getUnsortedObjects() ;
-    os << (unsigned long int)objs.size() << std::endl ;
-    for(unsigned int i=0; i<objs.size(); i++) {
-        os << objs[i].get() ;
-    }
-    return true ;
-}
-
-static bool readODEObjects(osgDB::InputStream& is, osgODE::World& world)
-{
-    unsigned int    size = 0 ;
-    is >> size ;
-    for(unsigned int i=0; i<size; i++) {
-        osg::ref_ptr<osg::Object>   tmp = is.readObject() ;
-        osgODE::ODEObject*  obj = dynamic_cast<osgODE::ODEObject*>(tmp.get()) ;
-        if( obj ) {
-            world.addObject(obj) ;
-        }
-    }
-    return true ;
-}
-
-
 static bool checkGravity(const osgODE::World& world)
 {
     return world.getGravity() != osg::Vec3(0, 0, -9.80665) ;
@@ -159,7 +127,7 @@ REGISTER_OBJECT_WRAPPER( World,
 
     ADD_USER_SERIALIZER(WorldStepFunction) ;
 
-    ADD_USER_SERIALIZER(ODEObjects) ;
+    ADD_LIST_SERIALIZER(ObjectList, osgODE::World::ObjectList) ;
 
     ADD_OBJECT_SERIALIZER( FrontEventsBuffer, osgODE::Events, NULL ) ;
     ADD_OBJECT_SERIALIZER( BackEventsBuffer, osgODE::Events, NULL ) ;

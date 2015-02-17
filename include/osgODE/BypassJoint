@@ -82,18 +82,6 @@ public:
 
 /* ======================================================================= */
 public:
-    inline void     setERP( int i, ooReal v ) ;
-    inline ooReal   getERP( int i ) ;
-
-    inline void     setCFM( int i, ooReal v ) ;
-    inline ooReal   getCFM( int i ) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
     //! Set the specified row
     void setRow(    unsigned int row,
                     const osg::Vec3& J1a,
@@ -125,6 +113,48 @@ public:
     inline void getInfo(    unsigned int& max_m,
                             unsigned int& m,
                             unsigned int& nub ) const ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the parameter
+    virtual void    setParamImplementation(int param, ooReal value) ;
+
+    //! Set the first axis
+    virtual void    setAxis1Implementation(const osg::Vec3& axis) ;
+
+    //! Set the second axis
+    virtual void    setAxis2Implementation(const osg::Vec3& axis) ;
+
+    //! Set the third axis
+    virtual void    setAxis3Implementation(const osg::Vec3& axis) ;
+
+    //! Set the first anchor
+    virtual void    setAnchor1Implementation(const osg::Vec3& anchor) ;
+
+    //! Set the second anchor
+    virtual void    setAnchor2Implementation(const osg::Vec3& anchor) ;
+
+    //! Get the parameter
+    virtual ooReal  getParamImplementation(int param) ;
+
+    //! Get the first axis
+    virtual void    readAxis1Implementation(osg::Vec3& axis) ;
+
+    //! Get the second axis
+    virtual void    readAxis2Implementation(osg::Vec3& axis) ;
+
+    //! Get the third axis
+    virtual void    readAxis3Implementation(osg::Vec3& axis) ;
+
+    //! Get the first anchor
+    virtual void    readAnchor1Implementation(osg::Vec3& anchor) ;
+
+    //! Get the second anchor
+    virtual void    readAnchor2Implementation(osg::Vec3& anchor) ;
 /* ======================================================================= */
 
 
@@ -181,15 +211,28 @@ protected:
 
 /* ======================================================================= */
 protected:
-    ooReal      m_erp[3] ;
-    ooReal      m_cfm[3] ;
-/* ======================================================================= */
+    ooReal      m_lo_stop[6] ;
+    ooReal      m_hi_stop[6] ;
+    ooReal      m_vel[6] ;
+    ooReal      m_lo_vel[6] ;
+    ooReal      m_hi_vel[6] ;
+    ooReal      m_f_max[6] ;
+    ooReal      m_fudge_factor[6] ;
+    ooReal      m_bounce[6] ;
+    ooReal      m_cfm[6] ;
+    ooReal      m_stop_erp[6] ;
+    ooReal      m_stop_cfm[6] ;
+    ooReal      m_suspension_erp[6] ;
+    ooReal      m_suspension_cfm[6] ;
+    ooReal      m_erp[6] ;
 
 
+    osg::Vec3   m_anchor1 ;
+    osg::Vec3   m_anchor2 ;
 
-
-/* ======================================================================= */
-private:
+    osg::Vec3   m_axis1 ;
+    osg::Vec3   m_axis2 ;
+    osg::Vec3   m_axis3 ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

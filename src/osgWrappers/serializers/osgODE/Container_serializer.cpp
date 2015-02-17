@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2012 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,38 +35,6 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-static bool checkODEObjects(const osgODE::Container& container)
-{
-	(void) container ;
-
-    return true ;
-}
-
-static bool writeODEObjects(osgDB::OutputStream& os, const osgODE::Container& container)
-{
-    const osgODE::Container::ObjectList&   objs = container.getObjectList() ;
-    os << (unsigned long int)objs.size() << std::endl ;
-    for(unsigned int i=0; i<objs.size(); i++) {
-        os << objs[i].get() ;
-    }
-    return true ;
-}
-
-static bool readODEObjects(osgDB::InputStream& is, osgODE::Container& container)
-{
-    unsigned int    size = 0 ;
-    is >> size ;
-    for(unsigned int i=0; i<size; i++) {
-        osg::ref_ptr<osg::Object>   tmp = is.readObject() ;
-        osgODE::ODEObject*  obj = dynamic_cast<osgODE::ODEObject*>(tmp.get()) ;
-        if( obj ) {
-            container.addObject(obj) ;
-        }
-    }
-    return true ;
-}
-} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -81,7 +49,7 @@ REGISTER_OBJECT_WRAPPER( Container,
                          "osg::Object osgODE::ODEObject osgODE::Container" )
 {
 
-    ADD_USER_SERIALIZER(ODEObjects) ;
+    ADD_LIST_SERIALIZER(ObjectList, osgODE::Container::ObjectList) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

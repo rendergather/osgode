@@ -65,7 +65,6 @@ inline void
 osgODE::GearboxJoint::setFriction(ooReal friction)
 {
     m_friction = friction ;
-//     this->setParam(dParamCFM, -1.0 + 1.0 / friction) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -78,11 +77,6 @@ osgODE::GearboxJoint::setFriction(ooReal friction)
 inline ooReal
 osgODE::GearboxJoint::getFriction(void) const
 {
-//     const ooReal    c = const_cast<GearboxJoint*>(this)->getParam(dParamStopCFM) ;
-
-//     return 1 / (c + 1) ;
-
-
     return m_friction ;
 }
 /* ....................................................................... */

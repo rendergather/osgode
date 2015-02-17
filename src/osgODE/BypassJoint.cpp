@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,9 +28,6 @@
 #include <osgODE/StaticWorld>
 #include <osgODE/World>
 #include <osgODE/Notify>
-
-#include <iostream>
-#include <osg/io_utils>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -39,57 +36,6 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-namespace {
-
-static void
-dJointSetBypassParam( dJointID j, int param, dReal value )
-{
-    PS_ASSERT1( j ) ;
-
-    osgODE::BypassJoint*    joint = static_cast<osgODE::Joint*>( dJointGetData(j) )->asBypassJoint() ;
-    PS_ASSERT1( joint ) ;
-
-
-    switch( param )
-    {
-        case dParamERP1: joint->setERP( 0, value ) ; break ;
-        case dParamERP2: joint->setERP( 1, value ) ; break ;
-        case dParamERP3: joint->setERP( 2, value ) ; break ;
-
-        case dParamCFM1: joint->setCFM( 0, value ) ; break ;
-        case dParamCFM2: joint->setCFM( 1, value ) ; break ;
-        case dParamCFM3: joint->setCFM( 2, value ) ; break ;
-
-        default:    break ;
-    }
-}
-
-
-
-static dReal
-dJointGetBypassParam( dJointID j, int param )
-{
-    PS_ASSERT1( j ) ;
-
-    osgODE::BypassJoint*    joint = static_cast<osgODE::Joint*>( dJointGetData(j) )->asBypassJoint() ;
-    PS_ASSERT1( joint ) ;
-
-
-    switch( param )
-    {
-        case dParamERP1: return joint->getERP( 0 ) ;
-        case dParamERP2: return joint->getERP( 1 ) ;
-        case dParamERP3: return joint->getERP( 2 ) ;
-
-        case dParamCFM1: return joint->getCFM( 0 ) ;
-        case dParamCFM2: return joint->getCFM( 1 ) ;
-        case dParamCFM3: return joint->getCFM( 2 ) ;
-
-        default:    return 0.0 ;
-    }
-}
-
-} // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -109,20 +55,6 @@ BypassJoint::BypassJoint(void)
     m_ODE_joint = dJointCreateBypass(StaticWorld::instance()->getODEWorld(), NULL) ;
 
     dJointSetData( m_ODE_joint, this ) ;
-
-
-
-    m_functions.SetParam    = dJointSetBypassParam ;
-    m_functions.GetParam    = dJointGetBypassParam ;
-
-
-    setParam( dParamERP1, 1.0 ) ;
-    setParam( dParamERP2, 1.0 ) ;
-    setParam( dParamERP3, 1.0 ) ;
-
-    setParam( dParamCFM1, 0.0 ) ;
-    setParam( dParamCFM2, 0.0 ) ;
-    setParam( dParamCFM3, 0.0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -133,7 +65,7 @@ BypassJoint::BypassJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 BypassJoint::BypassJoint(const BypassJoint& other, const osg::CopyOp& copyop):
-    Joint(other, copyop)
+    Joint   ( other, copyop )
 {
 }
 /* ....................................................................... */
@@ -393,6 +325,247 @@ BypassJoint::cloneODEJoint(dWorldID world) const
 
 
     return j ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setParamImplementation(int param, ooReal value)
+{
+#define CASE_ALL_PARAMS(X) \
+    case dParamLoStop##X:           m_lo_stop           [X-1] = value ;     break ; \
+    case dParamHiStop##X:           m_hi_stop           [X-1] = value ;     break ; \
+    case dParamVel##X:              m_vel               [X-1] = value ;     break ; \
+    case dParamLoVel##X:            m_lo_vel            [X-1] = value ;     break ; \
+    case dParamHiVel##X:            m_hi_vel            [X-1] = value ;     break ; \
+    case dParamFMax##X:             m_f_max             [X-1] = value ;     break ; \
+    case dParamFudgeFactor##X:      m_fudge_factor      [X-1] = value ;     break ; \
+    case dParamBounce##X:           m_bounce            [X-1] = value ;     break ; \
+    case dParamCFM##X:              m_cfm               [X-1] = value ;     break ; \
+    case dParamStopERP##X:          m_stop_erp          [X-1] = value ;     break ; \
+    case dParamStopCFM##X:          m_stop_cfm          [X-1] = value ;     break ; \
+    case dParamSuspensionERP##X:    m_suspension_erp    [X-1] = value ;     break ; \
+    case dParamSuspensionCFM##X:    m_suspension_cfm    [X-1] = value ;     break ; \
+    case dParamERP##X:              m_erp               [X-1] = value ;     break ;
+
+
+    switch( param )
+    {
+        CASE_ALL_PARAMS(1) ;
+        CASE_ALL_PARAMS(2) ;
+        CASE_ALL_PARAMS(3) ;
+        CASE_ALL_PARAMS(4) ;
+        CASE_ALL_PARAMS(5) ;
+        CASE_ALL_PARAMS(6) ;
+
+
+        default:    PS_BREAKPOINT() ;   break ;
+    }
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setAxis1Implementation(const osg::Vec3& axis)
+{
+    m_axis1 = axis ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setAxis2Implementation(const osg::Vec3& axis)
+{
+    m_axis2 = axis ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setAxis3Implementation(const osg::Vec3& axis)
+{
+    m_axis3 = axis ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+ooReal
+BypassJoint::getParamImplementation(int param)
+{
+    ooReal  value = 0.0 ;
+
+
+    switch( param )
+    {
+        case dParamLoStop:          value = m_lo_stop           [0] ;       break ;
+        case dParamHiStop:          value = m_hi_stop           [0] ;       break ;
+        case dParamVel:             value = m_vel               [0] ;       break ;
+        case dParamLoVel:           value = m_lo_vel            [0] ;       break ;
+        case dParamHiVel:           value = m_hi_vel            [0] ;       break ;
+        case dParamFMax:            value = m_f_max             [0] ;       break ;
+        case dParamFudgeFactor:     value = m_fudge_factor      [0] ;       break ;
+        case dParamBounce:          value = m_bounce            [0] ;       break ;
+        case dParamCFM:             value = m_cfm               [0] ;       break ;
+        case dParamStopERP:         value = m_stop_erp          [0] ;       break ;
+        case dParamStopCFM:         value = m_stop_cfm          [0] ;       break ;
+        case dParamSuspensionERP:   value = m_suspension_erp    [0] ;       break ;
+        case dParamSuspensionCFM:   value = m_suspension_cfm    [0] ;       break ;
+        case dParamERP:             value = m_erp               [0] ;       break ;
+
+        case dParamLoStop2:         value = m_lo_stop           [1] ;       break ;
+        case dParamHiStop2:         value = m_hi_stop           [1] ;       break ;
+        case dParamVel2:            value = m_vel               [1] ;       break ;
+        case dParamLoVel2:          value = m_lo_vel            [1] ;       break ;
+        case dParamHiVel2:          value = m_hi_vel            [1] ;       break ;
+        case dParamFMax2:           value = m_f_max             [1] ;       break ;
+        case dParamFudgeFactor2:    value = m_fudge_factor      [1] ;       break ;
+        case dParamBounce2:         value = m_bounce            [1] ;       break ;
+        case dParamCFM2:            value = m_cfm               [1] ;       break ;
+        case dParamStopERP2:        value = m_stop_erp          [1] ;       break ;
+        case dParamStopCFM2:        value = m_stop_cfm          [1] ;       break ;
+        case dParamSuspensionERP2:  value = m_suspension_erp    [1] ;       break ;
+        case dParamSuspensionCFM2:  value = m_suspension_cfm    [1] ;       break ;
+        case dParamERP2:            value = m_erp               [1] ;       break ;
+
+        case dParamLoStop3:         value = m_lo_stop           [2] ;       break ;
+        case dParamHiStop3:         value = m_hi_stop           [2] ;       break ;
+        case dParamVel3:            value = m_vel               [2] ;       break ;
+        case dParamLoVel3:          value = m_lo_vel            [2] ;       break ;
+        case dParamHiVel3:          value = m_hi_vel            [2] ;       break ;
+        case dParamFMax3:           value = m_f_max             [2] ;       break ;
+        case dParamFudgeFactor3:    value = m_fudge_factor      [2] ;       break ;
+        case dParamBounce3:         value = m_bounce            [2] ;       break ;
+        case dParamCFM3:            value = m_cfm               [2] ;       break ;
+        case dParamStopERP3:        value = m_stop_erp          [2] ;       break ;
+        case dParamStopCFM3:        value = m_stop_cfm          [2] ;       break ;
+        case dParamSuspensionERP3:  value = m_suspension_erp    [2] ;       break ;
+        case dParamSuspensionCFM3:  value = m_suspension_cfm    [2] ;       break ;
+        case dParamERP3:            value = m_erp               [2] ;       break ;
+
+
+        default:    PS_BREAKPOINT() ;   break ;
+    }
+
+
+
+
+    return value ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setAnchor1Implementation(const osg::Vec3& anchor)
+{
+    m_anchor1 = anchor ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::setAnchor2Implementation(const osg::Vec3& anchor)
+{
+    m_anchor2 = anchor ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::readAxis1Implementation(osg::Vec3& axis)
+{
+    axis = m_axis1 ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::readAxis2Implementation(osg::Vec3& axis)
+{
+    axis = m_axis2 ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::readAxis3Implementation(osg::Vec3& axis)
+{
+    axis = m_axis3 ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::readAnchor1Implementation(osg::Vec3& anchor)
+{
+    anchor = m_anchor1 ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::readAnchor2Implementation(osg::Vec3& anchor)
+{
+    anchor = m_anchor2 ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

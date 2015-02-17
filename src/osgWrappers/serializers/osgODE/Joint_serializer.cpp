@@ -122,44 +122,32 @@ static bool read##PAR_PROP(osgDB::InputStream& is, osgODE::Joint& joint) \
     return true ; \
 }
 
-ADD_PAR_FUNC(dParamLoStop, FLT_MAX) ;
-ADD_PAR_FUNC(dParamHiStop, -FLT_MAX) ;
-ADD_PAR_FUNC(dParamVel, 0.0) ;
-ADD_PAR_FUNC(dParamFMax, 0) ;
-ADD_PAR_FUNC(dParamFudgeFactor, 0.0) ;
-ADD_PAR_FUNC(dParamBounce, 0.0) ;
-ADD_PAR_FUNC(dParamCFM, 0.0) ;
-ADD_PAR_FUNC(dParamStopERP, 1.0) ;
-ADD_PAR_FUNC(dParamStopCFM, 0.0) ;
-ADD_PAR_FUNC(dParamSuspensionERP, 1.0) ;
-ADD_PAR_FUNC(dParamSuspensionCFM, 0.0) ;
-ADD_PAR_FUNC(dParamERP, 1.0) ;
 
-ADD_PAR_FUNC(dParamLoStop2, FLT_MAX) ;
-ADD_PAR_FUNC(dParamHiStop2, -FLT_MAX) ;
-ADD_PAR_FUNC(dParamVel2, 0.0) ;
-ADD_PAR_FUNC(dParamFMax2, 0) ;
-ADD_PAR_FUNC(dParamFudgeFactor2, 0.0) ;
-ADD_PAR_FUNC(dParamBounce2, 0.0) ;
-ADD_PAR_FUNC(dParamCFM2, 0.0) ;
-ADD_PAR_FUNC(dParamStopERP2, 1.0) ;
-ADD_PAR_FUNC(dParamStopCFM2, 0.0) ;
-ADD_PAR_FUNC(dParamSuspensionERP2, 1.0) ;
-ADD_PAR_FUNC(dParamSuspensionCFM2, 0.0) ;
-ADD_PAR_FUNC(dParamERP2, 1.0) ;
 
-ADD_PAR_FUNC(dParamLoStop3, FLT_MAX) ;
-ADD_PAR_FUNC(dParamHiStop3, -FLT_MAX) ;
-ADD_PAR_FUNC(dParamVel3, 0.0) ;
-ADD_PAR_FUNC(dParamFMax3, 0) ;
-ADD_PAR_FUNC(dParamFudgeFactor3, 0.0) ;
-ADD_PAR_FUNC(dParamBounce3, 0.0) ;
-ADD_PAR_FUNC(dParamCFM3, 0.0) ;
-ADD_PAR_FUNC(dParamStopERP3, 1.0) ;
-ADD_PAR_FUNC(dParamStopCFM3, 0.0) ;
-ADD_PAR_FUNC(dParamSuspensionERP3, 1.0) ;
-ADD_PAR_FUNC(dParamSuspensionCFM3, 0.0) ;
-ADD_PAR_FUNC(dParamERP3, 1.0) ;
+#define ADD_ALL_PAR_FUNC( X ) \
+    ADD_PAR_FUNC(dParamLoStop##X, -FLT_MAX) ; \
+    ADD_PAR_FUNC(dParamHiStop##X, FLT_MAX) ; \
+    ADD_PAR_FUNC(dParamVel##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamLoVel##X, FLT_MAX) ; \
+    ADD_PAR_FUNC(dParamHiVel##X, FLT_MAX) ; \
+    ADD_PAR_FUNC(dParamFMax##X, 0) ; \
+    ADD_PAR_FUNC(dParamFudgeFactor##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamBounce##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamCFM##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamStopERP##X, 1.0) ; \
+    ADD_PAR_FUNC(dParamStopCFM##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamSuspensionERP##X, 1.0) ; \
+    ADD_PAR_FUNC(dParamSuspensionCFM##X, 0.0) ; \
+    ADD_PAR_FUNC(dParamERP##X, 1.0) ;
+
+
+
+ADD_ALL_PAR_FUNC(1) ;
+ADD_ALL_PAR_FUNC(2) ;
+ADD_ALL_PAR_FUNC(3) ;
+ADD_ALL_PAR_FUNC(4) ;
+ADD_ALL_PAR_FUNC(5) ;
+ADD_ALL_PAR_FUNC(6) ;
 } // anon namespace
 /* ....................................................................... */
 /* ======================================================================= */
@@ -183,44 +171,29 @@ REGISTER_OBJECT_WRAPPER( Joint,
     ADD_USER_SERIALIZER( Axis2 ) ;
     ADD_USER_SERIALIZER( Axis3 ) ;
 
-    ADD_USER_SERIALIZER(dParamLoStop) ;
-    ADD_USER_SERIALIZER(dParamHiStop) ;
-    ADD_USER_SERIALIZER(dParamVel) ;
-    ADD_USER_SERIALIZER(dParamFMax) ;
-    ADD_USER_SERIALIZER(dParamFudgeFactor) ;
-    ADD_USER_SERIALIZER(dParamBounce) ;
-    ADD_USER_SERIALIZER(dParamCFM) ;
-    ADD_USER_SERIALIZER(dParamStopERP) ;
-    ADD_USER_SERIALIZER(dParamStopCFM) ;
-    ADD_USER_SERIALIZER(dParamSuspensionERP) ;
-    ADD_USER_SERIALIZER(dParamSuspensionCFM) ;
-    ADD_USER_SERIALIZER(dParamERP) ;
 
-    ADD_USER_SERIALIZER(dParamLoStop2) ;
-    ADD_USER_SERIALIZER(dParamHiStop2) ;
-    ADD_USER_SERIALIZER(dParamVel2) ;
-    ADD_USER_SERIALIZER(dParamFMax2) ;
-    ADD_USER_SERIALIZER(dParamFudgeFactor2) ;
-    ADD_USER_SERIALIZER(dParamBounce2) ;
-    ADD_USER_SERIALIZER(dParamCFM2) ;
-    ADD_USER_SERIALIZER(dParamStopERP2) ;
-    ADD_USER_SERIALIZER(dParamStopCFM2) ;
-    ADD_USER_SERIALIZER(dParamSuspensionERP2) ;
-    ADD_USER_SERIALIZER(dParamSuspensionCFM2) ;
-    ADD_USER_SERIALIZER(dParamERP2) ;
+#define ADD_ALL_PAR_SERIALIZERS( X ) \
+    ADD_USER_SERIALIZER(dParamLoStop##X) ; \
+    ADD_USER_SERIALIZER(dParamHiStop##X) ; \
+    ADD_USER_SERIALIZER(dParamVel##X) ; \
+    ADD_USER_SERIALIZER(dParamLoVel##X) ; \
+    ADD_USER_SERIALIZER(dParamHiVel##X) ; \
+    ADD_USER_SERIALIZER(dParamFMax##X) ; \
+    ADD_USER_SERIALIZER(dParamFudgeFactor##X) ; \
+    ADD_USER_SERIALIZER(dParamBounce##X) ; \
+    ADD_USER_SERIALIZER(dParamCFM##X) ; \
+    ADD_USER_SERIALIZER(dParamStopERP##X) ; \
+    ADD_USER_SERIALIZER(dParamStopCFM##X) ; \
+    ADD_USER_SERIALIZER(dParamSuspensionERP##X) ; \
+    ADD_USER_SERIALIZER(dParamSuspensionCFM##X) ; \
+    ADD_USER_SERIALIZER(dParamERP##X) ;
 
-    ADD_USER_SERIALIZER(dParamLoStop3) ;
-    ADD_USER_SERIALIZER(dParamHiStop3) ;
-    ADD_USER_SERIALIZER(dParamVel3) ;
-    ADD_USER_SERIALIZER(dParamFMax3) ;
-    ADD_USER_SERIALIZER(dParamFudgeFactor3) ;
-    ADD_USER_SERIALIZER(dParamBounce3) ;
-    ADD_USER_SERIALIZER(dParamCFM3) ;
-    ADD_USER_SERIALIZER(dParamStopERP3) ;
-    ADD_USER_SERIALIZER(dParamStopCFM3) ;
-    ADD_USER_SERIALIZER(dParamSuspensionERP3) ;
-    ADD_USER_SERIALIZER(dParamSuspensionCFM3) ;
-    ADD_USER_SERIALIZER(dParamERP3) ;
+    ADD_ALL_PAR_SERIALIZERS(1) ;
+    ADD_ALL_PAR_SERIALIZERS(2) ;
+    ADD_ALL_PAR_SERIALIZERS(3) ;
+    ADD_ALL_PAR_SERIALIZERS(4) ;
+    ADD_ALL_PAR_SERIALIZERS(5) ;
+    ADD_ALL_PAR_SERIALIZERS(6) ;
 
 
     ADD_BOOL_SERIALIZER( JointEnabled, true ) ;

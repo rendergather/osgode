@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -335,47 +335,33 @@ Joint::_initParams(void)
     setAnchor1( osg::Vec3(0,0,0) ) ;
     setAnchor2( osg::Vec3(0,0,0) ) ;
 
-    m_param_map[dParamLoStop]           = -FLT_MAX ;
-    m_param_map[dParamHiStop]           =  FLT_MAX ;
-    m_param_map[dParamVel]              =  0.0 ;
-    m_param_map[dParamFMax]             =  0.0 ;
-    m_param_map[dParamFudgeFactor]      =  0.0 ;
-    m_param_map[dParamBounce]           =  0.0 ;
-    m_param_map[dParamERP]              =  1.0 ;
-    m_param_map[dParamCFM]              =  0.0 ;
-    m_param_map[dParamStopERP]          =  1.0 ;
-    m_param_map[dParamStopCFM]          =  0.0 ;
-    m_param_map[dParamSuspensionERP]    =  1.0 ;
-    m_param_map[dParamSuspensionCFM]    =  0.0 ;
-    m_param_map[dParamERP]              =  1.0 ;
 
-    m_param_map[dParamLoStop2]          = -FLT_MAX ;
-    m_param_map[dParamHiStop2]          =  FLT_MAX ;
-    m_param_map[dParamVel2]             =  0.0 ;
-    m_param_map[dParamFMax2]            =  0.0 ;
-    m_param_map[dParamFudgeFactor2]     =  0.0 ;
-    m_param_map[dParamBounce2]          =  0.0 ;
-    m_param_map[dParamERP2]             =  1.0 ;
-    m_param_map[dParamCFM2]             =  0.0 ;
-    m_param_map[dParamStopERP2]         =  1.0 ;
-    m_param_map[dParamStopCFM2]         =  0.0 ;
-    m_param_map[dParamSuspensionERP2]   =  1.0 ;
-    m_param_map[dParamSuspensionCFM2]   =  0.0 ;
-    m_param_map[dParamERP2]             =  1.0 ;
 
-    m_param_map[dParamLoStop3]          = -FLT_MAX ;
-    m_param_map[dParamHiStop3]          =  FLT_MAX ;
-    m_param_map[dParamVel3]             =  0.0 ;
-    m_param_map[dParamFMax3]            =  0.0 ;
-    m_param_map[dParamFudgeFactor3]     =  0.0 ;
-    m_param_map[dParamBounce3]          =  0.0 ;
-    m_param_map[dParamERP3]             =  1.0 ;
-    m_param_map[dParamCFM3]             =  0.0 ;
-    m_param_map[dParamStopERP3]         =  1.0 ;
-    m_param_map[dParamStopCFM3]         =  0.0 ;
-    m_param_map[dParamSuspensionERP3]   =  1.0 ;
-    m_param_map[dParamSuspensionCFM3]   =  0.0 ;
-    m_param_map[dParamERP3]             =  1.0 ;
+#define SET_DEFAULT_PARAMS( X ) \
+{ \
+    setParam( dParamLoStop##X           , -FLT_MAX ) ; \
+    setParam( dParamHiStop##X           ,  FLT_MAX ) ; \
+    setParam( dParamVel##X              ,  0.0 ) ; \
+    setParam( dParamLoVel##X            ,  FLT_MAX ) ; \
+    setParam( dParamHiVel##X            ,  FLT_MAX ) ; \
+    setParam( dParamFMax##X             ,  0.0 ) ; \
+    setParam( dParamFudgeFactor##X      ,  0.0 ) ; \
+    setParam( dParamBounce##X           ,  0.0 ) ; \
+    setParam( dParamCFM##X              ,  0.0 ) ; \
+    setParam( dParamStopERP##X          ,  1.0 ) ; \
+    setParam( dParamStopCFM##X          ,  0.0 ) ; \
+    setParam( dParamSuspensionERP##X    ,  1.0 ) ; \
+    setParam( dParamSuspensionCFM##X    ,  0.0 ) ; \
+    setParam( dParamERP##X              ,  1.0 ) ; \
+}
+
+
+    SET_DEFAULT_PARAMS(1) ;
+    SET_DEFAULT_PARAMS(2) ;
+    SET_DEFAULT_PARAMS(3) ;
+    SET_DEFAULT_PARAMS(4) ;
+    SET_DEFAULT_PARAMS(5) ;
+    SET_DEFAULT_PARAMS(6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

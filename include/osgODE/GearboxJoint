@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -93,24 +93,6 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the axis relative to the first body
-    virtual void    setAxis1Implementation(const osg::Vec3& axis) ;
-
-    //! Get the axis relative to the first body
-    virtual void    readAxis1Implementation(osg::Vec3& axis) ;
-
-    //! Set the axis relative to the second body
-    virtual void    setAxis2Implementation(const osg::Vec3& axis) ;
-
-    //! Get the axis relative to the first body
-    virtual void    readAxis2Implementation(osg::Vec3& axis) ;
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-public:
     virtual void    update(ooReal step_size) ;
 /* ======================================================================= */
 
@@ -121,9 +103,6 @@ public:
 private:
     ooReal  m_ratio ;
     ooReal  m_friction ;
-
-    osg::Vec3   m_axis1 ;
-    osg::Vec3   m_axis2 ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

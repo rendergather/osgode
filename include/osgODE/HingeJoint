@@ -49,7 +49,7 @@ namespace osgODE
 
 /* ======================================================================= */
 /* ....................................................................... */
-//! A hinge constraint is a door, a window or ...
+//! A hinge constraint
 /*!
  */
 class OSG_EXPORT HingeJoint: public Joint

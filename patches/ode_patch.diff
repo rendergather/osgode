@@ -883,7 +883,17 @@ Index: include/ode/common.h
  } dJointType;
  
  
-@@ -329,7 +334,20 @@
+@@ -306,6 +311,9 @@
+   D_ALL_PARAM_NAMES_X(0x000,1)
+   D_ALL_PARAM_NAMES_X(0x100,2)
+   D_ALL_PARAM_NAMES_X(0x200,3)
++  D_ALL_PARAM_NAMES_X(0x300,4)
++  D_ALL_PARAM_NAMES_X(0x400,5)
++  D_ALL_PARAM_NAMES_X(0x500,6)
+ 
+   /* add a multiple of this constant to the basic parameter numbers to get
+    * the parameters for the second, third etc axes.
+@@ -329,7 +337,20 @@
    dTransmissionChainDrive = 2
  };
  

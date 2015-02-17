@@ -145,7 +145,7 @@ public:
 
     //! Set the anchor relative to the second body
     /*!
-     * This method affects the "ooReal joints" introduced by Joseph Cooper
+     * This method affects the "double joints" introduced by Joseph Cooper
      */
     inline void     setAnchor2(const osg::Vec3& anchor) ;
 

@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2012 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2012 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -127,6 +127,13 @@ public:
 
     typedef std::vector< osg::ref_ptr<ODEObject> >  ObjectList ;
 
+    //! Set the object list
+    inline void     setObjectList(const ObjectList& object_list) ;
+
+    //! Get the object list
+    inline ObjectList&    getObjectList(void) ;
+
+    //! Get the const object list
     inline const ObjectList&    getObjectList(void) const ;
 /* ======================================================================= */
 

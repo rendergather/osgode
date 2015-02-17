@@ -366,6 +366,9 @@ BypassJoint::setParamImplementation(int param, ooReal value)
 
         default:    PS_BREAKPOINT() ;   break ;
     }
+
+
+#undef CASE_ALL_PARAMS
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -420,56 +423,38 @@ BypassJoint::getParamImplementation(int param)
     ooReal  value = 0.0 ;
 
 
+#define CASE_ALL_PARAMS( X ) \
+        case dParamLoStop##X:           value = m_lo_stop           [X-1] ;     break ; \
+        case dParamHiStop##X:           value = m_hi_stop           [X-1] ;     break ; \
+        case dParamVel##X:              value = m_vel               [X-1] ;     break ; \
+        case dParamLoVel##X:            value = m_lo_vel            [X-1] ;     break ; \
+        case dParamHiVel##X:            value = m_hi_vel            [X-1] ;     break ; \
+        case dParamFMax##X:             value = m_f_max             [X-1] ;     break ; \
+        case dParamFudgeFactor##X:      value = m_fudge_factor      [X-1] ;     break ; \
+        case dParamBounce##X:           value = m_bounce            [X-1] ;     break ; \
+        case dParamCFM##X:              value = m_cfm               [X-1] ;     break ; \
+        case dParamStopERP##X:          value = m_stop_erp          [X-1] ;     break ; \
+        case dParamStopCFM##X:          value = m_stop_cfm          [X-1] ;     break ; \
+        case dParamSuspensionERP##X:    value = m_suspension_erp    [X-1] ;     break ; \
+        case dParamSuspensionCFM##X:    value = m_suspension_cfm    [X-1] ;     break ; \
+        case dParamERP##X:              value = m_erp               [X-1] ;     break ;
+
+
     switch( param )
     {
-        case dParamLoStop:          value = m_lo_stop           [0] ;       break ;
-        case dParamHiStop:          value = m_hi_stop           [0] ;       break ;
-        case dParamVel:             value = m_vel               [0] ;       break ;
-        case dParamLoVel:           value = m_lo_vel            [0] ;       break ;
-        case dParamHiVel:           value = m_hi_vel            [0] ;       break ;
-        case dParamFMax:            value = m_f_max             [0] ;       break ;
-        case dParamFudgeFactor:     value = m_fudge_factor      [0] ;       break ;
-        case dParamBounce:          value = m_bounce            [0] ;       break ;
-        case dParamCFM:             value = m_cfm               [0] ;       break ;
-        case dParamStopERP:         value = m_stop_erp          [0] ;       break ;
-        case dParamStopCFM:         value = m_stop_cfm          [0] ;       break ;
-        case dParamSuspensionERP:   value = m_suspension_erp    [0] ;       break ;
-        case dParamSuspensionCFM:   value = m_suspension_cfm    [0] ;       break ;
-        case dParamERP:             value = m_erp               [0] ;       break ;
-
-        case dParamLoStop2:         value = m_lo_stop           [1] ;       break ;
-        case dParamHiStop2:         value = m_hi_stop           [1] ;       break ;
-        case dParamVel2:            value = m_vel               [1] ;       break ;
-        case dParamLoVel2:          value = m_lo_vel            [1] ;       break ;
-        case dParamHiVel2:          value = m_hi_vel            [1] ;       break ;
-        case dParamFMax2:           value = m_f_max             [1] ;       break ;
-        case dParamFudgeFactor2:    value = m_fudge_factor      [1] ;       break ;
-        case dParamBounce2:         value = m_bounce            [1] ;       break ;
-        case dParamCFM2:            value = m_cfm               [1] ;       break ;
-        case dParamStopERP2:        value = m_stop_erp          [1] ;       break ;
-        case dParamStopCFM2:        value = m_stop_cfm          [1] ;       break ;
-        case dParamSuspensionERP2:  value = m_suspension_erp    [1] ;       break ;
-        case dParamSuspensionCFM2:  value = m_suspension_cfm    [1] ;       break ;
-        case dParamERP2:            value = m_erp               [1] ;       break ;
-
-        case dParamLoStop3:         value = m_lo_stop           [2] ;       break ;
-        case dParamHiStop3:         value = m_hi_stop           [2] ;       break ;
-        case dParamVel3:            value = m_vel               [2] ;       break ;
-        case dParamLoVel3:          value = m_lo_vel            [2] ;       break ;
-        case dParamHiVel3:          value = m_hi_vel            [2] ;       break ;
-        case dParamFMax3:           value = m_f_max             [2] ;       break ;
-        case dParamFudgeFactor3:    value = m_fudge_factor      [2] ;       break ;
-        case dParamBounce3:         value = m_bounce            [2] ;       break ;
-        case dParamCFM3:            value = m_cfm               [2] ;       break ;
-        case dParamStopERP3:        value = m_stop_erp          [2] ;       break ;
-        case dParamStopCFM3:        value = m_stop_cfm          [2] ;       break ;
-        case dParamSuspensionERP3:  value = m_suspension_erp    [2] ;       break ;
-        case dParamSuspensionCFM3:  value = m_suspension_cfm    [2] ;       break ;
-        case dParamERP3:            value = m_erp               [2] ;       break ;
+        CASE_ALL_PARAMS(1) ;
+        CASE_ALL_PARAMS(2) ;
+        CASE_ALL_PARAMS(3) ;
+        CASE_ALL_PARAMS(4) ;
+        CASE_ALL_PARAMS(5) ;
+        CASE_ALL_PARAMS(6) ;
 
 
         default:    PS_BREAKPOINT() ;   break ;
     }
+
+
+#undef CASE_ALL_PARAMS
 
 
 

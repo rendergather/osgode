@@ -55,6 +55,8 @@ SET(TARGET_H
     ${HEADER_PATH}/FixedJoint.inl
     ${HEADER_PATH}/GearboxJoint
     ${HEADER_PATH}/GearboxJoint.inl
+    ${HEADER_PATH}/Generic6DofJoint
+    ${HEADER_PATH}/Generic6DofJoint.inl
     ${HEADER_PATH}/Hinge2Joint
     ${HEADER_PATH}/Hinge2Joint.inl
     ${HEADER_PATH}/HingeJoint
@@ -174,6 +176,7 @@ SET(TARGET_SRC
     Events.cpp
     FixedJoint.cpp
     GearboxJoint.cpp
+    Generic6DofJoint.cpp
     Hinge2Joint.cpp
     HingeJoint.cpp
     HingeServoMotor.cpp

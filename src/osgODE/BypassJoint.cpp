@@ -49,7 +49,8 @@ using namespace osgODE ;
 
 /* ======================================================================= */
 /* ....................................................................... */
-BypassJoint::BypassJoint(void)
+BypassJoint::BypassJoint(void):
+    m_initial_transformation_set    ( false )
 {
 
     m_ODE_joint = dJointCreateBypass(StaticWorld::instance()->getODEWorld(), NULL) ;
@@ -65,7 +66,9 @@ BypassJoint::BypassJoint(void)
 /* ======================================================================= */
 /* ....................................................................... */
 BypassJoint::BypassJoint(const BypassJoint& other, const osg::CopyOp& copyop):
-    Joint   ( other, copyop )
+    Joint                           ( other, copyop ),
+    m_initial_transformation        ( other.m_initial_transformation ),
+    m_initial_transformation_set    ( other.m_initial_transformation_set )
 {
 }
 /* ....................................................................... */
@@ -551,6 +554,53 @@ void
 BypassJoint::readAnchor2Implementation(osg::Vec3& anchor)
 {
     anchor = m_anchor2 ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+BypassJoint::finalize(void)
+{
+    PS_DBG2("oo::BypassJoint::finalize(%p)", this) ;
+
+    this->Joint::finalize() ;
+
+
+
+
+    if( m_initial_transformation_set ) {
+        return ;
+    }
+
+
+
+    if( m_body1.valid() && m_body2.valid() ) {
+
+        m_initial_transformation = m_body2->getMatrix() * osg::Matrix::inverse( m_body1->getMatrix() ) ;
+
+
+
+    } else if( m_body1.valid() ) {
+
+        m_initial_transformation = m_body1->getMatrix() ;
+
+
+
+    } else if( m_body2.valid() ) {
+
+        m_initial_transformation = m_body2->getMatrix() ;
+
+
+
+    } else {
+
+        m_initial_transformation = osg::Matrix::identity() ;
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

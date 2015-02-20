@@ -1,9 +1,9 @@
 /*!
- * @file BypassJoint.inl
+ * @file Generic6DofJoint.inl
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2015 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,8 +22,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_BYPASSJOINT_INL
-#define _OSGODE_BYPASSJOINT_INL
+#ifndef _OSGODE_GENERIC6DOFJOINT_INL
+#define _OSGODE_GENERIC6DOFJOINT_INL
 
 
 
@@ -39,11 +39,9 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::BypassJoint::setInfo(   unsigned int max_m,
-                                unsigned int m,
-                                unsigned int nub )
+osgODE::Generic6DofJoint::setBlenderMode( bool blender_mode )
 {
-    dJointSetBypassInfo(m_ODE_joint, max_m, m, nub) ;
+    m_blender_mode = blender_mode ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -53,12 +51,10 @@ osgODE::BypassJoint::setInfo(   unsigned int max_m,
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::BypassJoint::getInfo(   unsigned int& max_m,
-                                unsigned int& m,
-                                unsigned int& nub ) const
+inline bool
+osgODE::Generic6DofJoint::getBlenderMode(void)
 {
-    dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
+    return m_blender_mode ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -68,11 +64,10 @@ osgODE::BypassJoint::getInfo(   unsigned int& max_m,
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::BypassJoint::setInitialTransformation( const osg::Matrix& initial_transformation )
+inline bool
+osgODE::Generic6DofJoint::getBlenderMode(void) const
 {
-    m_initial_transformation = initial_transformation ;
-    m_initial_transformation_set = true ;
+    return m_blender_mode ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -80,30 +75,4 @@ osgODE::BypassJoint::setInitialTransformation( const osg::Matrix& initial_transf
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void)
-{
-    return m_initial_transformation ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void) const
-{
-    return m_initial_transformation ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_BYPASSJOINT_INL */
+#endif /* _OSGODE_GENERIC6DOFJOINT_INL */

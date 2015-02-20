@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -76,6 +76,25 @@ public:
 
 
 
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the relative transformation from body1 to bidy2.
+    /*!
+     * Set the matrix that tansforms body1 to body2. If one of the two is
+     * NULL, the matrix holds the absolute transformation of the valid body.
+     * */
+    inline void setInitialTransformation( const osg::Matrix& initial_transformation ) ;
+
+    //! Get the relative transformation from body1 to bidy2.
+    inline osg::Matrix& getInitialTransformation(void) ;
+
+    //! Get the const relative transformation from body1 to bidy2.
+    inline const osg::Matrix& getInitialTransformation(void) const ;
+/* ======================================================================= */
 
 
 
@@ -162,6 +181,15 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Create the joint (Joint::finalize) then compute the initial transform
+    virtual void        finalize(void) ;
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+public:
     virtual BypassJoint*    asBypassJoint(void) ;
 /* ======================================================================= */
 
@@ -211,28 +239,31 @@ protected:
 
 /* ======================================================================= */
 protected:
-    ooReal      m_lo_stop[6] ;
-    ooReal      m_hi_stop[6] ;
-    ooReal      m_vel[6] ;
-    ooReal      m_lo_vel[6] ;
-    ooReal      m_hi_vel[6] ;
-    ooReal      m_f_max[6] ;
-    ooReal      m_fudge_factor[6] ;
-    ooReal      m_bounce[6] ;
-    ooReal      m_cfm[6] ;
-    ooReal      m_stop_erp[6] ;
-    ooReal      m_stop_cfm[6] ;
-    ooReal      m_suspension_erp[6] ;
-    ooReal      m_suspension_cfm[6] ;
-    ooReal      m_erp[6] ;
+    ooReal          m_lo_stop[6] ;
+    ooReal          m_hi_stop[6] ;
+    ooReal          m_vel[6] ;
+    ooReal          m_lo_vel[6] ;
+    ooReal          m_hi_vel[6] ;
+    ooReal          m_f_max[6] ;
+    ooReal          m_fudge_factor[6] ;
+    ooReal          m_bounce[6] ;
+    ooReal          m_cfm[6] ;
+    ooReal          m_stop_erp[6] ;
+    ooReal          m_stop_cfm[6] ;
+    ooReal          m_suspension_erp[6] ;
+    ooReal          m_suspension_cfm[6] ;
+    ooReal          m_erp[6] ;
 
 
-    osg::Vec3   m_anchor1 ;
-    osg::Vec3   m_anchor2 ;
+    osg::Vec3       m_anchor1 ;
+    osg::Vec3       m_anchor2 ;
 
-    osg::Vec3   m_axis1 ;
-    osg::Vec3   m_axis2 ;
-    osg::Vec3   m_axis3 ;
+    osg::Vec3       m_axis1 ;
+    osg::Vec3       m_axis2 ;
+    osg::Vec3       m_axis3 ;
+
+    osg::Matrix     m_initial_transformation ;
+    bool            m_initial_transformation_set ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

@@ -1,9 +1,9 @@
 /*!
- * @file BypassJoint.inl
+ * @file Generic6DofJoint_serializer.cpp
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2015 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,7 +14,7 @@
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
+ *   GNU Lesser General Public License for more details.                   *
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this program; if not, write to the                 *
@@ -22,8 +22,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_BYPASSJOINT_INL
-#define _OSGODE_BYPASSJOINT_INL
+/* ======================================================================= */
+/* ....................................................................... */
+#include <osgODE/Generic6DofJoint>
+
+#include <osgDB/Registry>
+
+#include "real_serializer"
+/* ....................................................................... */
+/* ======================================================================= */
 
 
 
@@ -38,72 +45,12 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::BypassJoint::setInfo(   unsigned int max_m,
-                                unsigned int m,
-                                unsigned int nub )
+REGISTER_OBJECT_WRAPPER( Generic6DofJoint,
+                         new osgODE::Generic6DofJoint,
+                         osgODE::Generic6DofJoint,
+                         "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint osgODE::Generic6DofJoint" )
 {
-    dJointSetBypassInfo(m_ODE_joint, max_m, m, nub) ;
+    ADD_BOOL_SERIALIZER( BlenderMode, true ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::BypassJoint::getInfo(   unsigned int& max_m,
-                                unsigned int& m,
-                                unsigned int& nub ) const
-{
-    dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::BypassJoint::setInitialTransformation( const osg::Matrix& initial_transformation )
-{
-    m_initial_transformation = initial_transformation ;
-    m_initial_transformation_set = true ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void)
-{
-    return m_initial_transformation ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void) const
-{
-    return m_initial_transformation ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
-
-
-
-
-#endif /* _OSGODE_BYPASSJOINT_INL */

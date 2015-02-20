@@ -235,7 +235,7 @@ protected:
 
 
 
-    //! Give effect to the joint
+    //! Create the joint
     /*!
      * It has a generic behaviour, but some joints need a special
      * treatment so it is virtual

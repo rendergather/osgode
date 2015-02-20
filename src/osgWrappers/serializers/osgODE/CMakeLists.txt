@@ -30,6 +30,7 @@ SET(TARGET_SRC
     Events_serializer.cpp
     FixedJoint_serializer.cpp
     GearboxJoint_serializer.cpp
+    Generic6DofJoint_serializer.cpp
     Hinge2Joint_serializer.cpp
     HingeJoint_serializer.cpp
     HingeServoMotor_serializer.cpp

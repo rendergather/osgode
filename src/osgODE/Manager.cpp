@@ -172,7 +172,7 @@ Manager::frame(ooReal dt)
         }
 
 
-//         dirtyBound() ;
+        dirtyBound() ;
     }
 
 

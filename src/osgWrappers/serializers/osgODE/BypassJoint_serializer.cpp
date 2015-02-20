@@ -35,6 +35,7 @@
 
 /* ======================================================================= */
 /* ....................................................................... */
+#if 0
 namespace {
 static bool checkRows(const osgODE::BypassJoint& j)
 {
@@ -143,6 +144,7 @@ static bool readInfo(osgDB::InputStream& is, osgODE::BypassJoint& j)
     return true ;
 }
 } // anon namespace
+#endif
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -156,8 +158,12 @@ REGISTER_OBJECT_WRAPPER( BypassJoint,
                          osgODE::BypassJoint,
                          "osg::Object osgODE::ODEObject osgODE::Transformable osgODE::Joint osgODE::BypassJoint" )
 {
+#if 0
     ADD_USER_SERIALIZER( Rows ) ;
     ADD_USER_SERIALIZER( Info ) ;
+#endif
+
+    ADD_MATRIX_SERIALIZER( InitialTransformation, osg::Matrix::identity() ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

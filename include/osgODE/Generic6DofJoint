@@ -1,9 +1,9 @@
 /*!
- * @file BypassJoint.inl
+ * @file Generic6DofJoint
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2015 by Rocco Martino                                   *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,30 +22,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _OSGODE_BYPASSJOINT_INL
-#define _OSGODE_BYPASSJOINT_INL
+#ifndef _OSGODE_GENERIC6DOFJOINT_HPP
+#define _OSGODE_GENERIC6DOFJOINT_HPP
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-/* ....................................................................... */
+#include <osgODE/BypassJoint>
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::BypassJoint::setInfo(   unsigned int max_m,
-                                unsigned int m,
-                                unsigned int nub )
+namespace osgODE
 {
-    dJointSetBypassInfo(m_ODE_joint, max_m, m, nub) ;
-}
-/* ....................................................................... */
+
+
+
+
+/* ======================================================================= */
 /* ======================================================================= */
 
 
@@ -53,57 +49,91 @@ osgODE::BypassJoint::setInfo(   unsigned int max_m,
 
 /* ======================================================================= */
 /* ....................................................................... */
-inline void
-osgODE::BypassJoint::getInfo(   unsigned int& max_m,
-                                unsigned int& m,
-                                unsigned int& nub ) const
+//! A ball joint with linear and angular limits
+/*!
+ * This works like a ball joint, but it is possible to set angular and linear
+ * stops.\n
+ * When both the bodies are valid, the axes are assumed to be in body1
+ * reference frame, while anchor2 is in body2 reference frame.\n
+ * If body2 is null, the axes and the second anchor are in absolute reference
+ * frame. The first anchor is always in body1 r.f.\n
+ * Param groups 1, 2 and 3 affect the first three rows for the linear
+ * constraint; 4, 5 and 6 the others for the angular constraint.
+ */
+class OSG_EXPORT Generic6DofJoint: public osgODE::BypassJoint
 {
-    dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
-}
-/* ....................................................................... */
+/* ======================================================================= */
+public:
+             Generic6DofJoint(void) ;
+             Generic6DofJoint(const Generic6DofJoint& other, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY) ;
+
+protected:
+    virtual ~Generic6DofJoint(void) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline void
-osgODE::BypassJoint::setInitialTransformation( const osg::Matrix& initial_transformation )
-{
-    m_initial_transformation = initial_transformation ;
-    m_initial_transformation_set = true ;
-}
-/* ....................................................................... */
+public:
+    META_Object(osgODE, Generic6DofJoint) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    //! Set the blender mode. Default: truew
+    inline void setBlenderMode( bool blender_mode ) ;
+
+    //! Get the blender mode. Default: truew
+    inline bool getBlenderMode(void) ;
+
+    //! Get the const blender mode. Defaultr: truew
+    inline bool getBlenderMode(void) const ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
+    virtual void    update(ooReal step_size) ;
 /* ======================================================================= */
 
 
 
 
 /* ======================================================================= */
-/* ....................................................................... */
-inline osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void)
-{
-    return m_initial_transformation ;
-}
+private:
+    bool    m_blender_mode ;
+/* ======================================================================= */
+} ;
 /* ....................................................................... */
 /* ======================================================================= */
 
 
 
 
-/* ======================================================================= */
-/* ....................................................................... */
-inline const osg::Matrix&
-osgODE::BypassJoint::getInitialTransformation(void) const
-{
-    return m_initial_transformation ;
-}
-/* ....................................................................... */
-/* ======================================================================= */
+} // namespace osgODE
 
 
 
 
-#endif /* _OSGODE_BYPASSJOINT_INL */
+#include "Generic6DofJoint.inl"
+
+
+
+
+#endif /* _OSGODE_GENERIC6DOFJOINT_HPP */

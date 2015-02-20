@@ -378,23 +378,23 @@ class Joint(ODEObject.ODEObject):
 
 
         if self.LoStop != None:
-            writer.writeLine("dParamLoStop %f" %self.LoStop)
+            writer.writeLine("dParamLoStop1 %f" %self.LoStop)
 
         if self.HiStop != None:
-            writer.writeLine("dParamHiStop %f" %self.HiStop)
+            writer.writeLine("dParamHiStop1 %f" %self.HiStop)
 
 
 
         if self.CFM != None:
-            writer.writeLine("dParamCFM %f" %self.CFM)
+            writer.writeLine("dParamCFM1 %f" %self.CFM)
 
-        writer.writeLine("dParamStopERP %f" %self.StopERP) ;
-        writer.writeLine("dParamStopCFM %f" %self.StopCFM) ;
+        writer.writeLine("dParamStopERP1 %f" %self.StopERP) ;
+        writer.writeLine("dParamStopCFM1 %f" %self.StopCFM) ;
 
 
 
         if self.ERP != None:
-            writer.writeLine("dParamERP %f" %self.ERP)
+            writer.writeLine("dParamERP1 %f" %self.ERP)
 
 
 

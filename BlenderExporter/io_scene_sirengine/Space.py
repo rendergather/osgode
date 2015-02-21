@@ -323,9 +323,9 @@ class Space(Writable.Writable):
         if len(self.ODEObjects):
             writer.moveIn("ObjectList %d" %len(self.ODEObjects))
 
-        for obj in self.ODEObjects:
-            if not obj.writeToStream(writer):
-                return False
+            for obj in self.ODEObjects:
+                if not obj.writeToStream(writer):
+                    return False
 
             writer.moveOut("ObjectList %d" %len(self.ODEObjects))
 

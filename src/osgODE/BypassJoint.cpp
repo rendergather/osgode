@@ -136,9 +136,9 @@ BypassJoint::setRelativeRotation( ooReal step_size, const osg::Quat& qrel, int& 
 //     }
 
 
-    this->setRow( row++, J1ax, osg::Vec3(), J2ax, osg::Vec3(), c.x(), cfm ) ;
-    this->setRow( row++, J1ay, osg::Vec3(), J2ay, osg::Vec3(), c.y(), cfm ) ;
-    this->setRow( row++, J1az, osg::Vec3(), J2az, osg::Vec3(), c.z(), cfm ) ;
+    this->setRow( row++, J1ax, osg::Vec3(), J2ax, osg::Vec3(), c.x(), cfm, -dInfinity, dInfinity ) ;
+    this->setRow( row++, J1ay, osg::Vec3(), J2ay, osg::Vec3(), c.y(), cfm, -dInfinity, dInfinity ) ;
+    this->setRow( row++, J1az, osg::Vec3(), J2az, osg::Vec3(), c.z(), cfm, -dInfinity, dInfinity ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -197,9 +197,9 @@ BypassJoint::setRelativePosition( ooReal step_size, const osg::Vec3& prel, int& 
     }
 
 
-    this->setRow( row++, osg::Vec3(), J1lx, osg::Vec3(), J2lx, c.x(), cfm ) ;
-    this->setRow( row++, osg::Vec3(), J1ly, osg::Vec3(), J2ly, c.y(), cfm ) ;
-    this->setRow( row++, osg::Vec3(), J1lz, osg::Vec3(), J2lz, c.z(), cfm ) ;
+    this->setRow( row++, osg::Vec3(), J1lx, osg::Vec3(), J2lx, c.x(), cfm, -dInfinity, dInfinity ) ;
+    this->setRow( row++, osg::Vec3(), J1ly, osg::Vec3(), J2ly, c.y(), cfm, -dInfinity, dInfinity ) ;
+    this->setRow( row++, osg::Vec3(), J1lz, osg::Vec3(), J2lz, c.z(), cfm, -dInfinity, dInfinity ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -216,7 +216,10 @@ BypassJoint::setRow(    unsigned int row,
                         const osg::Vec3& J2a,
                         const osg::Vec3& J2l,
                         ooReal rhs,
-                        ooReal cfm )
+                        ooReal cfm,
+                        ooReal lo,
+                        ooReal hi
+                   )
 {
 
     PS_ASSERT1( row < 6 ) ;
@@ -230,7 +233,7 @@ BypassJoint::setRow(    unsigned int row,
     dOPE(d, =, J2l) ;
 
 
-    dJointSetBypassRow(m_ODE_joint, row, a, b, c, d, rhs, cfm) ;
+    dJointSetBypassRow(m_ODE_joint, row, a, b, c, d, rhs, cfm, lo, hi) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -247,16 +250,19 @@ BypassJoint::getRow(    unsigned int row,
                         osg::Vec3& J2a,
                         osg::Vec3& J2l,
                         ooReal& rhs,
-                        ooReal& cfm ) const
+                        ooReal& cfm,
+                        ooReal& lo,
+                        ooReal& hi
+                   ) const
 {
 
     PS_ASSERT1( row < 6 ) ;
 
     dVector3    a, b, c, d ;
-    dReal   k, l ;
+    dReal   k, l, m, n ;
 
 
-    dJointGetBypassRow(m_ODE_joint, row, a, b, c, d, &k, &l) ;
+    dJointGetBypassRow(m_ODE_joint, row, a, b, c, d, &k, &l, &m, &n) ;
 
     J1a.set( a[0], a[1], a[2] ) ;
     J1l.set( b[0], b[1], b[2] ) ;
@@ -265,6 +271,8 @@ BypassJoint::getRow(    unsigned int row,
 
     rhs = k ;
     cfm = l ;
+    lo = m ;
+    hi = n ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -309,12 +317,12 @@ BypassJoint::cloneODEJoint(dWorldID world) const
 
     {
         dVector3    J1a, J1l, J2a, J2l ;
-        dReal   cfm, rhs ;
+        dReal   cfm, rhs, lo, hi ;
 
 
         for( unsigned int i=0; i<6; i++ ) {
-            dJointGetBypassRow(m_ODE_joint, i, J1a, J1l, J2a, J2l, &rhs, &cfm) ;
-            dJointSetBypassRow(j, i, J1a, J1l, J2a, J2l, rhs, cfm) ;
+            dJointGetBypassRow(m_ODE_joint, i, J1a, J1l, J2a, J2l, &rhs, &cfm, &lo, &hi) ;
+            dJointSetBypassRow(j, i, J1a, J1l, J2a, J2l, rhs, cfm, lo, hi) ;
         }
     }
 
@@ -322,8 +330,11 @@ BypassJoint::cloneODEJoint(dWorldID world) const
     {
         unsigned int    max_m, m, nub ;
 
-        dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
-        dJointSetBypassInfo(j, max_m, m, nub) ;
+        dJointGetBypassInfo1(m_ODE_joint, &m, &nub) ;
+        dJointSetBypassInfo1(j, m, nub) ;
+
+        dJointGetBypassSureMaxInfo(m_ODE_joint, &max_m) ;
+        dJointSetBypassSureMaxInfo(j, max_m) ;
     }
 
 

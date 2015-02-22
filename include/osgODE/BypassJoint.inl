@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -39,11 +39,10 @@
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::BypassJoint::setInfo(   unsigned int max_m,
-                                unsigned int m,
+osgODE::BypassJoint::setInfo1(  unsigned int m,
                                 unsigned int nub )
 {
-    dJointSetBypassInfo(m_ODE_joint, max_m, m, nub) ;
+    dJointSetBypassInfo1(m_ODE_joint, m, nub) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -54,11 +53,36 @@ osgODE::BypassJoint::setInfo(   unsigned int max_m,
 /* ======================================================================= */
 /* ....................................................................... */
 inline void
-osgODE::BypassJoint::getInfo(   unsigned int& max_m,
-                                unsigned int& m,
+osgODE::BypassJoint::getInfo1(  unsigned int& m,
                                 unsigned int& nub ) const
 {
-    dJointGetBypassInfo(m_ODE_joint, &max_m, &m, &nub) ;
+    dJointGetBypassInfo1(m_ODE_joint, &m, &nub) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::BypassJoint::setSureMaxInfo(  unsigned int max_m )
+{
+    dJointSetBypassSureMaxInfo(m_ODE_joint, max_m) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+inline void
+osgODE::BypassJoint::getSureMaxInfo(  unsigned int& max_m ) const
+{
+    dJointGetBypassSureMaxInfo(m_ODE_joint, &max_m ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

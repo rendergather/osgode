@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -42,7 +42,9 @@ Plane2DJoint::Plane2DJoint(void):
     m_normal    ( osg::Z_AXIS )
 {
     setAxis1( m_normal ) ;
-    this->setInfo( 1, 1, 1 ) ;
+
+    this->setSureMaxInfo( 1 ) ;
+    this->setInfo1( 1, 1 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -89,7 +91,7 @@ Plane2DJoint::update( ooReal step_size )
         rhs = (v * m_normal) * m_erp[0] / step_size ;
     }
 
-    this->setRow( 0, osg::Vec3(), m_normal, osg::Vec3(), osg::Vec3(), rhs, cfm ) ;
+    this->setRow( 0, osg::Vec3(), m_normal, osg::Vec3(), osg::Vec3(), rhs, cfm, -dInfinity, dInfinity ) ;
 
 
     this->BypassJoint::update( step_size ) ;

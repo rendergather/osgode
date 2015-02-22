@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2010 - 2013 by Rocco Martino                            *
+ *   Copyright (C) 2010 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -55,7 +55,7 @@ FixedJoint::FixedJoint(void):
     m_position_mode     ( true ),
     m_compute_matrix    ( true )
 {
-    this->setInfo(6, 6, 6) ;
+    this->setSureMaxInfo(6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -131,7 +131,7 @@ FixedJoint::update( ooReal step_size )
 
 
 
-    this->BypassJoint::setInfo( row, row, row ) ;
+    this->BypassJoint::setInfo1( row, row ) ;
 
 
 

@@ -108,7 +108,10 @@ public:
                     const osg::Vec3& J2a,
                     const osg::Vec3& J2l,
                     ooReal rhs,
-                    ooReal cfm ) ;
+                    ooReal cfm,
+                    ooReal lo,
+                    ooReal hi
+               ) ;
 
 
 
@@ -119,19 +122,26 @@ public:
                     osg::Vec3& J2a,
                     osg::Vec3& J2l,
                     ooReal& rhs,
-                    ooReal& cfm ) const ;
+                    ooReal& cfm,
+                    ooReal& lo,
+                    ooReal& hi
+               ) const ;
 
 
 
-    //! Set SureMaxInfo and Info1
-    inline void setInfo(    unsigned int max_m,
-                            unsigned int m,
+    //! Set Info1
+    inline void setInfo1(   unsigned int m,
                             unsigned int nub ) ;
 
-    //! Get SureMaxInfo and Info1
-    inline void getInfo(    unsigned int& max_m,
-                            unsigned int& m,
+    //! Get Info1
+    inline void getInfo1(   unsigned int& m,
                             unsigned int& nub ) const ;
+
+    //! Set SureMaxInfo
+    inline void setSureMaxInfo( unsigned int max_m ) ;
+
+    //! Get SureMaxInfo
+    inline void getSureMaxInfo( unsigned int& max_m ) const ;
 /* ======================================================================= */
 
 

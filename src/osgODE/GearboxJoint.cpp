@@ -3,7 +3,7 @@
  * @author Rocco Martino
  */
 /***************************************************************************
- *   Copyright (C) 2013 by Rocco Martino                                   *
+ *   Copyright (C) 2013 - 2015 by Rocco Martino                            *
  *   martinorocco@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -53,7 +53,9 @@ GearboxJoint::GearboxJoint(void):
     m_ratio     ( 1.0 ),
     m_friction  ( 1.0 )
 {
-    this->setInfo(1, 1, 1) ;
+    this->setSureMaxInfo(1) ;
+
+    this->setInfo1( 1, 0 ) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -105,7 +107,7 @@ GearboxJoint::update( ooReal step_size )
     }
 
 
-    this->setRow( 0, axis1, osg::Vec3(), axis2 * m_ratio, osg::Vec3(), 0.0, -1.0 + 1.0 / m_friction ) ;
+    this->setRow( 0, axis1, osg::Vec3(), axis2 * m_ratio, osg::Vec3(), 0.0, -1.0 + 1.0 / m_friction, -dInfinity, dInfinity ) ;
 
 
     this->BypassJoint::update( step_size ) ;

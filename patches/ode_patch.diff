@@ -2,7 +2,7 @@ Index: include/ode/bypass_api.h
 ===================================================================
 --- include/ode/bypass_api.h	(revision 0)
 +++ include/ode/bypass_api.h	(revision 0)
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,117 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -50,7 +50,9 @@ Index: include/ode/bypass_api.h
 +                                    const dReal* J2a,
 +                                    const dReal* J2l,
 +                                    dReal rhs,
-+                                    dReal cfm
++                                    dReal cfm,
++                                    dReal lo,
++                                    dReal hi
 +                               );
 +
 +
@@ -68,18 +70,19 @@ Index: include/ode/bypass_api.h
 +                                    dVector3 J2a,
 +                                    dVector3 J2l,
 +                                    dReal* rhs,
-+                                    dReal* cfm
++                                    dReal* cfm,
++                                    dReal* lo,
++                                    dReal* hi
 +                               );
 +
 +
 +
 +
 +/**
-+ * @brief set SureMaxInfo and Info1 for the bypass joint
++ * @brief set Info1 for the bypass joint
 + * @ingroup joints
 + */
-+ODE_API void dJointSetBypassInfo(   dJointID,
-+                                    unsigned int max_m,
++ODE_API void dJointSetBypassInfo1(  dJointID,
 +                                    unsigned int m,
 +                                    unsigned int nub
 +                               );
@@ -88,14 +91,35 @@ Index: include/ode/bypass_api.h
 +
 +
 +/**
-+ * @brief get SureMaxInfo and Info1 for the bypass joint
++ * @brief get Info1 for the bypass joint
 + * @ingroup joints
 + */
-+ODE_API void dJointGetBypassInfo(   dJointID,
-+                                    unsigned int* max_m,
++ODE_API void dJointGetBypassInfo1(  dJointID,
 +                                    unsigned int* m,
 +                                    unsigned int* nub
 +                               );
++
++
++
++
++/**
++ * @brief set SureMaxInfo for the bypass joint
++ * @ingroup joints
++ */
++ODE_API void dJointSetBypassSureMaxInfo(    dJointID,
++                                            unsigned int max_m
++                                       );
++
++
++
++
++/**
++ * @brief get SureMaxInfo for the bypass joint
++ * @ingroup joints
++ */
++ODE_API void dJointGetBypassSureMaxInfo(    dJointID,
++                                            unsigned int* max_m
++                                       );
 Index: include/ode/lmplus_api.h
 ===================================================================
 --- include/ode/lmplus_api.h	(revision 0)
@@ -2771,7 +2795,7 @@ Index: ode/src/joints/bypass.h
 ===================================================================
 --- ode/src/joints/bypass.h	(revision 0)
 +++ ode/src/joints/bypass.h	(revision 0)
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,59 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -2810,6 +2834,9 @@ Index: ode/src/joints/bypass.h
 +    dReal   m_rhs[6];
 +
 +    dReal   m_cfm[6] ;
++
++    dReal   m_lo[6];
++    dReal   m_hi[6];
 +
 +    unsigned int    m_info_max_m ;
 +    unsigned int    m_info_m ;
@@ -3764,7 +3791,7 @@ Index: ode/src/joints/bypass.cpp
 ===================================================================
 --- ode/src/joints/bypass.cpp	(revision 0)
 +++ ode/src/joints/bypass.cpp	(revision 0)
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,295 @@
 +/*************************************************************************
 + *                                                                       *
 + * Joint for the Open Dynamics Engine. Copyright (C) 2013, Rocco Martino *
@@ -3809,6 +3836,8 @@ Index: ode/src/joints/bypass.cpp
 +        dSetZero(m_J2l[i], 3);
 +        m_rhs[i] = 0 ;
 +        m_cfm[i] = 0 ;
++        m_lo[i] = -dInfinity ;
++        m_hi[i] = dInfinity ;
 +    }
 +
 +
@@ -3877,6 +3906,9 @@ Index: ode/src/joints/bypass.cpp
 +
 +        info->c[i] = m_rhs[i] ;
 +        info->cfm[i] = m_cfm[i] ;
++
++        info->lo[i] = m_lo[i] ;
++        info->hi[i] = m_hi[i] ;
 +    }
 +}
 +
@@ -3895,7 +3927,9 @@ Index: ode/src/joints/bypass.cpp
 +                            const dReal* J2a,
 +                            const dReal* J2l,
 +                            dReal rhs,
-+                            dReal cfm
++                            dReal cfm,
++                            dReal lo,
++                            dReal hi
 +                       )
 +{
 +    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
@@ -3910,6 +3944,8 @@ Index: ode/src/joints/bypass.cpp
 +        dCopyVector3(joint->m_J2l[row], J2l) ;
 +        joint->m_rhs[row] = rhs ;
 +        joint->m_cfm[row] = cfm ;
++        joint->m_lo[row] = lo ;
++        joint->m_hi[row] = hi ;
 +    }
 +}
 +
@@ -3928,7 +3964,9 @@ Index: ode/src/joints/bypass.cpp
 +                            dVector3 J2a,
 +                            dVector3 J2l,
 +                            dReal* rhs,
-+                            dReal* cfm
++                            dReal* cfm,
++                            dReal* lo,
++                            dReal* hi
 +                       )
 +{
 +    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
@@ -3943,6 +3981,8 @@ Index: ode/src/joints/bypass.cpp
 +        dCopyVector3(J2l, joint->m_J2l[row]) ;
 +        *rhs = joint->m_rhs[row] ;
 +        *cfm = joint->m_cfm[row] ;
++        *lo = joint->m_lo[row] ;
++        *hi = joint->m_hi[row] ;
 +    }
 +}
 +
@@ -3954,8 +3994,7 @@ Index: ode/src/joints/bypass.cpp
 +
 +
 +
-+void dJointSetBypassInfo(   dJointID j,
-+                            unsigned int max_m,
++void dJointSetBypassInfo1(  dJointID j,
 +                            unsigned int m,
 +                            unsigned int nub
 +                       )
@@ -3965,7 +4004,6 @@ Index: ode/src/joints/bypass.cpp
 +    checktype( joint, Bypass );
 +
 +
-+    joint->m_info_max_m = max_m ;
 +    joint->m_info_m = m ;
 +    joint->m_info_nub = nub ;
 +}
@@ -3978,8 +4016,27 @@ Index: ode/src/joints/bypass.cpp
 +
 +
 +
-+void dJointGetBypassInfo(   dJointID j,
-+                            unsigned int* max_m,
++void dJointSetBypassSureMaxInfo(   dJointID j,
++                       unsigned int max_m
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype( joint, Bypass );
++
++
++    joint->m_info_max_m = max_m ;
++}
++
++
++
++
++
++
++
++
++
++void dJointGetBypassInfo1(  dJointID j,
 +                            unsigned int* m,
 +                            unsigned int* nub
 +                       )
@@ -3987,14 +4044,30 @@ Index: ode/src/joints/bypass.cpp
 +    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
 +    dUASSERT( joint, "bad joint argument" );
 +    checktype( joint, Bypass );
-+    dAASSERT( max_m );
 +    dAASSERT( m );
 +    dAASSERT( nub );
 +
 +
-+    *max_m = joint->m_info_max_m ;
 +    *m = joint->m_info_m ;
 +    *nub = joint->m_info_nub ;
++}
++
++
++
++
++
++
++void dJointGetBypassSureMaxInfo(   dJointID j,
++                            unsigned int* max_m
++                       )
++{
++    dxJointBypass* joint = static_cast<dxJointBypass*>(j);
++    dUASSERT( joint, "bad joint argument" );
++    checktype( joint, Bypass );
++    dAASSERT( max_m );
++
++
++    *max_m = joint->m_info_max_m ;
 +}
 +
 +

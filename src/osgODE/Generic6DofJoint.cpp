@@ -27,6 +27,9 @@
 #include <osgODE/Generic6DofJoint>
 
 #include <osgODE/Notify>
+
+#include <iostream>
+#include <osg/io_utils>
 /* ....................................................................... */
 /* ======================================================================= */
 
@@ -43,7 +46,7 @@ using namespace osgODE ;
 Generic6DofJoint::Generic6DofJoint(void):
     m_blender_mode  ( true )
 {
-    this->setInfo(6, 6, 0) ;
+    this->setSureMaxInfo(6) ;
 }
 /* ....................................................................... */
 /* ======================================================================= */
@@ -83,7 +86,7 @@ Generic6DofJoint::update( ooReal step_size )
 
     PS_ASSERT1( m_body1.valid() ) ;
 
-    this->setInfo(6, 0, 0) ;
+    this->setInfo1(0, 0) ;
 
 
     bool    b1 = m_body1.valid() ;
@@ -129,7 +132,7 @@ Generic6DofJoint::update( ooReal step_size )
 
     } else {
 
-        osg::Matrix transform = m_blender_mode  ?   b1_to_world : m_initial_transformation ;
+        osg::Matrix transform = m_initial_transformation ;
 
         axes[0] = osg::Matrix::transform3x3( getAxis1(), transform ) ;
         axes[1] = osg::Matrix::transform3x3( getAxis2(), transform ) ;
@@ -138,9 +141,52 @@ Generic6DofJoint::update( ooReal step_size )
 
 
         for( int i=0; i<3; i++ ) {
+
             j1l[i] = axes[i] ;
         }
     }
+
+
+
+
+
+    // the anchors in world space
+    osg::Vec3   anchor1_world = getAnchor1() * b1_to_world ;
+
+
+    osg::Vec3   anchor2_world =   b2    ?   getAnchor2() * m_body2->getMatrix()
+                                        :   getAnchor2() ;
+
+
+
+
+
+    osg::Matrix joint_to_world ;
+
+    for( int r=0; r<3; r++ ) {
+
+        joint_to_world(3,r) = anchor1_world[r] ;
+
+
+        for( int c=0; c<3; c++ ) {
+            joint_to_world(r, c) = axes[r][c] ;
+        }
+    }
+
+
+
+
+    osg::Matrix world_to_joint = osg::Matrix::inverse( joint_to_world ) ;
+
+
+
+    // anchors in joint space
+
+    // this is always 0 0 0
+    osg::Vec3   anchor1_joint = anchor1_world * world_to_joint ;
+
+
+    osg::Vec3   anchor2_joint = anchor2_world * world_to_joint ;
 
 
 
@@ -156,84 +202,93 @@ Generic6DofJoint::update( ooReal step_size )
 
 
 
-    // the anchors in world space
-    osg::Vec3   anchor1 = getAnchor1() * b1_to_world ;
-
-
-    osg::Vec3   anchor2 =   b2      ?   getAnchor2() * m_body2->getMatrix()
-                                    :
-                                        getAnchor2() ;
-
-
-
-    // the error in world space
-    osg::Vec3   world_error = anchor2 - anchor1 ;
-
-
-
-    // the error in local space
-    osg::Vec3   joint_error =   m_blender_mode  ?   anchor2 * world_to_b1 - getAnchor1()
-                                                :
-                                                    osg::Vec3(      world_error * axes[0],
-                                                                    world_error * axes[1],
-                                                                    world_error * axes[2]
-                                                            ) ;
-
-
-
 
     osg::Vec3   j1a[3], j2a[3] ;
 
     if( m_blender_mode ) {
-        osg::Vec3   tmp1 = getAnchor1() ;
+        osg::Vec3   tmp = anchor1_joint - (m_body1->getPosition() * world_to_joint) ;
 
-        j1a[0] = osg::Matrix::transform3x3( osg::Vec3( 0.0, tmp1.z(), -tmp1.y() ), b1_to_world ) ;
-        j1a[1] = osg::Matrix::transform3x3( osg::Vec3( -tmp1.z(), 0.0, tmp1.x() ), b1_to_world ) ;
-        j1a[2] = osg::Matrix::transform3x3( osg::Vec3( tmp1.y(), -tmp1.x(), 0.0 ), b1_to_world ) ;
+        j1a[0] = osg::Matrix::transform3x3( osg::Vec3( 0.0, tmp.z(), -tmp.y() ), joint_to_world) ;
+        j1a[1] = osg::Matrix::transform3x3( osg::Vec3( -tmp.z(), 0.0, tmp.x() ), joint_to_world) ;
+        j1a[2] = osg::Matrix::transform3x3( osg::Vec3( tmp.y(), -tmp.x(), 0.0 ), joint_to_world) ;
 
 
         if( b2 ) {
-            osg::Vec3   tmp2 = getAnchor2() ;
+            osg::Vec3   tmp = anchor2_joint - (m_body2->getPosition() * world_to_joint) ;
 
-            osg::Quat   q = m_body2->getQuaternion() ;
-
-            j2a[0] = q * osg::Vec3( 0.0, -tmp2.z(), tmp2.y() ) ;
-            j2a[1] = q * osg::Vec3( tmp2.z(), 0.0, -tmp2.x() ) ;
-            j2a[2] = q * osg::Vec3( -tmp2.y(), tmp2.x(), 0.0 ) ;
+            j2a[0] = osg::Matrix::transform3x3( osg::Vec3( 0.0, -tmp.z(), tmp.y() ), joint_to_world ) ;
+            j2a[1] = osg::Matrix::transform3x3( osg::Vec3( tmp.z(), 0.0, -tmp.x() ), joint_to_world ) ;
+            j2a[2] = osg::Matrix::transform3x3( osg::Vec3( -tmp.y(), tmp.x(), 0.0 ), joint_to_world ) ;
         }
     }
 
 
+
+
+
+    // the error in joint space
+    osg::Vec3   error_joint = anchor2_joint - anchor1_joint ;
+
+
+
+
     //
-    // check for limits
+    // nub counter
+    //
+
+    int nub = 0 ;
+
+
+
+
+
+    //
+    // limits
     //
 
     bool    linear_limits[3] = { false, false, false } ;
+
+    ooReal  linear_lo[3] = { 0, 0, 0 } ;
+    ooReal  linear_hi[3] = { 0, 0, 0 } ;
 
     for( int i=0; i<3; i++ ) {
 
         ooReal  lo_stop = getParam( dParamLoStop + dParamGroup * i) ;
         ooReal  hi_stop = getParam( dParamHiStop + dParamGroup * i) ;
 
-        if( joint_error[i] <= lo_stop ) {
 
-            joint_error[i] -= lo_stop ;
+        if( error_joint[i] <= lo_stop ) {
+
+            error_joint[i] -= lo_stop ;
+            linear_lo[i] = -dInfinity ;
 
             linear_limits[i] = true ;
 
         }
 
 
-        else if( joint_error[i] >= hi_stop ) {
+        else if( error_joint[i] >= hi_stop ) {
 
-            joint_error[i] -= hi_stop ;
+            error_joint[i] -= hi_stop ;
+            linear_hi[i] = dInfinity ;
 
             linear_limits[i] = true ;
         }
 
 
 
-        joint_error[i] *= getParam( dParamStopERP + dParamGroup * i ) / step_size ;
+
+        if( linear_limits[i]  &&  lo_stop == hi_stop ) {
+
+            linear_lo[i] = -dInfinity ;
+            linear_hi[i] = dInfinity ;
+
+            nub++ ;
+        }
+
+
+
+        error_joint[i] *= getParam( dParamStopERP + dParamGroup * i ) / step_size ;
 
 
     }
@@ -249,7 +304,7 @@ Generic6DofJoint::update( ooReal step_size )
 
         if( linear_limits[i] ) {
 
-            setRow( row++, j1a[i], j1l[i], j2a[i], j2l[i], joint_error[i], getParam(dParamStopCFM + dParamGroup * i) ) ;
+            setRow( row++, j1a[i], j1l[i], j2a[i], j2l[i], error_joint[i], getParam(dParamStopCFM + dParamGroup * i), linear_lo[i], linear_hi[i] ) ;
         }
     }
 
@@ -282,20 +337,20 @@ Generic6DofJoint::update( ooReal step_size )
 
         merr = merr * osg::Matrix::inverse( m_initial_transformation ) ;
 
-        osg::Vec3   tmp1, tmp2 ;
-        osg::Quat   tmp3 ;
+        osg::Vec3   t, s ;
+        osg::Quat   so ;
 
-        merr.decompose(tmp1, qerr, tmp2, tmp3) ;
+        merr.decompose(t, qerr, s, so) ;
 
 
     } else {
 
         osg::Matrix     merr = m_initial_transformation * world_to_b1  ;
 
-        osg::Vec3   tmp1, tmp2 ;
-        osg::Quat   tmp3 ;
+        osg::Vec3   t, s ;
+        osg::Quat   so ;
 
-        merr.decompose(tmp1, qerr, tmp2, tmp3) ;
+        merr.decompose(t, qerr, s, so) ;
     }
 
 
@@ -322,14 +377,19 @@ Generic6DofJoint::update( ooReal step_size )
     //
     osg::Vec3   c = rotation_axis * angle * -1.0 ;
 
+    c = osg::Matrix::transform3x3( c, world_to_joint ) ;
+
 
 
 
     //
-    // check for limits
+    // limits
     //
 
     bool    angular_limits[3] = { false, false, false } ;
+
+    ooReal  angular_lo[3] = { 0, 0, 0 } ;
+    ooReal  angular_hi[3] = { 0, 0, 0 } ;
 
     for( int i=0; i<3; i++ ) {
 
@@ -339,6 +399,7 @@ Generic6DofJoint::update( ooReal step_size )
         if( c[i] <= lo_stop ) {
 
             c[i] -= lo_stop ;
+            angular_lo[i] = -dInfinity ;
 
             angular_limits[i] = true ;
 
@@ -348,8 +409,20 @@ Generic6DofJoint::update( ooReal step_size )
         else if( c[i] >= hi_stop ) {
 
             c[i] -= hi_stop ;
+            angular_hi[i] = dInfinity ;
 
             angular_limits[i] = true ;
+        }
+
+
+
+
+        if( angular_limits[i]  &&  lo_stop == hi_stop ) {
+
+            angular_lo[i] = -dInfinity ;
+            angular_hi[i] = dInfinity ;
+
+            nub++ ;
         }
 
 
@@ -370,17 +443,73 @@ Generic6DofJoint::update( ooReal step_size )
 
         if( angular_limits[i] ) {
 
-            setRow( row++, -axes[i], osg::Vec3(), b2 ? axes[i] : osg::Vec3(), osg::Vec3(), c[i], getParam(dParamStopCFM4 + dParamGroup * i) ) ;
+            setRow( row++, -axes[i], osg::Vec3(), b2 ? axes[i] : osg::Vec3(), osg::Vec3(), c[i], getParam(dParamStopCFM4 + dParamGroup * i), angular_lo[i], angular_hi[i] ) ;
         }
     }
 
 
 
 
-    this->setInfo( 6, row, row ) ;
+    this->setInfo1( row, nub ) ;
 
 
     this->BypassJoint::update( step_size ) ;
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Generic6DofJoint::updateTransformInternal(void)
+{
+
+    osg::Vec3   axis1 ;
+    osg::Vec3   axis2 ;
+    osg::Vec3   axis3 ;
+
+    osg::Vec3   anchor ;
+
+
+
+
+    if( m_body1.valid() && m_body2.valid() ) {
+
+        const osg::Quat     quaternion = m_body1->getQuaternion() ;
+        const osg::Matrix   transform = m_body1->getMatrix() ;
+
+        axis1 = quaternion * getAxis1() ;
+        axis2 = quaternion * getAxis2() ;
+        axis3 = quaternion * getAxis3() ;
+
+        anchor = getAnchor1() * transform ;
+
+    } else {
+
+        axis1 = getAxis1() ;
+        axis2 = getAxis2() ;
+        axis3 = getAxis3() ;
+
+        anchor = getAnchor2() ;
+    }
+
+
+
+
+    osg::Matrix m = osg::Matrix(    axis1[0],   axis1[1],   axis1[2],   0.0,
+                                    axis2[0],   axis2[1],   axis2[2],   0.0,
+                                    axis3[0],   axis3[1],   axis3[2],   0.0,
+                                    anchor[0],  anchor[1],  anchor[2],  1.0
+                                ) ;
+
+
+
+
+    this->getMatrixTransform()->setMatrix( m ) ;
+    this->getMatrixTransform()->dirtyBound() ;
 }
 /* ....................................................................... */
 /* ======================================================================= */

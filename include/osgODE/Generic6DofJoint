@@ -89,13 +89,25 @@ public:
 
 /* ======================================================================= */
 public:
-    //! Set the blender mode. Default: truew
+    //! Set the blender mode. Default: true
+    /*!
+     * If false, do not use the angular part in the linear constraint
+     * equation
+     */
     inline void setBlenderMode( bool blender_mode ) ;
 
-    //! Get the blender mode. Default: truew
+    //! Get the blender mode. Default: true
+    /*!
+     * If false, do not use the angular part in the linear constraint
+     * equation
+     */
     inline bool getBlenderMode(void) ;
 
-    //! Get the const blender mode. Defaultr: truew
+    //! Get the const blender mode. Default: true
+    /*!
+     * If false, do not use the angular part in the linear constraint
+     * equation
+     */
     inline bool getBlenderMode(void) const ;
 /* ======================================================================= */
 
@@ -110,6 +122,24 @@ public:
 /* ======================================================================= */
 public:
     virtual void    update(ooReal step_size) ;
+
+
+
+    //! Update the joint transformation
+    /*!
+     * if body1 and body2 are valid:\n
+     * -    r = body1 rotation ;\n
+     * -    X = axis1 * r ;\n
+     * -    Y = axis2 * r ;\n
+     * -    Z = axis3 * r ;\n
+     * -    O = anchor1 * body1 transform
+     * else
+     * -    X = axis1 ;\n
+     * -    Y = axis2 ;\n
+     * -    Z = axis3 ;\n
+     * -    O = anchor2
+     */
+    virtual void    updateTransformInternal(void) ;
 /* ======================================================================= */
 
 

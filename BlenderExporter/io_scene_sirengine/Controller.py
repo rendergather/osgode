@@ -143,12 +143,14 @@ class Controller(Writable.Writable):
 
             writer.writeLine("StateIndex %s" %self.StateIndex)
 
-            writer.writeLine( "ActuatorList %u" % len( self.ActuatorList ) )
+            writer.moveIn( "ActuatorList %u" % len( self.ActuatorList ) )
 
             for a in self.ActuatorList:
                 writer.writeLine( "%u " %a )
 
             writer.writeLine( " " )
+
+            writer.moveOut( "ActuatorList %u" % len( self.ActuatorList ) )
 
 
         return True

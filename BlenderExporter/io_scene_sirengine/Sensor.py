@@ -162,12 +162,14 @@ class Sensor(Writable.Writable):
 
 
 
-            writer.writeLine( "ControllerList %u" % len( self.ControllerList ) )
+            writer.moveIn( "ControllerList %u" % len( self.ControllerList ) )
 
             for c in self.ControllerList:
                 writer.writeLine( "%u " %c )
 
             writer.writeLine( " " )
+
+            writer.moveOut( "ControllerList %u" % len( self.ControllerList ) )
 
             self.writePrivateSensorData( writer )
 

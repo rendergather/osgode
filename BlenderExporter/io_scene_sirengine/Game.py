@@ -270,26 +270,32 @@ class Game(ODECallback.ODECallback):
 
 
 
-        writer.writeLine( "SensorList %u" % len(self.SensorList) )
+        writer.moveIn( "SensorList %u" % len(self.SensorList) )
 
         for s in self.SensorList:
             s.writeToStream(writer)
 
+        writer.moveOut( "SensorList %u" % len(self.SensorList) )
 
 
 
-        writer.writeLine( "ControllerList %u" % len(self.ControllerList) )
+
+        writer.moveIn( "ControllerList %u" % len(self.ControllerList) )
 
         for c in self.ControllerList:
             c.writeToStream(writer)
 
+        writer.moveOut( "ControllerList %u" % len(self.ControllerList) )
 
 
 
-        writer.writeLine( "ActuatorList %u" % len(self.ActuatorList) )
+
+        writer.moveIn( "ActuatorList %u" % len(self.ActuatorList) )
 
         for a in self.ActuatorList:
             a.writeToStream(writer)
+
+        writer.moveOut( "ActuatorList %u" % len(self.ActuatorList) )
 
 
         return True

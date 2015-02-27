@@ -85,6 +85,30 @@ public:
 
 /* ======================================================================= */
 public:
+    //! Set the matrix
+    inline void setMatrix( const osg::Matrix& matrix ) ;
+
+    //! Get the matrix
+    inline osg::Matrix& getMatrix(void) ;
+
+    //! Get the const matrix
+    inline const osg::Matrix& getMatrix(void) const ;
+
+
+    //! Transform each body by t in getMatrix() reference frame
+    void    transform( const osg::Matrix& t ) ;
+/* ======================================================================= */
+
+
+
+
+
+
+
+
+
+/* ======================================================================= */
+public:
     //! Put the object in the list
     void    addObject(ODEObject* obj) ;
 
@@ -147,7 +171,7 @@ public:
      * It's a bad idea to use this function if the container is not inside
      * a World
      */
-    void    translate( const osg::Vec3& distance ) ;
+    void    translate( const osg::Vec3& distance ) OSGODE_DEPRECATED ;
 /* ======================================================================= */
 
 
@@ -214,6 +238,9 @@ private:
 
 
     osg::BoundingSphere         m_bounding_sphere ;
+
+
+    osg::Matrix     m_matrix ;
 /* ======================================================================= */
 } ;
 /* ....................................................................... */

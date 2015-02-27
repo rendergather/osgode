@@ -60,7 +60,8 @@ Container::Container(void)
 /* ======================================================================= */
 /* ....................................................................... */
 Container::Container(const Container& other, const osg::CopyOp& copyop):
-    ODEObject(other, copyop)
+    ODEObject   ( other, copyop ),
+    m_matrix    ( other.m_matrix )
 {
 
 
@@ -86,7 +87,7 @@ Container::Container(const Container& other, const osg::CopyOp& copyop):
 
         ODEObject*  orig = *itr++ ;
 
-        ODEObject*  obj = osg::clone( orig ) ;
+        ODEObject*  obj = osg::clone( orig, copyop ) ;
 
         addObject( obj ) ;
 
@@ -140,6 +141,51 @@ Container::Container(const Container& other, const osg::CopyOp& copyop):
 /* ....................................................................... */
 Container::~Container(void)
 {
+}
+/* ....................................................................... */
+/* ======================================================================= */
+
+
+
+
+/* ======================================================================= */
+/* ....................................................................... */
+void
+Container::transform( const osg::Matrix& t )
+{
+    ObjectList::iterator    itr = m_object_list.begin() ;
+    ObjectList::iterator    itr_end = m_object_list.end() ;
+
+
+    osg::Matrix world_to_local = osg::Matrix::inverse( m_matrix ) ;
+
+    osg::Matrix local_to_world = m_matrix ;
+
+
+
+
+    while( itr != itr_end ) {
+        ODEObject*  obj = *itr++ ;
+
+        RigidBody*  body = obj->asRigidBody() ;
+        Container*  container = obj->asContainer() ;
+
+        if( body ) {
+
+            osg::Matrix matrix = body->getMatrix() * world_to_local ;
+
+            matrix = matrix * t ;
+
+            matrix = matrix * local_to_world ;
+
+            body->setMatrix( matrix ) ;
+
+
+        } else if( container ) {
+
+            container->setMatrix( container->getMatrix() * t ) ;
+        }
+    }
 }
 /* ....................................................................... */
 /* ======================================================================= */

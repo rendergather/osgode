@@ -48,6 +48,7 @@ REGISTER_OBJECT_WRAPPER( Container,
                          osgODE::Container,
                          "osg::Object osgODE::ODEObject osgODE::Container" )
 {
+    ADD_MATRIX_SERIALIZER( Matrix, osg::Matrix::identity() ) ;
 
     ADD_LIST_SERIALIZER(ObjectList, osgODE::Container::ObjectList) ;
 }

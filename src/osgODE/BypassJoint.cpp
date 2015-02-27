@@ -378,7 +378,8 @@ BypassJoint::setParamImplementation(int param, ooReal value)
         CASE_ALL_PARAMS(6) ;
 
 
-        default:    PS_BREAKPOINT() ;   break ;
+        //! @bug Generic6Dof breaks here with param=0x609 from Joint::_restoreParams
+//         default:    PS_BREAKPOINT() ;   break ;
     }
 
 

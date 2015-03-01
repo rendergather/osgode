@@ -75,6 +75,11 @@ findManager( osg::Node* graph ) ;
 
 
 
+extern OSG_EXPORT osgODE::World*
+findWorld( osg::Node* graph ) ;
+
+
+
 typedef std::vector< osg::ref_ptr<osgODE::Joint> >  Joints ;
 
 extern OSG_EXPORT unsigned int
@@ -93,6 +98,13 @@ typedef std::vector< osg::ref_ptr<osgODE::Manager> >    Managers ;
 
 extern OSG_EXPORT unsigned int
 findManagers( osg::Node* graph, Managers& managers) ;
+
+
+
+typedef std::vector< osg::ref_ptr<osgODE::World> >  Worlds ;
+
+extern OSG_EXPORT unsigned int
+findWorlds( osg::Node* graph, Worlds& worlds) ;
 /* ....................................................................... */
 /* ======================================================================= */
 

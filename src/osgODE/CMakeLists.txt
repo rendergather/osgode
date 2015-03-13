@@ -29,7 +29,6 @@ SET(TARGET_H
     ${HEADER_PATH}/CollisionCallback.inl
     ${HEADER_PATH}/CollisionParameters
     ${HEADER_PATH}/CollisionParameters.inl
-    ${HEADER_PATH}/CollisionPredictor
     ${HEADER_PATH}/CommonRayCastResults
     ${HEADER_PATH}/CommonRayCastResults.inl
     ${HEADER_PATH}/CommonWorldOperations
@@ -63,7 +62,6 @@ SET(TARGET_H
     ${HEADER_PATH}/HingeJoint.inl
     ${HEADER_PATH}/HingeServoMotor
     ${HEADER_PATH}/HingeServoMotor.inl
-    ${HEADER_PATH}/InterpolableMatrixTransform
     ${HEADER_PATH}/Interpolator
     ${HEADER_PATH}/Joint
     ${HEADER_PATH}/Joint.inl
@@ -161,7 +159,6 @@ SET(TARGET_SRC
     Collidable.cpp
     CollisionCallback.cpp
     CollisionParameters.cpp
-    CollisionPredictor.cpp
     CommonRayCastResults.cpp
     CommonWorldOperations.cpp
     Container.cpp
@@ -180,7 +177,6 @@ SET(TARGET_SRC
     Hinge2Joint.cpp
     HingeJoint.cpp
     HingeServoMotor.cpp
-    InterpolableMatrixTransform.cpp
     Joint.cpp
     JointBreakCallback.cpp
     JointFeedback.cpp

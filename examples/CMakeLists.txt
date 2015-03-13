@@ -41,7 +41,6 @@ IF( OSGODE_BUILD_PSOUND_EXAMPLES )
 ENDIF( OSGODE_BUILD_PSOUND_EXAMPLES )
 
 ADD_SUBDIRECTORY( osgodecharacter )
-ADD_SUBDIRECTORY( osgodecollisionprediction )
 
 IF( OSGODE_BUILD_PSOUND_EXAMPLES )
     ADD_SUBDIRECTORY( osgodecollisionsound )
@@ -49,7 +48,6 @@ ENDIF( OSGODE_BUILD_PSOUND_EXAMPLES )
 
 ADD_SUBDIRECTORY( osgodedhingejoint )
 ADD_SUBDIRECTORY( osgodedifferentialjoint )
-ADD_SUBDIRECTORY( osgodedynamicparticle )
 ADD_SUBDIRECTORY( osgodeengine )
 ADD_SUBDIRECTORY( osgodegearboxjoint )
 ADD_SUBDIRECTORY( osgodehingejoint )

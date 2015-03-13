@@ -397,7 +397,7 @@ CharacterBase:: _collideAgainstGround(ooReal step_size)
     m_foot_ray_cast_result->reset() ;
     m_foot_ray_cast_result->setMe( m_body->asCollidable() ) ;
 
-    space->rayCast( ray_from, ray_to, m_foot_ray_cast_result.get(), 4, false, true, true ) ;
+    space->performRayCast( ray_from, ray_to, m_foot_ray_cast_result.get(), 4 ) ;
 
     m_is_on_ground = m_foot_ray_cast_result->hasHit() ;
 

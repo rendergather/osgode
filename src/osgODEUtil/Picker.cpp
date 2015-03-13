@@ -112,7 +112,7 @@ Picker::pick( const osg::Vec2& ndc, osg::Vec3& point )
     m_ray_cast_result->reset() ;
 
 
-    m_space->rayCast( ray_from, ray_to, m_ray_cast_result, 128 ) ;
+    m_space->performRayCast( ray_from, ray_to, m_ray_cast_result, 128 ) ;
 
     point.set( m_ray_cast_result->getPosition() ) ;
 

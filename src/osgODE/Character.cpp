@@ -211,13 +211,10 @@ Character::touch( ooReal max_distance )
     osg::ref_ptr<NearestNotMeRayCastResult> result = new NearestNotMeRayCastResult( body->asCollidable() ) ;
 
 
-    space->rayCast( from,
-                    to,
-                    result.get(),
-                    8,
-                    false,      // first contact
-                    true,       // back face cull
-                    true        // closest hit
+    space->performRayCast(  from,
+                            to,
+                            result.get(),
+                            8
            ) ;
 
 
@@ -273,14 +270,11 @@ Character::touch( ooReal max_distance, osg::Vec3& position, osg::Vec3& normal )
     osg::ref_ptr<NearestNotMeRayCastResult> result = new NearestNotMeRayCastResult( body->asCollidable() ) ;
 
 
-    space->rayCast( from,
-                    to,
-                    result.get(),
-                    8,
-                    false,      // first contact
-                    true,       // back face cull
-                    true        // closest hit
-           ) ;
+    space->performRayCast(  from,
+                            to,
+                            result.get(),
+                            8
+                         ) ;
 
 
 

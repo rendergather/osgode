@@ -17,7 +17,6 @@ SET(TARGET_SRC
     Collidable_serializer.cpp
     CollisionCallback_serializer.cpp
     CollisionParameters_serializer.cpp
-    CollisionPredictor_serializer.cpp
     Container_serializer.cpp
     CubicVec3Interpolator_serializer.cpp
     Cylinder_serializer.cpp
@@ -34,7 +33,6 @@ SET(TARGET_SRC
     Hinge2Joint_serializer.cpp
     HingeJoint_serializer.cpp
     HingeServoMotor_serializer.cpp
-    InterpolableMatrixTransform_serializer.cpp
     InterpolatorBase_serializer.cpp
     JointBreakCallback_serializer.cpp
     Joint_serializer.cpp
